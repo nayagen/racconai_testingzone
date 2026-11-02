@@ -1,0 +1,64 @@
+/* This file is the LOOK of your page: colors, fonts, spacing. */
+/* Each rule says: "for these elements { set these properties }". */
+
+/* Colors stored in one place, so you can change them easily. Try new ones! */
+:root {
+  --background: #f5f3ee;
+  --card: #ffffff;
+  --text: #222222;
+  --accent: #2f6fde;
+}
+
+/* The whole page */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* The top banner */
+header {
+  background: var(--accent);
+  color: white;
+  text-align: center;
+  padding: 48px 16px;
+}
+
+/* The main area: centered, with a max width so lines don't get too long */
+main {
+  max-width: 700px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+/* Elements with class="card" */
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* :hover applies when the mouse is over the button */
+button:hover {
+  opacity: 0.85;
+}
+
+footer {
+  text-align: center;
+  padding: 24px;
+  color: #777777;
+}

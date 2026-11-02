@@ -1,0 +1,50 @@
+<!doctype html>
+<!-- This file is the STRUCTURE of your page: what's on it. -->
+<html lang="en">
+  <head>
+    <!-- The <head> holds info about the page. It isn't shown on the page itself. -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My First Website</title>
+    <!-- This links your styles (colors, fonts, layout) from style.css -->
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <!-- Everything inside <body> is what you see in the browser. -->
+    <header>
+      <h1>Hello, I'm Ayan 👋</h1>
+      <p>This is my first website. I'm learning HTML, CSS and JavaScript.</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>About me</h2>
+        <p>Try changing this text, save the file, and watch the browser update!</p>
+      </section>
+
+      <section class="card">
+        <h2>Things I want to learn</h2>
+        <!-- <ul> is a bulleted list, each <li> is one item -->
+        <ul>
+          <li>HTML: the structure of a page</li>
+          <li>CSS: how the page looks</li>
+          <li>JavaScript: making the page interactive</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Try the button</h2>
+        <!-- The id lets JavaScript find this element -->
+        <button id="click-button">Click me</button>
+        <p id="click-count">You haven't clicked yet.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>Made by me, with VS Code and Git.</p>
+    </footer>
+
+    <!-- This loads your JavaScript from script.js. It goes at the end so the page loads first. -->
+    <script src="script.js"></script>
+  </body>
+</html>
