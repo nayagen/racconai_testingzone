@@ -10,7 +10,7 @@ let clicks = 0;
 // Run this code every time the button is clicked
 button.addEventListener("click", function () {
   clicks = clicks + 1;
-  countText.textContent = "You clicked " + clicks + " time(s)!";
+  countText.textContent = "You pressed " + clicks + " time(s)!";
 });
 
 // This message appears in the browser's console (right-click the page → Inspect → Console)
