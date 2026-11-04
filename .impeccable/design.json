@@ -1,0 +1,768 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03T06:57:33.094Z",
+  "title": "Design System: RaccoonAI",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Dispatch Ink",
+        "canonical": "#080a11",
+        "oklch": "oklch(14.6% 0.016 271.2)",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#232427",
+          "#3e4046",
+          "#5a5d66",
+          "#7d808a",
+          "#a2a4ac",
+          "#c9cacf",
+          "#eeeef0"
+        ]
+      },
+      "ink-hover": {
+        "role": "primary",
+        "displayName": "Graphite Hover",
+        "canonical": "#232838",
+        "oklch": "oklch(27.9% 0.030 270.9)",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#22242a",
+          "#3c3f4b",
+          "#575d6e",
+          "#798093",
+          "#9fa4b2",
+          "#c7cad3",
+          "#edeef2"
+        ]
+      },
+      "ink-disabled": {
+        "role": "primary",
+        "displayName": "Ink Disabled",
+        "canonical": "#4a5263",
+        "oklch": "oklch(43.8% 0.030 265.3)",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#21242a",
+          "#3b404b",
+          "#565e6e",
+          "#788093",
+          "#9ea5b2",
+          "#c7cbd3",
+          "#edeef2"
+        ]
+      },
+      "body": {
+        "role": "neutral",
+        "displayName": "Body Slate",
+        "canonical": "#242a35",
+        "oklch": "oklch(28.4% 0.022 262.5)",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#222428",
+          "#3c4048",
+          "#575e6a",
+          "#79818e",
+          "#9fa5af",
+          "#c7cbd0",
+          "#edeef1"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Slate",
+        "canonical": "#586579",
+        "oklch": "oklch(50.3% 0.036 258.9)",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#20242b",
+          "#38404d",
+          "#525e71",
+          "#748196",
+          "#9ba5b5",
+          "#c5cbd4",
+          "#eceff2"
+        ]
+      },
+      "page": {
+        "role": "neutral",
+        "displayName": "Page White",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 0)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242424",
+          "#404040",
+          "#5d5d5d",
+          "#808080",
+          "#a4a4a4",
+          "#cacaca",
+          "#eeeeee"
+        ]
+      },
+      "tint": {
+        "role": "neutral",
+        "displayName": "Operations Tint",
+        "canonical": "#f1f5f9",
+        "oklch": "oklch(96.8% 0.007 247.9)",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#232425",
+          "#3e4042",
+          "#5b5e61",
+          "#7d8184",
+          "#a2a5a7",
+          "#c9cbcc",
+          "#eeeeef"
+        ]
+      },
+      "tint-hover": {
+        "role": "neutral",
+        "displayName": "Operations Tint Hover",
+        "canonical": "#e4eaf1",
+        "oklch": "oklch(93.5% 0.011 252.1)",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#222426",
+          "#3d4044",
+          "#595e64",
+          "#7b8187",
+          "#a1a5aa",
+          "#c8cbcd",
+          "#eeeeef"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e2e8f0",
+        "oklch": "oklch(92.9% 0.013 255.5)",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#222426",
+          "#3d4044",
+          "#595e64",
+          "#7b8188",
+          "#a1a5aa",
+          "#c8cbce",
+          "#eeeef0"
+        ]
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Strong Hairline",
+        "canonical": "#cbd5e1",
+        "oklch": "oklch(86.9% 0.020 252.9)",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#212428",
+          "#3b4047",
+          "#565e68",
+          "#78818c",
+          "#9fa5ad",
+          "#c7cbd0",
+          "#edeff0"
+        ]
+      },
+      "line-hover": {
+        "role": "neutral",
+        "displayName": "Hairline Hover",
+        "canonical": "#94a3b8",
+        "oklch": "oklch(71.1% 0.035 256.8)",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#20242b",
+          "#38404c",
+          "#525f71",
+          "#738196",
+          "#9ba6b4",
+          "#c5cbd4",
+          "#eceff2"
+        ]
+      },
+      "map-ground": {
+        "role": "neutral",
+        "displayName": "Map Ground",
+        "canonical": "#eef2f6",
+        "oklch": "oklch(95.9% 0.007 247.9)",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#232425",
+          "#3e4042",
+          "#5b5e61",
+          "#7d8184",
+          "#a2a5a7",
+          "#c9cbcc",
+          "#eeeeef"
+        ]
+      },
+      "ai": {
+        "role": "secondary",
+        "displayName": "AI Violet",
+        "canonical": "#7008e7",
+        "oklch": "oklch(49.1% 0.270 292.6)",
+        "tonalRamp": [
+          "#0c071a",
+          "#281352",
+          "#481894",
+          "#6c14dd",
+          "#8e46ff",
+          "#aa89ff",
+          "#ccbeff",
+          "#efeaff"
+        ]
+      },
+      "ai-text": {
+        "role": "secondary",
+        "displayName": "AI Violet Text",
+        "canonical": "#6a0fe0",
+        "oklch": "oklch(47.9% 0.262 291.5)",
+        "tonalRamp": [
+          "#0c081a",
+          "#271451",
+          "#461c93",
+          "#691fda",
+          "#8a4bff",
+          "#a88bff",
+          "#cbbfff",
+          "#eeeaff"
+        ]
+      },
+      "ai-soft": {
+        "role": "secondary",
+        "displayName": "AI Soft",
+        "canonical": "#ede9fe",
+        "oklch": "oklch(94.3% 0.028 294.6)",
+        "tonalRamp": [
+          "#0b0b0d",
+          "#242329",
+          "#403e49",
+          "#5e5b6c",
+          "#817d90",
+          "#a5a2b0",
+          "#cbc9d1",
+          "#eeeef1"
+        ]
+      },
+      "ai-line": {
+        "role": "secondary",
+        "displayName": "AI Line",
+        "canonical": "#c4b4ff",
+        "oklch": "oklch(81.0% 0.106 293.7)",
+        "tonalRamp": [
+          "#0b0a11",
+          "#252037",
+          "#423862",
+          "#615190",
+          "#8473b9",
+          "#a69ccf",
+          "#cbc6e4",
+          "#efedf8"
+        ]
+      },
+      "action": {
+        "role": "tertiary",
+        "displayName": "Product Action Blue",
+        "canonical": "#155dfc",
+        "oklch": "oklch(54.7% 0.246 262.9)",
+        "tonalRamp": [
+          "#040a1b",
+          "#081f52",
+          "#083495",
+          "#0449de",
+          "#276fff",
+          "#69a0ff",
+          "#a9cbff",
+          "#e2efff"
+        ]
+      },
+      "action-halo": {
+        "role": "tertiary",
+        "displayName": "Action Halo",
+        "canonical": "#bedbff",
+        "oklch": "oklch(88.2% 0.059 254.0)",
+        "tonalRamp": [
+          "#090b0f",
+          "#1c252f",
+          "#314155",
+          "#475f7d",
+          "#6882a3",
+          "#93a7be",
+          "#c0ccda",
+          "#eaeff4"
+        ]
+      },
+      "status-created": {
+        "role": "tertiary",
+        "displayName": "Created Amber",
+        "canonical": "#f0b100",
+        "oklch": "oklch(79.8% 0.164 82.7)",
+        "tonalRamp": [
+          "#100a02",
+          "#332000",
+          "#5c3700",
+          "#875000",
+          "#af7300",
+          "#c89d48",
+          "#e0c79a",
+          "#f7eddc"
+        ]
+      },
+      "status-created-ink": {
+        "role": "tertiary",
+        "displayName": "Created Ink",
+        "canonical": "#6b4a00",
+        "oklch": "oklch(43.4% 0.090 79.3)",
+        "tonalRamp": [
+          "#0e0b05",
+          "#2d220f",
+          "#513c16",
+          "#77571c",
+          "#9d7a3d",
+          "#baa178",
+          "#d7c8b1",
+          "#f3eee5"
+        ]
+      },
+      "status-created-soft": {
+        "role": "tertiary",
+        "displayName": "Created Cream",
+        "canonical": "#fef6d8",
+        "oklch": "oklch(97.2% 0.040 94.7)",
+        "tonalRamp": [
+          "#0c0b08",
+          "#26241b",
+          "#444030",
+          "#645e45",
+          "#888065",
+          "#aaa591",
+          "#cecbbf",
+          "#f0eeea"
+        ]
+      },
+      "status-progress": {
+        "role": "tertiary",
+        "displayName": "Progress Blue",
+        "canonical": "#2b7fff",
+        "oklch": "oklch(61.9% 0.207 259.2)",
+        "tonalRamp": [
+          "#040b18",
+          "#08224b",
+          "#043a87",
+          "#0054c9",
+          "#2479f8",
+          "#6ca4fe",
+          "#abccff",
+          "#e2f0ff"
+        ]
+      },
+      "status-progress-ink": {
+        "role": "tertiary",
+        "displayName": "Progress Ink",
+        "canonical": "#0f3fae",
+        "oklch": "oklch(41.7% 0.184 263.1)",
+        "tonalRamp": [
+          "#060b17",
+          "#102247",
+          "#1a3a80",
+          "#2554be",
+          "#4379ec",
+          "#7aa3f5",
+          "#b2cbfb",
+          "#e5efff"
+        ]
+      },
+      "status-progress-soft": {
+        "role": "tertiary",
+        "displayName": "Progress Ice",
+        "canonical": "#dbeafe",
+        "oklch": "oklch(93.2% 0.032 255.6)",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#20242a",
+          "#38404b",
+          "#535f6f",
+          "#748193",
+          "#9ca6b3",
+          "#c5cbd3",
+          "#eceff2"
+        ]
+      },
+      "status-done-strong": {
+        "role": "tertiary",
+        "displayName": "Done Green",
+        "canonical": "#008236",
+        "oklch": "oklch(53.0% 0.149 149.0)",
+        "tonalRamp": [
+          "#050e06",
+          "#0a2c13",
+          "#054e1f",
+          "#00722b",
+          "#2b984b",
+          "#74b780",
+          "#b0d6b6",
+          "#e5f3e6"
+        ]
+      },
+      "status-done-ink": {
+        "role": "tertiary",
+        "displayName": "Done Ink",
+        "canonical": "#0b4d26",
+        "oklch": "oklch(37.1% 0.091 151.8)",
+        "tonalRamp": [
+          "#070d08",
+          "#16291b",
+          "#25492f",
+          "#336b44",
+          "#549065",
+          "#87b191",
+          "#bad2bf",
+          "#e8f1ea"
+        ]
+      },
+      "status-done-soft": {
+        "role": "tertiary",
+        "displayName": "Done Mint",
+        "canonical": "#dcfce7",
+        "oklch": "oklch(96.2% 0.043 156.7)",
+        "tonalRamp": [
+          "#090c0a",
+          "#1d2721",
+          "#334539",
+          "#4b6554",
+          "#6b8876",
+          "#96ab9d",
+          "#c2cec6",
+          "#ebf0ed"
+        ]
+      },
+      "status-fail": {
+        "role": "tertiary",
+        "displayName": "Fail Red",
+        "canonical": "#fb2c36",
+        "oklch": "oklch(63.8% 0.237 25.4)",
+        "tonalRamp": [
+          "#180504",
+          "#480709",
+          "#800008",
+          "#bc0000",
+          "#ed1329",
+          "#fb756d",
+          "#ffb3ab",
+          "#ffe6e2"
+        ]
+      },
+      "error-ink": {
+        "role": "tertiary",
+        "displayName": "Error Ink",
+        "canonical": "#c10007",
+        "oklch": "oklch(50.9% 0.209 28.5)",
+        "tonalRamp": [
+          "#160605",
+          "#440e0a",
+          "#790e0b",
+          "#b30004",
+          "#e2372d",
+          "#f27d6f",
+          "#fcb6ac",
+          "#ffe7e3"
+        ]
+      },
+      "error-text": {
+        "role": "tertiary",
+        "displayName": "Error Text",
+        "canonical": "#8a0b10",
+        "oklch": "oklch(40.4% 0.157 27.0)",
+        "tonalRamp": [
+          "#140706",
+          "#3d1613",
+          "#6d231f",
+          "#a1302b",
+          "#cd534a",
+          "#e1897f",
+          "#f1bcb5",
+          "#fee9e6"
+        ]
+      },
+      "error-soft": {
+        "role": "tertiary",
+        "displayName": "Error Soft",
+        "canonical": "#fee2e2",
+        "oklch": "oklch(93.6% 0.031 17.7)",
+        "tonalRamp": [
+          "#0d0a0a",
+          "#2a2222",
+          "#4a3b3c",
+          "#6d5757",
+          "#927979",
+          "#b29f9f",
+          "#d2c7c7",
+          "#f1eded"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings."
+      },
+      "headline-sm": {
+        "displayName": "Headline Small",
+        "purpose": "Sub-section and proof headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product names; view headings at 22px."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Hero supporting line and section intros."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text; 17px under 600px."
+      },
+      "body-sm": {
+        "displayName": "Body Small",
+        "purpose": "Nav, where-lines, feature descriptions, footer."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "All buttons; 15px on small."
+      },
+      "ui": {
+        "displayName": "UI",
+        "purpose": "Text inside product replicas (Inter)."
+      },
+      "ui-label": {
+        "displayName": "UI Label",
+        "purpose": "Status chips."
+      },
+      "ui-micro": {
+        "displayName": "UI Micro",
+        "purpose": "Uppercase column and group headers inside product UI only."
+      },
+      "plate": {
+        "displayName": "Plate",
+        "purpose": "Vehicle plates, tabular figures."
+      },
+      "note": {
+        "displayName": "Note",
+        "purpose": "Demo-data captions under replicas."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating-ui",
+        "value": "0 1px 2px rgba(8, 10, 17, .06), 0 12px 32px -8px rgba(8, 10, 17, .16)",
+        "purpose": "Stage cards, DriverApp phone, fleet and Sentinel panels. The only elevation."
+      },
+      {
+        "name": "hairline-inset",
+        "value": "inset 0 0 0 1px #e2e8f0",
+        "purpose": "Map frame and brand mark tile."
+      },
+      {
+        "name": "switch-knob",
+        "value": "0 1px 2px rgba(0,0,0,.2)",
+        "purpose": "Toggle thumb only."
+      },
+      {
+        "name": "focus-halo",
+        "value": "0 0 0 3px #bedbff",
+        "purpose": "Input focus ring alongside the Action Blue border."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "All transitions and the route draw."
+      },
+      {
+        "name": "state-fast",
+        "value": ".2s",
+        "purpose": "Button, input and header border state changes."
+      },
+      {
+        "name": "switch",
+        "value": ".25s",
+        "purpose": "Switch track and knob."
+      },
+      {
+        "name": "sequence-reveal",
+        "value": ".6s",
+        "purpose": "Stage card, pin, route and phone-tile reveals in the signature sequence."
+      },
+      {
+        "name": "route-draw",
+        "value": "1.1s",
+        "purpose": "AI proposal stroke drawn along a mask."
+      },
+      {
+        "name": "pin-ring",
+        "value": "1.6s infinite",
+        "purpose": "Pulse ring on the new pin while the AI proposes."
+      },
+      {
+        "name": "sequence-timeline",
+        "value": "350ms request, 1500ms propose, 3100ms assign, 3700ms phone",
+        "purpose": "Plays once at 35% visibility; skipped under reduced motion or without JS, leaving the end state."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none; transition: none; scroll-behavior: auto",
+        "purpose": "Global prefers-reduced-motion override."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "tablet-wide",
+        "value": "1080px"
+      },
+      {
+        "name": "tablet",
+        "value": "860px"
+      },
+      {
+        "name": "mobile",
+        "value": "600px"
+      }
+    ],
+    "focus": {
+      "value": "outline: 3px solid #155dfc; outline-offset: 3px; border-radius: 6px",
+      "purpose": "Global :focus-visible."
+    },
+    "asBuiltDeviation": "Direction contract named ink #0b1220, grey #f2f4f7 and violet #3a2fd6; the build uses ink #080a11, tint #f1f5f9 and the client product design system's AI ramp (#7008e7 / #6a0fe0 / #ede9fe / #c4b4ff). Primary CTA is ink so violet stays reserved for AI meaning; job states use the product status colors."
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink call to action; the only CTA treatment. Violet is never used here.",
+      "html": "<button class=\"ds-btn-primary\">Запросить демо</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 26px; border: 0; border-radius: 12px; background: #080a11; color: #fff; font: 600 17px/1 Onest, system-ui, sans-serif; cursor: pointer; transition: background-color .2s cubic-bezier(.16,1,.3,1), transform .2s cubic-bezier(.16,1,.3,1); } .ds-btn-primary:hover { background: #232838; } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; } .ds-btn-primary[disabled] { background: #4a5263; cursor: progress; }"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Secondary action on Operations Tint.",
+      "html": "<button class=\"ds-btn-quiet\">Посмотреть продукты</button>",
+      "css": ".ds-btn-quiet { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 26px; border: 0; border-radius: 12px; background: #f1f5f9; color: #080a11; font: 600 17px/1 Onest, system-ui, sans-serif; cursor: pointer; transition: background-color .2s cubic-bezier(.16,1,.3,1); } .ds-btn-quiet:hover { background: #e4eaf1; } .ds-btn-quiet:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; }"
+    },
+    {
+      "name": "Status Chips",
+      "kind": "chip",
+      "refersTo": "status-progress",
+      "description": "Product job states plus the AI chip and its dashed proposed state.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-status ds-created\">Неназначено</span><span class=\"ds-status ds-progress\">Машина в пути</span><span class=\"ds-status ds-done\">Выполнено</span><span class=\"ds-status ds-ai\">Назначено AI</span><span class=\"ds-status ds-ai ds-proposed\">AI предлагает</span></div>",
+      "css": ".ds-row { display: flex; flex-wrap: wrap; gap: 8px; } .ds-status { display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 Inter, system-ui, sans-serif; padding: 6px 10px; border-radius: 999px; white-space: nowrap; } .ds-status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; } .ds-created { background: #fef6d8; color: #6b4a00; } .ds-progress { background: #dbeafe; color: #0f3fae; } .ds-done { background: #dcfce7; color: #0b4d26; } .ds-done::before { background: #008236; } .ds-ai { background: #ede9fe; color: #6a0fe0; } .ds-proposed { background: #fff; outline: 1.5px dashed #7008e7; outline-offset: -1.5px; }"
+    },
+    {
+      "name": "Floating UI Card",
+      "kind": "card",
+      "refersTo": "ui-card",
+      "description": "Assignment card that floats over the product stage; the only shadowed surface type.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-row\"><span class=\"ds-chip-ai\">Назначено AI</span><span class=\"ds-meta\">ETA 14:05</span></div><p class=\"ds-card-title\"><span class=\"ds-plate\">123 ABC 02</span> Мусоровоз ТБО</p><p class=\"ds-card-sub\">Добавлено в маршрут · точка 11 из 11</p><button class=\"ds-mini\">Переназначить</button></div>",
+      "css": ".ds-card { width: 300px; background: #fff; border: 1px solid #c4b4ff; border-radius: 14px; padding: 14px 16px 16px; box-shadow: 0 1px 2px rgba(8,10,17,.06), 0 12px 32px -8px rgba(8,10,17,.16); font-family: Inter, system-ui, sans-serif; } .ds-card-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; } .ds-chip-ai { display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 Inter, sans-serif; padding: 6px 10px; border-radius: 999px; background: #ede9fe; color: #6a0fe0; } .ds-chip-ai::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; } .ds-meta { font-size: 13px; color: #586579; font-variant-numeric: tabular-nums; } .ds-card-title { margin: 10px 0 0; font-size: 16px; font-weight: 600; color: #080a11; } .ds-plate { font-weight: 600; letter-spacing: .02em; font-variant-numeric: tabular-nums; } .ds-card-sub { margin: 4px 0 0; font-size: 14px; line-height: 1.4; color: #586579; } .ds-mini { margin-top: 12px; font: 500 13px/1 Inter, sans-serif; color: #080a11; background: #f1f5f9; border: 0; border-radius: 8px; padding: 8px 12px; cursor: pointer; } .ds-mini:hover { background: #e4eaf1; } .ds-mini:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; }"
+    },
+    {
+      "name": "Fleet Switch Row",
+      "kind": "custom",
+      "refersTo": "switch-on",
+      "description": "Per-vehicle AI toggle: violet when the AI controls the vehicle, grey when manual.",
+      "html": "<ul class=\"ds-fleet\"><li><span class=\"ds-plate\">123 ABC 02</span><span class=\"ds-mode\">Назначено AI · 10 точек</span><button class=\"ds-switch\" role=\"switch\" aria-checked=\"true\" aria-label=\"AI\"></button></li><li class=\"ds-manual\"><span class=\"ds-plate\">915 AAR 02</span><span class=\"ds-mode\">Вручную · диспетчер</span><button class=\"ds-switch\" role=\"switch\" aria-checked=\"false\" aria-label=\"AI\"></button></li></ul>",
+      "css": ".ds-fleet { list-style: none; margin: 0; padding: 0; width: 380px; font-family: Inter, system-ui, sans-serif; } .ds-fleet li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid #e2e8f0; font-size: 15px; } .ds-plate { font-weight: 600; letter-spacing: .02em; font-variant-numeric: tabular-nums; color: #080a11; } .ds-mode { color: #6a0fe0; font-weight: 500; } .ds-manual .ds-mode { color: #586579; } .ds-switch { position: relative; width: 44px; height: 26px; border-radius: 999px; border: 0; background: #cbd5e1; cursor: pointer; transition: background-color .25s cubic-bezier(.16,1,.3,1); } .ds-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .25s cubic-bezier(.16,1,.3,1); } .ds-switch[aria-checked='true'] { background: #7008e7; } .ds-switch[aria-checked='true']::after { transform: translateX(18px); } .ds-switch:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; }"
+    },
+    {
+      "name": "Form Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Demo-form text field with label, Action Blue focus halo and error state.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-f\">Телефон или WhatsApp</label><input id=\"ds-f\" class=\"ds-input\" placeholder=\"+7 700 000 00 00\"></div>",
+      "css": ".ds-field { display: grid; gap: 8px; width: 320px; font-family: Onest, system-ui, sans-serif; } .ds-field label { font-size: 15px; font-weight: 600; color: #080a11; } .ds-input { height: 52px; border: 1px solid #cbd5e1; border-radius: 10px; background: #fff; padding: 0 14px; font: 400 17px Onest, system-ui, sans-serif; color: #080a11; transition: border-color .2s, box-shadow .2s; } .ds-input::placeholder { color: #6b7789; } .ds-input:hover { border-color: #94a3b8; } .ds-input:focus { outline: none; border-color: #155dfc; box-shadow: 0 0 0 3px #bedbff; } .ds-input[aria-invalid='true'] { border-color: #c10007; }"
+    },
+    {
+      "name": "Site Navigation",
+      "kind": "nav",
+      "refersTo": "button-sm",
+      "description": "Sticky 72px header: mark, wordmark, links, small ink CTA.",
+      "html": "<header class=\"ds-nav\"><span class=\"ds-brand\">RaccoonAI</span><nav class=\"ds-links\"><a href=\"#\">Продукты</a><a href=\"#\">AI-диспетчер</a><a href=\"#\">Для акиматов</a></nav><a class=\"ds-cta\" href=\"#\">Запросить демо</a></header>",
+      "css": ".ds-nav { height: 72px; display: flex; align-items: center; gap: 40px; padding: 0 24px; background: rgba(255,255,255,.94); border-bottom: 1px solid #e2e8f0; font-family: Onest, system-ui, sans-serif; } .ds-brand { font-weight: 700; font-size: 20px; letter-spacing: -.01em; color: #080a11; } .ds-links { display: flex; gap: 28px; margin-right: auto; } .ds-links a { color: #242a35; text-decoration: none; font-size: 15px; font-weight: 500; text-underline-offset: .2em; } .ds-links a:hover { color: #080a11; text-decoration: underline; } .ds-links a:focus-visible, .ds-cta:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; border-radius: 6px; } .ds-cta { display: inline-flex; align-items: center; min-height: 42px; padding: 0 18px; border-radius: 10px; background: #080a11; color: #fff; font: 600 15px/1 Onest, sans-serif; text-decoration: none; } .ds-cta:hover { background: #232838; }"
+    },
+    {
+      "name": "Module Chip",
+      "kind": "chip",
+      "refersTo": "module-chip",
+      "description": "Flat tint pill listing Platform modules.",
+      "html": "<ul class=\"ds-modules\"><li>Заявки и маршруты</li><li>GPS-карта (Wialon)</li><li>Мониторинг ГСМ</li></ul>",
+      "css": ".ds-modules { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; font-family: Onest, system-ui, sans-serif; } .ds-modules li { font-size: 14px; color: #242a35; background: #f1f5f9; border-radius: 999px; padding: 6px 12px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Live Operations, Light",
+    "overview": "The marketing site is a dispatch room with the lights on. A white ground carries near-black ink, and the product itself does the persuading: map, route, assignment card, DriverApp phone, fleet switches and plan-vs-fact bars are rebuilt in HTML and CSS at real density, not shown as screenshots. Marketing copy is set in Onest with tight display tracking; everything that is product is set in Inter, so the reader always knows which voice is speaking.\n\nColor is semantic before it is decorative. Violet belongs to the AI and nothing else. Job states use the client product's status colors, the same ones dispatchers see in the Platform. The primary call to action is ink, not a brand color, so the page's one strong hue stays reserved for \"the AI did or proposes this\". Depth is minimal: flat tinted bands and hairlines for structure, one soft lifted shadow only on UI that floats over the product stage.\n\nAs built, the world departs from the direction contract in three values: ink is #080a11 (contract #0b1220), the cool product grey is #f1f5f9 (contract #f2f4f7), and violet is the product design system's AI ramp (#7008e7 / #6a0fe0 / #ede9fe / #c4b4ff) rather than the contract's #3a2fd6. The build is normative.",
+    "keyCharacteristics": [
+      "White page, ink headings, slate body text; cool tint bands alternate with white sections.",
+      "Product UI replicas at real density are the imagery; no illustrations, stock, or screenshots.",
+      "Violet only for AI meaning; status colors only for job states; ink for the primary action.",
+      "Two families: Onest for marketing voice, Inter for anything that is product UI.",
+      "One soft shadow, used only on floating product UI.",
+      "A single on-load signature sequence whose resting state is the end state."
+    ],
+    "rules": [
+      {
+        "name": "The Violet Means AI Rule",
+        "body": "AI Violet and its ramp mark only what the AI did, proposes, or controls. Never use it for a CTA, a link, a heading accent, or decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Action Rule",
+        "body": "The primary call to action is Dispatch Ink on white. A colored CTA would compete with the AI's meaning.",
+        "section": "colors"
+      },
+      {
+        "name": "The Shared Status Rule",
+        "body": "Job states use the product's status ramps with the same wording the product uses. The same status renders identically everywhere it appears.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Onest speaks for RaccoonAI; Inter speaks for the product. If it is a piece of the product, it is set in Inter.",
+        "section": "typography"
+      },
+      {
+        "name": "The Product-Only Caps Rule",
+        "body": "Uppercase tracked micro-labels exist only as table and group headers inside product UI. They never sit above a marketing heading.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Shadow Rule",
+        "body": "There is one elevation. If a surface does not float over product UI, it has no shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do rebuild product UI in HTML/CSS at real density, set in Inter, and caption it \"Демонстрационные данные\".",
+      "Do keep AI Violet for AI-made or AI-proposed things, and pair AI Violet Text with AI Soft for labels.",
+      "Do use the product status ramps (soft fill + ink text + currentColor dot) for any job state, with the product's wording.",
+      "Do set vehicle plates in the Plate style everywhere.",
+      "Do make the primary action Dispatch Ink and the secondary action Quiet tint.",
+      "Do structure sections with hairlines and tint bands; lift only floating product UI with the single Floating UI shadow.",
+      "Do make the resting state of any motion the meaningful end state, and honor reduced motion."
+    ],
+    "donts": [
+      "Don't use violet for CTAs, links, heading accents, or decoration.",
+      "Don't replace a product replica with a static screenshot or a row of equal feature cards.",
+      "Don't add gradients, glass, blur, or a second shadow level.",
+      "Don't put uppercase tracked labels above marketing headings; caps live only inside product UI headers.",
+      "Don't set product UI in Onest or marketing headings in Inter."
+    ]
+  }
+}

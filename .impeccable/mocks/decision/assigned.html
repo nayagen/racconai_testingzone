@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>Livery sketch</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:#f26a1b;font-family:"Arial Narrow",Arial,sans-serif;color:#121212}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:#121212;color:#fff}
+.nav b{font-size:28px;letter-spacing:.04em}
+.nav span{font-size:16px;margin-left:32px}
+.nav a{background:#f26a1b;color:#121212;padding:12px 24px;font-weight:700;font-size:16px;text-decoration:none}
+.body{position:relative;height:828px}
+.chev{position:absolute;left:0;right:0;top:520px;height:96px;background:repeating-linear-gradient(-45deg,#fff 0 48px,#c9ced3 48px 96px)}
+.panel{position:absolute;left:48px;top:56px;width:860px}
+.depot{font-size:20px;font-weight:700;letter-spacing:.2em}
+h1{font-size:120px;line-height:.92;font-weight:900;text-transform:uppercase;letter-spacing:-.01em;margin-top:16px}
+.plate{position:absolute;right:64px;top:72px;width:420px;height:112px;background:#fff;border:6px solid #121212;display:flex;align-items:center;justify-content:center;font-size:72px;font-weight:900;letter-spacing:.06em}
+.band{position:absolute;left:0;right:0;top:640px;height:48px;display:flex}
+.band div{flex:1;display:flex;align-items:center;padding-left:24px;font-size:22px;font-weight:700;color:#fff}
+.dash{border:4px dashed #5b2fd6;color:#5b2fd6!important;background:#fff}
+.cta{position:absolute;left:48px;top:728px;display:flex;gap:16px}
+.cta a{display:inline-block;padding:20px 36px;font-size:24px;font-weight:900;text-decoration:none;text-transform:uppercase}
+.p{background:#121212;color:#fff}.s{border:4px solid #121212;color:#121212}
+.right{position:absolute;right:64px;top:232px;width:420px;font-size:24px;line-height:1.35;font-weight:700}
+</style></head><body>
+<div class="nav"><div><b>RaccoonAI</b><span>Продукты</span><span>AI-диспетчер</span><span>Для акиматов</span></div><a href="#">Запросить демо</a></div>
+<div class="body">
+<div class="panel"><div class="depot">ДЕПО 02 · АЛМАТЫ</div><h1>Одна заявка.<br>Четыре экрана.<br>Один статус.</h1></div>
+<div class="plate">123 ABC 02</div>
+<div class="right">AI-диспетчер назначает задания на машины. Диспетчер работает только с исключениями.</div>
+<div class="chev"></div>
+<div class="band">
+ <div style="background:#6b7280">Неназначено</div>
+ <div class="dash">AI предлагает</div>
+ <div style="background:#2563eb">Назначено</div>
+ <div style="background:#047857">Выполнено</div>
+</div>
+<div class="cta"><a class="p" href="#">Запросить демо</a><a class="s" href="#">Как это работает</a></div>
+</div>
+</body></html>

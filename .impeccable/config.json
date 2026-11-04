@@ -1,0 +1,293 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-03T01:59:50.609Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r1-azulejo.html"
+        ],
+        "createdAt": "2026-11-03T01:59:50.682Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r2-dark.html"
+        ],
+        "createdAt": "2026-11-03T01:59:50.739Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "oversized-h1",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r1-assigned.html"
+        ],
+        "createdAt": "2026-11-03T01:59:50.794Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "oversized-h1",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r2-dark.html"
+        ],
+        "createdAt": "2026-11-03T01:59:50.848Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "overused-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-03T01:59:50.913Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "overused-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-event.html"
+        ],
+        "createdAt": "2026-11-03T01:59:50.971Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "overused-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-ribbon.html"
+        ],
+        "createdAt": "2026-11-03T01:59:51.028Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "overused-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-03T01:59:51.085Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "overused-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r1-azulejo.html"
+        ],
+        "createdAt": "2026-11-03T01:59:51.141Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "overused-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r1-signal.html"
+        ],
+        "createdAt": "2026-11-03T01:59:51.195Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-03T01:59:51.249Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r1-pick.html"
+        ],
+        "createdAt": "2026-11-03T01:59:51.306Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r2-light.html"
+        ],
+        "createdAt": "2026-11-03T01:59:51.360Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "skipped-heading",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r2-dark.html"
+        ],
+        "createdAt": "2026-11-03T01:59:51.417Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "skipped-heading",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r2-light.html"
+        ],
+        "createdAt": "2026-11-03T01:59:51.473Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, not shipped"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-03T02:08:46.378Z",
+        "reason": "Claude: Inter is the RaccoonAI design system's sole product font (README), used only inside product-UI mockups for fidelity"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "style.css"
+        ],
+        "createdAt": "2026-11-03T02:08:46.436Z",
+        "reason": "Claude: Inter is the RaccoonAI design system's sole product font (README), used only inside product-UI mockups for fidelity"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-03T02:15:19.294Z",
+        "reason": "Claude + finish reviewer: verified false positives; side insets come from .wrap and clamp() padding on .fleet/.sentinel, proof-list first column is intentionally flush to the grid"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.425Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.483Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-event.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.540Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-ribbon.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.597Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.653Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r1-assigned.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.709Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r1-azulejo.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.764Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r1-pick.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.819Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r1-signal.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.874Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r2-calm.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.929Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r2-dark.html"
+        ],
+        "createdAt": "2026-11-03T06:58:16.984Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/r2-light.html"
+        ],
+        "createdAt": "2026-11-03T06:58:17.039Z",
+        "reason": "Claude: spent low-fidelity decision sketch from the shape round, uses stand-in system fonts, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "medeo sans",
+        "createdAt": "2026-11-04T17:22:51.899Z",
+        "reason": "Claude: Medeo Sans is the RaccoonAI product font, used only inside the .rds Platform screen the user asked to recreate with the RaccoonAI Design System; documented in DESIGN.md › Platform Screen"
+      }
+    ]
+  }
+}

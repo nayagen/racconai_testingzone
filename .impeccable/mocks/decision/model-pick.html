@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>Waybill sketch</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:#1d3a8a;font-family:"Courier New",monospace;color:#1d2b6b}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;color:#fff;font-family:Arial,sans-serif}
+.nav b{font-size:28px}.nav a{background:#fff;color:#1d3a8a;padding:12px 24px;font-weight:700;text-decoration:none}
+.sheet{position:absolute;width:820px;height:700px;padding:40px;border:2px solid #1d2b6b}
+.s4{left:420px;top:140px;background:#f7b3c2;transform:rotate(4deg)}
+.s3{left:380px;top:124px;background:#f6e27a;transform:rotate(2deg)}
+.s2{left:340px;top:108px;background:#cfe3f7;transform:rotate(-1deg)}
+.s1{left:300px;top:96px;background:#fff;transform:rotate(-3deg)}
+h1{font-family:Arial,sans-serif;font-size:76px;line-height:1;font-weight:900;color:#121212;margin:24px 0}
+.row{display:flex;justify-content:space-between;border-bottom:2px solid #1d2b6b;padding:14px 0;font-size:24px}
+.stamp{position:absolute;right:60px;bottom:90px;width:240px;height:240px;border:8px solid #6d28d9;border-radius:50%;color:#6d28d9;display:flex;align-items:center;justify-content:center;text-align:center;font-size:30px;font-weight:900;transform:rotate(-14deg);font-family:Arial,sans-serif}
+.tabs{position:absolute;left:48px;top:160px;display:flex;flex-direction:column;gap:16px;color:#fff;font-family:Arial,sans-serif;font-size:24px;font-weight:700}
+.cta{position:absolute;left:48px;bottom:56px}
+.cta a{background:#fff;color:#1d3a8a;padding:20px 36px;font-family:Arial,sans-serif;font-size:24px;font-weight:900;text-decoration:none}
+</style></head><body>
+<div class="nav"><b>RaccoonAI</b><a href="#">Запросить демо</a></div>
+<div class="tabs"><span>1 · Диспетчер</span><span>2 · Водитель</span><span>3 · Клиент</span><span>4 · Акимат</span></div>
+<div class="sheet s4"></div><div class="sheet s3"></div><div class="sheet s2"></div>
+<div class="sheet s1">
+<div style="font-size:22px">ЗАДАНИЕ № 2026-11-03-0418</div>
+<h1>Одно задание —<br>копия у каждого</h1>
+<div class="row"><span>Площадка</span><span>ул. Абая 150</span></div>
+<div class="row"><span>Машина</span><span>123 ABC 02</span></div>
+<div class="row"><span>Полигон</span><span>12.4 т</span></div>
+<div class="stamp">НАЗНАЧЕНО<br>AI</div>
+</div>
+<div class="cta"><a href="#">Запросить демо</a></div>
+</body></html>

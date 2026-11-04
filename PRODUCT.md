@@ -43,7 +43,7 @@ Product lineup (from the existing RaccoonAI client landing design):
 
 Constraints:
 
-- **Languages: Russian and Kazakh are required**; English is also offered. Russian is the primary language of existing product copy.
+- **Languages:** the website ships in Russian first (user decision, 2026-11-03); Kazakh and English follow later, so copy stays separable and layouts must tolerate longer strings. The products themselves are localized to Kazakh and English.
 - Primary call to action: **request a demo / contact**. No self-serve sign-up or public pricing.
 - The repository currently holds a plain static HTML/CSS/JS starter page (`index.html`, `style.css`, `script.js`) that is not yet RaccoonAI content.
 
@@ -53,6 +53,7 @@ Open decisions: contact channel(s) and actual email/phone; whether English is a 
 
 - Name: **RaccoonAI**. Based in Almaty, Kazakhstan.
 - Voice in existing copy: concrete and operational, speaks the operator's language (МВО, СО/ТБО, ГСМ, полигон, акимат); positions AI as assisting dispatchers — "решения остаются за диспетчером" (decisions stay with the dispatcher).
+- Marketing look (user's stated preference, 2026-11-03): clean, premium, modern, at the craft level of top SaaS sites (Stripe, Linear, Samsara); show the real product (Platform, map, DriverApp) rather than metaphors; no cultural or heritage costume.
 - Existing brand assets live in the user's Claude artifacts: "RaccoonAI Design System for Claude", "RaccoonAI — Fluent-редизайн логотипа", and "RaccoonAI — лендинг для клиентов". Visual direction is decided later, not here.
 
 ## Evidence on Hand
@@ -71,8 +72,8 @@ Claims stated in the existing RaccoonAI client landing design (user's own materi
 2. **AI assists, people decide.** Present automation as removing routine work, with human control always visible.
 3. **Speak operations, not hype.** Use the operator's real terms and workflows; concrete beats buzzwords.
 4. **Proof over promise.** Lead with real pilots and partners; leave metrics as placeholders until real numbers exist.
-5. **Russian and Kazakh first-class.** Content and layout must work fully in both, not as an afterthought.
+5. **Built for more than one language.** Russian ships first; Kazakh and English must drop in without a redesign.
 
 ## Accessibility & Inclusion
 
-Multilingual (Russian, Kazakh, English) with a visible language switcher; layouts must tolerate longer Kazakh/Russian strings.
+Russian at launch; a language switcher arrives with Kazakh and English. Layouts must tolerate longer Kazakh/Russian strings.

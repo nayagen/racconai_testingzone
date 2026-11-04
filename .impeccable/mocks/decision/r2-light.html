@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>Live operations sketch</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:#fff;font-family:"Segoe UI",Arial,sans-serif;color:#0b1220}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 64px;border-bottom:1px solid #eef0f3}
+.nav b{font-size:24px;font-weight:700}.nav span{font-size:15px;margin-left:32px;color:#475467}
+.nav a{background:#3a2fd6;color:#fff;padding:12px 22px;font-weight:600;text-decoration:none;border-radius:10px}
+h1{position:absolute;left:64px;top:128px;width:700px;font-size:72px;line-height:1.02;font-weight:700;letter-spacing:-.035em}
+.sub{position:absolute;left:64px;top:370px;width:560px;font-size:22px;line-height:1.45;color:#475467}
+.cta{position:absolute;left:64px;top:480px;display:flex;gap:12px}
+.cta a{padding:18px 30px;font-size:22px;font-weight:600;text-decoration:none;border-radius:12px}
+.p{background:#3a2fd6;color:#fff}.s{background:#f2f4f7;color:#0b1220}
+.stage{position:absolute;left:640px;top:200px;width:860px;height:640px;border-radius:20px;background:#f2f4f7;border:1px solid #e4e7ec;overflow:hidden}
+.map{position:absolute;inset:0;background:repeating-linear-gradient(35deg,#e9edf2 0 2px,transparent 2px 60px),repeating-linear-gradient(-55deg,#e9edf2 0 2px,transparent 2px 80px)}
+.route{position:absolute;left:0;top:0}
+.card{position:absolute;left:60px;top:60px;width:360px;background:#fff;border-radius:14px;padding:20px;box-shadow:0 12px 32px rgba(16,24,40,.12)}
+.card .ai{display:inline-block;background:#efeafe;color:#4c2fd6;font-weight:700;font-size:22px;padding:4px 12px;border-radius:999px}
+.card h3{font-size:26px;margin-top:12px}
+.phone{position:absolute;left:520px;top:120px;width:220px;height:440px;border-radius:32px;background:#0b1220;padding:10px}
+.phone div{width:100%;height:100%;border-radius:24px;background:#fff}
+.strip{position:absolute;left:64px;bottom:56px;font-size:22px;font-weight:600;color:#344054}
+</style></head><body>
+<div class="nav"><div><b>RaccoonAI</b><span>Платформа</span><span>AI-диспетчер</span><span>DriverApp</span><span>Для акиматов</span></div><a href="#">Запросить демо</a></div>
+<h1>AI-диспетчер для вывоза отходов</h1>
+<div class="sub">Заявки, маршруты, техника и отчёты — в одной системе. AI назначает задания, диспетчер решает исключения.</div>
+<div class="cta"><a class="p" href="#">Запросить демо</a><a class="s" href="#">Посмотреть продукт</a></div>
+<div class="stage"><div class="map"></div>
+<svg class="route" width="860" height="640" aria-hidden="true"><path d="M80 560 C220 420 300 480 420 330 S640 240 780 120" fill="none" stroke="#3a2fd6" stroke-width="6"/><circle cx="420" cy="330" r="12" fill="#3a2fd6"/></svg>
+<div class="card"><span class="ai">Назначено AI</span><h3>123 ABC 02 · 10 точек</h3></div>
+<div class="phone"><div></div></div></div>
+<div class="strip">Пилоты в Алматы и Астане · Партнёр — ТОО «Ак Тартып»</div>
+</body></html>

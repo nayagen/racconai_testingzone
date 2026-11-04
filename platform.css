@@ -1,0 +1,387 @@
+/* RaccoonAI Platform dashboard replica (Figma RaccoonAI Desktop, node 4296:5593).
+   Atoms come from platform-ds.css (RaccoonAI Design System for Claude); this file lays out the organisms
+   in design pixels on a 1600 x 980 screen that script.js scales to fit. */
+
+/* Landing frame: the screen keeps its 1600 x 980 design size and scales by --pf-s (set in script.js) */
+.platform .section-head { margin-bottom: clamp(32px, 4vw, 48px); }
+.pf-frame { width: min(100% - 2 * var(--gutter), 1600px); margin: 0 auto; }
+.pf-viewport {
+  --pf-s: .5; overflow: hidden; border-radius: 20px; background: #f1f5f9;
+  box-shadow: inset 0 0 0 1px #e2e8f0, 0 1px 2px rgba(8, 10, 17, .06), 0 12px 32px -8px rgba(8, 10, 17, .16);
+}
+.pf-stage { position: relative; width: calc(1600px * var(--pf-s)); height: calc(980px * var(--pf-s)); }
+.pf-stage .pf-screen { position: absolute; left: 0; top: 0; transform: scale(var(--pf-s)); transform-origin: 0 0; }
+.pf-viewport.is-pan { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; }
+.pf-caption { max-width: none; display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; padding: 0; font: 500 13px/1.4 var(--font); color: var(--muted); }
+.pf-hint { display: none; }
+.pf-viewport.is-pan + .pf-caption .pf-hint { display: inline; }
+
+.pf-screen {
+  width: 1600px; height: 980px; box-sizing: border-box; padding: 16px;
+  display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: 16px;
+  background: var(--surface-page); font-family: var(--font-sans); color: var(--text-body);
+  -webkit-font-smoothing: antialiased; text-align: left;
+}
+.pf-screen p { margin: 0; }
+.pf-screen .rc-sidenav { min-height: 0; height: 100%; }
+.pf-main { display: grid; grid-template-rows: 512px minmax(0, 1fr); gap: 16px; min-width: 0; }
+.pf-top { display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 16px; min-width: 0; }
+.pf-muted { color: var(--text-secondary); }
+.pf-ink { color: var(--text-headings); }
+.pf-link { color: var(--text-action); }
+.pf-ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Map */
+.pf-map { position: relative; overflow: hidden; border-radius: var(--radius-lg); border: 1px solid var(--border-primary); background: #f3eedf; }
+.pf-map__bg { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; max-width: none; }
+.pf-map__pin { position: absolute; display: block; }
+.pf-map__depot { position: absolute; left: 610px; top: 288px; width: 32px; height: 32px; display: grid; place-items: center; background: var(--surface-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-md); }
+.pf-map__truck { position: absolute; line-height: 0; }
+.pf-map__truckart { display: block; }
+.pf-map__truck:not(.is-active) .pf-map__truckart--on, .pf-map__truck.is-active .pf-map__truckart--off { display: none; }
+.pf-map__top { position: absolute; left: 8px; right: 8px; top: 8px; display: flex; justify-content: space-between; gap: 8px; }
+.pf-map__top .rc-search { box-shadow: var(--shadow-sm); }
+.pf-map__tools { display: flex; gap: 8px; }
+.pf-map__tools .rc-filterbtn { box-shadow: var(--shadow-sm); }
+.pf-map__tools .rc-ibtn { background: var(--surface-primary); box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
+.pf-map__attr { position: absolute; right: 6px; bottom: 4px; padding: 1px 4px; border-radius: 3px; background: rgba(255, 255, 255, .8); font: 500 10px/12px var(--font-sans); color: var(--text-secondary); }
+
+/* Truck selected on map */
+.pf-truck { display: flex; flex-direction: column; min-width: 0; background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+.pf-truck__head { display: flex; gap: 16px; align-items: flex-start; padding: 16px; }
+.pf-truck__img { width: 96px; height: 80px; object-fit: contain; object-position: center bottom; flex: none; }
+.pf-truck__info { flex: 1; min-width: 0; display: grid; gap: 12px; justify-items: start; }
+.pf-truck__model { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.pf-truck__model > div:first-child { display: grid; gap: 4px; }
+.pf-depot { display: flex; align-items: center; gap: 4px; }
+.pf-truck__body { padding: 16px; display: grid; gap: 8px; }
+.pf-crewrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.pf-crew { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 8px; border-radius: var(--radius-md); background: var(--surface-secondary); }
+.pf-crew__who { display: grid; gap: 2px; min-width: 0; }
+.pf-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pf-metric { display: grid; gap: 8px; padding: 16px; border-radius: var(--radius-md); background: var(--surface-secondary); }
+.pf-metric__row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.pf-metric__val { display: flex; align-items: center; gap: 4px; }
+.pf-chip { padding: 2px 8px; border-radius: var(--radius-full); background: var(--surface-tertiary); color: var(--text-body); white-space: nowrap; }
+.pf-truck__trips { flex: 1; display: grid; align-content: start; gap: 10px; padding: 16px; }
+.pf-shift { display: flex; justify-content: space-between; align-items: center; }
+.pf-trip { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: var(--radius-md); background: var(--surface-secondary); }
+.pf-trip__main { flex: 1; display: flex; align-items: center; gap: 8px; }
+.pf-trip__ico { width: 32px; height: 32px; display: grid; place-items: center; margin-right: -8px; }
+.pf-truck__foot { display: flex; justify-content: space-between; align-items: center; padding: 16px; }
+.pf-gps { display: flex; align-items: center; gap: 4px; }
+
+/* Status block */
+.pf-status { display: flex; flex-direction: column; min-height: 0; background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); overflow: hidden; }
+.pf-status__bar { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 0 12px 0 16px; border-bottom: 1px solid var(--border-primary); }
+.pf-ftabs { display: flex; align-items: flex-end; height: 52px; }
+.pf-ftab { appearance: none; margin: 0; cursor: pointer; font: 700 12px/16px var(--font-sans); text-transform: uppercase; transition: color .15s, background-color .15s; position: relative; top: 1px; padding: 8px 12px; border: 1px solid var(--border-primary); border-radius: 8px 8px 0 0; background: var(--surface-secondary); color: var(--text-secondary); white-space: nowrap; }
+.pf-ftab.is-selected { background: var(--surface-primary); border-bottom-color: var(--surface-primary); color: var(--text-body); margin-right: -1px; z-index: 1; }
+.pf-ftab:not(.is-selected):hover { color: var(--text-body); background: var(--surface-tertiary); }
+.pf-ftab:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; z-index: 2; }
+.pf-status__tools { display: flex; align-items: center; gap: 32px; padding: 10px 0; }
+.pf-status__tools .rc-selectwrap, .pf-status__tools .rc-select { width: 160px; }
+.pf-status__kpis { display: grid; grid-template-columns: minmax(0, 1fr) repeat(4, auto); border-bottom: 1px solid var(--border-primary); }
+.pf-bars { display: grid; gap: 24px; align-content: center; padding: 20px 24px; border-right: 1px solid var(--border-primary); }
+.pf-bar { display: grid; gap: 8px; }
+.pf-bar__track { display: flex; height: 24px; border-radius: 4px; overflow: hidden; }
+.pf-seg { display: flex; align-items: center; justify-content: center; padding: 0 4px; white-space: nowrap; flex-shrink: 0; }
+.pf-seg--created { background: var(--status-created-idle); color: var(--text-body); }
+.pf-seg--assigned { background: var(--status-assigned-idle); color: var(--text-information); flex-basis: 0; }
+.pf-seg--completed { background: var(--status-completed-idle); color: var(--text-on-action); flex-basis: 0; }
+.pf-seg--failed { background: var(--status-failed-idle); color: var(--text-on-action); }
+.pf-kpi { display: grid; align-content: start; gap: 16px; padding: 20px 20px; border-right: 1px solid var(--border-primary); }
+.pf-kpi:last-child { border-right: 0; }
+.pf-kpi__head { display: flex; align-items: center; gap: 4px; }
+.pf-kpi__cols { display: flex; gap: 20px; }
+.pf-kpi__col { display: grid; gap: 8px; justify-items: start; }
+.pf-kpi__pct { display: inline-block; min-height: 20px; box-sizing: border-box; padding: 2px 8px; border-radius: var(--radius-full); font: 700 12px/16px var(--font-sans); }
+.pf-kpi__pct--created { background: var(--status-created-idle); color: var(--text-body); }
+.pf-kpi__pct--assigned { background: var(--status-assigned-idle); color: var(--text-information); }
+.pf-kpi__pct--failed { background: var(--status-failed-idle); color: var(--text-on-action); }
+.pf-kpi__pct--completed { background: var(--status-completed-idle); color: var(--text-on-action); }
+.pf-kpi__pct--none { visibility: hidden; }
+.pf-kpi__num { font: 700 20px/24px var(--font-sans); color: var(--text-body); white-space: nowrap; }
+.pf-status__fleet { flex: 1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.pf-fleet { display: grid; align-content: start; gap: 12px; padding: 18px 20px; border-right: 1px solid var(--border-primary); min-width: 0; }
+.pf-fleet:last-child { border-right: 0; }
+.pf-fleet__head { display: flex; justify-content: space-between; align-items: center; height: 32px; }
+.pf-fleet__ico { width: 40px; height: 24px; display: grid; place-items: center; overflow: visible; }
+.pf-fleet__ico .rc-truck { transform: scale(.9); }
+.pf-frow { display: flex; justify-content: space-between; align-items: center; height: 20px; gap: 8px; }
+.pf-fleet--total .pf-frow > p:first-child { font: 700 12px/16px var(--font-sans); text-transform: uppercase; color: var(--text-secondary); }
+.pf-bigpct { padding: 4px 12px; border-radius: var(--radius-full); background: var(--surface-attention-subtle); color: var(--text-attention); font: 700 20px/24px var(--font-sans); }
+@media (max-width: 700px) {
+  .pf-caption { flex-direction: column; gap: 4px; }
+}
+
+/* Tabs and panels (interactive: script.js switches them) */
+.pf-contents { display: contents; }
+.pf-sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.pf-tools [hidden], .pf-panel[hidden] { display: none; }
+.pf-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.pf-panel > [aria-hidden] { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.pf-panel__body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.pf-tools__group { display: flex; align-items: center; gap: 16px; }
+.pf-status__tools--schedule { gap: 32px; }
+.pf-iseg { display: flex; gap: 1px; width: 64px; height: 32px; padding: 1px; box-sizing: border-box; border-radius: var(--radius-md); background: var(--border-primary); }
+.pf-iseg__item { flex: 1; display: grid; place-items: center; background: var(--surface-primary); --rc-icon-color: var(--icons-default); }
+.pf-iseg__item:first-child { border-radius: 7px 0 0 7px; }
+.pf-iseg__item:last-child { border-radius: 0 7px 7px 0; }
+.pf-iseg__item.is-selected { background: var(--surface-selected); box-shadow: 0 0 0 1px var(--border-action-subtle); position: relative; }
+
+/* Route schedule Gantt (Figma 4439:1609) */
+.pf-gantt { --hr: 91.4px; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.pf-ghours { position: relative; flex: none; height: 44px; margin-left: 197px; border-bottom: 1px solid var(--border-primary); }
+.pf-ghour { position: absolute; top: 14px; left: calc(var(--t0) * var(--hr)); transform: translateX(-50%); color: var(--text-body); white-space: nowrap; }
+.pf-ghour::after { content: ""; position: absolute; left: 50%; top: 24px; width: 1px; height: 6px; background: var(--text-secondary); }
+.pf-gbody { flex: 1; min-height: 0; overflow-y: auto; padding: 8px 8px 12px; scrollbar-width: thin; scrollbar-color: var(--border-disabled) transparent; outline: none; }
+.pf-ggroup { display: grid; gap: 0; }
+.pf-ggroup + .pf-ggroup { margin-top: 16px; }
+.pf-ggroup__head { display: flex; align-items: center; gap: 6px; height: 24px; color: var(--text-secondary); }
+.pf-ggroup__head.is-alert { color: var(--text-error); gap: 4px; }
+.pf-grow { display: grid; grid-template-columns: 173px minmax(0, 1fr); gap: 16px; align-items: center; height: 40px; }
+.pf-gtruck { display: flex; align-items: center; height: 32px; padding-right: 8px; gap: 8px; border-radius: 8px 4px 4px 8px; background: var(--surface-tertiary); }
+.pf-gtruck__ai { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-right: 1px solid var(--surface-primary); }
+.pf-gtruck__plate { flex: 1; color: var(--text-body); }
+.pf-gtruck__count { min-width: 20px; height: 20px; padding: 0 4px; box-sizing: border-box; display: grid; place-items: center; border-radius: var(--radius-md); background: var(--icons-secondary); color: var(--text-on-action); font: 600 10px/10px var(--font-sans); }
+.pf-gbars { position: relative; height: 32px; min-width: 0; }
+/* Shift container: same box as the row's track so its trips keep their clock positions. The outline (and its id/driver label)
+   shows only while the shift is hovered or a trip in it has keyboard focus; the outline box also catches the gaps between trips. */
+.pf-gshift { position: absolute; inset: 0; pointer-events: none; }
+.pf-gshift .pf-gbar { pointer-events: auto; z-index: 1; }
+.pf-gsel { position: absolute; top: 0; height: 32px; left: calc(var(--t0) * var(--hr)); width: calc(var(--dt) * var(--hr) - 2px); border-radius: 4px; outline: 1px solid transparent; outline-offset: 3px; pointer-events: auto; transition: outline-color 120ms ease-out; }
+.pf-gtip { position: absolute; left: 6px; top: -15px; z-index: 5; display: flex; gap: 8px; height: 20px; align-items: center; padding: 0 8px; border-radius: 4px; background: var(--icons-default); color: var(--text-on-action); white-space: nowrap; opacity: 0; visibility: hidden; transition: opacity 120ms ease-out, visibility 0s 120ms; }
+.pf-gtip__on--active { color: var(--text-success-subtle); }
+.pf-gtip__on--done, .pf-gtip__on--plan { color: color-mix(in srgb, var(--text-on-action) 74%, transparent); }
+.pf-gshift:hover, .pf-gshift:has(:focus-visible) { z-index: 4; }
+.pf-gshift:hover .pf-gsel, .pf-gshift:has(:focus-visible) .pf-gsel { outline-color: var(--border-invert); }
+.pf-gshift:hover .pf-gtip, .pf-gshift:has(:focus-visible) .pf-gtip { opacity: 1; visibility: visible; transition: opacity 120ms ease-out; }
+@media (prefers-reduced-motion: reduce) { .pf-gsel, .pf-gtip { transition: none; } }
+.pf-gbar { position: absolute; top: 0; left: calc(var(--t0) * var(--hr)); width: calc(var(--dt) * var(--hr) - 2px); display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px; box-sizing: border-box; border-radius: 4px; white-space: nowrap; overflow: hidden; }
+.pf-gbar__lead { flex: 1; display: flex; align-items: center; gap: 4px; min-width: 0; }
+.pf-gbar__id { flex: none; }
+.pf-gbar__sites { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; text-align: right; white-space: pre; }
+.pf-gbar--ai .pf-gbar__sites { text-align: left; }
+.pf-gbar__count { flex: none; }
+.pf-gbar__count { height: 16px; min-width: 16px; padding: 0 4px; box-sizing: border-box; display: grid; place-items: center; border-radius: 4px; font: 600 10px/10px var(--font-sans); }
+.pf-gbar--completed { background: var(--status-completed-idle); color: var(--text-on-action); }
+.pf-gbar--completed .pf-gbar__count { background: var(--surface-primary); color: var(--text-success); }
+.pf-gbar--in-progress { background: var(--status-in-progress-idle); color: var(--text-on-action); }
+.pf-gbar--in-progress .pf-gbar__count { background: var(--surface-success); color: var(--text-on-action); }
+.pf-gbar--assigned { background: var(--status-assigned-idle); color: var(--text-action); }
+.pf-gbar--assigned .pf-gbar__count { background: var(--surface-primary); color: var(--text-action); }
+.pf-gbar--ai { background: var(--surface-ai-subtle); color: var(--text-ai); border: 1.5px dashed var(--border-ai); }
+
+/* Selectable map and Gantt items (script.js swaps the right-hand card) */
+.pf-mpin { position: absolute; display: block; padding: 0; margin: 0; border: 0; background: none; line-height: 0; cursor: pointer; transform-origin: 50% 100%; transition: transform .15s ease-out, filter .15s ease-out; }
+.pf-mpin:hover { transform: scale(1.15); z-index: 2; }
+.pf-mpin.is-active { transform: scale(1.35); z-index: 3; filter: drop-shadow(0 2px 3px rgba(16, 24, 40, .35)); }
+.pf-map__truck { padding: 0; margin: 0; border: 0; background: none; cursor: pointer; z-index: 2; }
+
+.pf-mpin:focus-visible, .pf-map__truck:focus-visible, .pf-gbar:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; z-index: 4; }
+.pf-gbar { margin: 0; border: 0; font: inherit; text-align: left; cursor: pointer; transition: filter .15s ease-out; }
+.pf-gbar--ai { border: 1.5px dashed var(--border-ai); }
+.pf-gbar:hover { filter: brightness(.95); }
+.pf-gbar.is-active { outline: 2px solid var(--border-invert); outline-offset: 1px; z-index: 3; }
+
+/* Right-hand slot: one card at a time */
+.pf-side { display: grid; min-width: 0; min-height: 0; }
+.pf-slot { grid-area: 1 / 1; display: flex; min-width: 0; min-height: 0; }
+.pf-slot[hidden] { display: none; }
+.pf-slot > .pf-truck { flex: 1; }
+/* Map hover tooltip: truck (plate + driver), pin (site, address, job count), depot (name) */
+.pf-maptip { position: absolute; left: 0; top: 0; z-index: 6; display: grid; gap: 2px; width: max-content; max-width: 280px; padding: 6px 10px 7px; border-radius: 6px;
+  background: var(--icons-default); color: var(--text-on-action); box-shadow: var(--shadow-md); pointer-events: none; white-space: nowrap;
+  transform: translate(-50%, calc(-100% - 8px)); opacity: 0; transition: opacity 120ms ease-out; }
+.pf-maptip.is-below { transform: translate(-50%, 8px); }
+.pf-maptip.is-on { opacity: 1; }
+.pf-maptip::after { content: ""; position: absolute; left: var(--ax, 50%); top: 100%; margin-left: -5px; border: 5px solid transparent; border-top-color: var(--icons-default); }
+.pf-maptip.is-below::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: var(--icons-default); }
+.pf-maptip__t { font: 600 13px/18px var(--font-sans); overflow: hidden; text-overflow: ellipsis; }
+.pf-maptip__s { font: 400 12px/16px var(--font-sans); color: color-mix(in srgb, var(--text-on-action) 74%, transparent); overflow: hidden; text-overflow: ellipsis; }
+.pf-map__depot { cursor: default; }
+@media (prefers-reduced-motion: reduce) { .pf-maptip { transition: none; } }
+
+/* Closing the card collapses its column; the map takes the full width until something is selected again */
+.pf-top { transition: grid-template-columns 320ms cubic-bezier(.22, 1, .36, 1), column-gap 320ms cubic-bezier(.22, 1, .36, 1); }
+.pf-side { transition: opacity 200ms ease 120ms, visibility 0s; }
+.pf-slot { width: 460px; }
+.pf-top.is-collapsed { grid-template-columns: minmax(0, 1fr) 0px; column-gap: 0; }
+.pf-top.is-collapsed .pf-side { opacity: 0; visibility: hidden; overflow: hidden; transition: opacity 140ms ease, visibility 0s 320ms; }
+@media (prefers-reduced-motion: reduce) { .pf-top, .pf-side, .pf-top.is-collapsed .pf-side { transition: none; } }
+
+/* Pin / route cards (Figma 23677:79952, 23682:80896) */
+.pf-c-head { display: flex; gap: 16px; align-items: flex-start; padding: 16px; }
+.pf-c-title { flex: 1; min-width: 0; display: flex; gap: 8px; align-items: flex-start; }
+.pf-c-title > .rc-pin, .pf-c-title > .rc-icon { flex: none; }
+.pf-c-title__txt { min-width: 0; display: grid; gap: 4px; padding-top: 2px; }
+.pf-c-h { display: flex; gap: 4px; font: 600 16px/16px var(--font-sans); letter-spacing: -.01px; color: var(--text-body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pf-c-sub { display: flex; gap: 8px; font: 500 14px/16px var(--font-sans); letter-spacing: -.2px; color: var(--text-secondary); white-space: nowrap; }
+.pf-c-st--in-progress { color: var(--status-in-progress-idle); }
+.pf-c-st--completed { color: var(--status-completed-selected); }
+.pf-c-st--assigned { color: var(--text-action); }
+.pf-c-st--ai { color: var(--text-ai); }
+.pf-c-body { display: grid; gap: 16px; align-content: start; padding: 16px; }
+.pf-c-label { display: flex; align-items: center; gap: 8px; }
+.pf-c-grp { display: flex; align-items: center; gap: 16px; min-height: 34px; }
+.pf-c-grp__cont { flex: none; width: 140px; display: grid; gap: 2px; }
+.pf-c-grp__who { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.pf-c-strong { font: 500 14px/16px var(--font-sans); letter-spacing: -.2px; color: var(--text-body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pf-c-strong span { color: var(--text-secondary); margin-left: 4px; }
+.pf-c-note { justify-self: start; padding: 4px 8px; border-radius: var(--radius-md); background: var(--surface-success-subtle); color: var(--text-success); font: 500 12px/16px var(--font-sans); }
+.pf-c-list { flex: 1; min-height: 0; overflow-y: auto; display: grid; gap: 8px; align-content: start; padding: 16px; scrollbar-width: thin; }
+.pf-c-job { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: var(--radius-md); background: var(--surface-secondary); }
+.pf-c-job__name { flex: 1; display: flex; gap: 8px; font: 500 14px/16px var(--font-sans); letter-spacing: -.2px; color: var(--text-body); }
+.pf-c-job .rc-status { min-width: 101px; justify-content: center; }
+.pf-c-foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px; }
+.pf-c-person { display: grid; }
+.pf-c-veh { display: flex; align-items: center; gap: 16px; }
+.pf-c-veh__model { flex: 1; min-width: 0; display: grid; gap: 4px; }
+.pf-c-tasks { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 16px 16px 8px; }
+.pf-c-taskhead { display: flex; justify-content: space-between; align-items: center; }
+.pf-c-pts { flex: 1; min-height: 0; overflow-y: auto; margin: 0 -8px; scrollbar-width: thin; }
+.pf-c-pt { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: var(--radius-md); }
+.pf-c-pt__txt { flex: 1; min-width: 0; display: grid; gap: 4px; }
+.pf-numpin { position: relative; flex: none; width: 24px; height: 24px; display: grid; place-items: center; }
+.pf-numpin svg { width: 20px; height: 24px; display: block; }
+.pf-numpin b { position: absolute; left: 0; right: 0; top: 5px; text-align: center; font: 700 10px/10px var(--font-sans); color: var(--text-on-action); }
+.pf-numpin--assigned b { color: var(--text-information); }
+.pf-c-aichip { display: inline-flex; align-items: center; height: 24px; padding: 0 12px; border-radius: var(--radius-full); background: var(--surface-ai-subtle); color: var(--text-ai); font: 500 12px/16px var(--font-sans); }
+
+/* Selected truck's routes: past = solid ink, planned = blue dash with a white casing (casing is dashed too, so each dash reads outlined) */
+.pf-route { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; opacity: 0; transition: opacity 200ms ease-out; }
+.pf-route.is-on { opacity: 1; }
+.pf-route path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.pf-route__past { stroke: var(--icons-default); stroke-width: 3; }
+.pf-route__case { stroke: #fff; stroke-width: 7; stroke-dasharray: 10 9; }
+.pf-route__plan { stroke: var(--icons-action); stroke-width: 3.5; stroke-dasharray: 10 9; }
+@media (prefers-reduced-motion: reduce) { .pf-route { transition: none; } }
+
+/* Crew alert card on the Gantt plate column: opens on hover or keyboard focus of the red icon and stays open while the pointer is on the card */
+.pf-galert { position: relative; display: flex; flex: none; }
+.pf-galert__btn { display: grid; place-items: center; width: 24px; height: 24px; margin: -2px; padding: 0; border: 0; border-radius: var(--radius-md); background: none; cursor: pointer; }
+.pf-galert__btn:hover { background: var(--surface-error-subtle); }
+.pf-galert__btn:focus-visible { outline: 2px solid var(--border-action); outline-offset: 1px; }
+/* Fixed against the scaled .pf-screen (its transform makes it the containing block), so the Gantt scroll box cannot clip it.
+   script.js sets --x/--y from the icon: the card sits above it, or below (.is-below) when there is no room. */
+.pf-gcard { position: fixed; left: var(--x, 0px); top: var(--y, 0px); z-index: 10; width: 320px; box-sizing: border-box; display: grid; gap: 4px; justify-items: start;
+  padding: 12px 16px 16px; background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg); color: var(--text-body); white-space: normal; text-align: left;
+  opacity: 0; visibility: hidden; transform: translateY(calc(-100% + 4px)); transition: opacity 140ms ease-out, transform 140ms ease-out, visibility 0s 140ms; }
+.pf-gcard::before { content: ""; position: absolute; left: 0; right: 0; bottom: -12px; height: 12px; }
+.pf-gcard.is-below { transform: translateY(-4px); }
+.pf-gcard.is-below::before { bottom: auto; top: -12px; }
+.pf-gcard__head { display: flex; align-items: center; gap: 8px; }
+.pf-gcard__title { color: var(--text-error); }
+.pf-gcard__text { margin: 4px 0 8px; }
+.pf-galert:hover .pf-gcard, .pf-galert:focus-within .pf-gcard { opacity: 1; visibility: visible; transform: translateY(-100%); }
+.pf-galert:hover .pf-gcard.is-below, .pf-galert:focus-within .pf-gcard.is-below { transform: none; }
+.pf-galert:hover .pf-gcard, .pf-galert:focus-within .pf-gcard { transition: opacity 140ms ease-out, transform 140ms ease-out; }
+@media (prefers-reduced-motion: reduce) { .pf-gcard { transition: none; } }
+
+/* ---------- Photo proof modal (Figma 19635:35376). Opened from the blue photo icon of a completed job in the site card;
+   positioned inside the 1600 x 980 screen so it scales with it. ---------- */
+.pf-screen { position: relative; }
+.pf-c-photo { display: grid; place-items: center; width: 32px; height: 32px; margin: -4px; padding: 0; border: 0; border-radius: var(--radius-md); background: none; cursor: pointer; }
+.pf-c-photo:hover { background: var(--surface-selected); }
+.pf-c-photo:focus-visible { outline: 2px solid var(--border-action); outline-offset: 1px; }
+.pf-pm { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; }
+.pf-pm[hidden] { display: none; }
+.pf-pm__scrim { position: absolute; inset: 0; background: color-mix(in srgb, var(--surface-invert) 48%, transparent); }
+.pf-pm__card { position: relative; width: 1400px; height: 920px; display: flex; flex-direction: column; overflow: hidden; background: var(--surface-primary);
+  border: 1px solid var(--border-primary); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); animation: pf-pm-in 180ms ease-out; }
+@keyframes pf-pm-in { from { opacity: 0; transform: translateY(8px) scale(.99); } }
+@media (prefers-reduced-motion: reduce) { .pf-pm__card { animation: none; } }
+.pf-pm__card > .rc-sep { flex: none; }
+.pf-pm__head { flex: none; display: flex; align-items: center; gap: 16px; padding: 16px; }
+.pf-pm__nav { display: flex; }
+.pf-pm__nav [data-pf-pstep="-1"] svg { transform: rotate(180deg); }
+.pf-pm__nav .rc-ibtn:disabled { opacity: .35; cursor: default; }
+.pf-pm__title { display: grid; gap: 4px; white-space: nowrap; }
+.pf-pm__h { font: 700 18px/20px var(--font-sans); letter-spacing: -.01px; color: var(--text-body); }
+.pf-pm__check { flex: none; padding: 4px 8px; border-radius: var(--radius-md); border: 1px solid var(--border-disabled); background: var(--surface-tertiary); color: var(--text-body); }
+.pf-pm__check--ok { border-color: var(--border-success); background: var(--surface-success-subtle); color: var(--text-success); }
+.pf-pm__check--sus { border-color: var(--border-warning); background: var(--surface-warning-subtle); color: var(--text-warning); }
+.pf-pm__check--bad { border-color: var(--border-error); background: var(--surface-error-subtle); color: var(--text-error); }
+.pf-pm__meta { flex: 1; min-width: 0; display: flex; align-items: center; gap: 18px; color: var(--text-body); white-space: nowrap; }
+.pf-pm__meta .pf-ellipsis { max-width: 240px; }
+.pf-pm__msg { flex: none; }
+.pf-pm__jobs { flex: none; padding: 16px; }
+.pf-pm .rc-seg { border-radius: var(--radius-lg); }
+.pf-pm .rc-seg__item { height: 32px; min-width: 72px; justify-content: center; border-radius: var(--radius-md); }
+.pf-pm .rc-seg__item:disabled { color: var(--text-secondary); cursor: default; background: none; }
+.pf-pm .rc-seg__item:focus-visible, .pf-ph__thumb:focus-visible, .pf-pm .rc-ibtn:focus-visible, .pf-pm .rc-btn:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; }
+.pf-pm__dot { width: 8px; height: 8px; margin: 0 4px 0 2px; border-radius: 50%; background: var(--status-created-idle); }
+.pf-pm__dot--success { background: var(--surface-success); }
+.pf-pm__dot--failed { background: var(--status-failed-idle); }
+.pf-pm__dot--progress { background: var(--status-in-progress-idle); }
+.pf-pm__dot--assigned { background: var(--status-assigned-idle); }
+.pf-pm__main { flex: 1; min-height: 0; display: flex; }
+.pf-pm__info { flex: none; width: 240px; box-sizing: border-box; border-top: 1px solid var(--border-primary); border-right: 1px solid var(--border-primary); }
+.pf-pm__sec { display: grid; gap: 16px; justify-items: start; padding: 24px; }
+.pf-pm__sec > .caption-caps-bold { justify-self: stretch; color: var(--text-body); }
+.pf-pm__crew, .pf-pm__veh { display: grid; gap: 8px; }
+.pf-pm__rows { justify-self: stretch; display: grid; gap: 4px; }
+.pf-pm__row { display: flex; align-items: center; justify-content: space-between; min-height: 24px; gap: 8px; color: var(--text-body); }
+.pf-pm__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 24px; padding: 24px; border-top: 1px solid var(--border-primary); }
+.pf-pm__bar { flex: none; display: flex; align-items: flex-end; justify-content: space-between; }
+.pf-pm__issue { padding: 8px 16px; border: 1px solid var(--border-success); border-radius: var(--radius-md); background: var(--surface-success-subtle); color: var(--text-success); }
+.pf-pm__pane { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 16px; }
+.pf-pm__pane[hidden] { display: none; }
+.pf-pm__fill { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 16px; border-radius: var(--radius-md); background: var(--surface-secondary); }
+.pf-pm__fl { display: flex; align-items: center; gap: 16px; }
+.pf-pm__sel { width: 120px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 8px; border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); }
+.pf-pm__qty { display: flex; align-items: center; height: 32px; padding: 0 4px; box-sizing: border-box; border: 1px solid var(--border-primary); border-radius: 999px; background: var(--surface-primary); }
+.pf-pm__qty > span { width: 48px; text-align: center; }
+.pf-pm__conts { display: flex; gap: 16px; }
+.pf-pm__cont { position: relative; width: 32px; height: 32px; display: grid; place-items: center; }
+.pf-pm__cont svg { fill: var(--icons-success); }
+.pf-pm__cont b { position: absolute; left: 0; right: 0; top: 11px; text-align: center; font: 700 10px/10px var(--font-sans); letter-spacing: -.4px; color: var(--text-on-action); }
+.pf-pm__cont--0 svg { fill: var(--icons-error); }
+.pf-pm__cont--50 svg { fill: var(--icons-action); }
+.pf-pm__cont--75 svg { fill: var(--icons-ai); }
+.pf-pm__cont--125 svg { fill: var(--icons-warning); }
+.pf-pm__vol { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px; border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); }
+.pf-pm__vol b { color: var(--text-information); }
+.pf-pm__photos { flex: 1; min-height: 0; display: flex; gap: 16px; }
+.pf-ph { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.pf-ph__main { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: var(--radius-md); background: var(--surface-tertiary); }
+.pf-ph__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: rotate(var(--rot, 0deg)) scale(var(--z, 1)); transition: transform 220ms ease-out; }
+@media (prefers-reduced-motion: reduce) { .pf-ph__img { transition: none; } }
+.pf-ph__tag { position: absolute; left: 8px; top: 8px; display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px; border-radius: var(--radius-md); background: var(--surface-invert); color: var(--text-on-action); }
+.pf-ph__tagsep { align-self: stretch; width: 1px; background: color-mix(in srgb, var(--text-on-action) 30%, transparent); }
+.pf-ph__bar { position: absolute; left: 8px; right: 8px; bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+.pf-ph__btn { background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-md); }
+.pf-ph__btn:hover { background: var(--surface-secondary); }
+.pf-ph__dots { display: flex; gap: 16px; }
+.pf-ph__dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--surface-primary); box-shadow: 0 0 0 1px rgba(16, 24, 40, .12); }
+.pf-ph__dots i.is-on { background: var(--surface-action); }
+.pf-ph__thumbs { flex: none; display: flex; gap: 8px; }
+.pf-ph__thumb { position: relative; width: 120px; height: 80px; padding: 0; overflow: hidden; border: 0; border-radius: var(--radius-md); background: var(--surface-tertiary); cursor: pointer; }
+.pf-ph__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pf-ph__thumb.is-on::after { content: ""; position: absolute; inset: 0; border: 4px solid var(--border-action); border-radius: inherit; }
+.pf-pm__gps { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: var(--radius-md); }
+.pf-pm__map { position: absolute; inset: 0; background: url("images/platform/map-almaty.webp") no-repeat; }
+.pf-pm__gpin { position: absolute; transform: translate(-50%, -100%); line-height: 0; }
+.pf-pm__gcard { position: absolute; left: 16px; top: 16px; display: grid; gap: 4px; padding: 12px 16px; border-radius: var(--radius-lg); background: var(--surface-primary); box-shadow: var(--shadow-md); }
+.pf-pm__foot { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 16px; }
+.pf-pm__acts { display: flex; gap: 16px; }
+
+/* ---------- Side-nav page cards: what each platform page does (hover or keyboard focus of a nav item) ---------- */
+.pf-screen .rc-sidenav__item { width: 100%; margin: 0; border: 0; background: none; text-align: left; cursor: pointer; }
+.pf-screen .rc-sidenav__item.is-selected { background: var(--surface-selected); }
+.pf-screen .rc-sidenav__item:focus-visible { outline: 2px solid var(--border-action); outline-offset: -2px; }
+.pf-navcard { position: absolute; z-index: 15; width: 300px; box-sizing: border-box; display: grid; gap: 8px; padding: 12px 16px 14px;
+  background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+  color: var(--text-body); pointer-events: none; opacity: 0; transform: translateX(-4px); transition: opacity 120ms ease-out, transform 120ms ease-out; }
+.pf-navcard.is-on { opacity: 1; transform: none; }
+.pf-navcard::before { content: ""; position: absolute; left: -6px; top: calc(var(--ay, 22px) - 6px); width: 10px; height: 10px; background: var(--surface-primary);
+  border-left: 1px solid var(--border-primary); border-bottom: 1px solid var(--border-primary); transform: rotate(45deg); }
+.pf-navcard__head { display: flex; align-items: center; gap: 8px; }
+.pf-navcard__head { --rc-icon-color: var(--icons-action); }
+.pf-navcard__head .rc-icon { flex: none; }
+.pf-navcard__head p { flex: 1; }
+.pf-navcard__here { flex: none; padding: 2px 8px; border-radius: 999px; background: var(--surface-selected); color: var(--text-selected); }
+.pf-navcard__text { color: var(--text-secondary); line-height: 20px; }
+@media (prefers-reduced-motion: reduce) { .pf-navcard { transition: none; transform: none; } }
