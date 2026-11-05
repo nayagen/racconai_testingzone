@@ -89,15 +89,16 @@ function crew(initials, name, role, kind) {
   return div('pf-crew', h(Avatar, { initials, size: 24, role: kind }),
     div('pf-crew__who', p('caption-m-medium pf-ellipsis', name), p('caption-m-regular pf-muted', role)));
 }
-function metric(label, icon, value, chip) {
-  return div('pf-metric', p('caption-caps-bold pf-muted', label),
+function metric(label, icon, value, chip, key) {
+  return h('div', { className: 'pf-metric', 'data-pf-metric': key }, p('caption-caps-bold pf-muted', label),
     div('pf-metric__row', div('pf-metric__val', h(Icon, { name: icon, size: 24, color: 'var(--icons-information)' }), p('heading-h4-semibold pf-ink', value)),
       span('pf-chip caption-m-medium', chip)));
 }
-function trip(n, id, statusEl) {
-  return div('pf-trip', div('pf-trip__main', span('pf-trip__ico', h(Icon, { name: 'journey', size: 20, color: 'var(--icons-information)' })),
-    p('body-m-semibold', 'Рейс ' + n), p('body-m-semibold pf-link', id)),
-    statusEl, h(IconButton, { icon: 'chevron-right', label: 'Открыть рейс', size: 'small' }));
+function trip(n, id, statusEl, key) {
+  return h('button', { type: 'button', className: 'pf-trip', 'data-pf-rmodal': key, 'aria-haspopup': 'dialog', 'aria-label': 'Рейс ' + n + ' ' + id + ': открыть карточку маршрута' },
+    div('pf-trip__main', span('pf-trip__ico', h(Icon, { name: 'journey', size: 20, color: 'var(--icons-information)' })),
+      p('body-m-semibold', 'Рейс ' + n), p('body-m-semibold pf-link', id)),
+    statusEl, span('pf-trip__chev', h(Icon, { name: 'chevron-right', size: 20 })));
 }
 /* Truck card (Figma 23644:69859, truck selected). Vehicle, crew and today's trips come from the truck's Gantt row; mileage, fuel and GPS are per-truck demo values */
 const TRUCK_EXTRA = {
@@ -107,7 +108,7 @@ const TRUCK_EXTRA = {
 };
 const pad = v => (v.length === 4 ? '0' + v : v);
 function truckPanel(plate) {
-  const trips = Object.values(ROUTES).filter(r => r.plate === plate && r.k !== 'ai');
+  const tripKeys = Object.keys(ROUTES).filter(k => ROUTES[k].plate === plate && ROUTES[k].k !== 'ai'), trips = tripKeys.map(k => ROUTES[k]);
   const r0 = trips[0], x = TRUCK_EXTRA[plate];
   const badge = r => r.k === 'completed' ? h(StatusBadge, { entity: 'route', status: 'completed' })
     : r.k === 'in-progress' ? h(StatusBadge, { entity: 'route', status: 'enroute', progress: r.done + '/' + r.total })
@@ -123,11 +124,11 @@ function truckPanel(plate) {
     h(Separator),
     div('pf-truck__body',
       div('pf-crewrow', ...r0.crew.map(c => crew(...c))),
-      div('pf-metrics', metric('Пробег за смену', 'journey', x.km, x.odo), metric('Расход топлива', 'petrol', x.fuel, x.left))),
+      div('pf-metrics', metric('Пробег за смену', 'journey', x.km, x.odo, 'km'), metric('Расход топлива', 'petrol', x.fuel, x.left, 'fuel'))),
     h(Separator),
     div('pf-truck__trips',
       div('pf-shift', h(StatusBadge, { entity: 'shift', status: 'ttn_approved' }, 'Смена активна'), p('caption-m-medium pf-muted', 'На линии с ' + pad(r0.f))),
-      ...trips.map(r => trip(r.trip, r.id, badge(r)))),
+      ...trips.map((r, i) => trip(r.trip, r.id, badge(r), tripKeys[i]))),
     h(Separator),
     div('pf-truck__foot',
       div('pf-gps', h(Icon, { name: 'navigation', size: 16, color: 'var(--icons-secondary)' }), p('caption-m-regular pf-muted', x.gps)),
@@ -152,16 +153,16 @@ function kpi(k) {
       pct ? span('pf-kpi__pct pf-kpi__pct--' + k.st, pct) : span('pf-kpi__pct pf-kpi__pct--none', ' '), p('pf-kpi__num', v)))));
 }
 const FLEET = [
-  { label: 'Мусоровозы ТБО', type: 'musorovoz', line: '30 из 32', pct: '93.8', lvl: 'green', vol: '1312.6 м³', vp: '91.2', wt: '164.3 т', wp: '90.4' },
-  { label: 'Бункеровозы', type: 'truck', line: '5 из 6', pct: '83.3', lvl: 'yellow', vol: '418.0 м³', vp: '76.5', wt: '52.7 т', wp: '74.8' },
-  { label: 'Мультилифты', type: 'dump', line: '3 из 6', pct: '50.0', lvl: 'orange', vol: '264.0 м³', vp: '58.3', wt: '33.1 т', wp: '55.9' },
-  { label: 'Самосвалы', type: 'samosval', line: '2 из 5', pct: '40.0', lvl: 'red', vol: '126.0 м³', vp: '44.2', wt: '21.6 т', wp: '41.7' },
-  { label: 'Ассенизаторы', type: 'desinfection', line: '2 из 2', pct: '100', lvl: 'green', vol: '107.8 м³', vp: '96.3', wt: '6.8 т', wp: '97.1' },
+  { label: 'Мусоровозы ТБО', type: 'musorovoz', img: 'musorovoz', line: '30 из 32', pct: '93.8', lvl: 'green', vol: '1312.6 м³', vp: '91.2', wt: '164.3 т', wp: '90.4' },
+  { label: 'Бункеровозы', type: 'truck', img: 'bunker', line: '5 из 6', pct: '83.3', lvl: 'yellow', vol: '418.0 м³', vp: '76.5', wt: '52.7 т', wp: '74.8' },
+  { label: 'Мультилифты', type: 'dump', img: 'multilift', line: '3 из 6', pct: '50.0', lvl: 'orange', vol: '264.0 м³', vp: '58.3', wt: '33.1 т', wp: '55.9' },
+  { label: 'Самосвалы', type: 'samosval', img: 'samosval', line: '2 из 5', pct: '40.0', lvl: 'red', vol: '126.0 м³', vp: '44.2', wt: '21.6 т', wp: '41.7' },
+  { label: 'Ассенизаторы', type: 'desinfection', img: 'assenizator', line: '2 из 2', pct: '100', lvl: 'green', vol: '107.8 м³', vp: '96.3', wt: '6.8 т', wp: '97.1' },
 ];
 function fleetRow(left, badge) { return div('pf-frow', p('body-m-medium', left), badge); }
 function fleet(f) {
   return div('pf-fleet',
-    div('pf-fleet__head', p('caption-caps-bold', f.label), span('pf-fleet__ico', h(TruckMarker, { type: f.type, state: 'enroute', size: 40 }))),
+    div('pf-fleet__head', p('caption-caps-bold', f.label), span('pf-fleet__ico', h('img', { src: 'images/platform/trucks/' + f.img + '.png', width: 40, height: 40, alt: '' }))),
     fleetRow(f.line, h(PercentBadge, { level: f.lvl, value: f.pct })),
     fleetRow(f.vol, h(PercentBadge, { level: 'disabled', value: f.vp })),
     fleetRow(f.wt, h(PercentBadge, { level: 'disabled', value: f.wp })));
@@ -178,16 +179,15 @@ const GANTT = [
   { title: 'Внимание', alert: true, rows: [
     { plate: '381BCJ02', jobs: 14, warn: true, trips: [D('M101', ['Школа Шыгула', 'Элиф Гарден'], '2/2', '6:00', '10:40'), P('M107', ['СПА'], '0/1', '10:45', '14:10'), AI('Самал-2', '14:15', '17:40')] },
     { plate: '265AOK02', jobs: 9, warn: true, trips: [D('M102', ['Орбита-1'], '3/3', '6:30', '11:10'), P('M115', ['Аксай-4', 'Мамыр-7'], '1/2', '11:15', '14:30'), A('M131', ['Ривьера'], '2', '14:35', '17:20')] },
-    { plate: '211KTA02', jobs: 11, warn: true, selected: { shift: 'S234', driver: 'Айбол Санаев' },
+    { plate: '211KTA02', jobs: 11, warn: true, selected: { shift: 'S234', driver: 'Санаев Айбол' },
       trips: [D('M103', ['Тастак', 'Жетысу-2'], '2/2', '6:00', '9:50'), P('M118', ['Коктем-3'], '0/1', '9:55', '13:45'), AI('Нурлы Тау', '13:50', '16:50')] }] },
-  { title: 'Бункеровозы', count: '5/6', rows: [
+  { title: 'Мусоровозы ТБО', count: '35/38', rows: [
+    { plate: '714SH02', jobs: 22, trips: [P('M235', ['Самал-2', 'Коктем-3'], '7/10', '6:32', '14:20'), A('M241', ['Орбита-1'], '12', '14:30', '17:30')] },
+    { plate: '402BCK02', jobs: 18, trips: [D('M231', ['Мамыр-7'], '9/9', '6:00', '10:30'), P('M238', ['Аксай-4'], '4/9', '10:35', '15:10')] },
+    { plate: '417AHT02', jobs: 16, trips: [D('M232', ['Жетысу-2'], '8/8', '6:00', '11:00'), P('M239', ['Тастак'], '3/8', '11:05', '15:30'), AI('Нурлы Тау', '15:35', '17:50')] },
     { plate: '382BHR02', jobs: 6, split: { at: 2, driver: 'Ахметжанов Нурбол' }, trips: [D('M201', ['Алатау Сити'], '1/1', '6:00', '8:40'), D('M204', ['Казахфильм', 'Самал-2'], '2/2', '8:45', '12:20'), P('M209', ['Ривьера'], '0/1', '12:25', '14:40'), A('M215', ['Орбита-1'], '1', '14:45', '16:30')] },
     { plate: '917ACX02', jobs: 4, split: { at: 2, driver: 'Искаков Дамир' }, trips: [D('M202', ['Элиф Гарден'], '1/1', '7:00', '10:10'), P('M207', ['Школа Шыгула', 'СПА'], '1/2', '10:15', '14:00'), A('M216', ['Мамыр-7'], '1', '14:05', '15:50')] },
     { plate: '044BMN02', jobs: 5, trips: [D('M203', ['Аксай-4'], '1/1', '6:30', '9:30'), P('M208', ['Тастак'], '0/1', '9:35', '13:50'), AI('Коктем-3', '13:55', '17:10')] }] },
-  { title: 'Мусоровозы ТБО', count: '30/32', rows: [
-    { plate: '714SH02', jobs: 22, trips: [P('M235', ['Самал-2', 'Коктем-3'], '7/10', '6:32', '14:20'), A('M241', ['Орбита-1'], '12', '14:30', '17:30')] },
-    { plate: '402BCK02', jobs: 18, trips: [D('M231', ['Мамыр-7'], '9/9', '6:00', '10:30'), P('M238', ['Аксай-4'], '4/9', '10:35', '15:10')] },
-    { plate: '417AHT02', jobs: 16, trips: [D('M232', ['Жетысу-2'], '8/8', '6:00', '11:00'), P('M239', ['Тастак'], '3/8', '11:05', '15:30'), AI('Нурлы Тау', '15:35', '17:50')] }] },
   { title: 'Мультилифты', count: '3/6', rows: [
     { plate: '521BCM02', jobs: 3, trips: [D('M301', ['Казахфильм'], '1/1', '7:30', '10:00'), P('M305', ['Алатау Сити'], '0/1', '10:05', '13:40'), A('M309', ['Ривьера'], '1', '13:45', '15:20')] },
     { plate: '533ARE02', jobs: 2, trips: [D('M302', ['Нурлы Тау'], '1/1', '8:00', '11:30'), A('M306', ['СПА'], '1', '13:00', '15:00')] },
@@ -205,11 +205,11 @@ function tripBar(t) {
 }
 const SHIFT_WORD = { active: 'Активная смена', done: 'Смена завершена', plan: 'Плановая смена' };
 /* One container per shift: its trips plus a hover-only outline with the shift id and driver. AI proposals belong to no shift. */
-function shiftBox(sh) {
+function shiftBox(sh, byDriver) {
   const a = sh.trips[0], z = sh.trips[sh.trips.length - 1];
   return div('pf-gshift',
     h('div', { className: 'pf-gsel', 'aria-hidden': 'true', style: place(a.from, z.to) },
-      div('pf-gtip caption-m-medium', span('pf-gtip__on pf-gtip__on--' + sh.state, SHIFT_WORD[sh.state]), span('', sh.id), span('', sh.driver))),
+      div('pf-gtip caption-m-medium', span('pf-gtip__on pf-gtip__on--' + sh.state, SHIFT_WORD[sh.state]), span('', sh.id), span('', byDriver ? sh.plate : sh.driver))),
     ...sh.trips.map(tripBar));
 }
 /* Crew alerts on the «Внимание» rows: hovering (or focusing) the red icon opens a card with the problem and one action.
@@ -224,8 +224,8 @@ const ALERTS = {
     text: (r, t) => r.shifts[0].driver + ' больше 20 минут стоит на одной точке и не движется. Рейс ' + t.id + ' может сорваться.' },
 };
 const ALERT_PLATES = Object.keys(ALERTS);
-function alertIcon(r) {
-  const a = ALERTS[r.plate], t = r.trips.find(x => x.k === 'in-progress'), id = 'pf-galert-' + r.plate;
+function alertIcon(r, sfx = '') {
+  const a = ALERTS[r.plate], t = r.trips.find(x => x.k === 'in-progress'), id = 'pf-galert-' + r.plate + sfx;
   if (!a) return h(Icon, { name: 'error', size: 20, color: 'var(--icons-error)' });
   return span('pf-galert',
     h('button', { type: 'button', className: 'pf-galert__btn', tabIndex: -1, 'aria-label': 'Проблема: ' + a.title, 'aria-describedby': id },
@@ -237,13 +237,30 @@ function alertIcon(r) {
       h(Button, { variant: 'primary', size: 'small', icon: a.cta[1] }, a.cta[0])));
 }
 function ganttRow(r) {
-  return div('pf-grow',
+  return h('div', { className: 'pf-grow' },
     h('div', { className: 'pf-gtruck' },
       h('span', { className: 'pf-gtruck__ai', 'aria-hidden': 'true' }, h(Icon, { name: 'ai', size: 16, color: 'var(--icons-secondary)' })),
       span('pf-gtruck__plate caption-m-medium', r.plate),
       r.warn ? alertIcon(r) : null,
-      h('span', { className: 'pf-gtruck__count', 'aria-label': r.jobs + ' заданий' }, String(r.jobs))),
-    div('pf-gbars', ...r.shifts.map(shiftBox), ...r.trips.filter(t => t.k === 'ai').map(tripBar)));
+      h('span', { className: 'pf-gtruck__count', 'data-pf-jobs': r.jobs, 'data-pf-plate': r.plate, 'aria-label': 'Всего заданий на день: ' + r.jobs }, String(r.jobs))),
+    div('pf-gbars', ...r.shifts.map(sh => shiftBox(sh)), ...r.trips.filter(t => t.k === 'ai').map(tripBar)));
+}
+/* Driver view: one row per shift driver. A truck handed over mid-day gives two rows; AI proposals stay with the truck's last driver.
+   The count is the jobs in that driver's trips (a split truck's day total is shared out by trip). */
+const shortName = nm => { const [a, b] = nm.split(' '); return b ? a + ' ' + b[0] + '.' : a; };
+function driverRows(r) {
+  const last = r.shifts.length - 1;
+  const own = sh => sh.trips.reduce((a, t) => a + Number(t.count.split('/').pop()), 0);
+  return r.shifts.map((sh, si) => {
+    const jobs = r.shifts.length === 1 ? r.jobs : si === last ? Math.max(1, r.jobs - own(r.shifts[0])) : own(sh);
+    return h('div', { className: 'pf-grow' },
+      h('div', { className: 'pf-gtruck' },
+        h('span', { className: 'pf-gtruck__ai', 'aria-hidden': 'true' }, h(Icon, { name: 'ai', size: 16, color: 'var(--icons-secondary)' })),
+        h('span', { className: 'pf-gtruck__plate caption-m-medium pf-ellipsis', title: sh.driver }, shortName(sh.driver)),
+        r.warn && si === 0 ? alertIcon(r, '-d') : null,
+        h('span', { className: 'pf-gtruck__count', 'data-pf-jobs': jobs, 'data-pf-plate': sh.driver, 'data-pf-who': 'driver', 'aria-label': 'Всего заданий на день: ' + jobs }, String(jobs))),
+      div('pf-gbars', shiftBox(sh, true), ...(si === last ? r.trips.filter(t => t.k === 'ai').map(tripBar) : [])));
+  });
 }
 /* ---------- Click-to-inspect (Figma 23644:69859: truck / pin on map / route item selected) ---------- */
 let seed = 20260106;
@@ -303,7 +320,7 @@ const ADDRS = ['ул. Абая, 56', 'ул. Жамакаева, 344', 'ул. С�
   'мкр. Коктем-3, 21', 'ул. Утепова, 19', 'ул. Навои, 208', 'ул. Шарипова, 90', 'ул. Курмангазы, 145', 'ул. Айтеке би, 77', 'ул. Гоголя, 201'];
 const AUTHORS = ['Бибинур Байдарова', 'Арайлым Бекова', 'Жанар Сулейменова'];
 const ROUTES = {};
-let rowIdx = 0, addrSeq = 0, drvSeq = 0, ldSeq = 0;
+let rowIdx = 0, addrSeq = 0, drvSeq = 0, ldSeq = 0, ptSeq = 0;
 for (const g of GANTT) for (const r of g.rows) {
   const ri = rowIdx++;
   const type = ROW_TYPE[r.plate] || GROUP_TYPE[g.title];
@@ -321,13 +338,13 @@ for (const g of GANTT) for (const r of g.rows) {
     const drv = si ? r.split.driver : own ? 'Асаубаев Ерлан' : driver;
     const ks = trips.map(t => t.k);
     const state = ks.includes('in-progress') ? 'active' : ks.every(k => k === 'completed') ? 'done' : ks.every(k => k === 'assigned') ? 'plan' : 'active';
-    const sh = { id: si ? 'S' + (260 + ri) : r.selected ? r.selected.shift : 'S' + (240 + ri), driver: drv, state, trips, crew: crewOf(drv) };
+    const sh = { id: si ? 'S' + (260 + ri) : r.selected ? r.selected.shift : 'S' + (240 + ri), driver: drv, plate: r.plate, state, trips, crew: crewOf(drv) };
     trips.forEach(t => { t.shift = sh; });
     return sh;
   });
   const crew = r.shifts[0].crew;
   const model = own ? 'Iveco EuroCargo SB-800' : v.models[ri % v.models.length];
-  const depot = own ? 'ПрУ МЕД' : ['ПрУ АЛМ', 'ПрУ МЕД', 'ПрУ АУЭ'][ri % 3];
+  const depot = 'Депо №1';
   r.trips.forEach((t, ti) => {
     t.key = ri + '-' + ti;
     const [done, total] = t.k === 'ai' ? [0, 3] : t.count.includes('/') ? t.count.split('/').map(Number) : [0, Number(t.count)];
@@ -336,8 +353,16 @@ for (const g of GANTT) for (const r of g.rows) {
       cont: (type === 'musorovoz' ? pick(['1.1 евро', '1.1 евро', '0.75']) + ' (' + (1 + Math.floor(rnd() * 6)) + ')' : 'Бункер 8 м³ (1)') + (rnd() < 0.35 ? ' · РСО (1)' : ''),
       st: t.k === 'completed' || k < done ? 'completed' : t.k === 'in-progress' && k === done ? 'enroute' : 'assigned',
     }));
+    const mt = t.k === 'in-progress' && MAP_TRUCKS.find(m => m.plate === r.plate);
+    if (mt) mt.past.concat(mt.plan).forEach((pi, k) => { if (points[k]) { points[k].addr = SITES[pi].addr; points[k].pin = [pins[pi].x, pins[pi].y]; } });
+    points.forEach(pt => {
+      const q = ptSeq++, m = pt.cont.match(/^(Бункер 8 м³|1\.1 евро|0\.75) \((\d+)\)/);
+      pt.id = 'Z' + (2223400 + q * 3); pt.client = CLIENTS[q % CLIENTS.length][0];
+      pt.vol = m ? +((m[1] === 'Бункер 8 м³' ? 8 : m[1] === '0.75' ? 0.75 : 1.1) * +m[2]).toFixed(2) : 1.1;
+      pt.type = type === 'musorovoz' ? 'Вывоз ТБО' : type === 'bunker' ? 'Вывоз КГО' : 'Замена бункера';
+    });
     ROUTES[t.key] = {
-      trip: ti + 1, id: t.id || null, k: t.k, f: t.f, t: t.t, done, total, plate: r.plate, model, vtype: v.label, rtype: v.route, depot, crew: t.shift ? t.shift.crew : crew, points,
+      trip: ti + 1, id: t.id || null, k: t.k, f: t.f, t: t.t, done, total, plate: r.plate, model, vtype: v.label, rtype: v.route, depot, crew: t.shift ? t.shift.crew : crew, shift: t.shift ? t.shift.state : null, points,
       author: t.k === 'ai' ? ['AI-диспетчер', 'Предложение'] : [AUTHORS[ri % AUTHORS.length], 'Автор'],
     };
   });
@@ -386,23 +411,27 @@ function sidePanel() {
 }
 
 function scheduleTools() {
-  const seg = (a, b) => div('pf-iseg', span('pf-iseg__item is-selected', h(Icon, { name: a, size: 20, color: 'var(--icons-action)' })),
-    span('pf-iseg__item', h(Icon, { name: b, size: 20 })));
+  const vbtn = (view, icon, label, on) => h('button', { type: 'button', className: 'pf-iseg__item' + (on ? ' is-selected' : ''), 'data-pf-gview': view,
+    'aria-pressed': on ? 'true' : 'false', 'aria-label': label, title: label }, h(Icon, { name: icon, size: 20 }));
+  const deco = el => h('div', { className: 'pf-contents', ...hide }, el);
   return div('pf-status__tools pf-status__tools--schedule',
-    h(DateButton, { value: '6 Янв 2026', arrows: true }),
-    div('pf-tools__group', seg('garbage-truck', 'user-contact'), seg('source-driverapp', 'navigation'),
-      h(Select, { value: 'Все', width: 160 }), h(Select, { value: 'ПрУ АЛМ', width: 160 })),
-    h(IconButton, { icon: 'expand', label: 'Развернуть' }));
+    deco(h(DateButton, { value: '6 Янв 2026', arrows: true })),
+    div('pf-tools__group',
+      h('div', { className: 'pf-iseg', role: 'group', 'aria-label': 'Строки графика' },
+        vbtn('truck', 'garbage-truck', 'По машинам', true), vbtn('driver', 'user-contact', 'По водителям', false)),
+      deco(h(Select, { value: 'Депо №1', width: 160 }))),
+    deco(h(IconButton, { icon: 'expand', label: 'Развернуть' })));
 }
 function schedulePanel() {
   return div('pf-gantt',
     h('div', { className: 'pf-ghours', 'aria-hidden': 'true' }, ...HOURS.map((t, i) => h('span', { className: 'pf-ghour caption-m-medium', style: { '--t0': i } }, t))),
-    h('div', { className: 'pf-gbody', tabIndex: -1, role: 'group', 'aria-label': 'Рейсы по машинам', 'data-pf-roving': '' },
-      ...GANTT.map(g => div('pf-ggroup',
-        div('pf-ggroup__head' + (g.alert ? ' is-alert' : ''),
-          g.alert ? h(Icon, { name: 'error', size: 16, color: 'var(--icons-error)' }) : null,
-          span('caption-caps-bold', g.title), g.count ? h(DS.CounterBadge, { count: g.count, tone: 'neutral' }) : null),
-        ...g.rows.map(ganttRow)))));
+    ...[['truck', 'Рейсы по машинам', ganttRow], ['driver', 'Рейсы по водителям', driverRows]].map(([view, label, rows]) =>
+      h('div', { className: 'pf-gbody', tabIndex: -1, role: 'group', 'aria-label': label, 'data-pf-roving': '', 'data-pf-gbody': view, hidden: view !== 'truck' },
+        ...GANTT.map(g => div('pf-ggroup',
+          div('pf-ggroup__head' + (g.alert ? ' is-alert' : ''),
+            g.alert ? h(Icon, { name: 'error', size: 16, color: 'var(--icons-error)' }) : null,
+            span('caption-caps-bold', g.title), g.count ? h(DS.CounterBadge, { count: g.count, tone: 'neutral' }) : null),
+          ...g.rows.flatMap(r => [].concat(rows(r))))))));
 }
 
 const hide = { 'aria-hidden': 'true', inert: '' };
@@ -413,8 +442,8 @@ function statusBlock() {
     div('pf-status__bar',
       h('div', { className: 'pf-ftabs', role: 'tablist', 'aria-label': 'Вкладки дэшборда' },
         tab('status', 'Статус вывоза', true), tab('schedule', 'Расписание маршрутов', false)),
-      h('div', { className: 'pf-tools', ...hide },
-        h('div', { 'data-pf-tools': 'status', className: 'pf-status__tools' }, h(DateButton, { value: '6 Янв 2026', arrows: true }), h(Select, { value: 'Депо №1', width: 160 })),
+      h('div', { className: 'pf-tools' },
+        h('div', { 'data-pf-tools': 'status', className: 'pf-status__tools', ...hide }, h(DateButton, { value: '6 Янв 2026', arrows: true }), h(Select, { value: 'Депо №1', width: 160 })),
         h('div', { 'data-pf-tools': 'schedule', hidden: true }, scheduleTools()))),
     h('div', { className: 'pf-panel', role: 'tabpanel', id: 'pf-panel-schedule', 'aria-labelledby': 'pf-tab-schedule', hidden: true },
       h('p', { className: 'pf-sr' }, 'Расписание маршрутов: рейсы машин по часам с 6:00 до 18:00, сгруппированные по типам техники; выполненные, текущие, назначенные и предложенные AI-диспетчером рейсы.'),
@@ -477,6 +506,30 @@ const UI = {
   photoNo: R(h(Icon, { name: 'photo-not-finished', size: 24, color: 'var(--icons-secondary)' })),
   sitePin: Object.fromEntries(PIN_STATUSES.map(st => [st, R(h(MapPin, { status: st, size: 36 }))])),
   numPin: PIN_SVG,
+  route: (() => {
+    const tag = (html, attr) => html.replace('<button type="button"', '<button type="button" ' + attr);
+    return {
+      close: tag(R(h(IconButton, { icon: 'cancel', label: 'Закрыть карточку маршрута' })), 'data-pf-rclose'),
+      prev: tag(R(h(IconButton, { icon: 'chevron-down', label: 'Следующий рейс' })), 'data-pf-rstep="1"'),
+      next: tag(R(h(IconButton, { icon: 'chevron-down', label: 'Предыдущий рейс' })), 'data-pf-rstep="-1"'),
+      check: R(h(DS.Checkbox, {})),
+      select: R(h(Select, { value: '__V__', width: '__W__' })),
+      seg: R(h(DS.SegmentedTabs, { items: ['Разгрузка'], value: 'Разгрузка' })),
+      add: R(h(Button, { variant: 'link', icon: 'add' }, 'Добавить задание в маршрут')),
+      moveBtn: tag(R(h(Button, { variant: 'primary' }, 'Перенести выбранные задания')), 'data-pf-rmove'),
+      cancelBtn: R(h(Button, { variant: 'accent-red' }, 'Отменить маршрут')),
+      finishBtn: R(h(Button, { variant: 'accent-green' }, 'Завершить принудительно')),
+      saveBtn: tag(R(h(Button, { variant: 'secondary' }, 'Сохранить')), 'data-pf-rsave'),
+      del: R(h(Icon, { name: 'cancel', size: 20, color: 'var(--icons-error)' })),
+      drag: R(h(Icon, { name: 'drag-and-drop', size: 20 })),
+      more: R(h(Icon, { name: 'more', size: 20 })),
+      expand: R(h(Icon, { name: 'expand', size: 20 })),
+      eye: R(h(Icon, { name: 'eye', size: 20 })),
+      filter: R(h(Icon, { name: 'filter', size: 20 })),
+      picture: R(h(Icon, { name: 'photo-uploaded', size: 24, color: 'var(--icons-action)' })),
+      truck: R(h(TruckMarker, { type: 'musorovoz', state: 'enroute', size: 48 })),
+    };
+  })(),
   proof: (() => {
     const tag = (html, attr) => html.replace('<button type="button"', '<button type="button" ' + attr);
     /* Container fill marker: the Figma TBO container shape (exported vector), tinted per fill level */

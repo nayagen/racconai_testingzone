@@ -1,30 +1,30 @@
 /* RaccoonAI Platform dashboard replica (Figma RaccoonAI Desktop, node 4296:5593).
    Atoms come from platform-ds.css (RaccoonAI Design System for Claude); this file lays out the organisms
-   in design pixels on a 1600 x 980 screen that script.js scales to fit. */
+   in design pixels on a 1600 px wide screen, 720-980 px tall (--pf-h), that script.js scales to fit. */
 
 /* Landing frame: the screen keeps its 1600 x 980 design size and scales by --pf-s (set in script.js) */
 .platform .section-head { margin-bottom: clamp(32px, 4vw, 48px); }
 .pf-frame { width: min(100% - 2 * var(--gutter), 1600px); margin: 0 auto; }
 .pf-viewport {
-  --pf-s: .5; overflow: hidden; border-radius: 20px; background: #f1f5f9;
+  --pf-s: .5; --pf-h: 980px; overflow: hidden; border-radius: 20px; background: #f1f5f9;
   box-shadow: inset 0 0 0 1px #e2e8f0, 0 1px 2px rgba(8, 10, 17, .06), 0 12px 32px -8px rgba(8, 10, 17, .16);
 }
-.pf-stage { position: relative; width: calc(1600px * var(--pf-s)); height: calc(980px * var(--pf-s)); }
-.pf-stage .pf-screen { position: absolute; left: 0; top: 0; transform: scale(var(--pf-s)); transform-origin: 0 0; }
+.pf-stage { position: relative; width: calc(1600px * var(--pf-s)); height: calc(var(--pf-h) * var(--pf-s)); }
+.pf-stage .pf-screen { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
 .pf-viewport.is-pan { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; }
 .pf-caption { max-width: none; display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; padding: 0; font: 500 13px/1.4 var(--font); color: var(--muted); }
 .pf-hint { display: none; }
 .pf-viewport.is-pan + .pf-caption .pf-hint { display: inline; }
 
 .pf-screen {
-  width: 1600px; height: 980px; box-sizing: border-box; padding: 16px;
-  display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: 16px;
+  width: 1600px; height: var(--pf-h, 980px); box-sizing: border-box; padding: 16px;
+  display: grid; grid-template-columns: 232px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); gap: 16px;
   background: var(--surface-page); font-family: var(--font-sans); color: var(--text-body);
   -webkit-font-smoothing: antialiased; text-align: left;
 }
 .pf-screen p { margin: 0; }
 .pf-screen .rc-sidenav { min-height: 0; height: 100%; }
-.pf-main { display: grid; grid-template-rows: 512px minmax(0, 1fr); gap: 16px; min-width: 0; }
+.pf-main { display: grid; grid-template-rows: minmax(0, 1fr) clamp(384px, calc(var(--pf-h, 980px) * .43), 420px); gap: 16px; min-width: 0; min-height: 0; }
 .pf-top { display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 16px; min-width: 0; }
 .pf-muted { color: var(--text-secondary); }
 .pf-ink { color: var(--text-headings); }
@@ -106,8 +106,8 @@
 .pf-fleet { display: grid; align-content: start; gap: 12px; padding: 18px 20px; border-right: 1px solid var(--border-primary); min-width: 0; }
 .pf-fleet:last-child { border-right: 0; }
 .pf-fleet__head { display: flex; justify-content: space-between; align-items: center; height: 32px; }
-.pf-fleet__ico { width: 40px; height: 24px; display: grid; place-items: center; overflow: visible; }
-.pf-fleet__ico .rc-truck { transform: scale(.9); }
+.pf-fleet__ico { width: 40px; height: 40px; margin: -8px 0; display: grid; place-items: center; overflow: visible; }
+.pf-fleet__ico img { display: block; width: 40px; height: 40px; }
 .pf-frow { display: flex; justify-content: space-between; align-items: center; height: 20px; gap: 8px; }
 .pf-fleet--total .pf-frow > p:first-child { font: 700 12px/16px var(--font-sans); text-transform: uppercase; color: var(--text-secondary); }
 .pf-bigpct { padding: 4px 12px; border-radius: var(--radius-full); background: var(--surface-attention-subtle); color: var(--text-attention); font: 700 20px/24px var(--font-sans); }
@@ -385,3 +385,184 @@
 .pf-navcard__here { flex: none; padding: 2px 8px; border-radius: 999px; background: var(--surface-selected); color: var(--text-selected); }
 .pf-navcard__text { color: var(--text-secondary); line-height: 20px; }
 @media (prefers-reduced-motion: reduce) { .pf-navcard { transition: none; transform: none; } }
+
+/* ---------- Gantt job counter card: what the number next to a plate counts (hover) ---------- */
+.pf-gtruck__count { cursor: help; }
+.pf-ctip { position: absolute; z-index: 15; width: 300px; box-sizing: border-box; display: grid; gap: 6px; padding: 12px 16px 14px;
+  background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+  color: var(--text-body); pointer-events: none; opacity: 0; transition: opacity 120ms ease-out; }
+.pf-ctip.is-on { opacity: 1; }
+.pf-ctip::after { content: ""; position: absolute; left: calc(var(--ax, 24px) - 6px); bottom: -6px; width: 10px; height: 10px; background: var(--surface-primary);
+  border-right: 1px solid var(--border-primary); border-bottom: 1px solid var(--border-primary); transform: rotate(45deg); }
+.pf-ctip.is-below::after { bottom: auto; top: -6px; transform: rotate(225deg); }
+.pf-ctip__text { color: var(--text-secondary); line-height: 20px; }
+@media (prefers-reduced-motion: reduce) { .pf-ctip { transition: none; } }
+
+.pf-metric[data-pf-metric] { cursor: help; }
+
+/* ---------- Gantt view toggle: rows by truck or by driver ---------- */
+.pf-iseg__item { margin: 0; padding: 0; border: 0; cursor: pointer; font: inherit; }
+.pf-iseg__item.is-selected { --rc-icon-color: var(--icons-action); }
+.pf-iseg__item:not(.is-selected):hover { background: var(--surface-secondary); }
+.pf-iseg__item:focus-visible { outline: 2px solid var(--border-action); outline-offset: 1px; z-index: 1; }
+.pf-gbody[hidden] { display: none; }
+.pf-gtruck__plate { min-width: 0; }
+
+/* ---------- Route card modal (Figma 19601:36533), opened from a trip row of the truck card ---------- */
+.pf-screen button.pf-trip { width: 100%; margin: 0; border: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; transition: background-color 120ms ease-out; }
+.pf-screen button.pf-trip:hover { background: var(--surface-tertiary); }
+.pf-screen button.pf-trip:focus-visible { outline: 2px solid var(--border-action); outline-offset: 1px; }
+.pf-trip__chev { width: 24px; height: 24px; display: grid; place-items: center; --rc-icon-color: var(--icons-default); }
+.pf-rm__card { width: 1440px; height: 702px; }
+.pf-rm__head { flex: none; display: flex; align-items: center; gap: 16px; height: 68px; padding: 0 16px; box-sizing: border-box; }
+.pf-rm__nav { display: flex; }
+.pf-rm__nav [data-pf-rstep="-1"] svg { transform: rotate(180deg); }
+.pf-rm__nav .rc-ibtn:disabled { opacity: .35; cursor: default; }
+.pf-rm__title { display: grid; gap: 2px; }
+.pf-rm__title .pf-muted { font-weight: 600; }
+.pf-rm__times { margin-left: auto; display: flex; height: 32px; border-radius: var(--radius-md); background: var(--surface-secondary); border: 1px solid var(--border-primary); overflow: hidden; }
+.pf-rm__times > span { display: flex; align-items: center; gap: 16px; padding: 0 16px; }
+.pf-rm__times > span + span { border-left: 1px solid var(--border-primary); }
+.pf-rm__times i { font-style: normal; color: var(--text-information); }
+.pf-rm__times i.pf-muted { color: var(--text-secondary); }
+.pf-rm__head > .rc-ibtn:last-child { margin-left: 16px; }
+.pf-rm__main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 424px; gap: 16px; padding: 16px 32px 0; }
+.pf-rm__left { display: flex; flex-direction: column; gap: 12px; min-width: 0; min-height: 0; }
+.pf-rm__veh { display: flex; align-items: center; gap: 16px; }
+.pf-rm__crew { flex: 1; display: flex; gap: 16px; color: var(--text-body); }
+.pf-rm__vsub { display: flex; gap: 16px; }
+.pf-rm__list { flex: 1; min-height: 0; display: flex; flex-direction: column; border: 1px solid var(--border-primary); border-radius: var(--radius-lg); overflow: hidden; }
+.pf-rm__jobs { flex: 1; min-height: 0; overflow-y: auto; padding: 8px 8px 8px 0; scrollbar-width: thin; position: relative;
+  background: linear-gradient(var(--border-primary), var(--border-primary)) 46px 0 / 1px 100% no-repeat; }
+.pf-rm__job { position: relative; display: grid; grid-template-columns: 48px 20px minmax(140px, 1fr) minmax(0, 1.05fr) 112px 32px 92px; align-items: center; gap: 0 12px;
+  min-height: 44px; padding: 4px 8px 4px 0; border-radius: var(--radius-md); }
+.pf-rm__job:hover, .pf-rm__job.is-checked { background: var(--surface-secondary); }
+.pf-rm__job + .pf-rm__job .pf-rm__idx::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 1px; height: 20px; background: var(--icons-action); transform: translateX(-.5px); }
+.pf-rm__idx { position: relative; justify-self: stretch; display: grid; place-items: center; height: 24px; margin-right: -12px; padding-right: 2px; box-sizing: border-box; }
+.pf-rm__job .rc-check { justify-self: center; }
+.pf-rm__jaddr, .pf-rm__jinfo { display: grid; gap: 2px; min-width: 0; }
+.pf-rm__jinfo p:first-child { display: flex; gap: 8px; white-space: nowrap; }
+.pf-rm__jst { justify-self: start; }
+.pf-rm__jph { display: grid; place-items: center; }
+.pf-rm__jact { display: flex; align-items: center; gap: 8px; opacity: 0; transition: opacity 120ms ease-out; --rc-icon-color: var(--icons-default); }
+.pf-rm__job:hover .pf-rm__jact { opacity: 1; }
+.pf-rm__add { padding: 8px 0 8px 52px; }
+.pf-rm__add .rc-btn { --rc-icon-color: var(--icons-action); }
+.pf-rm__unload { flex: none; display: flex; align-items: center; gap: 0; padding: 12px 16px; border-top: 1px solid var(--border-primary); }
+.pf-rm__ulabel { display: flex; align-items: center; height: 32px; padding: 0 16px; box-sizing: border-box; border: 1px solid var(--border-primary); border-right: 0;
+  border-radius: var(--radius-md) 0 0 var(--radius-md); background: var(--surface-tertiary); color: var(--text-body); }
+.pf-rm__unload .rc-selectwrap .rc-select { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.pf-rm__unload .pf-rm__sum { margin-left: auto; display: flex; gap: 16px; color: var(--text-body); }
+.pf-rm__map { position: relative; overflow: hidden; border-radius: var(--radius-lg); border: 1px solid var(--border-primary); background: var(--surface-tertiary); }
+.pf-rm__world { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; }
+.pf-rm__world > img { display: block; width: 1600px; height: 900px; }
+.pf-rm__pin { position: absolute; transform: translate(-50%, -100%); }
+.pf-rm__truck { position: absolute; width: 64px; height: 64px; }
+.pf-rm__mtools { position: absolute; top: 12px; right: 12px; display: grid; gap: 8px; }
+.pf-rm__mtools span { width: 32px; height: 32px; display: grid; place-items: center; border-radius: var(--radius-md); background: var(--surface-primary); box-shadow: var(--shadow-sm); --rc-icon-color: var(--icons-default); }
+.pf-rm__mnote { position: absolute; top: 12px; left: 12px; padding: 4px 8px; border-radius: var(--radius-md); background: var(--surface-primary); color: var(--text-secondary); box-shadow: var(--shadow-sm); }
+.pf-rm__player { position: absolute; left: 4px; right: 4px; bottom: 4px; display: grid; gap: 4px; }
+.pf-rm__ptimes { display: flex; justify-content: space-between; }
+.pf-rm__ptimes span { padding: 2px 6px; border-radius: 4px; background: var(--surface-primary); color: var(--text-body); }
+.pf-rm__pbar { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 12px; border-radius: var(--radius-md); background: color-mix(in srgb, var(--surface-invert) 72%, transparent); color: var(--text-on-action); }
+.pf-rm__play { width: 0; height: 0; border-left: 10px solid currentColor; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.pf-rm__track { flex: 1; position: relative; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--text-on-action) 70%, transparent); }
+.pf-rm__track i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; background: var(--icons-action); }
+.pf-rm__track i::after { content: ""; position: absolute; right: -8px; top: -6px; width: 16px; height: 16px; border-radius: 50%; background: var(--icons-action); }
+.pf-rm__wbwrap { flex: none; padding: 16px 32px; }
+.pf-rm__wb { display: flex; align-items: center; gap: 24px; height: 40px; padding-right: 16px; border-radius: var(--radius-md); background: var(--surface-secondary); border: 1px solid var(--border-primary); color: var(--text-body); }
+.pf-rm__wb .rc-selectwrap .rc-select { border: 0; border-right: 1px solid var(--border-primary); border-radius: var(--radius-md) 0 0 var(--radius-md); background: transparent; height: 38px; }
+.pf-rm__wbi { display: flex; gap: 8px; white-space: nowrap; }
+.pf-rm__wbph { display: grid; place-items: center; margin-left: -12px; }
+.pf-rm__wbnote { margin-left: auto; }
+.pf-rm__foot { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 16px; }
+.pf-rm__foot [data-pf-rmove]:disabled { opacity: .45; cursor: default; }
+.pf-rm__acts { display: flex; gap: 8px; }
+@media (prefers-reduced-motion: reduce) { .pf-rm__jact, .pf-screen button.pf-trip { transition: none; } }
+
+/* ---------- Adaptive screen height (--pf-h, 720-980 design px, set in script.js to fit the window) ---------- */
+.pf-panel > div:not([hidden]) { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+/* side nav items give up height first: 40px at full height, down to 28px */
+.pf-screen .rc-sidenav__item { box-sizing: border-box; height: clamp(26px, calc((var(--pf-h, 980px) - 390px) / 14), 40px); padding-block: 0; }
+.pf-screen .rc-sidenav__groups { min-height: 0; overflow-y: auto; scrollbar-width: none; }
+/* the upper-right card scrolls when the map row is shorter than the card */
+.pf-slot > .pf-truck { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--border-disabled) transparent; }
+.pf-pm__card { max-height: calc(var(--pf-h, 980px) - 32px); }
+
+/* ---------- Auto tour (script.js): camera, spotlight, drawn cursor, narration, control bar ----------
+   Overlay pieces sit on the unzoomed .pf-stage, in real px. Narration is RaccoonAI's voice: Onest on Dispatch Ink,
+   apart from the product's own white cards. */
+.pf-tourwrap { position: relative; }
+.pf-stage .pf-screen { transform: translate(var(--cam-tx, 0px), var(--cam-ty, 0px)) scale(calc(var(--pf-s) * var(--cam-z, 1))); }
+.pf-stage .pf-screen.is-cam { transition: transform 720ms cubic-bezier(.65, 0, .35, 1); }
+.pf-tour-shield { position: absolute; inset: 0; z-index: 31; cursor: pointer; }
+.pf-tour-shield[hidden], .pf-tour-cursor[hidden], .pf-tour-call[hidden], .pf-tour-bar[hidden], .pf-tour-replay[hidden], .pf-tour-spot[hidden], .pf-tour-veil[hidden] { display: none; }
+/* spotlight: a window cut into a dim layer; the huge spread shadow is the dim, not a glow */
+.pf-tour-spot { position: absolute; z-index: 30; border-radius: 14px; pointer-events: none; opacity: 0;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .9), 0 0 0 200vmax rgba(8, 10, 17, .38);
+  transition: opacity 320ms var(--ease), left 520ms var(--ease), top 520ms var(--ease), width 520ms var(--ease), height 520ms var(--ease); }
+.pf-tour-spot.is-on { opacity: 1; }
+.pf-tour-cursor { position: absolute; left: 0; top: 0; z-index: 50; width: 26px; height: 26px; pointer-events: none; will-change: transform; }
+.pf-tour-cursor svg { display: block; overflow: visible; filter: drop-shadow(0 2px 3px rgba(8, 10, 17, .28)); }
+.pf-tour-cursor path { fill: var(--ink); stroke: #fff; stroke-width: 1.6; stroke-linejoin: round; }
+.pf-tour-cursor__ring { position: absolute; left: 5px; top: 3px; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%;
+  border: 2px solid #fff; box-shadow: 0 0 0 2px var(--ink); opacity: 0; transform: scale(.3); }
+.pf-tour-cursor.is-click .pf-tour-cursor__ring { animation: pf-tour-ring 460ms cubic-bezier(.16, 1, .3, 1); }
+@keyframes pf-tour-ring { 0% { opacity: .85; transform: scale(.3); } 100% { opacity: 0; transform: scale(1.35); } }
+
+.pf-tour-call { position: absolute; z-index: 40; width: 330px; box-sizing: border-box; padding: 16px 20px 18px; border-radius: 14px;
+  background: var(--ink); color: #fff; font-family: var(--font); text-align: left; box-shadow: var(--shadow); pointer-events: none;
+  opacity: 0; transform: translateY(6px); transition: opacity 240ms var(--ease), transform 320ms var(--ease); }
+.pf-tour-call.is-on { opacity: 1; transform: none; }
+.pf-tour-call.is-dim { opacity: .25; }
+.pf-tour-call p { margin: 0; }
+.pf-tour-call__step { font: 600 13px/1 var(--font); color: rgba(255, 255, 255, .62); font-variant-numeric: tabular-nums; }
+.pf-tour-call .pf-tour-call__title { margin-top: 8px; font: 600 18px/1.25 var(--font); letter-spacing: -.015em; text-wrap: balance; }
+.pf-tour-call .pf-tour-call__text { margin-top: 6px; font: 400 15px/1.5 var(--font); color: rgba(255, 255, 255, .84); text-wrap: pretty; }
+.pf-tour-veil { position: absolute; inset: 0; z-index: 35; background: color-mix(in srgb, var(--ink) 30%, transparent); }
+.pf-tour-call.is-final, .pf-tour-ask { width: 480px; padding: 24px 28px 26px; background: var(--page); color: var(--ink); pointer-events: auto; }
+.pf-tour-ask { z-index: 45; width: 420px; }
+.pf-tour-call.is-final .pf-tour-call__title, .pf-tour-ask .pf-tour-call__title { margin-top: 0; font-size: 22px; }
+.pf-tour-call.is-final .pf-tour-call__text, .pf-tour-ask .pf-tour-call__text { color: var(--body); font-size: 16px; }
+.pf-tour-call__acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+
+.pf-tour-bar { display: flex; align-items: center; gap: 18px; margin-left: auto; white-space: nowrap; }
+.pf-tour-bar__state { display: flex; align-items: center; gap: 8px; margin: 0; font: 500 15px/1 var(--font); color: var(--body); }
+.pf-tour-bar__count { min-width: 4.2ch; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pf-tour-bar__nav { display: flex; align-items: center; gap: 8px; }
+.pf-tour-bar__nav .pf-tour-bar__state { padding: 0 10px; }
+/* step controls: labelled, 44px, white on the tint band with a strong hairline so they read as buttons */
+.pf-tour-step { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 12px;
+  background: var(--page); box-shadow: inset 0 0 0 1.5px var(--line-strong), 0 1px 2px rgba(8, 10, 17, .06); color: var(--ink);
+  font: 600 15px/1 var(--font); cursor: pointer; transition: background-color .2s var(--ease), box-shadow .2s var(--ease), transform .2s var(--ease); }
+.pf-tour-step[data-tour-step="-1"] { padding-left: 10px; }
+.pf-tour-step[data-tour-step="1"] { padding-right: 10px; }
+.pf-tour-step:hover:not(:disabled) { box-shadow: inset 0 0 0 1.5px var(--ink), 0 1px 2px rgba(8, 10, 17, .06); }
+.pf-tour-step:active:not(:disabled) { transform: translateY(1px); }
+.pf-tour-step:disabled { color: var(--muted); box-shadow: inset 0 0 0 1.5px var(--line); opacity: .6; cursor: default; }
+.pf-tour-step svg { display: block; flex: none; }
+.pf-tour-replay { margin: 0 0 0 auto; padding: 0; border: 0; background: none; cursor: pointer; font: 600 13px/1.4 var(--font); color: var(--ink);
+  text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.pf-tour-replay:hover { text-decoration-thickness: 2px; }
+
+/* the tour can't trigger :hover, so each hover-only effect it shows has an .is-th twin */
+.pf-gshift.is-th { z-index: 4; }
+.pf-gshift.is-th .pf-gsel { outline-color: var(--border-invert); }
+.pf-gshift.is-th .pf-gtip { opacity: 1; visibility: visible; }
+.pf-galert.is-th .pf-gcard { opacity: 1; visibility: visible; transform: translateY(-100%); transition: opacity 140ms ease-out, transform 140ms ease-out; }
+.pf-galert.is-th .pf-gcard.is-below { transform: none; }
+.pf-mpin.is-th { transform: scale(1.15); z-index: 2; }
+.pf-rm__job.is-th { background: var(--surface-secondary); }
+.pf-rm__job.is-th .pf-rm__jact { opacity: 1; }
+
+.pf-caption { align-items: center; min-height: 44px; }
+.pf-caption.is-touring > span { display: none; }
+.pf-caption.is-touring .pf-tour-bar { margin-left: 0; gap: 12px 24px; flex-wrap: wrap; }
+.pf-caption.is-touring .pf-tour-bar .btn { min-height: 44px; }
+@media (max-width: 600px) {
+  .pf-tour-bar__state > span:first-child { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-tour-call { transform: none; transition: opacity 200ms linear; }
+  .pf-stage .pf-screen.is-cam, .pf-tour-spot { transition: none; }
+}
