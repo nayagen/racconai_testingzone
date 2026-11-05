@@ -1,10 +1,51 @@
 /* RaccoonAI Platform dashboard replica (Figma RaccoonAI Desktop, node 4296:5593).
    Atoms come from platform-ds.css (RaccoonAI Design System for Claude); this file lays out the organisms
-   in design pixels on a 1600 px wide screen, 720-980 px tall (--pf-h), that script.js scales to fit. */
+   in design pixels on a 1600 x 980 px screen that script.js scales as a whole to fit. */
 
 /* Landing frame: the screen keeps its 1600 x 980 design size and scales by --pf-s (set in script.js) */
 .platform .section-head { margin-bottom: clamp(32px, 4vw, 48px); }
-.pf-frame { width: min(100% - 2 * var(--gutter), 1600px); margin: 0 auto; }
+/* Page opener: a full-bleed dawn photograph carries the headline; the real screen rises over its lower edge,
+   so the first viewport shows only the top of the interface (--pf-glimpse) */
+.platform-hero { --pf-glimpse: clamp(88px, 13svh, 148px); --pf-rise: clamp(64px, 7vw, 112px); margin-top: 0; padding-top: 0; }
+.pf-hero { position: relative; isolation: isolate; min-height: calc(100svh - var(--header-h) - var(--pf-glimpse) + var(--pf-rise)); padding-bottom: var(--pf-rise); display: flex; }
+.pf-hero-img {
+  position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: 62% 58%;
+  background: #e6ecf2;
+  -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%); mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
+}
+/* a soft daylight wash under the copy keeps ink text above 4.5:1 wherever the sky darkens */
+.pf-hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(100deg, rgba(241, 245, 249, .9) 0%, rgba(241, 245, 249, .7) 36%, rgba(241, 245, 249, 0) 60%);
+}
+.pf-hero-copy { width: 100%; padding-top: clamp(64px, 13svh, 168px); padding-bottom: clamp(56px, 10svh, 120px); }
+.pf-hero-copy h1 { font-size: clamp(44px, 6vw, 88px); line-height: 1; letter-spacing: -.04em; max-width: 12ch; }
+.pf-hero-copy p { margin-top: clamp(24px, 3svh, 36px); font-size: clamp(18px, 1.45vw, 21px); line-height: 1.55; color: var(--body); max-width: 40ch; }
+.pf-hero-copy .hero-actions { margin-top: clamp(32px, 4.5svh, 48px); }
+/* Proof under the actions: the three facts the page can back, set quietly so the buttons stay first. */
+.pf-hero-copy .hero-proof { max-width: none; margin-top: clamp(24px, 3.5svh, 36px); display: inline-flex; flex-wrap: wrap; gap: 4px 0; padding: 10px 16px; border-radius: 12px; background: #fff; font-size: 14px; line-height: 1.45; color: var(--body); }
+.hero-proof span { display: inline-flex; align-items: center; white-space: nowrap; }
+.hero-proof span + span::before { content: ""; width: 4px; height: 4px; margin: 0 12px; border-radius: 50%; background: var(--line-strong); }
+@media (max-width: 600px) {
+  .pf-hero-copy .hero-proof { display: grid; gap: 6px; }
+  .hero-proof span { white-space: normal; }
+  .hero-proof span + span::before { display: none; }
+}
+.pf-hero-copy .btn-quiet { background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
+.pf-hero-copy .btn-quiet:hover { background: #f8fafc; }
+.platform-hero .pf-frame { position: relative; z-index: 1; margin-top: calc(-1 * var(--pf-rise)); }
+@media (max-width: 860px) {
+  .platform-hero { --pf-rise: 56px; }
+  .pf-hero { flex-direction: column; min-height: 0; }
+  .pf-hero-img { order: 2; position: relative; inset: auto; display: block; height: auto; aspect-ratio: 4 / 3; object-position: 68% 50%; }
+  .pf-hero::before { display: none; }
+  .pf-hero-copy { padding-top: clamp(40px, 9svh, 72px); padding-bottom: 32px; }
+}
+/* Up to 1600px the frame fills the wrap as before; on larger screens it grows to 80% of the viewport (the screen scales up past
+   its design size), capped by the window height so the whole 980 design px tall screen fits under the header. */
+/* The screen and its caption row narrow to the scaled screen width when the window height limits the scale (script.js) */
+.pf-frame > .pf-viewport, .pf-frame > .pf-tourwrap, .pf-frame > .pf-caption { max-width: var(--pf-fit, none); margin-inline: auto; }
+.pf-frame { width: min(100% - 2 * max(var(--gutter), var(--edge)), max(1600px, min(80vw, (100svh - var(--header-h) - 93px) * 1.633))); margin: 0 auto; }
 .pf-viewport {
   --pf-s: .5; --pf-h: 980px; overflow: hidden; border-radius: 20px; background: #f1f5f9;
   box-shadow: inset 0 0 0 1px #e2e8f0, 0 1px 2px rgba(8, 10, 17, .06), 0 12px 32px -8px rgba(8, 10, 17, .16);
@@ -62,6 +103,8 @@
 .pf-metric { display: grid; gap: 8px; padding: 16px; border-radius: var(--radius-md); background: var(--surface-secondary); }
 .pf-metric__row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .pf-metric__val { display: flex; align-items: center; gap: 4px; }
+/* values and their chips never wrap: «89 л», «Осталось 123 л» read as one unit each */
+.pf-metric__val p, .pf-metric__row .pf-chip { white-space: nowrap; }
 .pf-chip { padding: 2px 8px; border-radius: var(--radius-full); background: var(--surface-tertiary); color: var(--text-body); white-space: nowrap; }
 .pf-truck__trips { flex: 1; display: grid; align-content: start; gap: 10px; padding: 16px; }
 .pf-shift { display: flex; justify-content: space-between; align-items: center; }
@@ -556,6 +599,39 @@
 .pf-rm__job.is-th .pf-rm__jact { opacity: 1; }
 
 .pf-caption { align-items: center; min-height: 44px; }
+/* explore strip (tour off): a badge and one line on what can be clicked; it replaces the plain caption line */
+.pf-caption.has-explore > span:first-child { display: none; }
+.pf-explore { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; margin: 0; font: 500 15px/1.4 var(--font); color: var(--body); }
+.pf-explore[hidden] { display: none; }
+.pf-explore__badge { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px 0 10px; border-radius: 999px;
+  background: var(--ink); color: #fff; font: 600 14px/1 var(--font); white-space: nowrap; }
+.pf-explore__badge svg { display: block; flex: none; }
+.pf-explore__badge path { fill: #fff; stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; }
+.pf-caption.has-explore .pf-tour-replay { font-size: 15px; white-space: nowrap; }
+@media (max-width: 860px) {
+  .pf-caption.has-explore { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .pf-caption.has-explore .pf-tour-replay { margin-left: 0; }
+}
+
+/* hand-over hints: the tour's ring vocabulary (white keyline on ink), pulsing on the real targets */
+.pf-hints { position: absolute; inset: 0; z-index: 28; pointer-events: none; }
+.pf-hints[hidden] { display: none; }
+.pf-hint-dot { position: absolute; width: 0; height: 0; opacity: 0; transform: scale(.6);
+  transition: opacity 260ms var(--ease), transform 420ms var(--ease); transition-delay: calc(var(--i) * 110ms); }
+.pf-hints.is-on .pf-hint-dot { opacity: 1; transform: none; }
+.pf-hint-dot__ring { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%;
+  border: 2px solid #fff; box-shadow: 0 0 0 2px var(--ink), 0 4px 12px rgba(8, 10, 17, .22);
+}
+.pf-hint-dot__ring::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--ink);
+  animation: pf-hint-pulse 1600ms cubic-bezier(.16, 1, .3, 1) infinite; animation-delay: calc(var(--i) * 110ms); }
+.pf-hint-dot__label { position: absolute; left: 0; top: -64px; transform: translateX(-50%); height: 30px; padding: 0 12px; border-radius: 999px; display: inline-flex; align-items: center;
+  background: var(--ink); color: #fff; font: 600 14px/1 var(--font); white-space: nowrap; box-shadow: 0 4px 12px rgba(8, 10, 17, .22); }
+/* labels sit above their ring so they never cover the control they point at */
+@keyframes pf-hint-pulse { 0% { transform: scale(.9); opacity: .9; } 80%, 100% { transform: scale(1.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .pf-hint-dot { transition: opacity 200ms linear; transform: none; }
+  .pf-hint-dot__ring::after { animation: none; display: none; }
+}
 .pf-caption.is-touring > span { display: none; }
 .pf-caption.is-touring .pf-tour-bar { margin-left: 0; gap: 12px 24px; flex-wrap: wrap; }
 .pf-caption.is-touring .pf-tour-bar .btn { min-height: 44px; }

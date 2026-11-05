@@ -12,20 +12,140 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
-  /* ---------- Signature sequence (about 9 s): request → AI proposes → assigned → driver gets the point ---------- */
+  /* ---------- Mobile section menu: closes on a pick, on Escape and on a tap outside ---------- */
+  var mNav = document.querySelector(".m-nav");
+  if (mNav) {
+    var mClose = function (focus) { if (mNav.open) { mNav.open = false; if (focus) { mNav.querySelector("summary").focus(); } } };
+    mNav.querySelector(".m-nav-panel").addEventListener("click", function (e) { if (e.target.closest("a")) { mClose(false); } });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") { mClose(true); } });
+    document.addEventListener("click", function (e) { if (!mNav.contains(e.target)) { mClose(false); } });
+  }
+
+  /* ---------- Desktop dock: section scroll spy, hover follow and the wide/compact switch ----------
+     The marker, the rail fill and the hover pill share one position on a critically damped spring: it retargets
+     from the live value and keeps its velocity, so sweeping the pointer down the list never snaps. */
+  var tree = document.querySelector("[data-tree]");
+  if (tree) {
+    var tLinks = Array.prototype.slice.call(tree.querySelectorAll(".tree-list a"));
+    var tRows = tLinks.map(function (a) { return a.parentNode; });
+    var tSections = tLinks.map(function (a) { return document.querySelector(a.hash); });
+    var tPill = tree.querySelector(".tree-pill");
+    var tFill = tree.querySelector(".tree-fill");
+    var tMarker = tree.querySelector(".tree-marker");
+    var tWideMq = window.matchMedia("(min-width: 1680px)");
+    var tShowMq = window.matchMedia("(min-width: 1081px)");
+    // Blocks wider than the page column; while one is behind the open card the dock stays a strip.
+    var tAvoid = Array.prototype.slice.call(document.querySelectorAll(".pf-frame"));
+    var tCenters = [], tFirst = 0, tLast = 0;
+    var tActive = -1, tHover = null;
+    var tPos = 0, tVel = 0, tTarget = 0, tRaf = 0, tPrev = 0;
+    var OMEGA = 24; // ≈0.25 s to settle, no overshoot
+
+    var tRender = function () {
+      tPill.style.transform = "translateY(" + (tPos - 16) + "px)";
+      tMarker.style.transform = "translateY(" + (tPos - 3.5) + "px) rotate(45deg)";
+      var span = tLast - tFirst;
+      tFill.style.transform = "scaleY(" + (span > 0 ? Math.max(0, Math.min(1, (tPos - tFirst) / span)) : 0) + ")";
+      for (var i = 0; i < tRows.length; i++) { tRows[i].classList.toggle("is-past", tCenters[i] <= tPos + .5); }
+    };
+    var tStep = function () {
+      var now = performance.now();
+      var dt = Math.min(.032, (now - tPrev) / 1000); tPrev = now;
+      tVel += (OMEGA * OMEGA * (tTarget - tPos) - 2 * OMEGA * tVel) * dt;
+      tPos += tVel * dt;
+      if (Math.abs(tTarget - tPos) < .2 && Math.abs(tVel) < 2) { tPos = tTarget; tVel = 0; tRaf = 0; tRender(); return; }
+      tRender();
+      tRaf = requestAnimationFrame(tStep);
+    };
+    var tMoveTo = function (i, immediate) {
+      if (i == null || i < 0 || i >= tCenters.length) { tree.classList.remove("has-mark"); return; }
+      tTarget = tCenters[i];
+      // Appearing from hidden lands on the row instead of travelling from where it was parked.
+      if (immediate || reduceMotion || !tree.classList.contains("has-mark")) {
+        if (tRaf) { cancelAnimationFrame(tRaf); tRaf = 0; }
+        tPos = tTarget; tVel = 0; tRender();
+      } else if (!tRaf) { tPrev = performance.now(); tRaf = requestAnimationFrame(tStep); }
+      tree.classList.add("has-mark");
+    };
+    var tMeasure = function () {
+      tCenters = tRows.map(function (li) { return li.offsetTop + li.offsetHeight / 2; });
+      tFirst = tCenters[0] || 0; tLast = tCenters[tCenters.length - 1] || 0;
+      tree.style.setProperty("--rail-top", tFirst + "px");
+      tree.style.setProperty("--rail-len", (tLast - tFirst) + "px");
+      if (tCenters.length) { tMoveTo(tHover != null ? tHover : tActive, true); }
+    };
+    var tSetActive = function (i) {
+      if (i === tActive) { return; }
+      if (tActive >= 0) { tLinks[tActive].removeAttribute("aria-current"); }
+      tActive = i;
+      if (i >= 0) { tLinks[i].setAttribute("aria-current", "location"); }
+      if (tHover == null) { tMoveTo(i); }
+    };
+    var tUpdate = function () {
+      if (!tShowMq.matches) { return; }
+      // Active: the last section whose top has passed 40% of the window.
+      var line = window.innerHeight * .4, idx = -1;
+      for (var i = 0; i < tSections.length; i++) { if (tSections[i] && tSections[i].getBoundingClientRect().top <= line) { idx = i; } }
+      tSetActive(idx < 0 ? 0 : idx);
+      var wide = tWideMq.matches;
+      if (wide) {
+        var r = tree.getBoundingClientRect();
+        for (var k = 0; k < tAvoid.length; k++) {
+          var a = tAvoid[k].getBoundingClientRect();
+          if (a.bottom > r.top && a.top < r.bottom && a.left < r.right) { wide = false; break; }
+        }
+      }
+      tree.classList.toggle("is-wide", wide);
+    };
+    var tQueued = false;
+    var tSchedule = function () { if (!tQueued) { tQueued = true; requestAnimationFrame(function () { tQueued = false; tUpdate(); }); } };
+    var tRowAt = function (y) {
+      var best = null, bestD = Infinity;
+      for (var i = 0; i < tRows.length; i++) {
+        var b = tRows[i].getBoundingClientRect(), d = Math.abs(y - (b.top + b.height / 2));
+        if (d < bestD) { bestD = d; best = i; }
+      }
+      return best;
+    };
+
+    tree.addEventListener("pointermove", function (e) {
+      var i = tRowAt(e.clientY);
+      if (i !== tHover) { tHover = i; tMoveTo(i); }
+    });
+    tree.addEventListener("pointerleave", function () { tHover = null; tMoveTo(tActive); });
+    tree.addEventListener("focusin", function (e) { var i = tLinks.indexOf(e.target); if (i >= 0) { tHover = i; tMoveTo(i); } });
+    tree.addEventListener("focusout", function (e) { if (!tree.contains(e.relatedTarget)) { tHover = null; tMoveTo(tActive); } });
+    // A pick moves the marker at once; the smooth scroll then confirms it.
+    tree.addEventListener("click", function (e) {
+      var i = tLinks.indexOf(e.target.closest("a"));
+      if (i >= 0) { tSetActive(i); if (e.detail) { e.target.closest("a").blur(); } }
+    });
+
+    window.addEventListener("scroll", tSchedule, { passive: true });
+    window.addEventListener("resize", tSchedule);
+    if ("ResizeObserver" in window) { new ResizeObserver(tMeasure).observe(tree.querySelector(".tree-list")); }
+    tMeasure();
+    tUpdate();
+  }
+
+  /* ---------- Signature sequence (loops, about 11 s): the truck drives to its next stop while a request lands,
+     the AI checks each truck and assigns it; then the truck drives on to the new stop. ---------- */
   var stage = document.getElementById("stage");
   var requestStatus = document.querySelector("#card-request .status");
   var aiBadge = document.getElementById("ai-badge");
   var aiSub = document.getElementById("ai-sub");
-  var phoneTotal = document.getElementById("phone-total");
+  var cands = Array.prototype.slice.call(stage.querySelectorAll("[data-cand]"));
   var stepItems = Array.prototype.slice.call(document.querySelectorAll(".seq-steps li"));
-  var replayBtn = document.getElementById("seq-replay");
+  var truck = stage.querySelector(".truck");
+  var pinNext = stage.querySelector(".pin-next");
+  var pinNew = document.getElementById("pin-new");
+  var legLive = stage.querySelector(".route-live");
+  var legAi = document.getElementById("route-ai");
 
   var finalText = {
     badge: aiBadge.textContent,
     sub: aiSub.innerHTML,
-    request: requestStatus.textContent,
-    total: phoneTotal.textContent
+    request: requestStatus.textContent
   };
 
   function setRequest(created) {
@@ -48,7 +168,44 @@
     aiMask.style.strokeDashoffset = "0";
   }
 
-  // Step indicator under the map: one item active at a time, a bar fills for its duration.
+  // The truck follows a route leg: position and heading come from the path itself.
+  var drive = null;
+  function placeTruck(path, t) {
+    var len = path.getTotalLength();
+    var p = path.getPointAtLength(len * t);
+    var q = path.getPointAtLength(Math.min(len, len * t + 2));
+    var r = t >= 1 ? path.getPointAtLength(len - 2) : p;
+    var a = Math.atan2(q.y - r.y, q.x - r.x) * 180 / Math.PI;
+    truck.setAttribute("transform", "translate(" + p.x.toFixed(1) + " " + p.y.toFixed(1) + ") rotate(" + a.toFixed(1) + ")");
+  }
+  function driveAlong(path, ms, done) {
+    var start = null;
+    if (drive) { window.cancelAnimationFrame(drive); }
+    function frame(now) {
+      if (start === null) { start = now; }
+      var k = Math.min(1, (now - start) / ms);
+      var e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; // ease in-out: pull away, then brake at the stop
+      placeTruck(path, e);
+      if (k < 1) { drive = window.requestAnimationFrame(frame); } else { drive = null; if (done) { done(); } }
+    }
+    drive = window.requestAnimationFrame(frame);
+  }
+  function stopDriving() {
+    if (drive) { window.cancelAnimationFrame(drive); drive = null; }
+  }
+  // A stop the truck has reached turns into a done pin.
+  function setReached(pin, on) {
+    pin.classList.toggle("is-reached", on);
+  }
+
+  // Candidate rows: pending (no verdict) → checking → verdict shown.
+  function setCand(i, state) {
+    var row = cands[i];
+    row.classList.toggle("is-pending", state === "pending" || state === "checking");
+    row.classList.toggle("is-checking", state === "checking");
+  }
+
+  // Step indicator under the stage: one item active at a time, a bar fills for its duration.
   function markStep(n, ms) {
     stepItems.forEach(function (li, i) {
       var k = i + 1;
@@ -67,88 +224,90 @@
   function resetToStart() {
     timers.forEach(window.clearTimeout);
     timers = [];
-    stage.classList.remove("is-step-1", "is-proposing", "hide-ai", "hide-phone", "is-done");
+    stopDriving();
+    stage.classList.remove("is-step-1", "is-proposing", "hide-ai", "is-done");
     stage.classList.add("is-step-0");
     stage.removeAttribute("data-focus");
     setRequest(true);
-    aiBadge.textContent = "AI предлагает";
+    aiBadge.textContent = "AI подбирает";
     aiBadge.classList.add("is-proposed");
-    aiSub.textContent = "Подбирает ближайшую подходящую машину…";
-    phoneTotal.textContent = "10";
+    aiSub.textContent = "Ждёт решения AI";
+    cands.forEach(function (row, i) { setCand(i, "pending"); });
     hideProposal();
+    setReached(pinNext, false);
+    setReached(pinNew, false);
+    legLive.classList.remove("is-passed");
+    placeTruck(legLive, 0);
     markStep(0, 0);
-    replayBtn.hidden = true;
   }
 
+  var LOOP = 11400;
   function playSequence() {
     resetToStart();
 
-    // 1. A new WhatsApp request lands on the map.
+    // 1. A new WhatsApp request lands on the map; the truck carries on to its next stop.
     at(500, function () {
       stage.classList.remove("is-step-0");
-      stage.classList.add("is-step-1", "hide-ai", "hide-phone");
+      stage.classList.add("is-step-1", "hide-ai");
       stage.setAttribute("data-focus", "request");
-      markStep(1, 2100);
+      markStep(1, 1900);
+      driveAlong(legLive, 4600, function () { setReached(pinNext, true); legLive.classList.add("is-passed"); });
     });
 
-    // 2. The AI proposes a truck: the dashed violet route draws slowly.
-    at(2600, function () {
+    // 2. The AI checks each truck in turn; the chosen one gets a dashed proposal to the new stop.
+    at(2400, function () {
       stage.classList.remove("hide-ai");
       stage.classList.add("is-proposing");
       stage.setAttribute("data-focus", "ai");
-      markStep(2, 3000);
-      drawProposal(2600);
+      markStep(2, 3400);
+      setCand(0, "checking");
     });
-    at(4100, function () {
-      aiSub.textContent = "Ближайшая подходящая машина · ТБО · 1.8 км";
-    });
+    at(3200, function () { setCand(0, "done"); setCand(1, "checking"); drawProposal(2400); });
+    at(4000, function () { setCand(1, "done"); setCand(2, "checking"); });
+    at(4800, function () { setCand(2, "done"); aiBadge.textContent = "AI предлагает"; });
 
-    // 3. Assigned: the route turns solid, both cards change status.
-    at(5600, function () {
+    // 3. Assigned: the route turns solid and the truck drives on to the new stop.
+    at(5800, function () {
       stage.classList.remove("is-proposing", "is-step-1");
+      stage.removeAttribute("data-focus");
       aiBadge.textContent = finalText.badge;
       aiBadge.classList.remove("is-proposed");
       aiSub.innerHTML = finalText.sub;
       setRequest(false);
-      markStep(3, 1800);
+      markStep(3, 3400);
+    });
+    at(6100, function () {
+      driveAlong(legAi, 3100, function () { setReached(pinNew, true); });
     });
 
-    // 4. The driver's app receives the new point.
-    at(7400, function () {
-      stage.classList.remove("hide-phone");
-      stage.setAttribute("data-focus", "driver");
-      phoneTotal.textContent = finalText.total;
-      markStep(4, 1800);
-    });
-
-    // Rest on the full picture, offer a replay.
-    at(9400, function () {
-      stage.removeAttribute("data-focus");
+    // Rest on the full picture, then start over.
+    at(9200, function () {
       stage.classList.add("is-done");
       finishSteps();
-      replayBtn.hidden = false;
     });
+    at(LOOP, playSequence);
   }
 
-  replayBtn.addEventListener("click", function () {
-    playSequence();
-  });
-
-  if (reduceMotion) {
+  // Loop only while the stage is on screen; the markup (and reduced motion) shows the assigned end state.
+  if (reduceMotion || !("IntersectionObserver" in window)) {
     finishSteps();
-  } else if ("IntersectionObserver" in window) {
-    var played = false;
+  } else {
+    var playing = false;
     var io = new IntersectionObserver(function (entries) {
-      if (!played && entries[0].isIntersecting) {
-        played = true;
-        io.disconnect();
+      var visible = entries[0].isIntersecting;
+      if (visible && !playing) {
+        playing = true;
         playSequence();
+      } else if (!visible && playing) {
+        playing = false;
+        timers.forEach(window.clearTimeout);
+        timers = [];
+        stopDriving();
       }
     }, { threshold: 0.35 });
     io.observe(stage);
-  } else {
-    finishSteps();
   }
+
 
   /* ---------- AI dispatcher switches (fleet-wide and per truck) ---------- */
   var fleetSwitch = document.querySelector('[data-switch="fleet"]');
@@ -179,11 +338,222 @@
     });
   });
 
+  /* ---------- Route group: approve tomorrow's route sheets ---------- */
+  var approveBtn = document.getElementById("rg-approve");
+  if (approveBtn) {
+    var sheets = Array.prototype.slice.call(document.querySelectorAll("[data-sheet]"));
+    var rgFoot = document.getElementById("rg-foot");
+    approveBtn.addEventListener("click", function () {
+      approveBtn.disabled = true;
+      approveBtn.textContent = "Утверждено";
+      sheets.forEach(function (chip, i) {
+        window.setTimeout(function () {
+          chip.textContent = "Утверждён";
+          chip.classList.remove("status-wait");
+          chip.classList.add("status-done");
+          if (i === sheets.length - 1) {
+            rgFoot.textContent = "Отправлено в DriverApp: " + sheets.length + " экипажа получили маршрутные листы";
+            rgFoot.classList.add("is-sent");
+          }
+        }, reduceMotion ? 0 : 160 * i);
+      });
+    });
+  }
+
+  /* ---------- DriverApp: the capability list switches the phone screen ---------- */
+  var drvTabs = Array.prototype.slice.call(document.querySelectorAll('.drv-tabs [role="tab"]'));
+  function selectDrvTab(tab, focus) {
+    drvTabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+    });
+    if (drvPhoto) { drvPhoto.classList.remove("is-after"); }
+    if (focus) { tab.focus(); }
+  }
+  var drvPhoto = document.getElementById("drv-p2");
+
+  // Autoplay: every screen holds 5 s, in order. The photo tab has two screens ("Фотографии ДО", then the
+  // finished task once the after photo is uploaded), so it holds 10 s. Starts from the first screen each time
+  // the block scrolls into view; pauses only while the keyboard is in the list; off when reduced motion is on.
+  var DRV_HOLD = 5000;
+  var drvStage = document.querySelector(".drv-stage");
+  var drvTabList = document.querySelector(".drv-tabs");
+  var drvAuto = { on: false, i: 0, sub: 0, timer: null, left: 0, since: 0, paused: false };
+  function drvScreens(i) { return drvTabs[i].getAttribute("aria-controls") === "drv-p2" ? 2 : 1; }
+  function drvProgress(i, ms, total) {
+    drvTabs.forEach(function (t, k) {
+      t.classList.toggle("is-auto", drvAuto.on && k === i);
+      if (k === i) {
+        t.style.setProperty("--auto-total", total + "ms");
+        t.style.setProperty("--auto-left", ms + "ms");
+        t.style.setProperty("--auto-from", String(1 - ms / total));
+        t.classList.remove("is-running");
+        void t.offsetWidth; // restart the bar's transition
+        if (!drvAuto.paused) { t.classList.add("is-running"); }
+      }
+    });
+  }
+  function drvArm(ms) {
+    window.clearTimeout(drvAuto.timer);
+    drvAuto.left = ms;
+    drvAuto.since = Date.now();
+    if (!drvAuto.paused) { drvAuto.timer = window.setTimeout(drvNext, ms); }
+  }
+  function drvShow(i, sub) {
+    drvAuto.i = i;
+    drvAuto.sub = sub;
+    if (sub === 0) { selectDrvTab(drvTabs[i]); }
+    if (drvPhoto) { drvPhoto.classList.toggle("is-after", sub === 1); }
+    var total = drvScreens(i) * DRV_HOLD;
+    var left = total - sub * DRV_HOLD;
+    drvProgress(i, left, total);
+    drvArm(DRV_HOLD);
+  }
+  function drvNext() {
+    if (drvAuto.sub + 1 < drvScreens(drvAuto.i)) { drvShow(drvAuto.i, drvAuto.sub + 1); }
+    else { drvShow((drvAuto.i + 1) % drvTabs.length, 0); }
+  }
+  function drvStart() { drvAuto.on = true; drvAuto.paused = false; drvShow(0, 0); }
+  function drvStop() {
+    drvAuto.on = false;
+    window.clearTimeout(drvAuto.timer);
+    drvTabs.forEach(function (t) { t.classList.remove("is-auto", "is-running"); });
+  }
+  function drvPause(p) {
+    if (!drvAuto.on || drvAuto.paused === p) { return; }
+    drvAuto.paused = p;
+    var t = drvTabs[drvAuto.i];
+    if (p) {
+      window.clearTimeout(drvAuto.timer);
+      drvAuto.left = Math.max(0, drvAuto.left - (Date.now() - drvAuto.since));
+      var total = drvScreens(drvAuto.i) * DRV_HOLD;
+      var shown = total - ((drvScreens(drvAuto.i) - 1 - drvAuto.sub) * DRV_HOLD + drvAuto.left);
+      t.style.setProperty("--auto-from", String(shown / total));
+      t.classList.remove("is-running");
+    } else {
+      var totalR = drvScreens(drvAuto.i) * DRV_HOLD;
+      var leftAll = (drvScreens(drvAuto.i) - 1 - drvAuto.sub) * DRV_HOLD + drvAuto.left;
+      t.style.setProperty("--auto-left", leftAll + "ms");
+      t.style.setProperty("--auto-from", String(1 - leftAll / totalR));
+      void t.offsetWidth;
+      t.classList.add("is-running");
+      drvArm(drvAuto.left);
+    }
+  }
+
+  drvTabs.forEach(function (tab, i) {
+    tab.addEventListener("click", function () {
+      if (drvAuto.on) { drvShow(i, 0); } else { selectDrvTab(tab); }
+    });
+    tab.addEventListener("keydown", function (e) {
+      var k = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+      var n = e.key === "Home" ? 0 : e.key === "End" ? drvTabs.length - 1 : k ? (i + k + drvTabs.length) % drvTabs.length : -1;
+      if (n < 0) { return; }
+      e.preventDefault();
+      if (drvAuto.on) { drvShow(n, 0); drvPause(true); }
+      selectDrvTab(drvTabs[n], true);
+    });
+  });
+
+  if (drvStage && drvTabs.length && !reduceMotion && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { if (!drvAuto.on) { drvStart(); } } else if (drvAuto.on) { drvStop(); }
+    }, { threshold: 0.35 }).observe(drvStage);
+    // Only keyboard focus in the list pauses; a resting mouse cursor must not freeze the autoplay.
+    drvTabList.addEventListener("focusin", function (e) { if (e.target.matches(":focus-visible")) { drvPause(true); } });
+    drvTabList.addEventListener("focusout", function (e) { if (!drvTabList.contains(e.relatedTarget)) { drvPause(false); } });
+  }
+
+  /* ---------- DriverApp, one stop: the steps cascade in once, then stay; only the highlight moves from step to step ---------- */
+  var flow = document.getElementById("flow");
+  if (flow && !reduceMotion && "IntersectionObserver" in window) {
+    var flowSteps = Array.prototype.slice.call(flow.querySelectorAll(".flow-step"));
+    var FLOW_STEP = 2200, FLOW_DWELL = 3200;
+    var flowTimers = [], flowPlayed = false, flowCur = 0;
+    var flowAt = function (ms, fn) { flowTimers.push(window.setTimeout(fn, ms)); };
+    var flowStop = function () { flowTimers.forEach(window.clearTimeout); flowTimers = []; };
+    var flowShow = function (n) { flowSteps.forEach(function (li, i) { li.classList.toggle("is-shown", i < n); }); };
+    var flowMark = function (c) { flowCur = c; flowSteps.forEach(function (li, i) { li.classList.toggle("is-current", i === c); }); };
+    var flowLoop = function () {
+      flowStop();
+      flow.classList.add("is-looping");
+      (function next() { flowAt(FLOW_DWELL, function () { flowMark((flowCur + 1) % flowSteps.length); next(); }); })();
+    };
+    var flowIntro = function () {
+      flowStop();
+      flowShow(0);
+      flowMark(-1);
+      flowSteps.forEach(function (_, i) { flowAt(300 + i * FLOW_STEP, function () { flowShow(i + 1); flowMark(i); }); });
+      flowAt(300 + (flowSteps.length - 1) * FLOW_STEP, function () { flowPlayed = true; flowMark(0); flowLoop(); });
+    };
+    flow.classList.add("is-anim");
+    flowShow(flowSteps.length); // fully visible until it scrolls into view
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { if (flowPlayed) { flowLoop(); } else { flowIntro(); } }
+      else { flowStop(); flowShow(flowSteps.length); }
+    }, { threshold: 0.3 }).observe(flow);
+  }
+
+  /* ---------- Intake: an incoming call becomes a request in the queue ---------- */
+  var callBtn = document.getElementById("call-create");
+  if (callBtn) {
+    callBtn.addEventListener("click", function () {
+      var list = document.getElementById("inbox-list");
+      var row = list.firstElementChild.cloneNode(true);
+      row.querySelector(".src").innerHTML = list.lastElementChild.querySelector(".src").innerHTML;
+      row.querySelector(".inbox-main b").textContent = "ТОО «Береке Трейд»";
+      row.querySelector(".inbox-main small").textContent = "Вывоз ТБО · Жибек Жолы, 115";
+      row.classList.add("is-new");
+      list.insertBefore(row, list.firstElementChild);
+      var n = document.getElementById("inbox-n");
+      n.textContent = String(+n.textContent + 1);
+      callBtn.disabled = true;
+      callBtn.textContent = "Заявка создана";
+      document.getElementById("call-state").textContent = "Звонок завершён";
+      document.getElementById("call-note").textContent = "№ 10486 · в очереди";
+    });
+  }
+
   /* ---------- Demo request form ---------- */
   var form = document.getElementById("demo-form");
   var submit = document.getElementById("f-submit");
   var status = document.getElementById("form-status");
   var FORM_NOT_CONNECTED = /FORM_ID$/.test(form.action);
+
+  /* Contact details. Leave a value empty until it is real: empty values stay hidden on the page and out of messages.
+     When an email is set, a request that cannot be sent is offered as a prefilled letter instead. */
+  var CONTACT = { phone: "", email: "" };
+
+  var contactList = document.querySelector(".contacts");
+  if (contactList) {
+    var shown = 0;
+    [["phone", "tel:" + CONTACT.phone.replace(/[^\d+]/g, "")], ["email", "mailto:" + CONTACT.email]].forEach(function (c) {
+      var row = contactList.querySelector('[data-contact="' + c[0] + '"]');
+      if (!row || !CONTACT[c[0]]) { return; }
+      var a = row.querySelector("a");
+      a.href = c[1];
+      a.textContent = CONTACT[c[0]];
+      row.hidden = false;
+      shown++;
+    });
+    contactList.hidden = shown === 0;
+  }
+
+  function escHtml(s) { return String(s).replace(/[&<>"]/g, function (ch) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]; }); }
+
+  // What the visitor can do when the request does not go through; never cites a contact that does not exist yet.
+  function fallbackHtml() {
+    var ways = [];
+    if (CONTACT.email) {
+      var f = form.elements;
+      var body = ["Имя: " + f.name.value, "Компания: " + f.company.value, "Телефон: " + f.phone.value, f.email.value ? "Почта: " + f.email.value : ""].filter(Boolean).join("\n");
+      ways.push('<a href="mailto:' + escHtml(CONTACT.email) + "?subject=" + encodeURIComponent("Запрос демо RaccoonAI") + "&body=" + encodeURIComponent(body) + '">отправьте заявку письмом</a>');
+    }
+    if (CONTACT.phone) { ways.push('позвоните: <a href="tel:' + escHtml(CONTACT.phone.replace(/[^\d+]/g, "")) + '">' + escHtml(CONTACT.phone) + "</a>"); }
+    return ways.length ? " Или " + ways.join(", или ") + "." : "";
+  }
 
   var rules = {
     name: function (v) { return v.trim().length > 0; },
@@ -230,7 +600,7 @@
     if (firstBad) { firstBad.focus(); return; }
 
     if (FORM_NOT_CONNECTED) {
-      showStatus("error", "Форма ещё не подключена к сервису отправки. Позвоните нам: [ТЕЛЕФОН].");
+      showStatus("error", "Заявку не удалось отправить: форма ещё не подключена. Введённые данные сохранены." + fallbackHtml());
       return;
     }
 
@@ -246,7 +616,7 @@
         showStatus("success", "<strong>Заявка отправлена.</strong> Мы свяжемся с вами, чтобы договориться о демо.");
       })
       .catch(function () {
-        showStatus("error", "Не удалось отправить заявку. Проверьте подключение и попробуйте ещё раз или позвоните нам: [ТЕЛЕФОН].");
+        showStatus("error", "Не удалось отправить заявку. Проверьте подключение и попробуйте ещё раз, введённые данные сохранены." + fallbackHtml());
       })
       .then(function () {
         submit.disabled = false;
@@ -257,24 +627,29 @@
   /* ---------- Platform screen: scale the 1600px design to the frame; pan on narrow screens ---------- */
   var pfView = document.getElementById("pf-viewport");
   if (pfView) {
-    /* Height: the screen is 980 design px tall at most; on shorter windows it shrinks (down to 720) so the whole
-       scaled screen fits below the sticky header. The layout inside absorbs the difference (platform.css, --pf-h). */
-    var PF_W = 1600, PF_MIN = 0.5, PF_H = 980, PF_HMIN = 720;
+    /* The screen is always laid out at its full 1600 x 980 design size and scaled as a whole, like browser zoom, so text,
+       spacing and icons shrink together. The scale fits the frame width and the window height below the sticky header
+       (the caption row takes 62px), but never drops below 0.8 to fit the height: below that the screen runs past the
+       fold and the page scrolls. The frame narrows to the scaled width (--pf-fit) and stays centred. */
+    var PF_W = 1600, PF_MIN = 0.5, PF_H = 980, PF_HFLOOR = 0.8;
     var pfHeader = document.querySelector(".site-header");
+    var pfFrame = pfView.closest(".pf-frame");
     var fitPlatform = function () {
-      var w = pfView.clientWidth;
+      var w = pfFrame.clientWidth;
       if (!w) { return; }
-      var s = Math.min(1, w / PF_W);
+      var sW = w / PF_W;
+      var avail = window.innerHeight - (pfHeader ? pfHeader.offsetHeight : 0) - 32 - 62;
+      var sH = Math.max(PF_HFLOOR, avail / PF_H);
+      var s = Math.min(sW, sH);
       var pan = s < PF_MIN;
       if (pan) { s = PF_MIN; }
-      var avail = window.innerHeight - (pfHeader ? pfHeader.offsetHeight : 0) - 32 - 62;
-      var hgt = Math.round(Math.max(PF_HMIN, Math.min(PF_H, avail / s)));
       pfView.style.setProperty("--pf-s", String(s));
-      pfView.style.setProperty("--pf-h", hgt + "px");
+      pfView.style.setProperty("--pf-h", PF_H + "px");
+      pfFrame.style.setProperty("--pf-fit", pan ? "none" : Math.ceil(PF_W * s) + "px");
       pfView.classList.toggle("is-pan", pan);
     };
     fitPlatform();
-    if ("ResizeObserver" in window) { new ResizeObserver(fitPlatform).observe(pfView); }
+    if ("ResizeObserver" in window) { new ResizeObserver(fitPlatform).observe(pfFrame); }
     window.addEventListener("resize", fitPlatform);
 
     /* Dashboard tabs: «Статус вывоза» / «Расписание маршрутов» (WAI-ARIA tabs, manual activation) */
@@ -1031,7 +1406,53 @@
         tReplay.type = "button";
         tReplay.className = "pf-tour-replay";
         tReplay.textContent = "Смотреть обзор интерфейса";
-        if (capEl) { capEl.appendChild(tReplay); capEl.appendChild(tBar); } else { tWrap.appendChild(tBar); }
+        /* explore strip: whenever the tour is not running, the caption says plainly that the screen is live */
+        var tExplore = document.createElement("p");
+        tExplore.className = "pf-explore";
+        tExplore.innerHTML = '<span class="pf-explore__badge"><svg width="16" height="16" viewBox="0 0 30 30" aria-hidden="true"><path d="M6 3.5v20.2l5.1-4.9 3.6 8.2 3.6-1.6-3.6-8.1 7.1-.4z"/></svg>Интерфейс кликабельный</span>' +
+          '<span class="pf-explore__text">Нажимайте на&nbsp;машины и&nbsp;точки на&nbsp;карте, рейсы и&nbsp;вкладки. Данные демонстрационные.</span>';
+        if (capEl) { capEl.appendChild(tExplore); capEl.appendChild(tReplay); capEl.appendChild(tBar); capEl.classList.add("has-explore"); } else { tWrap.appendChild(tBar); }
+
+        /* hand-over hints: labelled rings on a few things worth clicking, gone after the first click or a few seconds */
+        var tHints = mk("pf-hints", "", tourStage);
+        tHints.setAttribute("aria-hidden", "true");
+        var hintTimer = 0;
+        var hideHints = function () {
+          clearTimeout(hintTimer);
+          if (tHints.hidden) { return; }
+          tHints.classList.remove("is-on");
+          setTimeout(function () { if (!tHints.classList.contains("is-on")) { tHints.hidden = true; tHints.innerHTML = ""; } }, 260);
+        };
+        var showHints = function () {
+          var vr = pfView.getBoundingClientRect();
+          var picks = [
+            ["Машина", '.pf-map [data-pf-truck="714SH02"]'],
+            ["Площадка", ".pf-mpin:not([hidden])"],
+            ["Рейс", ".pf-trip"],
+            ["Вкладка", '[data-pf-tab="schedule"]']
+          ];
+          var html = "", n = 0;
+          picks.forEach(function (pk) {
+            var el = pfView.querySelector(pk[1]);
+            if (!el) { return; }
+            var r = el.getBoundingClientRect();
+            var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+            if (!r.width || cx < vr.left + 8 || cx > vr.right - 8 || cy < vr.top + 8 || cy > vr.bottom - 8) { return; }
+            var b = stageBox(el);
+            var x = Math.round(b.x + b.w / 2), y = Math.round(b.y + b.h / 2);
+            var left = false;
+            html += '<span class="pf-hint-dot' + (left ? ' is-left' : '') + '" style="left:' + x + 'px;top:' + y + 'px;--i:' + (n++) + '"><span class="pf-hint-dot__ring"></span><span class="pf-hint-dot__label">' + pk[0] + '</span></span>';
+          });
+          if (!n) { return; }
+          tHints.innerHTML = html;
+          tHints.hidden = false;
+          requestAnimationFrame(function () { tHints.classList.add("is-on"); });
+          clearTimeout(hintTimer);
+          hintTimer = setTimeout(hideHints, 7000);
+        };
+        pfView.addEventListener("pointerdown", function () { if (!T.on) { hideHints(); } });
+        pfView.addEventListener("keydown", function () { if (!T.on) { hideHints(); } });
+        window.addEventListener("resize", hideHints);
 
         /* geometry: stage px for the overlay, design px for the camera */
         var stageBox = function (el) {
@@ -1423,7 +1844,8 @@
         var chrome = function (on) {
           T.on = on;
           tBar.hidden = !on; tShield.hidden = !on; tCur.hidden = !on; tSpot.hidden = !on;
-          tReplay.hidden = on;
+          tReplay.hidden = on; tExplore.hidden = on;
+          if (on) { hideHints(); }
           tWrap.classList.toggle("is-touring", on);
           if (capEl) { capEl.classList.toggle("is-touring", on); }
           if (on) { pfScr.setAttribute("aria-hidden", "true"); } else { pfScr.removeAttribute("aria-hidden"); }
@@ -1474,6 +1896,7 @@
         };
         var takeControl = function () {
           stop();
+          setTimeout(showHints, 760);
           var first = pfView.querySelector('[data-pf-tab][aria-selected="true"]');
           if (first) { first.focus({ preventScroll: true }); }
         };
@@ -1531,10 +1954,16 @@
         var autoOK = function () { return !reduceTour && !pfView.classList.contains("is-pan"); };
         if ("IntersectionObserver" in window) {
           new IntersectionObserver(function (es) {
-            onScreen = es[0].isIntersecting && es[0].intersectionRatio >= 0.35;
+            var e0 = es[0];
+            onScreen = e0.isIntersecting && e0.intersectionRatio >= 0.35;
+            /* "on the interface": most of the screen visible, or it fills most of the window */
+            var onIt = e0.isIntersecting && (e0.intersectionRatio >= 0.8 || e0.intersectionRect.height >= window.innerHeight * 0.7);
             syncPause();
-            if (onScreen && !T.seen && autoOK()) { T.seen = true; setTimeout(function () { if (onScreen && !T.on) { start(); } }, 500); }
-          }, { threshold: [0, 0.35, 0.6] }).observe(pfView);
+            if (onIt && !T.seen && autoOK()) {
+              T.seen = true;
+              setTimeout(function () { if (onScreen && !T.on) { start(); } }, 500);
+            }
+          }, { threshold: [0, 0.35, 0.5, 0.6, 0.7, 0.8, 0.9, 1] }).observe(pfView);
         } else { onScreen = true; }
       }
     }

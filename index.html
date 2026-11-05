@@ -9,10 +9,14 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="platform-ds.css">
   <link rel="stylesheet" href="platform.css">
+  <script src="i18n/i18n.js"></script>
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="mark" viewBox="0 0 48 48"><rect width="48" height="48" rx="2.5" fill="#fff"/><path fill-rule="evenodd" clip-rule="evenodd" d="M48 10.87V2.51C48 1.12 46.87 0 45.48 0H2.51C1.12 0 0 1.12 0 2.51v42.97C0 46.870 1.12 48 2.51 48h7.44c3.290-3.050 6.740-7.010 6.650-7.590-.11-.73-1.760-3.530-3.600-4.650-.41-.25-1.680-.85-1.750-.94-.07-.1-.16-.37-.05-.48 1.370-1.290 4.480-5.860 7.410-10.710 0 0-1.820-1.720-3.660-3.800-1.830-2.090-3.030-6.480-2.790-11.100.24-4.610 5.750-1.470 7.830-.67 2.070.8 10.840 5.330 10.840 5.330 3.480-1.830 11.410-2.850 17.170-2.510ZM33.78 48h7.79c-.73-.06-5.380-3.980-6.430-5.770-2.040-3.510-3.480-4.850-.4-6.340 2.220-1.070 10.320-3.410 10.310-9.090 0-2.800-1.790-5.780-5.580-5.900-5.870-.17-7.530 2.890-11.550 7.530-4.740 5.460-6.170 4.610-2.300 9.650 1.450 1.890 6.210 8.050 8.160 9.920ZM48 35.54c-2.320.21-4.360.57-4.390 1.190-.1 2.890 3.140 3.760 4.390 3.980v-5.170ZM38.63 24.29c1.570 0 2.840 1.300 2.840 2.910s-1.270 2.900-2.840 2.900-2.840-1.300-2.840-2.900 1.270-2.910 2.840-2.910ZM21.23 21.13l2.870-2.420c-4.510-3.080-6.600-5.780-8.010-8.220-.05 4.130 1.260 7.340 5.140 10.640Z" fill="#080A11"/></symbol>
+    <symbol id="flag-ru" viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice"><path fill="#fff" d="M0 0h30v7H0z"/><path fill="#0039a6" d="M0 6.67h30v6.67H0z"/><path fill="#d52b1e" d="M0 13.33h30V20H0z"/></symbol>
+    <symbol id="flag-kz" viewBox="0 0 600 300" preserveAspectRatio="xMidYMid slice"><path fill="#00afca" d="M0 0h600v300H0z"/><g fill="#fec50c"><circle cx="300" cy="128" r="40"/><path d="M345.9 125.5L378.0 128.0L345.9 130.5ZM345.5 134.5L376.5 143.2L344.6 139.4ZM343.4 143.3L372.1 157.8L341.5 147.9ZM339.6 151.5L364.9 171.3L336.8 155.6ZM334.2 158.7L355.2 183.2L330.7 162.2ZM327.6 164.8L343.3 192.9L323.5 167.6ZM319.9 169.5L329.8 200.1L315.3 171.4ZM311.4 172.6L315.2 204.5L306.5 173.5ZM302.5 173.9L300.0 206.0L297.5 173.9ZM293.5 173.5L284.8 204.5L288.6 172.6ZM284.7 171.4L270.2 200.1L280.1 169.5ZM276.5 167.6L256.7 192.9L272.4 164.8ZM269.3 162.2L244.8 183.2L265.8 158.7ZM263.2 155.6L235.1 171.3L260.4 151.5ZM258.5 147.9L227.9 157.8L256.6 143.3ZM255.4 139.4L223.5 143.2L254.5 134.5ZM254.1 130.5L222.0 128.0L254.1 125.5ZM254.5 121.5L223.5 112.8L255.4 116.6ZM256.6 112.7L227.9 98.2L258.5 108.1ZM260.4 104.5L235.1 84.7L263.2 100.4ZM265.8 97.3L244.8 72.8L269.3 93.8ZM272.4 91.2L256.7 63.1L276.5 88.4ZM280.1 86.5L270.2 55.9L284.7 84.6ZM288.6 83.4L284.8 51.5L293.5 82.5ZM297.5 82.1L300.0 50.0L302.5 82.1ZM306.5 82.5L315.2 51.5L311.4 83.4ZM315.3 84.6L329.8 55.9L319.9 86.5ZM323.5 88.4L343.3 63.1L327.6 91.2ZM330.7 93.8L355.2 72.8L334.2 97.3ZM336.8 100.4L364.9 84.7L339.6 104.5ZM341.5 108.1L372.1 98.2L343.4 112.7ZM344.6 116.6L376.5 112.8L345.5 121.5Z"/><path d="M190 222c40-26 80-34 110-30 30-4 70 4 110 30-34-8-70-10-110-4-40-6-76-4-110 4z"/><path d="M42 18l14 14-14 14-14-14zM42 62l14 14-14 14-14-14zM42 106l14 14-14 14-14-14zM42 150l14 14-14 14-14-14zM42 194l14 14-14 14-14-14zM42 238l14 14-14 14-14-14zM42 282l14 14-14 14-14-14z"/></g></symbol>
+    <symbol id="flag-gb" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice"><clipPath id="flag-gb-c"><path d="M30 15h30v15zv15H0zH0V0zV0h30z"/></clipPath><path fill="#012169" d="M0 0h60v30H0z"/><path stroke="#fff" stroke-width="6" d="M0 0l60 30m0-30L0 30"/><path stroke="#c8102e" stroke-width="4" d="M0 0l60 30m0-30L0 30" clip-path="url(#flag-gb-c)"/><path stroke="#fff" stroke-width="10" d="M30 0v30M0 15h60"/><path stroke="#c8102e" stroke-width="6" d="M30 0v30M0 15h60"/></symbol>
   </svg>
   <a class="skip" href="#main">Перейти к содержанию</a>
 
@@ -22,151 +26,88 @@
         <svg class="brand-mark" width="32" height="32" aria-hidden="true"><use href="#mark"/></svg>
         <span>RaccoonAI</span>
       </a>
-      <nav class="site-nav" aria-label="Основная навигация">
-        <a href="#products">Продукты</a>
-        <a href="#ai">AI-диспетчер</a>
-        <a href="#city">Для акиматов</a>
-      </nav>
+      <details class="lang" translate="no" data-i18n-skip>
+        <summary data-lang-current aria-label="Язык · Тіл · Language"><svg class="flag" aria-hidden="true"><use href="#flag-ru"/></svg><span class="lang-code">RU</span><svg class="lang-chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+        <div class="lang-menu" role="group" aria-label="Язык · Тіл · Language">
+          <button type="button" data-lang="ru" lang="ru" aria-pressed="true"><svg class="flag" aria-hidden="true"><use href="#flag-ru"/></svg><span>Русский</span></button>
+          <button type="button" data-lang="kk" lang="kk" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-kz"/></svg><span>Қазақша</span></button>
+          <button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-gb"/></svg><span>English</span></button>
+        </div>
+      </details>
       <a class="btn btn-primary btn-sm" href="#demo">Запросить демо</a>
+      <details class="m-nav">
+        <summary aria-label="Разделы страницы"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="m-nav-open" d="M4 7h16M4 12h16M4 17h16"/><path class="m-nav-close" d="M6 6l12 12M18 6L6 18"/></svg></summary>
+        <nav class="m-nav-panel" aria-label="Разделы страницы">
+          <a href="#intake">Заявки</a>
+          <a href="#dispatcher">AI-диспетчер</a>
+          <a href="#schedule">Плановый вывоз</a>
+          <a href="#driverapp">DriverApp</a>
+          <a href="#clients">Заказчики</a>
+          <a href="#products">Продукты</a>
+          <div class="m-lang" translate="no" data-i18n-skip role="group" aria-label="Язык · Тіл · Language">
+            <button type="button" data-lang="ru" lang="ru" aria-pressed="true"><svg class="flag" aria-hidden="true"><use href="#flag-ru"/></svg><span>RU</span></button>
+            <button type="button" data-lang="kk" lang="kk" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-kz"/></svg><span>KK</span></button>
+            <button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-gb"/></svg><span>EN</span></button>
+          </div>
+        </nav>
+      </details>
     </div>
   </header>
 
+  <!-- Desktop navigation (≥1081px; the header above serves narrower screens): a floating card at the top-left with the
+       brand, the section tree and the language switcher with the demo CTA. At rest it is a 48px strip (mark, rail, flag,
+       CTA icon); hover or keyboard focus opens it, and it stays open on wide screens when nothing full-bleed is behind it. -->
+  <nav class="tree-nav" aria-label="Разделы страницы" data-tree>
+    <div class="tree-card">
+      <a class="tree-brand" href="#top" aria-label="RaccoonAI — на главную">
+        <svg class="brand-mark" width="32" height="32" aria-hidden="true"><use href="#mark"/></svg>
+        <span class="tree-txt">RaccoonAI</span>
+      </a>
+      <div class="tree-body">
+        <span class="tree-pill" aria-hidden="true"></span>
+        <ul class="tree-list">
+          <li><a href="#top">Платформа</a></li>
+          <li><a href="#intake">Заявки</a></li>
+          <li><a href="#dispatcher">AI-диспетчер</a></li>
+          <li><a href="#schedule">Плановый вывоз</a></li>
+          <li><a href="#driverapp">DriverApp</a></li>
+          <li><a href="#clients">Заказчики</a></li>
+          <li><a href="#products">Продукты</a></li>
+        </ul>
+        <span class="tree-rail" aria-hidden="true">
+          <span class="tree-line"></span>
+          <span class="tree-fill"></span>
+          <span class="tree-marker"></span>
+        </span>
+      </div>
+      <div class="tree-foot">
+        <details class="lang tree-lang" translate="no" data-i18n-skip>
+          <summary data-lang-current aria-label="Язык · Тіл · Language"><svg class="flag" aria-hidden="true"><use href="#flag-ru"/></svg><span class="lang-code tree-txt">RU</span><svg class="lang-chev tree-txt" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+          <div class="lang-menu" role="group" aria-label="Язык · Тіл · Language">
+            <button type="button" data-lang="ru" lang="ru" aria-pressed="true"><svg class="flag" aria-hidden="true"><use href="#flag-ru"/></svg><span>Русский</span></button>
+            <button type="button" data-lang="kk" lang="kk" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-kz"/></svg><span>Қазақша</span></button>
+            <button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-gb"/></svg><span>English</span></button>
+          </div>
+        </details>
+        <a class="btn btn-primary tree-cta" href="#demo"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="4.5" width="14" height="12.5" rx="2.5"/><path d="M3 8.5h14M7 2.5v4M13 2.5v4"/></svg><span class="tree-txt">Запросить демо</span></a>
+      </div>
+    </div>
+  </nav>
+
   <main id="main">
-    <!-- ============ HERO ============ -->
-    <section class="hero" id="top" aria-labelledby="hero-title">
-      <div class="wrap hero-grid">
-        <div class="hero-copy">
-          <h1 id="hero-title"><span class="nobr">AI&#8209;диспетчер</span> для&nbsp;вывоза отходов</h1>
-          <p class="lead">Заявки, маршруты, техника, водители и&nbsp;клиенты МВО — в&nbsp;одной системе. AI назначает задания на&nbsp;машины, диспетчер работает только с&nbsp;исключениями.</p>
+    <!-- ============ PLATFORM (built from Figma 4296:5593 with the RaccoonAI Design System; regenerate, do not hand-edit the screen) ============ -->
+    <section class="section section-tint platform platform-hero" id="top" aria-labelledby="platform-title">
+      <div class="pf-hero">
+        <img class="pf-hero-img" src="images/hero-1600.webp" srcset="images/hero-960.webp 960w, images/hero-1600.webp 1600w, images/hero-2400.webp 2400w, images/hero-3840.webp 3840w" sizes="100vw" width="3840" height="1648" alt="" fetchpriority="high" decoding="async">
+        <div class="wrap pf-hero-copy">
+          <h1 id="platform-title">Платформа: вся диспетчерская на&nbsp;одном экране</h1>
+          <p>Карта заданий по&nbsp;статусам, машина на&nbsp;линии с&nbsp;экипажем и&nbsp;рейсами, план и&nbsp;факт вывоза по&nbsp;площадкам и&nbsp;технике. Так выглядит рабочий экран диспетчера RaccoonAI.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#demo">Запросить демо</a>
-            <a class="btn btn-quiet" href="#products">Посмотреть продукты</a>
+            <a class="btn btn-quiet" href="#pf-viewport">Посмотреть интерфейс</a>
           </div>
-          <ul class="proof-line" aria-label="Где работает RaccoonAI">
-            <li>Пилоты в&nbsp;Алматы и&nbsp;Астане</li>
-            <li>Партнёр по&nbsp;разработке — ТОО «Ак&nbsp;Тартып»</li>
-            <li>Ситуационный центр Алматы</li>
-          </ul>
+          <p class="hero-proof"><span>Пилоты в&nbsp;Алматы и&nbsp;Астане</span><span>Партнёр по&nbsp;разработке&nbsp;— ТОО «Ак&nbsp;Тартып»</span><span>Ситуационный центр Алматы</span></p>
         </div>
-
-        <figure class="stage" id="stage" aria-label="Пример: AI-диспетчер назначает новую заявку на машину 123 ABC 02">
-          <div class="stage-map" aria-hidden="true">
-            <svg viewBox="0 0 800 600" preserveAspectRatio="xMinYMid slice">
-              <rect width="800" height="600" fill="#eef2f6"/>
-              <path d="M-20 420 C120 380 210 470 330 430 S560 330 820 360" fill="none" stroke="#d6e4f2" stroke-width="34"/>
-              <rect x="470" y="420" width="160" height="110" rx="10" fill="#e1ede2"/>
-              <rect x="60" y="70" width="120" height="90" rx="8" fill="#e1ede2"/>
-              <g fill="#e3e8ee">
-                <rect x="40" y="200" width="110" height="70" rx="6"/><rect x="170" y="200" width="90" height="70" rx="6"/><rect x="280" y="180" width="120" height="90" rx="6"/>
-                <rect x="210" y="60" width="140" height="100" rx="6"/><rect x="380" y="60" width="110" height="90" rx="6"/><rect x="520" y="40" width="130" height="80" rx="6"/>
-                <rect x="430" y="180" width="100" height="90" rx="6"/><rect x="560" y="160" width="120" height="100" rx="6"/><rect x="700" y="120" width="90" height="140" rx="6"/>
-                <rect x="40" y="480" width="150" height="90" rx="6"/><rect x="220" y="500" width="120" height="80" rx="6"/><rect x="660" y="430" width="120" height="120" rx="6"/>
-              </g>
-              <g fill="none" stroke="#ffffff" stroke-linecap="round">
-                <path d="M0 180 H800" stroke-width="14"/><path d="M0 300 H800" stroke-width="18"/><path d="M200 0 V600" stroke-width="12"/>
-                <path d="M410 0 V600" stroke-width="16"/><path d="M690 0 L560 600" stroke-width="12"/><path d="M0 560 L800 470" stroke-width="10"/>
-              </g>
-              <g class="map-labels">
-                <text x="236" y="322">пр. Абая</text>
-                <text x="404" y="560" transform="rotate(-90 404 560)">ул. Жандосова</text>
-              </g>
-              <g class="map-fleet">
-                <rect x="440" y="290" width="30" height="20" rx="6"/><rect x="472" y="484" width="30" height="20" rx="6" transform="rotate(-6 487 494)"/><rect x="420" y="214" width="20" height="30" rx="6"/>
-              </g>
-            </svg>
-          </div>
-
-          <svg class="stage-routes" viewBox="0 0 800 600" preserveAspectRatio="xMinYMid meet" aria-hidden="true">
-            <defs><mask id="ai-draw" maskUnits="userSpaceOnUse" x="0" y="0" width="800" height="600"><path id="ai-mask" d="M470 220 V198 Q470 180 488 180 H622 Q640 180 640 198 V208 Q640 226 658 226 H720" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></mask></defs>
-            <path class="route-casing" d="M60 420 H182 Q200 420 200 402 V318 Q200 300 218 300 H312 Q330 300 330 282 V238 Q330 220 348 220 H470 V198 Q470 180 488 180 H622 Q640 180 640 198 V208 Q640 226 658 226 H720"/>
-            <path class="route-done" d="M60 420 H182 Q200 420 200 402 V318 Q200 300 218 300 H312 Q330 300 330 282 V238 Q330 220 348 220 H400"/>
-            <path class="route-live" d="M400 220 H470"/>
-            <path class="route-ai" id="route-ai" d="M470 220 V198 Q470 180 488 180 H622 Q640 180 640 198 V208 Q640 226 658 226 H720" mask="url(#ai-draw)"/>
-            <g class="pin pin-done"><circle cx="200" cy="350" r="9"/></g>
-            <g class="pin pin-done"><circle cx="276" cy="300" r="9"/></g>
-            <g class="pin pin-next"><circle cx="470" cy="220" r="10"/></g>
-            <g class="pin pin-new" id="pin-new"><circle cx="720" cy="226" r="12"/><circle class="pin-ring" cx="720" cy="226" r="22"/></g>
-            <g class="depot"><rect x="38" y="404" width="32" height="32" rx="8"/><path d="M47 424h14M50 416h8" /></g>
-            <g class="truck" transform="translate(400 220)"><rect x="-22" y="-14" width="44" height="28" rx="8"/><path d="M-11 -2h12v8h-12zM1 0h6l4 4v2h-10z"/></g>
-          </svg>
-
-          <div class="ui-card card-request" id="card-request">
-            <div class="card-row">
-              <span class="status status-progress">Машина в&nbsp;пути</span>
-              <span class="meta">13:32 · WhatsApp</span>
-            </div>
-            <p class="card-title">Новая заявка</p>
-            <p class="card-sub">мкр. Самал-2, 58 · контейнер ТБО 1.1&nbsp;м³</p>
-          </div>
-
-          <div class="ui-card card-ai" id="card-ai">
-            <div class="card-row">
-              <span class="status status-ai" id="ai-badge">Назначено AI</span>
-              <span class="meta">ETA 14:05</span>
-            </div>
-            <p class="card-title"><span class="plate">123 ABC 02</span> Мусоровоз ТБО</p>
-            <p class="card-sub" id="ai-sub">Добавлено в&nbsp;маршрут · точка 11 из&nbsp;11</p>
-            <div class="card-actions">
-              <button type="button" class="mini-btn" tabindex="-1">Переназначить</button>
-            </div>
-          </div>
-
-          <div class="phone" aria-hidden="true">
-            <div class="phone-screen">
-              <div class="phone-top">
-                <span class="plate">123 ABC 02</span>
-                <span class="phone-shift">Смена до 20:00</span>
-              </div>
-              <p class="phone-progress">Точка 3 из <span id="phone-total">11</span></p>
-              <div class="phone-point">
-                <span class="point-no">3</span>
-                <div>
-                  <p class="point-addr">ул. Толе би, 112</p>
-                  <p class="point-sub">Площадка · 2 контейнера</p>
-                </div>
-              </div>
-              <div class="phone-btn">Сделайте фото ДО</div>
-              <div class="phone-upcoming">
-                <p><span>4</span>пр. Абая, 48</p>
-                <p><span>5</span>ул. Жандосова, 7</p>
-                <p><span>6</span>мкр. Орбита-1, 12</p>
-              </div>
-              <div class="phone-new" id="phone-new">
-                <span class="dot-ai"></span>
-                <div>
-                  <p class="point-addr">мкр. Самал-2, 58</p>
-                  <p class="point-sub">Новая точка от AI-диспетчера</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="drv-strip" aria-hidden="true">
-            <span class="dot-ai"></span>
-            <span><strong>DriverApp</strong> · новая точка: мкр. Самал-2, 58</span>
-          </div>
-
-          <figcaption class="stage-caption">
-            <ol class="seq-steps">
-              <li><span class="seq-no">1</span>Заявка из&nbsp;WhatsApp</li>
-              <li class="seq-ai"><span class="seq-no">2</span>AI предлагает машину</li>
-              <li><span class="seq-no">3</span>Назначено</li>
-              <li><span class="seq-no">4</span>Точка у&nbsp;водителя</li>
-            </ol>
-            <div class="seq-foot">
-              <span>Демонстрационные данные</span>
-              <button type="button" class="seq-replay" id="seq-replay" hidden>Повторить</button>
-            </div>
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- ============ PLATFORM (built from Figma 4296:5593 with the RaccoonAI Design System; regenerate, do not hand-edit the screen) ============ -->
-    <section class="section section-tint platform" id="platform" aria-labelledby="platform-title">
-      <div class="wrap section-head">
-        <h2 id="platform-title">Платформа: вся диспетчерская на&nbsp;одном экране</h2>
-        <p>Карта заданий по&nbsp;статусам, машина на&nbsp;линии с&nbsp;экипажем и&nbsp;рейсами, план и&nbsp;факт вывоза по&nbsp;площадкам и&nbsp;технике. Так выглядит рабочий экран диспетчера RaccoonAI.</p>
       </div>
       <figure class="pf-frame" aria-label="Экран Платформы RaccoonAI: дэшборд диспетчера с картой заданий, карточкой машины 714SH02 и статусом вывоза">
         <div class="pf-viewport" id="pf-viewport">
@@ -179,65 +120,168 @@
       </figure>
     </section>
 
-    <!-- ============ ONE JOB, ONE STATUS ============ -->
-    <section class="section" aria-labelledby="one-title">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 id="one-title">Одна заявка. Четыре экрана. Один статус.</h2>
-          <p>Заявка клиента, маршрут водителя, взвешивание на&nbsp;полигоне и&nbsp;отчёт для&nbsp;акимата — это одно и&nbsp;то же задание. Каждый видит его в&nbsp;своём приложении, и&nbsp;статус у&nbsp;всех один.</p>
+    <!-- ============ REQUEST INTAKE ============ -->
+    <section class="section intake" id="intake" aria-labelledby="intake-title">
+      <div class="wrap split intake-split">
+        <div class="split-copy">
+          <h2 id="intake-title">Заявки из&nbsp;трёх каналов в&nbsp;одной очереди</h2>
+          <p>Клиент пишет, звонит или нажимает кнопку в&nbsp;приложении. Заявка в&nbsp;любом случае попадает в&nbsp;Платформу, и&nbsp;дальше её&nbsp;ведёт диспетчер или AI.</p>
+          <dl class="channels">
+            <div><dt><span class="src-ic"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4.5" y="1.8" width="7" height="12.4" rx="1.6"/><path d="M7.2 11.9h1.6"/></svg></span>Client App</dt><dd>Клиент оформляет вывоз в&nbsp;приложении и&nbsp;следит за&nbsp;статусом заявки.</dd></div>
+            <div><dt><span class="src-ic"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5a5.5 5.5 0 0 0-4.8 8.2L2.5 13.5l2.9-.7A5.5 5.5 0 1 0 8 2.5z"/></svg></span>WhatsApp-бот</dt><dd>Узнаёт клиента по&nbsp;номеру телефона и&nbsp;сам создаёт заявку в&nbsp;Платформе.</dd></div>
+            <div><dt><span class="src-ic"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.2 2.5l1.6 3-1.3 1.2a8 8 0 0 0 3.8 3.8l1.2-1.3 3 1.6-.6 2.4c-.1.4-.5.7-1 .6A11 11 0 0 1 2.2 4.1c0-.5.2-.9.6-1z"/></svg></span>SIP-телефония</dt><dd>Абонентский отдел принимает звонки прямо в&nbsp;Платформе: карточка звонящего открывается сама, заявка оформляется без&nbsp;второй программы.</dd></div>
+          </dl>
         </div>
 
-        <div class="views" role="list">
-          <div class="view" role="listitem">
-            <h3>Диспетчер</h3>
-            <p class="view-where">Платформа · веб</p>
-            <div class="view-ui">
-              <div class="v-table">
-                <div class="v-th"><span>Площадка</span><span>Машина</span></div>
-                <div class="v-tr"><span>Самал-2, 58</span><span class="plate">123 ABC 02</span></div>
-              </div>
+        <figure class="intake-stage" aria-label="Пример очереди заявок в Платформе">
+          <div class="call" id="call">
+            <div class="call-head">
+              <span class="call-state"><i></i><span id="call-state">Входящий звонок</span></span>
+              <span class="call-time">00:42</span>
             </div>
-            <span class="status status-progress">Машина в&nbsp;пути</span>
-          </div>
-          <div class="view" role="listitem">
-            <h3>Водитель</h3>
-            <p class="view-where">DriverApp · Android, iOS</p>
-            <div class="view-ui">
-              <p class="v-strong">Следующая точка</p>
-              <p class="v-sub">мкр. Самал-2, 58 · 1.1&nbsp;м³</p>
+            <p class="call-num">+7 727 345&nbsp;12&nbsp;08</p>
+            <p class="call-who">ТОО «Береке Трейд» · КП Жибек Жолы, 115</p>
+            <div class="call-actions">
+              <button type="button" class="call-btn" id="call-create">Создать заявку</button>
+              <span class="call-note" id="call-note">Договор № 31/2026 · вывоз ТБО</span>
             </div>
-            <span class="status status-progress">Машина в&nbsp;пути</span>
           </div>
-          <div class="view" role="listitem">
-            <h3>Клиент</h3>
-            <p class="view-where">WhatsApp-бот · Client App</p>
-            <div class="view-ui">
-              <p class="v-bubble">Заявка принята. Машина 123&nbsp;ABC&nbsp;02 приедет к&nbsp;14:05.</p>
+
+          <div class="inbox">
+            <div class="inbox-head">
+              <p class="inbox-title">Заявки · сегодня</p>
+              <p class="inbox-count"><span id="inbox-n">3</span> новых</p>
             </div>
-            <span class="status status-progress">Машина в&nbsp;пути</span>
+            <ul class="inbox-list" id="inbox-list" aria-live="polite">
+              <li>
+                <span class="src"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5a5.5 5.5 0 0 0-4.8 8.2L2.5 13.5l2.9-.7A5.5 5.5 0 1 0 8 2.5z"/></svg>WhatsApp</span>
+                <span class="inbox-main"><b>ИП Сапарова А.</b><small>Вывоз ТБО · Абая, 52</small></span>
+                <span class="status status-created">Неназначено</span>
+              </li>
+              <li>
+                <span class="src"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4.5" y="1.8" width="7" height="12.4" rx="1.6"/><path d="M7.2 11.9h1.6"/></svg>Client App</span>
+                <span class="inbox-main"><b>ТОО «Медеу Фуд»</b><small>Дезинфекция · Достык, 9</small></span>
+                <span class="status status-ai">Назначено AI</span>
+              </li>
+              <li>
+                <span class="src"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.2 2.5l1.6 3-1.3 1.2a8 8 0 0 0 3.8 3.8l1.2-1.3 3 1.6-.6 2.4c-.1.4-.5.7-1 .6A11 11 0 0 1 2.2 4.1c0-.5.2-.9.6-1z"/></svg>Звонок</span>
+                <span class="inbox-main"><b>ТОО «Алатау Сервис Групп»</b><small>Вывоз ТБО · Самал-2, 58</small></span>
+                <span class="status status-progress">Машина в&nbsp;пути</span>
+              </li>
+            </ul>
           </div>
-          <div class="view" role="listitem">
-            <h3>Акимат</h3>
-            <p class="view-where">Sentinel · ситуационный центр</p>
-            <div class="view-ui">
-              <p class="v-strong">Алмалинский район</p>
-              <p class="v-sub">План и факт по&nbsp;площадкам</p>
-            </div>
-            <span class="status status-progress">Машина в&nbsp;пути</span>
+
+          <div class="wa">
+            <p class="wa-in">Здравствуйте, нужен вывоз на&nbsp;Абая, 52, два контейнера</p>
+            <p class="wa-out">ИП Сапарова А., заявка № 10482 принята. Статус пришлём сюда&nbsp;же.</p>
           </div>
-        </div>
-        <p class="stage-note stage-note-inline">Демонстрационные данные</p>
+          <figcaption class="stage-note">Демонстрационные данные · кнопка «Создать заявку» работает</figcaption>
+        </figure>
       </div>
     </section>
 
-    <!-- ============ AI DISPATCHER ============ -->
-    <section class="section section-tint" id="ai" aria-labelledby="ai-title">
-      <div class="wrap split">
+    <!-- ============ AI DISPATCHER (one block: how it decides, who stays in control) ============ -->
+    <section class="hero section-tint dispatcher" id="dispatcher" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <h2 id="hero-title"><span class="nobr">AI&#8209;диспетчер</span> для&nbsp;вывоза отходов</h2>
+          <p class="lead">Новая заявка — и&nbsp;AI сам выбирает для&nbsp;неё машину и&nbsp;добавляет точку в&nbsp;маршрут. Диспетчер работает только с&nbsp;исключениями.</p>
+          <dl class="weighs" aria-label="Что учитывает AI-диспетчер">
+            <div><dt>Приоритет по&nbsp;SLA</dt><dd>успеет ли машина к&nbsp;сроку</dd></div>
+            <div><dt>Расположение площадки</dt><dd>кто ближе по&nbsp;маршруту</dd></div>
+            <div><dt>Тип отходов</dt><dd>СО или ТБО</dd></div>
+            <div><dt>Подходящая техника</dt><dd>мусоровоз или мультилифт</dd></div>
+            <div><dt>Приоритет клиента</dt><dd>кого обслужить первым</dd></div>
+          </dl>
+          <a class="more-link" href="#ai-control">Как устроен контроль<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4.5v11M5 11l5 4.5 5-4.5"/></svg></a>
+        </div>
+
+        <figure class="stage" id="stage" aria-label="Пример: AI-диспетчер сравнивает три машины и назначает новую заявку на 123 ABC 02">
+          <div class="stage-canvas">
+            <div class="stage-map" aria-hidden="true">
+              <img src="images/dispatch-map-1020.webp" srcset="images/dispatch-map-1020.webp 1020w, images/dispatch-map-2040.webp 2040w" sizes="(min-width: 1081px) 60vw, 100vw" width="1020" height="500" alt="" decoding="async">
+              <span class="map-credit">© 2GIS</span>
+            </div>
+
+            <svg class="stage-routes" viewBox="0 0 1020 500" preserveAspectRatio="xMinYMid slice" aria-hidden="true">
+              <defs><mask id="ai-draw" maskUnits="userSpaceOnUse" x="0" y="0" width="1020" height="500"><path id="ai-mask" d="M350 206 L383 202 L440 196" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></mask></defs>
+              <path class="route-casing" d="M93 305 L92 250 L92 228 L153 225 L191 216 L270 211 L350 206 L383 202 L440 196"/>
+              <path class="route-done" d="M93 305 L92 250 L92 228 L153 225 L191 216 L270 211"/>
+              <path class="route-live" d="M270 211 L350 206"/>
+              <path class="route-ai" id="route-ai" d="M350 206 L383 202 L440 196" mask="url(#ai-draw)"/>
+              <g class="depot"><rect x="80" y="292" width="26" height="26" rx="7"/><path d="M87 308h12M90 302h6"/></g>
+              <g class="truck" transform="translate(270 211) rotate(-4)"><svg x="-26" y="-26" width="52" height="52" viewBox="0 0 56 56" fill="none"><g filter="url(#dt-r49)"><path d="M14.5 36L12.5 34.5L22 34L19.5 36L14.5 36Z" fill="#1A8B27"/><path d="M12.5 21.5L14.5 19.5L20 19.5L21.5 21.5L12.5 21.5Z" fill="#1A8B27"/><path d="M21.5 36L19.5 34.5L29 34L26.5 36L21.5 36Z" fill="#1A8B27"/><path d="M19.5 21.5L21.5 19.5L27 19.5L28.5 21.5L19.5 21.5Z" fill="#1A8B27"/><path d="M12.16 35L31.13 35.16C31.68 35.17 32.14 34.72 32.14 34.16L32.14 21.5C32.14 20.95 31.69 20.5 31.14 20.5L12.16 20.5C12.05 20.5 11.95 20.52 11.85 20.55L9.14 21.45C9.06 21.48 9 21.56 9 21.64L9 33.86C9 33.94 9.06 34.02 9.14 34.05L11.85 34.95C11.95 34.98 12.05 35 12.16 35Z" fill="#23BF36"/><g style="mix-blend-mode:multiply"><path d="M28.5 34L32 35.29L32 20.5L28.5 21.5L28.5 34Z" fill="#BDB9B9"/></g><path opacity="0.3" d="M28.5 21.86L28.5 33.6C28.5 33.71 28.41 33.8 28.3 33.8L9 33.88L9 21.5L28.3 21.66C28.41 21.66 28.5 21.75 28.5 21.86Z" fill="white"/><mask id="dt-r4d" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="9" y="21" width="20" height="13"><path opacity="0.3" d="M28.5 21.86L28.5 33.6C28.5 33.71 28.41 33.8 28.3 33.8L9.07 33.8L9.14 21.5L28.3 21.66C28.41 21.66 28.5 21.75 28.5 21.86Z" fill="white"/></mask><g mask="url(#dt-r4d)"><path d="M11 21.52L11 33.8C11 33.91 10.91 34 10.8 34L10 34L10 21.32L10.8 21.32C10.91 21.32 11 21.41 11 21.52Z" fill="white"/><path d="M14 20.85L14 34.3C14 34.41 13.91 34.5 13.8 34.5L13 34.5L13 20.5L13.84 20.65C13.93 20.67 14 20.75 14 20.85Z" fill="white"/><path d="M17 20.85L17 34.3C17 34.41 16.91 34.5 16.8 34.5L16 34.5L16 20.5L16.84 20.65C16.93 20.67 17 20.75 17 20.85Z" fill="white"/><path d="M20 20.85L20 34.3C20 34.41 19.91 34.5 19.8 34.5L19 34.5L19 20.5L19.84 20.65C19.93 20.67 20 20.75 20 20.85Z" fill="white"/><path d="M23 20.85L23 34.3C23 34.41 22.91 34.5 22.8 34.5L22 34.5L22 20.5L22.84 20.65C22.93 20.67 23 20.75 23 20.85Z" fill="white"/><path d="M26 20.85L26 34.3C26 34.41 25.91 34.5 25.8 34.5L25 34.5L25 20.5L25.84 20.65C25.93 20.67 26 20.75 26 20.85Z" fill="white"/><path d="M29 20.85L29 34.3C29 34.41 28.91 34.5 28.8 34.5L28 34.5L28 20.5L28.84 20.65C28.93 20.67 29 20.75 29 20.85Z" fill="white"/></g><path d="M38.5 35.5L37 33.5L46 33.5L44 35.5L38.5 35.5Z" fill="#63E583"/><path d="M37 22L38.5 20L44 20L46 22L37 22Z" fill="#63E583"/><path d="M47 33.5C47.17 32.67 47.5 29.5 47.5 27.5C47.5 26.21 47.36 24.38 47.22 22.91C47.14 22.11 46.5 21 46 21H45V34.5C45 34.5 45.5 34.5 46 34.5C46.5 34.5 46.83 34.33 47 33.5Z" fill="#34C759"/><path d="M36.74 34.5L31.74 34.5C31.58 34.5 31.43 34.46 31.29 34.39L30.05 33.78C29.71 33.61 29.5 33.26 29.5 32.88L29.5 22.62C29.5 22.24 29.71 21.89 30.05 21.72L31.29 21.11C31.43 21.04 31.58 21 31.74 21L36.74 21C36.87 21 36.97 20.88 36.94 20.75L36.65 19.6C36.57 19.3 36.81 19 37.12 19C37.34 19 37.54 19.15 37.59 19.37L37.96 20.85C37.98 20.94 38.06 21 38.16 21L44.5 21C45.64 21 45.97 21.91 46.43 22.85C46.48 22.95 46.54 23.04 46.6 23.13C47.47 24.51 46.98 31.53 46.5 32.5C46.17 33.15 45.2 34.14 44.65 34.43C44.55 34.48 44.45 34.5 44.34 34.5L38.16 34.5C38.06 34.5 37.98 34.56 37.96 34.65L37.59 36.13C37.54 36.35 37.34 36.5 37.12 36.5C36.81 36.5 36.57 36.2 36.65 35.9L36.94 34.75C36.97 34.62 36.87 34.5 36.74 34.5Z" fill="#34C759"/><mask id="dt-r4e" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="29" y="19" width="19" height="18"><path d="M36.74 34.5L31.74 34.5C31.58 34.5 31.43 34.46 31.29 34.39L30.05 33.78C29.71 33.61 29.5 33.26 29.5 32.88L29.5 22.62C29.5 22.24 29.71 21.89 30.05 21.72L31.29 21.11C31.43 21.04 31.58 21 31.74 21L36.74 21C36.87 21 36.97 20.88 36.94 20.75L36.65 19.6C36.57 19.3 36.81 19 37.12 19C37.34 19 37.54 19.15 37.59 19.37L37.96 20.85C37.98 20.94 38.06 21 38.16 21L44.5 21C45.64 21 45.97 21.91 46.43 22.85C46.48 22.95 46.54 23.04 46.6 23.13C47.47 24.51 46.98 31.53 46.5 32.5C46.17 33.15 45.2 34.14 44.65 34.43C44.55 34.48 44.45 34.5 44.34 34.5L38.16 34.5C38.06 34.5 37.98 34.56 37.96 34.65L37.59 36.13C37.54 36.35 37.34 36.5 37.12 36.5C36.81 36.5 36.57 36.2 36.65 35.9L36.94 34.75C36.97 34.62 36.87 34.5 36.74 34.5Z" fill="#17BA58"/></mask><g mask="url(#dt-r4e)"><g opacity="0.2" filter="url(#dt-r4a)"><path d="M38 22L47 23V32.5L38 33.5L34.5 32.5H29V23H34.5L38 22Z" fill="white"/></g><path d="M45 34.09L46.5 32.5C46.5 32.5 47.5 31.75 47.5 27.5C47.5 23.25 46.5 23 46.5 23L45 22.06L45 34.09Z" fill="url(#dt-r45)"/></g><path d="M37.5 34L32 34L30 33L34.5 33L37.5 34Z" fill="url(#dt-r46)"/><path d="M38 33.5L34.5 32.5C34.5 32.5 35 29 35 27.5C35 26 34.5 23 34.5 23L38 22C38.5 23 39 24.11 39 27.5C39 31.5 38.5 32.5 38 33.5Z" fill="url(#dt-r47)"/><path d="M34.5 22.5L30 22.5L32 21.5L37.5 21.5L34.5 22.5Z" fill="url(#dt-r48)"/><g filter="url(#dt-r4b)"><path d="M45 33C44.43 33.57 44 34 44 34.5L45 34.5C46.2 34.5 46.5 33 46.5 32.5C46.5 32.5 45.5 32.5 45 33Z" fill="#FFE9BD"/></g><g filter="url(#dt-r4c)"><path d="M45.08 22.5C44.81 22.21 44.16 21.5 44.16 21L45.08 21C46.18 21 46.5 22.5 46.5 23C46.5 23 45.54 23 45.08 22.5Z" fill="#FFE9BD"/></g></g><defs><filter id="dt-r49" x="4" y="8" width="48" height="48" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="4"/><feGaussianBlur stdDeviation="2"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_12995_27786"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_12995_27786" result="shape"/></filter><filter id="dt-r4a" x="28.8" y="21.8" width="18.4" height="11.9" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="0.1" result="effect1_foregroundBlur_12995_27786"/></filter><filter id="dt-r4b" x="40" y="32.5" width="10.5" height="10" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="4"/><feGaussianBlur stdDeviation="2"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_12995_27786"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_12995_27786" result="shape"/></filter><filter id="dt-r4c" x="40.16" y="21" width="10.34" height="10" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="4"/><feGaussianBlur stdDeviation="2"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_12995_27786"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_12995_27786" result="shape"/></filter><linearGradient id="dt-r45" x1="45" y1="27.5" x2="46.5" y2="27.5" gradientUnits="userSpaceOnUse"><stop stop-color="white" stop-opacity="0"/><stop offset="1" stop-opacity="0.15"/></linearGradient><radialGradient id="dt-r46" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(35 28) rotate(-180) scale(5 8.1)"><stop stop-color="#777777"/><stop offset="1" stop-color="#222222"/></radialGradient><radialGradient id="dt-r47" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(35 28) rotate(-180) scale(5 8.1)"><stop stop-color="#777777"/><stop offset="1" stop-color="#222222"/></radialGradient><radialGradient id="dt-r48" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(35 28) rotate(-180) scale(5 8.1)"><stop stop-color="#777777"/><stop offset="1" stop-color="#222222"/></radialGradient></defs></svg></g>
+              <g class="pin pin-done"><circle cx="92" cy="250" r="12"/><text x="92" y="250">8</text></g>
+              <g class="pin pin-done"><circle cx="191" cy="216" r="12"/><text x="191" y="216">9</text></g>
+              <g class="pin pin-next"><circle cx="350" cy="206" r="12"/><text x="350" y="206">10</text></g>
+              <g class="pin pin-new" id="pin-new"><circle class="pin-ring" cx="440" cy="196" r="24"/><circle cx="440" cy="196" r="12"/><text x="440" y="196">11</text></g>
+            </svg>
+
+            <div class="ui-card card-request" id="card-request">
+              <div class="card-row">
+                <span class="status status-progress">Машина в&nbsp;пути</span>
+                <span class="meta">13:32 · WhatsApp</span>
+              </div>
+              <p class="card-title">Вывоз ТБО</p>
+              <p class="card-sub">ул. Шевченко, 118 · контейнер 1,1&nbsp;м³</p>
+            </div>
+          </div>
+
+          <div class="ai-pick" id="ai-pick">
+            <div class="pick-head">
+              <div>
+                <p class="pick-title">Подбор машины</p>
+                <p class="pick-sub">ул. Шевченко, 118 · ТБО · <span class="nobr">SLA до 14:30</span></p>
+              </div>
+              <span class="status status-ai" id="ai-badge">Назначено AI</span>
+            </div>
+            <ol class="cands">
+              <li class="cand is-chosen" data-cand>
+                <span class="cand-mark is-ok" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7"/></svg></span>
+                <div>
+                  <p class="cand-name"><span class="plate">123 ABC 02</span> Мусоровоз ТБО</p>
+                  <p class="cand-why">1.8&nbsp;км · прибудет в&nbsp;14:05, до&nbsp;срока SLA</p>
+                </div>
+              </li>
+              <li class="cand" data-cand>
+                <span class="cand-mark is-no" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span>
+                <div>
+                  <p class="cand-name"><span class="plate">482 KMT 02</span> Мусоровоз ТБО</p>
+                  <p class="cand-why">4.6&nbsp;км · прибудет в&nbsp;14:40, позже срока</p>
+                </div>
+              </li>
+              <li class="cand" data-cand>
+                <span class="cand-mark is-no" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span>
+                <div>
+                  <p class="cand-name"><span class="plate">915 AAR 02</span> Мусоровоз ТБО</p>
+                  <p class="cand-why">AI выключен · машина на&nbsp;ручном управлении</p>
+                </div>
+              </li>
+            </ol>
+            <div class="pick-foot">
+              <p id="ai-sub">Добавлено в&nbsp;маршрут · <span class="nobr">точка 11 из 11</span></p>
+              <button type="button" class="mini-btn" tabindex="-1">Переназначить</button>
+            </div>
+          </div>
+
+          <figcaption class="stage-caption">
+            <ol class="seq-steps">
+              <li><span class="seq-no">1</span>Заявка из&nbsp;WhatsApp</li>
+              <li class="seq-ai"><span class="seq-no">2</span>AI сравнивает машины</li>
+              <li class="seq-ai"><span class="seq-no">3</span>Назначено AI</li>
+            </ol>
+            <div class="seq-foot">
+              <span>Демонстрационные данные</span>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="wrap split control" id="ai-control">
         <div class="split-copy">
-          <h2 id="ai-title">Маршруты строит AI. Решения остаются за&nbsp;диспетчером.</h2>
+          <h3 class="control-title">Решения остаются за&nbsp;диспетчером</h3>
           <p>Модель обучается на&nbsp;исторических маршрутах вашего МВО и&nbsp;с&nbsp;каждой сменой распределяет задания точнее. Цель — чтобы большинство маршрутов назначалось автоматически, а&nbsp;люди работали только с&nbsp;исключениями.</p>
           <ul class="checks">
-            <li><strong>Учитывает то, что важно на&nbsp;линии.</strong> Приоритет по&nbsp;SLA, расположение площадок, тип отходов (СО или ТБО), подходящую технику и&nbsp;приоритет клиента.</li>
             <li><strong>Двухуровневый контроль.</strong> Общий переключатель для&nbsp;всего парка и&nbsp;отдельный — для&nbsp;каждой машины.</li>
             <li><strong>Ручное управление всегда доступно.</strong> Любой маршрут можно переназначить вручную.</li>
           </ul>
@@ -277,99 +321,450 @@
       </div>
     </section>
 
-    <!-- ============ PRODUCTS ============ -->
-    <section class="section" id="products" aria-labelledby="products-title">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 id="products-title">Одна экосистема для&nbsp;диспетчера, водителя, клиента и&nbsp;города</h2>
+    <!-- ============ SCHEDULED COLLECTION ============ -->
+    <section class="section schedule" id="schedule" aria-labelledby="schedule-title">
+      <div class="wrap split sched-split">
+        <div class="split-copy">
+          <h2 id="schedule-title">Плановый вывоз: маршрутные листы готовы к&nbsp;началу смены</h2>
+          <p>Основная работа МВО — вывоз городских контейнерных площадок по&nbsp;графику. В&nbsp;Платформе площадки и&nbsp;заявки собраны в&nbsp;маршрутные группы, закреплённые за&nbsp;машинами. Дальше всё идёт по&nbsp;кругу каждый день.</p>
+          <ol class="cycle">
+            <li><strong>Маршрутная группа</strong><span>Площадки района с&nbsp;графиками и&nbsp;машины, которые их&nbsp;обслуживают.</span></li>
+            <li><strong>Формирование в&nbsp;заданный час</strong><span>Система проходит по&nbsp;графикам и&nbsp;заявкам группы и&nbsp;собирает маршрутный лист на&nbsp;следующую смену для&nbsp;каждого экипажа.</span></li>
+            <li><strong>Утверждение</strong><span>Диспетчеру остаётся проверить маршруты и&nbsp;утвердить.</span></li>
+            <li><strong>DriverApp</strong><span>Экипаж получает маршрутный лист в&nbsp;приложении водителя.</span></li>
+          </ol>
         </div>
-        <ul class="products">
-          <li>
-            <div class="prod-name"><h3>Платформа</h3><p class="where">Для диспетчеров и&nbsp;руководителей МВО · веб</p></div>
-            <div class="prod-text">
-              <p>Всё, что нужно диспетчерской, &mdash;&nbsp;без 1С и&nbsp;таблиц.</p>
-              <ul class="modules">
-                <li>Заявки и&nbsp;маршруты</li><li>Клиенты и&nbsp;договоры</li><li>GPS-карта (Wialon)</li><li>Смены техники и&nbsp;водителей</li>
-                <li>Мониторинг ГСМ</li><li>Данные весовой полигона</li><li>Реестр бункеров СО</li><li>Фотоотчёты ДО и&nbsp;ПОСЛЕ</li>
-              </ul>
+
+        <figure class="rgroup" id="rgroup" aria-label="Пример маршрутной группы в Платформе">
+          <div class="rg-head">
+            <div>
+              <p class="rg-title">Маршрутная группа «Алмалинский · ТБО»</p>
+              <p class="rg-sub">3 машины · 63 площадки · формирование ежедневно в&nbsp;18:00</p>
             </div>
-            <div class="frag" aria-hidden="true">
-              <div class="frag-table">
-                <div class="ft-h"><span>Заявка</span><span>Машина</span><span>Статус</span></div>
-                <div class="ft-r"><span>Самал-2, 58</span><span class="plate">123 ABC 02</span><span class="status status-progress">В&nbsp;пути</span></div>
-                <div class="ft-r"><span>Абая, 48</span><span class="plate">482 KMT 02</span><span class="status status-done">Выполнено</span></div>
-                <div class="ft-r"><span>Орбита-1, 12</span><span>–</span><span class="status status-created">Неназначено</span></div>
-              </div>
+          </div>
+          <div class="rg-bar">
+            <p class="rg-label">Маршрутные листы на&nbsp;пт, 6&nbsp;ноября</p>
+            <button type="button" class="rg-approve" id="rg-approve">Утвердить все</button>
+          </div>
+          <div class="rg-table" role="table" aria-label="Маршрутные листы на 6 ноября">
+            <div class="rg-th" role="row"><span role="columnheader">Машина и&nbsp;экипаж</span><span role="columnheader">Точки</span><span role="columnheader">Статус</span></div>
+            <div class="rg-tr" role="row">
+              <span role="cell"><span class="plate">123 ABC 02</span><span class="rg-crew">Ержан С., Данияр Т.</span></span>
+              <span role="cell" class="rg-pts">24 точки<span>из них 2 заявки</span></span>
+              <span role="cell"><span class="status status-wait" data-sheet>Ждёт утверждения</span></span>
             </div>
-          </li>
-          <li>
-            <div class="prod-name"><h3><span class="ai-word">AI-диспетчер</span></h3><p class="where">Встроен в&nbsp;Платформу · включается по&nbsp;кнопке</p></div>
-            <div class="prod-text"><p>Автоматически назначает задания на&nbsp;машины и&nbsp;строит маршруты. Учится на&nbsp;исторических маршрутах вашего парка.</p></div>
-            <div class="frag" aria-hidden="true">
-              <div class="frag-ai"><span class="status status-ai">Назначено AI</span><span class="plate">123 ABC 02</span><span class="frag-muted">10 точек · ТБО</span></div>
+            <div class="rg-tr" role="row">
+              <span role="cell"><span class="plate">482 KMT 02</span><span class="rg-crew">Айдос К., Руслан М.</span></span>
+              <span role="cell" class="rg-pts">21 точка<span>все по&nbsp;графику</span></span>
+              <span role="cell"><span class="status status-wait" data-sheet>Ждёт утверждения</span></span>
             </div>
-          </li>
-          <li>
-            <div class="prod-name"><h3>DriverApp</h3><p class="where">Android, iOS, PWA</p></div>
-            <div class="prod-text"><p>Приложение водителя: последовательность точек маршрута, фотоотчёт ДО и&nbsp;ПОСЛЕ, сообщение о&nbsp;проблеме, график и&nbsp;заработок.</p></div>
-            <div class="frag" aria-hidden="true">
-              <div class="frag-step"><span class="point-no">3</span><div><p class="point-addr">ул. Толе би, 112</p><p class="point-sub">Сделайте фото ДО</p></div></div>
+            <div class="rg-tr" role="row">
+              <span role="cell"><span class="plate">915 AAR 02</span><span class="rg-crew">Марат Б., Ильяс Н.</span></span>
+              <span role="cell" class="rg-pts">18 точек<span>из них 1 заявка</span></span>
+              <span role="cell"><span class="status status-wait" data-sheet>Ждёт утверждения</span></span>
             </div>
-          </li>
-          <li>
-            <div class="prod-name"><h3>Client App и&nbsp;WhatsApp-бот</h3><p class="where">Android, iOS, PWA, WhatsApp</p></div>
-            <div class="prod-text"><p>Клиенты МВО оставляют заявки на&nbsp;вывоз в&nbsp;приложении или пишут в&nbsp;WhatsApp — бот узнаёт клиента по&nbsp;номеру и&nbsp;создаёт задание в&nbsp;Платформе.</p></div>
-            <div class="frag" aria-hidden="true">
-              <div class="frag-chat"><p class="v-bubble v-out">Нужно вывезти контейнер, Самал-2, 58</p><p class="v-bubble">Заявка создана. Машина приедет к&nbsp;14:05.</p></div>
-            </div>
-          </li>
-          <li>
-            <div class="prod-name"><h3>Sentinel и&nbsp;Inspect</h3><p class="where">Для госорганов и&nbsp;ситуационных центров · веб</p></div>
-            <div class="prod-text"><p>Мониторинг для&nbsp;акиматов: план и&nbsp;факт вывоза по&nbsp;площадкам, карта техники всех МВО города, жалобы жителей и&nbsp;данные газоанализаторов.</p></div>
-            <div class="frag" aria-hidden="true">
-              <div class="frag-bar"><span class="frag-muted">Алмалинский · план и&nbsp;факт</span><span class="bar"><i class="b-done" style="--v:86%"></i><i class="b-fail" style="--v:4%"></i></span></div>
-            </div>
-          </li>
-        </ul>
-        <p class="stage-note stage-note-inline">Фрагменты интерфейса — демонстрационные данные</p>
+          </div>
+          <p class="rg-foot" id="rg-foot" aria-live="polite">После утверждения листы уйдут экипажам в&nbsp;DriverApp</p>
+          <figcaption class="stage-note">Демонстрационные данные · кнопка работает</figcaption>
+        </figure>
+      </div>
+
+      <div class="wrap sched-types">
+        <div class="sched-types-head">
+          <h3 class="sub-title">Три типа графиков</h3>
+          <p>Недельный повторяется каждую неделю, месячный — по&nbsp;числам месяца, третий — через равное число дней. Колонка 6&nbsp;ноября — это площадки, которые попадут в&nbsp;маршрутный лист на&nbsp;эту смену.</p>
+        </div>
+        <figure class="cal">
+          <div class="cal-scroll">
+            <table aria-describedby="cal-summary">
+              <caption>Ноябрь 2026 <span class="cal-next-tag">лист на&nbsp;6&nbsp;ноября</span></caption>
+              <thead><tr><td></td><th scope="col" class="is-wknd"><span>Вс</span>1</th><th scope="col"><span>Пн</span>2</th><th scope="col"><span>Вт</span>3</th><th scope="col"><span>Ср</span>4</th><th scope="col"><span>Чт</span>5</th><th scope="col" class="is-next"><span>Пт</span>6</th><th scope="col" class="is-wknd"><span>Сб</span>7</th><th scope="col" class="is-wknd"><span>Вс</span>8</th><th scope="col"><span>Пн</span>9</th><th scope="col"><span>Вт</span>10</th><th scope="col"><span>Ср</span>11</th><th scope="col"><span>Чт</span>12</th><th scope="col"><span>Пт</span>13</th><th scope="col" class="is-wknd"><span>Сб</span>14</th><th scope="col" class="is-wknd"><span>Вс</span>15</th><th scope="col"><span>Пн</span>16</th><th scope="col"><span>Вт</span>17</th><th scope="col"><span>Ср</span>18</th><th scope="col"><span>Чт</span>19</th><th scope="col"><span>Пт</span>20</th><th scope="col" class="is-wknd"><span>Сб</span>21</th><th scope="col" class="is-wknd"><span>Вс</span>22</th><th scope="col"><span>Пн</span>23</th><th scope="col"><span>Вт</span>24</th><th scope="col"><span>Ср</span>25</th><th scope="col"><span>Чт</span>26</th><th scope="col"><span>Пт</span>27</th><th scope="col" class="is-wknd"><span>Сб</span>28</th><th scope="col" class="is-wknd"><span>Вс</span>29</th><th scope="col"><span>Пн</span>30</th></tr></thead>
+              <tbody>
+                <tr><th scope="row"><span class="cal-site">Жибек Жолы, 115</span><span class="cal-rule">Недельный · Пн и Пт</span></th><td class="is-wknd"></td><td><i></i></td><td></td><td></td><td></td><td class="is-next"><i></i></td><td class="is-wknd"></td><td class="is-wknd"></td><td><i></i></td><td></td><td></td><td></td><td><i></i></td><td class="is-wknd"></td><td class="is-wknd"></td><td><i></i></td><td></td><td></td><td></td><td><i></i></td><td class="is-wknd"></td><td class="is-wknd"></td><td><i></i></td><td></td><td></td><td></td><td><i></i></td><td class="is-wknd"></td><td class="is-wknd"></td><td><i></i></td></tr>
+                <tr><th scope="row"><span class="cal-site">Абая, 52</span><span class="cal-rule">Месячный · 5, 16 и 27 числа</span></th><td class="is-wknd"></td><td></td><td></td><td></td><td><i></i></td><td class="is-next"></td><td class="is-wknd"></td><td class="is-wknd"></td><td></td><td></td><td></td><td></td><td></td><td class="is-wknd"></td><td class="is-wknd"></td><td><i></i></td><td></td><td></td><td></td><td></td><td class="is-wknd"></td><td class="is-wknd"></td><td></td><td></td><td></td><td></td><td><i></i></td><td class="is-wknd"></td><td class="is-wknd"></td><td></td></tr>
+                <tr><th scope="row"><span class="cal-site">Самал-2, 58</span><span class="cal-rule">Каждые 2 дня</span></th><td class="is-wknd"></td><td><i></i></td><td></td><td><i></i></td><td></td><td class="is-next"><i></i></td><td class="is-wknd"></td><td class="is-wknd"><i></i></td><td></td><td><i></i></td><td></td><td><i></i></td><td></td><td class="is-wknd"><i></i></td><td class="is-wknd"></td><td><i></i></td><td></td><td><i></i></td><td></td><td><i></i></td><td class="is-wknd"></td><td class="is-wknd"><i></i></td><td></td><td><i></i></td><td></td><td><i></i></td><td></td><td class="is-wknd"><i></i></td><td class="is-wknd"></td><td><i></i></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="sr-only" id="cal-summary">Жибек Жолы, 115 — каждый понедельник и&nbsp;пятницу. Абая, 52 — 5, 16 и&nbsp;27 числа. Самал-2, 58 — каждые 2 дня. В&nbsp;лист на&nbsp;6&nbsp;ноября попадают Жибек Жолы, 115 и&nbsp;Самал-2, 58.</p>
+          <figcaption class="stage-note">Демонстрационные данные</figcaption>
+        </figure>
       </div>
     </section>
 
-    <!-- ============ CITY / SENTINEL ============ -->
-    <section class="section section-tint" id="city" aria-labelledby="city-title">
-      <div class="wrap split split-reverse">
+    <!-- Photo pause between blocks (illustrative, see images/PROVENANCE.md) -->
+    <figure class="pause pause-cab">
+      <img src="images/cab-1600.webp" srcset="images/cab-960.webp 960w, images/cab-1600.webp 1600w, images/cab-2400.webp 2400w, images/cab-3840.webp 3840w" sizes="100vw" width="3840" height="1648" loading="lazy" decoding="async" alt="Кабина мусоровоза у контейнерной площадки: рука водителя на руле, на держателе у панели закреплён планшет">
+    </figure>
+
+    <!-- ============ DRIVERAPP ============ -->
+    <section class="section section-tint driver" id="driverapp" aria-labelledby="driver-title">
+      <div class="wrap split driver-split">
         <div class="split-copy">
-          <h2 id="city-title">Sentinel — прозрачный вывоз отходов по&nbsp;всему городу</h2>
-          <p>Город видит работу всех подключённых МВО в&nbsp;одном окне: что запланировано, что вывезено и&nbsp;где был невывоз.</p>
+          <h2 id="driver-title">DriverApp: смена водителя в&nbsp;одном приложении</h2>
+          <p>Утверждённый маршрутный лист приходит экипажу на&nbsp;телефон. Водитель идёт по&nbsp;точкам по&nbsp;порядку, снимает фото до&nbsp;и&nbsp;после вывоза и&nbsp;сообщает о&nbsp;проблеме в&nbsp;два касания. Диспетчер видит всё это в&nbsp;Платформе в&nbsp;том&nbsp;же статусе.</p>
+          <div class="drv-tabs" role="tablist" aria-label="Экраны DriverApp" aria-orientation="vertical">
+            <button type="button" role="tab" id="drv-t1" aria-controls="drv-p1" aria-selected="true"><strong>Маршрут по&nbsp;порядку</strong><span>Площадки рейса по&nbsp;порядку: адрес, контейнеры и&nbsp;статус машины.</span></button>
+            <button type="button" role="tab" id="drv-t2" aria-controls="drv-p2" aria-selected="false" tabindex="-1"><strong>Фотоотчёт до&nbsp;и&nbsp;после</strong><span>Водитель указывает, сколько контейнеров опустошил, и&nbsp;снимает фото до&nbsp;и&nbsp;после. Их видят диспетчер и&nbsp;клиент.</span></button>
+            <button type="button" role="tab" id="drv-t3" aria-controls="drv-p3" aria-selected="false" tabindex="-1"><strong>Сообщить о&nbsp;проблеме</strong><span>КП запаркована, контейнер повреждён, поломка ТС: диспетчер узнаёт сразу.</span></button>
+            <button type="button" role="tab" id="drv-t4" aria-controls="drv-p4" aria-selected="false" tabindex="-1"><strong>График и&nbsp;заработок</strong><span>Смены на&nbsp;неделю и&nbsp;начисления за&nbsp;месяц.</span></button>
+          </div>
+          <div class="drv-platforms">
+            <div class="stores">
+              <span class="store" role="img" aria-label="Загрузите в App Store"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg><span><small>Загрузите в</small>App Store</span></span>
+              <span class="store" role="img" aria-label="Доступно в Google Play"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#00d7fe" d="M3.6 2.3c-.3.3-.4.7-.4 1.3v16.8c0 .6.1 1 .4 1.3l.1.1 9.4-9.4v-.2z"/><path fill="#ffce00" d="m16.2 15.5-3.1-3.1v-.2l3.1-3.1h.1l3.7 2.1c1.1.6 1.1 1.6 0 2.2l-3.7 2.1z"/><path fill="#ff3a44" d="M16.3 15.4 13.1 12.3l-9.5 9.5c.4.4.9.4 1.6.1z"/><path fill="#00f076" d="M16.3 9.2 5.2 2.9c-.7-.4-1.2-.3-1.6.1l9.5 9.3z"/></svg><span><small>Доступно в</small>Google Play</span></span>
+            </div>
+            <ul class="devices">
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.2"/><path d="M11 17h2"/></svg><span>Подойдёт личный смартфон водителя, но&nbsp;лучше всего&nbsp;— <strong>корпоративный планшет</strong></span></li>
+            </ul>
+          </div>
+        </div>
+
+        <figure class="drv-stage">
+          <div class="dphone">
+            <div class="dphone-screen">
+              <div class="ds">
+              <div class="ds-head" aria-hidden="true"><span class="ds-ava">ДС</span><span class="ds-who"><b>123 ABC 02</b><small>Сериков Данияр</small></span><span class="ds-online">На&nbsp;линии</span></div>
+              <div class="ds-body">
+              <div class="dp-panel ds-route" role="tabpanel" id="drv-p1" aria-labelledby="drv-t1">
+                <div class="ds-map ds-map-city">
+                  <img src="images/platform/map-almaty.webp" width="1600" height="900" alt="" loading="lazy" decoding="async">
+                  <span class="ds-mpin" style="--x: 352px; --y: 118px">1</span>
+                  <img class="ds-mtruck" src="images/platform/trucks/musorovoz.png" width="64" height="64" alt="" loading="lazy" decoding="async" style="--x: 88px; --y: 436px">
+                  <span class="ds-ctrl ds-ctrl-warn"><svg viewBox="0 0 24 24"><path d="M12 3.5 22 20.5H2z" fill="#e7000b"/><path d="M12 9.5v5M12 17.2v.3" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span><span class="ds-ctrl ds-ctrl-flag"><svg viewBox="0 0 24 24"><path d="M5 21V4" stroke="#364153" stroke-width="2" stroke-linecap="round"/><path d="M5 4h15v10H5z" fill="#fff" stroke="#364153" stroke-width="1.6"/><path d="M5 4h3.75v3.33H5zM12.5 4h3.75v3.33H12.5zM8.75 7.33h3.75v3.33H8.75zM16.25 7.33H20v3.33h-3.75zM5 10.67h3.75V14H5zM12.5 10.67h3.75V14H12.5z" fill="#364153"/></svg></span><span class="ds-ctrl ds-ctrl-loc"><svg viewBox="0 0 24 24" fill="none" stroke="#155dfc" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.6" fill="#155dfc" stroke="none"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span>
+                </div>
+                <div class="ds-sheet">
+                  <i class="ds-grab"></i>
+                  <div class="ds-trip"><b>Рейс 1</b><span class="ds-chips"><span>M345</span><span>0 из&nbsp;17</span><span>0%</span><span class="is-time">00:03</span></span></div>
+                  <p class="ds-hint">Выберите площадку</p>
+                  <ol class="ds-sites">
+                    <li><span class="ds-n">1</span><div class="ds-site"><b>Кабанбай батыра, 45</b><small>ТОО «Алатау Сервис Групп»</small><small>Акимат г.&nbsp;Алматы</small><div class="ds-site-foot"><small>1,1 евро (5) | РСО (1)</small><span class="ds-chip-move">Машина в&nbsp;пути</span></div><span class="ds-link">2 задания на&nbsp;площадке</span></div></li>
+                    <li><span class="ds-n">2</span><div class="ds-site"><b>Радостовца, 34</b><small>ИП Сапарова А.</small><small>Акимат г.&nbsp;Алматы</small></div></li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="dp-panel ds-photo" role="tabpanel" id="drv-p2" aria-labelledby="drv-t2" hidden>
+                <div class="ds-state ds-before">
+                  <div class="ds-pad">
+                    <p class="ds-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#101828"/><path d="m13.5 7.5-4.5 4.5 4.5 4.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Фотографии ДО</p>
+                    <p class="ds-sub">Укажите заполненность и&nbsp;сделайте фото</p>
+                    <div class="ds-count"><span>Сколько контейнеров вы&nbsp;опустошили?</span><b>5</b></div>
+                    <div class="ds-shot"><img src="images/platform/proof/b1.webp" width="1280" height="960" alt="Контейнерная площадка до вывоза" loading="lazy" decoding="async"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#e7000b"/><path d="m8.5 8.5 7 7m0-7-7 7" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></i></div>
+                    <div class="ds-take"><svg viewBox="0 0 24 24"><path d="M3 8.5A2 2 0 0 1 5 6.5h2.4l1.6-2.2h6l1.6 2.2H19a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="#155dfc"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="#fff" stroke-width="2"/></svg>Сделать фото</div>
+                  </div>
+                  <span class="ds-btn ds-btn-bottom">Готово</span>
+                </div>
+                <div class="ds-state ds-after">
+                  <div class="ds-map ds-map-near">
+                    <img src="images/dispatch-map-2040.webp" width="2040" height="1000" alt="" loading="lazy" decoding="async">
+                    <span class="ds-mpin" style="--x: 350px; --y: 112px">1</span>
+                    <span class="ds-ctrl ds-ctrl-warn"><svg viewBox="0 0 24 24"><path d="M12 3.5 22 20.5H2z" fill="#e7000b"/><path d="M12 9.5v5M12 17.2v.3" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span><span class="ds-ctrl ds-ctrl-flag"><svg viewBox="0 0 24 24"><path d="M5 21V4" stroke="#364153" stroke-width="2" stroke-linecap="round"/><path d="M5 4h15v10H5z" fill="#fff" stroke="#364153" stroke-width="1.6"/><path d="M5 4h3.75v3.33H5zM12.5 4h3.75v3.33H12.5zM8.75 7.33h3.75v3.33H8.75zM16.25 7.33H20v3.33h-3.75zM5 10.67h3.75V14H5zM12.5 10.67h3.75V14H12.5z" fill="#364153"/></svg></span><span class="ds-ctrl ds-ctrl-loc"><svg viewBox="0 0 24 24" fill="none" stroke="#155dfc" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.6" fill="#155dfc" stroke="none"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span><span class="ds-backmap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#101828"/><path d="m13.5 7.5-4.5 4.5 4.5 4.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </div>
+                  <div class="ds-sheet">
+                    <i class="ds-grab"></i>
+                    <div class="ds-trip"><b>Кабанбай батыра, 45</b><span class="ds-chips"><span class="is-time">00:03</span></span></div>
+                    <p class="ds-hint">Задание 1 выполнено</p>
+                    <div class="ds-task">
+                      <div class="ds-task-top"><b>1,1 евро &nbsp;5 конт.</b><small>Задание 1</small></div>
+                      <small class="ds-task-client">ТОО «Алатау Сервис Групп»</small>
+                      <p class="ds-task-line"><svg viewBox="0 0 24 24" fill="none" stroke="#155dfc" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M9 4h6v3H9zM7 5.5H5.5V21h13V5.5H17"/><path d="m9 14 2 2 4-4.5"/></svg>Вывоз ТБО</p>
+                      <p class="ds-task-line"><svg viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 0 0-7.4 12.7L3.5 20.5l4.4-1.1A8.5 8.5 0 1 0 12 3.5z" fill="#155dfc"/><path d="M8 11h8M8 14h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>Позвонить на&nbsp;номер +7&nbsp;727&nbsp;345&nbsp;12&nbsp;08</p>
+                      <div class="ds-task-foot"><small>Z52625623526</small><span class="ds-chip-done">Выполнено</span></div>
+                    </div>
+                    <div class="ds-pair"><span><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5" fill="#fff"/><path d="m8 12.2 2.8 2.8L16.5 9" fill="none" stroke="#00a63e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>ДО</span><span><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5" fill="#fff"/><path d="m8 12.2 2.8 2.8L16.5 9" fill="none" stroke="#00a63e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>ПОСЛЕ</span></div>
+                    <span class="ds-btn">Следующее задание</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dp-panel ds-issue" role="tabpanel" id="drv-p3" aria-labelledby="drv-t3" hidden>
+                <div class="ds-pad">
+                  <p class="ds-title ds-title-x">Сообщить о&nbsp;проблеме на&nbsp;задаче<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#101828"/><path d="m8.5 8.5 7 7m0-7-7 7" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></p>
+                  <p class="ds-sub">Выберите причину, мы&nbsp;сообщим диспетчеру</p>
+                  <ul class="ds-reasons">
+                    <li>КП запаркована машинами</li>
+                    <li>Нет доступа к&nbsp;КП (закрыто)</li>
+                    <li>Неподходящая техника</li>
+                    <li>Контейнер(ы) повреждены</li>
+                    <li>Поломка ТС</li>
+                    <li>Произошло ДТП</li>
+                    <li>Грузчикам нездоровится</li>
+                    <li>Водителю нездоровится</li>
+                    <li>Другое (с&nbsp;вами свяжется диспетчер)</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="dp-panel ds-legacy" role="tabpanel" id="drv-p4" aria-labelledby="drv-t4" hidden>
+                <p class="dp-title">Мой график</p>
+                <ol class="dp-week" aria-label="Смены на неделю">
+                  <li class="is-shift"><span>Пн</span>2</li><li class="is-shift"><span>Вт</span>3</li><li><span>Ср</span>4</li><li class="is-shift"><span>Чт</span>5</li><li class="is-shift is-today"><span>Пт</span>6</li><li><span>Сб</span>7</li><li><span>Вс</span>8</li>
+                </ol>
+                <div class="dp-earn">
+                  <p class="dp-sub">Начислено за&nbsp;ноябрь</p>
+                  <p class="dp-sum">142&nbsp;600&nbsp;₸</p>
+                  <p class="dp-sub">4 смены · 87 точек</p>
+                </div>
+                <ul class="dp-pay">
+                  <li><span>Чт, 5 ноября</span><b>36&nbsp;400&nbsp;₸</b></li>
+                  <li><span>Вт, 3 ноября</span><b>35&nbsp;100&nbsp;₸</b></li>
+                  <li><span>Пн, 2 ноября</span><b>37&nbsp;900&nbsp;₸</b></li>
+                </ul>
+              </div>
+              </div>
+              <div class="ds-tabs" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg>История</span><span class="is-on"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 5H8.5a3 3 0 0 0 0 6h7a3 3 0 0 1 0 6H6"/><path d="m15 3 2 2-2 2M8 15l-2 2 2 2"/></svg></i>Маршруты</span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><circle cx="12" cy="9.5" r="3.2" fill="#fff"/><path d="M6.8 17.4a6.2 6.2 0 0 1 10.4 0" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>Профиль</span></div>
+              </div>
+            </div>
+          </div>
+          <figcaption class="stage-note">Демонстрационные данные · экраны листаются сами, можно выбрать в&nbsp;списке</figcaption>
+        </figure>
+      </div>
+
+      <div class="wrap drv-more">
+        <div class="drv-more-copy">
+          <h3>В&nbsp;пути навигатор, на&nbsp;точке DriverApp. Связь не&nbsp;обязательна</h3>
+          <p>Кнопка «2ГИС» открывает точку в&nbsp;2ГИС Навигаторе, и&nbsp;тот строит маршрут для&nbsp;крупногабаритного транспорта. Маршрут заранее сохранён на&nbsp;телефоне, а&nbsp;фото до&nbsp;и&nbsp;после при плохой связи ждут в&nbsp;очереди и&nbsp;сами уходят в&nbsp;Платформу. Водитель не&nbsp;ждёт загрузки и&nbsp;продолжает маршрут.</p>
+        </div>
+
+        <figure class="flow" id="flow" aria-label="Одна точка маршрута: от выбора задания до фотоотчёта в Платформе">
+          <ol class="flow-steps">
+            <li class="flow-step">
+              <p class="flow-title"><span class="flow-ix">1</span>Выбирает задание и&nbsp;жмёт «2ГИС»</p>
+              <p class="flow-net is-on"><svg viewBox="0 0 16 16"><path d="M2 6.5a9 9 0 0 1 12 0M4.2 9a5.8 5.8 0 0 1 7.6 0M6.4 11.4a2.6 2.6 0 0 1 3.2 0"/></svg><span class="flow-net-text">Связь есть · маршрут сохранён на&nbsp;телефоне</span></p>
+              <div class="fphone" aria-hidden="true">
+                <div class="fphone-screen">
+                  <div class="fp-head"><span class="fp-ava">ДС</span><span class="fp-who"><b>123 ABC 02</b><small>Сериков Данияр</small></span><span class="fp-online">На линии</span></div>
+                  <div class="fp-map">
+                    <img src="images/dispatch-map-1020.webp" width="1020" height="500" alt="" loading="lazy" decoding="async">
+                    <span class="fp-pin" style="--x: 64%; --y: 34%">1</span>
+                    <img class="fp-truck" src="images/platform/trucks/musorovoz.png" width="64" height="64" alt="" loading="lazy" decoding="async" style="--x: 30%; --y: 70%">
+                  </div>
+                  <div class="fp-sheet">
+                    <div class="fp-sheet-head"><b>Кабанбай батыра, 45</b><span class="fp-timer">00:03</span></div>
+                    <p class="fp-hint">Задания на&nbsp;площадке</p>
+                    <div class="fp-job is-sel">
+                      <div class="fp-job-top"><b>1,1 евро · 5&nbsp;конт.</b><small>Задание 1</small></div>
+                      <p class="fp-client">ТОО «Алатау Сервис Групп»</p>
+                      <p class="fp-type"><svg viewBox="0 0 16 16"><path d="M5 2.5h6M4 4.5h8l-.8 9H4.8z"/></svg>Вывоз ТБО</p>
+                      <div class="fp-job-foot"><small>№ 25625623526</small><span class="fp-chip fp-chip-assigned">Назначено</span></div>
+                    </div>
+                    <div class="fp-navs"><span class="fp-2gis">2ГИС</span><span class="fp-ya">Яндекс Карты</span></div>
+                    <div class="fp-slide"><i><svg viewBox="0 0 16 16"><path d="M6 3.5l4.5 4.5L6 12.5"/></svg></i><span>Начать задание<small>Потяните вправо</small></span></div>
+                  </div>
+                  <div class="fp-tabs"><span>История</span><span class="is-on">Маршруты</span><span>Профиль</span></div>
+                </div>
+              </div>
+              <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>
+            </li>
+
+            <li class="flow-step">
+              <p class="flow-title"><span class="flow-ix">2</span>Едет по&nbsp;навигатору</p>
+              <p class="flow-net is-off"><svg viewBox="0 0 16 16"><path d="M2 6.5a9 9 0 0 1 4-2.1M9.6 4.3A9 9 0 0 1 14 6.5M6.4 11.4a2.6 2.6 0 0 1 3.2 0M2.5 2.5l11 11"/></svg><span class="flow-net-text">Нет связи</span></p>
+              <div class="navcard">
+                <p class="navcard-app">2ГИС Навигатор</p>
+                <svg class="navcard-map" viewBox="0 0 240 150" aria-hidden="true">
+                  <path class="navcard-streets" d="M0 38h240M0 96h240M0 132h240M52 0v150M128 0v150M196 0v150"/>
+                  <path class="navcard-route" d="M22 132H52V96h76V38h68"/>
+                  <circle class="navcard-from" cx="22" cy="132" r="6"/>
+                  <circle class="navcard-to" cx="196" cy="38" r="7"/>
+                </svg>
+                <dl class="navcard-rows">
+                  <div><dt>Режим</dt><dd>Грузовой транспорт</dd></div>
+                  <div><dt>До&nbsp;точки</dt><dd>3,8&nbsp;км · 12&nbsp;мин</dd></div>
+                </dl>
+                <p class="navcard-note">DriverApp свёрнут, в&nbsp;пути он&nbsp;не&nbsp;нужен</p>
+              </div>
+              <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>
+            </li>
+
+            <li class="flow-step">
+              <p class="flow-title"><span class="flow-ix">3</span>Снимает фото до&nbsp;и&nbsp;после</p>
+              <p class="flow-net is-off"><svg viewBox="0 0 16 16"><path d="M2 6.5a9 9 0 0 1 4-2.1M9.6 4.3A9 9 0 0 1 14 6.5M6.4 11.4a2.6 2.6 0 0 1 3.2 0M2.5 2.5l11 11"/></svg><span class="flow-net-text">Нет связи · фото ждут в&nbsp;очереди</span></p>
+              <div class="fphone" aria-hidden="true">
+                <div class="fphone-screen">
+                  <div class="fp-head"><span class="fp-ava">ДС</span><span class="fp-who"><b>123 ABC 02</b><small>Сериков Данияр</small></span><span class="fp-online is-off">Офлайн</span></div>
+                  <div class="fp-map fp-map-short">
+                    <img src="images/dispatch-map-1020.webp" width="1020" height="500" alt="" loading="lazy" decoding="async">
+                    <img class="fp-truck" src="images/platform/trucks/musorovoz.png" width="64" height="64" alt="" loading="lazy" decoding="async" style="--x: 64%; --y: 46%">
+                    <span class="fp-offline"><svg viewBox="0 0 16 16"><path d="M2 6.5a9 9 0 0 1 4-2.1M9.6 4.3A9 9 0 0 1 14 6.5M6.4 11.4a2.6 2.6 0 0 1 3.2 0M2.5 2.5l11 11"/></svg>Нет связи · 2&nbsp;фото в&nbsp;очереди</span>
+                  </div>
+                  <div class="fp-sheet">
+                    <div class="fp-sheet-head"><b>Кабанбай батыра, 45</b><span class="fp-timer">00:12</span></div>
+                    <p class="fp-hint">Задание 1 выполнено</p>
+                    <div class="fp-job">
+                      <div class="fp-job-top"><b>1,1 евро · 5&nbsp;конт.</b><small>Задание 1</small></div>
+                      <div class="fp-shots">
+                        <span><img src="images/platform/proof/b1.webp" width="1280" height="960" alt="" loading="lazy" decoding="async"><small>До</small></span>
+                        <span><img src="images/platform/proof/a1.webp" width="1280" height="960" alt="" loading="lazy" decoding="async"><small>После</small></span>
+                      </div>
+                      <div class="fp-job-foot"><small>Ждут связи</small><span class="fp-chip fp-chip-done">Выполнено</span></div>
+                    </div>
+                    <div class="fp-navs fp-photo-btns"><span><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7"/></svg>ДО</span><span><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7"/></svg>ПОСЛЕ</span></div>
+                    <span class="fp-next">Следующее задание</span>
+                  </div>
+                  <div class="fp-tabs"><span>История</span><span class="is-on">Маршруты</span><span>Профиль</span></div>
+                </div>
+              </div>
+              <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>
+            </li>
+
+            <li class="flow-step">
+              <p class="flow-title"><span class="flow-ix">4</span>Отчёт приходит в&nbsp;Платформу</p>
+              <p class="flow-net is-on"><svg viewBox="0 0 16 16"><path d="M2 6.5a9 9 0 0 1 12 0M4.2 9a5.8 5.8 0 0 1 7.6 0M6.4 11.4a2.6 2.6 0 0 1 3.2 0"/></svg><span class="flow-net-text">Связь вернулась · фото отправлены</span></p>
+              <div class="synccard">
+                <div class="synccard-head"><b>Кабанбай батыра, 45</b><span class="status status-done">Выполнено</span></div>
+                <p class="synccard-sub">ТОО «Алатау Сервис Групп» · вывоз ТБО</p>
+                <div class="synccard-photos">
+                  <span><img src="images/platform/proof/b1.webp" width="1280" height="960" alt="Площадка до вывоза" loading="lazy" decoding="async"><small>До · 07:52</small></span>
+                  <span><img src="images/platform/proof/a1.webp" width="1280" height="960" alt="Площадка после вывоза" loading="lazy" decoding="async"><small>После · 08:04</small></span>
+                </div>
+                <p class="synccard-foot">Получено в&nbsp;08:31, когда вернулась связь</p>
+              </div>
+            </li>
+          </ol>
+          <figcaption class="stage-note">Демонстрационные данные</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Photo pause between blocks (illustrative, see images/PROVENANCE.md) -->
+    <figure class="pause pause-site">
+      <img src="images/site-1600.webp" srcset="images/site-960.webp 960w, images/site-1600.webp 1600w, images/site-2400.webp 2400w, images/site-3840.webp 3840w" sizes="100vw" width="3840" height="1648" loading="lazy" decoding="async" alt="Контейнерная площадка с навесом между жилым домом и магазинами первого этажа">
+    </figure>
+
+    <!-- ============ CLIENTS AND CONTRACTS ============ -->
+    <section class="section clients" id="clients" aria-labelledby="clients-title">
+      <div class="wrap split">
+        <div class="split-copy">
+          <h2 id="clients-title">Реестр заказчиков и&nbsp;цифровые договоры</h2>
+          <p>Каждый заказчик проверяется по&nbsp;БИН, поэтому дублей в&nbsp;реестре нет. По&nbsp;тому&nbsp;же БИН заказчика можно найти. Цифровой договор задаёт тарифы по&nbsp;типам задач: за&nbsp;кубометр вывоза или за&nbsp;заявку.</p>
+        </div>
+
+        <figure class="reg" aria-label="Пример карточки заказчика в Платформе">
+          <div class="reg-search">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l3.5 3.5"/></svg>
+            <span class="reg-q">180840012345</span>
+            <span class="reg-hint">Поиск по&nbsp;БИН</span>
+          </div>
+          <div class="reg-card">
+            <div class="reg-row">
+              <div>
+                <p class="reg-name">ТОО «Алатау Сервис Групп»</p>
+                <p class="reg-meta">БИН 180840012345 · Алматы</p>
+              </div>
+              <span class="reg-ok"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>БИН проверен</span>
+            </div>
+            <div class="reg-contract">
+              <p class="reg-cname">Договор № 47/2026 <span>действует до&nbsp;31.12.2026</span></p>
+              <div class="reg-tariffs" role="table" aria-label="Тарифы по договору">
+                <div class="reg-th" role="row"><span role="columnheader">Тип задачи</span><span role="columnheader">Тариф</span></div>
+                <div class="reg-tr" role="row"><span role="cell">Вывоз ТБО</span><span role="cell"><b>2&nbsp;200&nbsp;₸</b> за&nbsp;м³</span></div>
+                <div class="reg-tr" role="row"><span role="cell">Дезинфекция площадки</span><span role="cell"><b>10&nbsp;000&nbsp;₸</b> за&nbsp;заявку</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="reg-dup"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.8v3.6M8 10.9v.1"/></svg>Повторная карточка с&nbsp;этим БИН не&nbsp;создаётся: заказчик уже в&nbsp;реестре</p>
+          <figcaption class="stage-note">Демонстрационные данные</figcaption>
+        </figure>
+      </div>
+
+      <div class="wrap split split-reverse clients-row">
+        <div class="split-copy">
+          <h3 class="sub-title">Заказчики по&nbsp;нормативу&nbsp;— на&nbsp;своих площадках</h3>
+          <p>Юрлиц, которые платят по&nbsp;нормативу, прикрепляют к&nbsp;городским контейнерным площадкам. Так видно, сколько компаний на&nbsp;самом деле пользуется площадкой. В&nbsp;их цифровых договорах указан фиксированный месячный тариф.</p>
           <ul class="checks">
-            <li><strong>План и факт по&nbsp;площадкам.</strong> Статусы вывоза и&nbsp;невывоза.</li>
-            <li><strong>Карта техники всех МВО.</strong> И&nbsp;стоянки в&nbsp;нежелательных зонах.</li>
-            <li><strong>Inspect — жалобы жителей.</strong> Обращения и&nbsp;их отработка.</li>
-            <li><strong>Газоанализаторы.</strong> Выбросы CO₂, CH₄ и&nbsp;O₂.</li>
+            <li><strong>Аналитика загруженности площадок.</strong> Объём, который приходится на&nbsp;площадку, сравнивается с&nbsp;её&nbsp;вместимостью.</li>
+            <li><strong>Реакция до&nbsp;переполнения.</strong> Если площадке нужен вывоз чаще, это видно заранее, и&nbsp;график меняется в&nbsp;маршрутной группе.</li>
           </ul>
         </div>
 
-        <div class="photo-stage photo-stage-reverse">
-        <img class="photo-stage-img" src="images/city-960.webp" srcset="images/city-640.webp 640w, images/city-960.webp 960w, images/city-1280.webp 1280w, images/city-1792.webp 1792w" sizes="(max-width: 860px) 100vw, 560px" width="1792" height="2240" loading="lazy" decoding="async" alt="Алматы с высоты в сумерках: микрорайоны, освещённые проспекты и горы Заилийского Алатау">
-        <div class="sentinel" aria-label="Пример экрана Sentinel">
-          <div class="sentinel-head">
-            <p class="fleet-title">Вывоз по&nbsp;районам</p>
-            <p class="fleet-sub">Сегодня · план и&nbsp;факт</p>
+        <figure class="site-load" aria-label="Пример карточки площадки с заказчиками по нормативу">
+          <div class="sl-head">
+            <p class="sl-title">КП Жибек Жолы, 115</p>
+            <p class="sl-sub">4 контейнера по&nbsp;1,1&nbsp;м³ · график Пн, Пт</p>
           </div>
-          <ul class="bars">
-            <li><span class="bar-name">Алмалинский</span><span class="bar"><i class="b-done" style="--v:86%"></i><i class="b-fail" style="--v:4%"></i></span></li>
-            <li><span class="bar-name">Бостандыкский</span><span class="bar"><i class="b-done" style="--v:78%"></i><i class="b-fail" style="--v:7%"></i></span></li>
-            <li><span class="bar-name">Медеуский</span><span class="bar"><i class="b-done" style="--v:91%"></i><i class="b-fail" style="--v:2%"></i></span></li>
-            <li><span class="bar-name">Ауэзовский</span><span class="bar"><i class="b-done" style="--v:69%"></i><i class="b-fail" style="--v:9%"></i></span></li>
+          <p class="sl-label">Заказчики по&nbsp;нормативу · 7</p>
+          <ul class="sl-list">
+            <li><span>ТОО «Береке Трейд»</span><span class="sl-fee">45&nbsp;000&nbsp;₸ / мес</span></li>
+            <li><span>ИП Сапарова А.</span><span class="sl-fee">12&nbsp;000&nbsp;₸ / мес</span></li>
+            <li><span>ТОО «Медеу Фуд»</span><span class="sl-fee">38&nbsp;000&nbsp;₸ / мес</span></li>
+            <li class="sl-more">и&nbsp;ещё 4 заказчика</li>
           </ul>
-          <ul class="legend">
-            <li><i class="b-done"></i>Вывезено</li>
-            <li><i class="b-fail"></i>Невывоз</li>
-            <li><i class="b-plan"></i>Запланировано</li>
+          <div class="sl-load">
+            <div class="sl-load-row"><span>Загруженность к&nbsp;вывозу</span><b>118%</b></div>
+            <div class="sl-meter" aria-hidden="true"><i style="--v: 84.7%"></i><i class="is-over" style="--v: 15.3%"></i><span class="sl-cap" style="--at: 84.7%"></span></div>
+            <p class="sl-scale"><span>5,2&nbsp;м³ на&nbsp;вывоз</span><span>вместимость 4,4&nbsp;м³</span></p>
+          </div>
+          <div class="sl-action">
+            <p>Нужен вывоз чаще: <b>Пн, Пт → Пн, Ср, Пт</b></p>
+            <span class="mini-btn">Изменить график</span>
+          </div>
+          <figcaption class="stage-note">Демонстрационные данные</figcaption>
+        </figure>
+      </div>
+
+      <div class="wrap split clients-row sync-row">
+        <div class="split-copy">
+          <h3 class="sub-title">Двусторонняя синхронизация с&nbsp;1С</h3>
+          <p>Интеграция с&nbsp;1С бухгалтерии подключается индивидуально. Реестр заказчиков, договорные обязательства и&nbsp;отчёты о&nbsp;вывозе у&nbsp;операционного отдела и&nbsp;бухгалтерии совпадают. Через интеграцию выпускаются ЭАВР и&nbsp;ЭСФ или их&nbsp;бумажные аналоги.</p>
+        </div>
+
+        <figure class="sync" aria-label="Пример синхронизации с 1С">
+          <div class="sync-ends" aria-hidden="true">
+            <span class="sync-end">RaccoonAI</span>
+            <svg class="sync-arrows" viewBox="0 0 48 20"><path d="M4 6h38l-4-4M44 14H6l4 4"/></svg>
+            <span class="sync-end">1С:Бухгалтерия</span>
+          </div>
+          <ul class="sync-objs">
+            <li><span>Реестр заказчиков</span><span class="sync-state">совпадает</span></li>
+            <li><span>Договоры и&nbsp;тарифы</span><span class="sync-state">совпадает</span></li>
+            <li><span>Отчёты о&nbsp;вывозе</span><span class="sync-state">совпадает</span></li>
           </ul>
-          <p class="stage-note stage-note-inline">Демонстрационные данные</p>
+          <p class="sync-label">Новый заказчик</p>
+          <ol class="sync-log">
+            <li><time>14:02</time><span>Менеджер по&nbsp;продажам добавил ТОО «Алатау Сервис Групп» в&nbsp;RaccoonAI</span></li>
+            <li><time>14:02</time><span>Карточка заказчика и&nbsp;договор получены в&nbsp;1С</span></li>
+          </ol>
+          <p class="sync-label">Документы из&nbsp;1С</p>
+          <ul class="sync-docs"><li>ЭАВР</li><li>ЭСФ</li><li>Бумажные акты и&nbsp;счета-фактуры</li></ul>
+          <figcaption class="stage-note">Демонстрационные данные</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ PRODUCTS ============ -->
+    <section class="section section-tint" id="products" aria-labelledby="products-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="products-title">Одна экосистема для&nbsp;диспетчера, водителя и&nbsp;клиента</h2>
         </div>
-        </div>
+        <ul class="products">
+          <li>
+            <h3>Платформа</h3>
+            <p class="where">Для диспетчеров и&nbsp;руководителей МВО · веб</p>
+            <p>Заявки и&nbsp;маршруты, клиенты и&nbsp;договоры, GPS&#8209;карта (Wialon), смены, ГСМ, весовая полигона, бункеры СО и&nbsp;фотоотчёты&nbsp;— без&nbsp;1С и&nbsp;таблиц.</p>
+            <a class="more-link" href="#top">К разделу<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 15.5v-11M5 9l5-4.5 5 4.5"/></svg></a>
+          </li>
+          <li>
+            <h3><span class="ai-word">AI-диспетчер</span></h3>
+            <p class="where">Встроен в&nbsp;Платформу · включается по&nbsp;кнопке</p>
+            <p>Назначает задания на&nbsp;машины и&nbsp;строит маршруты. Учится на&nbsp;исторических маршрутах вашего парка.</p>
+            <a class="more-link" href="#dispatcher">К разделу<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 15.5v-11M5 9l5-4.5 5 4.5"/></svg></a>
+          </li>
+          <li>
+            <h3>DriverApp</h3>
+            <p class="where">Для водителей · iOS и&nbsp;Android</p>
+            <p>Маршрут по&nbsp;порядку, фотоотчёт до&nbsp;и&nbsp;после, сообщение о&nbsp;проблеме, график и&nbsp;заработок.</p>
+            <a class="more-link" href="#driverapp">К разделу<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 15.5v-11M5 9l5-4.5 5 4.5"/></svg></a>
+          </li>
+          <li>
+            <h3>Client App, WhatsApp&#8209;бот и&nbsp;SIP&#8209;телефония</h3>
+            <p class="where">Для клиентов МВО</p>
+            <p>Заявка из&nbsp;приложения, WhatsApp или звонка сразу становится заданием в&nbsp;Платформе.</p>
+            <a class="more-link" href="#intake">К разделу<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 15.5v-11M5 9l5-4.5 5 4.5"/></svg></a>
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -395,9 +790,10 @@
         <div class="demo-copy">
           <h2 id="demo-title">Покажем RaccoonAI на&nbsp;данных вашего МВО</h2>
           <p>Оставьте контакты — проведём демо, разберём ваши маршруты и&nbsp;расскажем, как подключиться к&nbsp;пилоту.</p>
-          <dl class="contacts">
-            <div><dt>Телефон</dt><dd>[ТЕЛЕФОН]</dd></div>
-            <div><dt>Почта</dt><dd>[EMAIL]</dd></div>
+          <!-- Filled from CONTACT in script.js; each row stays hidden until its value is real. -->
+          <dl class="contacts" hidden>
+            <div data-contact="phone" hidden><dt>Телефон</dt><dd><a href="#"></a></dd></div>
+            <div data-contact="email" hidden><dt>Почта</dt><dd><a href="#"></a></dd></div>
           </dl>
         </div>
 
@@ -425,7 +821,6 @@
                 <option>20–50</option>
                 <option>50–150</option>
                 <option>Больше 150</option>
-                <option>Мы акимат / госорган</option>
               </select>
             </div>
           </div>
@@ -454,9 +849,12 @@
       </div>
       <p>Алматы, Казахстан</p>
       <nav class="footer-nav" aria-label="Навигация в подвале">
+        <a href="#intake">Заявки</a>
+        <a href="#dispatcher">AI-диспетчер</a>
+        <a href="#schedule">Плановый вывоз</a>
+        <a href="#driverapp">DriverApp</a>
+        <a href="#clients">Заказчики</a>
         <a href="#products">Продукты</a>
-        <a href="#ai">AI-диспетчер</a>
-        <a href="#city">Для акиматов</a>
         <a href="#demo">Контакты</a>
       </nav>
     </div>

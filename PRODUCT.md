@@ -43,7 +43,7 @@ Product lineup (from the existing RaccoonAI client landing design):
 
 Constraints:
 
-- **Languages:** the website ships in Russian first (user decision, 2026-11-03); Kazakh and English follow later, so copy stays separable and layouts must tolerate longer strings. The products themselves are localized to Kazakh and English.
+- **Languages:** the website ships in Russian, Kazakh and English (switcher with flags in the header, user decision 2026-11-06). Russian in the HTML is the source; Kazakh and English are dictionaries in `i18n/`. The first visit picks the language from the browser time zone: CIS countries get Russian, everyone else English; an explicit choice is remembered. The Kazakh and English texts are machine-quality drafts until a native speaker reviews them.
 - Primary call to action: **request a demo / contact**. No self-serve sign-up or public pricing.
 - The repository currently holds a plain static HTML/CSS/JS starter page (`index.html`, `style.css`, `script.js`) that is not yet RaccoonAI content.
 
@@ -76,4 +76,4 @@ Claims stated in the existing RaccoonAI client landing design (user's own materi
 
 ## Accessibility & Inclusion
 
-Russian at launch; a language switcher arrives with Kazakh and English. Layouts must tolerate longer Kazakh/Russian strings.
+Russian, Kazakh and English, switched in the header; layouts must tolerate longer Kazakh/English strings, and Kazakh needs fonts with Ә Ғ Қ Ң Ө Ү Һ.

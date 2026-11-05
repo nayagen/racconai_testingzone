@@ -11,7 +11,7 @@ Scope: the public landing page (index.html, style.css, script.js). Visitor mode:
 
 Audience: directors and dispatch heads of large МВО; akimats and situational centers. Action: request a demo through the form. Proof: pilots in Almaty and Astana, partner ТОО «Ак Тартып», used by the Almaty Situational Center. No invented metrics, logos, testimonials or prices.
 
-Constraints: static HTML/CSS/JS, Russian only now with strings kept separable for kk/en, responsive to 390 px, light only, form posts to a form service (endpoint placeholder), contact details placeholders.
+Constraints: static HTML/CSS/JS, Russian source with Kazakh and English applied at runtime by i18n/i18n.js (header switcher, time-zone default), responsive to 390 px, light only, form posts to a form service (endpoint placeholder), contact details placeholders.
 
 Open decisions: form service and endpoint; phone and email; real metrics; final logo wordmark (current file reads "Rakun AI").
 
