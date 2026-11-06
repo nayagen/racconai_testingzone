@@ -78,22 +78,22 @@ typography:
     fontWeight: 600
     lineHeight: 1
   ui:
-    fontFamily: "Inter, system-ui, sans-serif"
+    fontFamily: "Medeo Sans, system-ui, sans-serif"
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.4
   ui-label:
-    fontFamily: "Inter, system-ui, sans-serif"
+    fontFamily: "Medeo Sans, system-ui, sans-serif"
     fontSize: "13px"
     fontWeight: 600
     lineHeight: 1
   ui-micro:
-    fontFamily: "Inter, system-ui, sans-serif"
+    fontFamily: "Medeo Sans, system-ui, sans-serif"
     fontSize: "11px"
     fontWeight: 600
     letterSpacing: "0.04em"
   plate:
-    fontFamily: "Inter, system-ui, sans-serif"
+    fontFamily: "Medeo Sans, system-ui, sans-serif"
     fontWeight: 600
     letterSpacing: "0.02em"
     fontFeature: "tnum"
@@ -217,7 +217,7 @@ components:
 
 **Creative North Star: "Live Operations, Light"**
 
-The marketing site is a dispatch room with the lights on. A white ground carries near-black ink, and the product itself does the persuading: map, route, the AI pick panel, fleet switches and plan-vs-fact bars are rebuilt in HTML and CSS at real density, not shown as screenshots. Marketing copy is set in Onest with tight display tracking; everything that is product is set in Inter, so the reader always knows which voice is speaking.
+The marketing site is a dispatch room with the lights on. A white ground carries near-black ink, and the product itself does the persuading: map, route, the AI pick panel, fleet switches and plan-vs-fact bars are rebuilt in HTML and CSS at real density, not shown as screenshots. Marketing copy is set in Onest with tight display tracking; everything that is product is set in Medeo Sans, so the reader always knows which voice is speaking.
 
 Color is semantic before it is decorative. Violet belongs to the AI and nothing else. Job states use the client product's status colors, the same ones dispatchers see in the Platform. The primary call to action is ink, not a brand color, so the page's one strong hue stays reserved for "the AI did or proposes this". Depth is minimal: flat tinted bands and hairlines for structure, one soft lifted shadow only on UI that floats over the product stage.
 
@@ -227,7 +227,7 @@ As built, the world departs from the direction contract in three values: ink is 
 - White page, ink headings, slate body text; cool tint bands alternate with white sections.
 - Product UI replicas at real density are the primary imagery; no illustrations, stock, or screenshots. Documentary field photography supports them in three places only (see Photography).
 - Violet only for AI meaning; status colors only for job states; ink for the primary action.
-- Two families: Onest for marketing voice, Inter for anything that is product UI.
+- Two families: Onest for marketing voice, Medeo Sans for anything that is product UI.
 - One soft shadow, used only on floating product UI.
 - A single on-load signature sequence whose resting state is the end state.
 
@@ -265,11 +265,11 @@ A neutral slate world with two semantic voices: the AI violet ramp and the produ
 
 ## Typography
 
-**Display Font:** Onest (with system-ui, sans-serif), self-hosted 400-700, cyrillic and latin Onest has no Kazakh letters, so on Kazakh pages (`html[lang="kk"]`) marketing text uses Medeo Sans, the product font, and Inter carries a cyrillic-ext subset for the UI.
+**Display Font:** Onest (with system-ui, sans-serif), self-hosted 400-700, cyrillic and latin Onest has no Kazakh letters, so on Kazakh pages (`html[lang="kk"]`) marketing text uses Medeo Sans, the product font, which covers them.
 **Body Font:** Onest
-**Label/Mono Font:** Inter (with system-ui, sans-serif), self-hosted 400-600, for product UI
+**Label/Mono Font:** Medeo Sans (with system-ui, sans-serif), the RaccoonAI product font, self-hosted as one variable file (fonts/MedeoSansVariable.woff2, 100-900, cyrillic with Kazakh letters and latin), for product UI
 
-**Character:** Onest is a warm, geometric grotesk that tightens well at display sizes and reads comfortably in Russian body copy. Inter is the product's own UI face; using it inside every replica makes the rebuilt UI read as the real product.
+**Character:** Onest is a warm, geometric grotesk that tightens well at display sizes and reads comfortably in Russian body copy. Medeo Sans is the product's own UI face; using it inside every replica makes the rebuilt UI read as the real product.
 
 ### Hierarchy
 - **Display** (600, clamp 44-88px, 1, -0.04em, max 12ch): the Platform h1 only, balanced wrapping. It is the page's single display headline; every other block, #dispatcher included, opens on Headline.
@@ -278,12 +278,12 @@ A neutral slate world with two semantic voices: the AI violet ramp and the produ
 - **Lead** (400, clamp 18-21px, 1.55, max 34ch in hero): the hero supporting line; section intros use clamp 18-20px at max 62ch.
 - **Body** (400, 18px, 1.6; 17px under 600px): running text. Check-list items 17px / 1.55 at max 56ch. **Body Small** (15px): nav, "where" lines, feature descriptions, footer.
 - **Button** (600, 17px, line-height 1; 15px on small buttons).
-- **UI** (Inter 400, 13-14px): text inside product replicas. **UI Label** (Inter 600, 13px; 12px in table rows): status chips. **UI Micro** (Inter 600, 11-12px, 0.04-0.05em, uppercase): column headers and group labels inside product replicas only.
-- **Plate** (Inter 600, tabular figures, 0.02em, no wrap): vehicle plates such as "123 ABC 02", wherever they appear.
+- **UI** (Medeo Sans 400, 13-14px): text inside product replicas. **UI Label** (Medeo Sans 600, 13px; 12px in table rows): status chips. **UI Micro** (Medeo Sans 600, 11-12px, 0.04-0.05em, uppercase): column headers and group labels inside product replicas only.
+- **Plate** (Medeo Sans 600, tabular figures, 0.02em, no wrap): vehicle plates such as "123 ABC 02", wherever they appear.
 - **Note** (Onest 500, 13px, muted): short interaction hints under a replica when it has controls («Кнопка работает»).
 
 ### Named Rules
-**The Two Voices Rule.** Onest speaks for RaccoonAI; Inter speaks for the product. If it is a piece of the product, it is set in Inter.
+**The Two Voices Rule.** Onest speaks for RaccoonAI; Medeo Sans speaks for the product. If it is a piece of the product, it is set in Medeo Sans.
 
 **The Product-Only Caps Rule.** Uppercase tracked micro-labels exist only as table and group headers inside product UI. They never sit above a marketing heading.
 
@@ -321,12 +321,12 @@ Solid, quiet, and confident; no outlines, no icons.
 - **Quiet:** Operations Tint fill with ink text, hover tint-hover. The secondary hero action.
 
 ### Chips
-- **Status chip:** pill, Inter 600 13px, 6px x 10px, leading 7px dot in currentColor. Created, In progress (also "Машина в пути"), Done, AI. Smaller in table rows (12px, 4px x 8px).
+- **Status chip:** pill, Medeo Sans 600 13px, 6px x 10px, leading 7px dot in currentColor. Created, In progress (also "Машина в пути"), Done, AI. Smaller in table rows (12px, 4px x 8px).
 - **AI proposed:** white fill with a 1.5px dashed AI Violet outline; it becomes the solid AI chip once assigned.
 - **Module chip:** pill, Operations Tint, body text 14px, 6px x 12px; lists Platform modules.
 
 ### Cards / Containers
-- **Floating UI card:** white, 14px corners, Floating UI shadow, 14px 16px 16px padding, Inter. The AI assignment card adds an AI Line hairline.
+- **Floating UI card:** white, 14px corners, Floating UI shadow, 14px 16px 16px padding, Medeo Sans. The AI assignment card adds an AI Line hairline.
 - **Product panel** (fleet): white, 20px corners, Floating UI shadow, fluid padding (clamp 20-32px), header ruled off with a hairline.
 - **Product fragment:** Operations Tint, 14px corners, 14px padding, white inner rows at 8-10px corners. Flat.
 - **Form panel:** Operations Tint, 20px corners, fluid padding (clamp 24-40px), 18px field gap. Flat.
@@ -373,8 +373,8 @@ While the stage is at least 35% visible, JavaScript loops the sequence every 11.
 - **driverapp.html:** the same header, dock, footer, script.js and dictionaries as the main page (script.js runs each block only when its markup is present). Order: the opener `#top`, built like the main page opener (shared `.pf-hero` rules, now in style.css): the cab photo (`cab-*`) full-bleed under the left daylight wash, filling the first viewport; on the left the badge «Raccoon AI DriverApp», the h1 in two lines «Смена водителя / в одном приложении», the lead, «Запросить демо» and the quiet «Посмотреть экраны», the store badges, and the device note on the white proof strip. On the right the **opener prototype** (`.dh-proto`, `role="img"` with a spoken summary): the HTML-built phone plays one stop as a loop (about 12s): the truck drives up to stop 1 on the route screen, a finger ring presses the site card, «Фотографии ДО» opens on an empty frame, the ring presses «Сделать фото» and the shot lands with a short white flash, the ring presses «Готово», and the finished task shows (ДО/ПОСЛЕ green). A white Platform card (plate, address, «Задание 1 · Вывоз ТБО», status chip) overlaps the phone’s left edge; its chip reads «Машина в пути» and turns «Выполнено» with both photo thumbnails at the same moment the driver closes the task (one job, one status). It runs only while 35% visible and in a visible tab, has the shared pause/play text button, and the markup (and reduced motion) is the end state. Under 1080px the stage stacks under the copy; under 860px the photo sits only behind the phone, fading in from the tint above; under 600px the Platform card moves under the phone. There is no separate cab photo band any more. Then #screens (tint, the tablist split below, h2 «Что водитель делает в приложении»), #stop (white, the one-stop flow below with its copy as the h2; the .flow panel turns tint on the white band), and the demo form on a tint band (the form panel turns white there).
 
 On driverapp.html, under 860px the DriverApp copy column dissolves (display: contents) so the phone sits between the lead and the screen list that drives it. Under 1080px the DriverApp copy column dissolves (display: contents) so the phone sits between the lead and the screen list that drives it. Under 1080px the intake queue rows stack the source label above client and status.
-- **#screens (driverapp.html, tint):** a split. The copy column holds four capabilities as a vertical WAI-ARIA tablist (route, before/after photos, problem report, schedule and earnings). The selected row has a tint fill and ink title; the others are muted. Arrow keys, Home and End move between rows. They switch the screen of an HTML-built phone on a tint stage: 300px wide, ink bezel 42px radius, screen 34px, the one shadow, Inter throughout.
-  - **Phone screens:** the DriverApp Figma frames (Raccoon AI Mobile Apps) built at their 412×917 size plus a 30px status bar (time, punch-hole, signal, battery) so the rounded screen corners never clip the top bar; .ds is 412×947 design px, scaled to the bezel with --s = screen width / 412 (.6845 desktop, .6456 under 600px). Inside the phone the product speaks in the RaccoonAI Design System tokens (`.rds`: --surface-*, --text-*, --status-*, --radius-*), set in Inter as in the app; the DS night tokens live in style.css so both pages share them. Icons are the Figma exports in `images/driverapp/icons/`; the truck marker is the Figma «Truck on map / enroute · container» component (`images/driverapp/truck.svg`). 2ГИС green and Яндекс yellow are product truth in the mock.
+- **#screens (driverapp.html, tint):** a split. The copy column holds four capabilities as a vertical WAI-ARIA tablist (route, before/after photos, problem report, schedule and earnings). The selected row has a tint fill and ink title; the others are muted. Arrow keys, Home and End move between rows. They switch the screen of an HTML-built phone on a tint stage: 300px wide, ink bezel 42px radius, screen 34px, the one shadow, Medeo Sans throughout.
+  - **Phone screens:** the DriverApp Figma frames (Raccoon AI Mobile Apps) built at their 412×917 size plus a 30px status bar (time, punch-hole, signal, battery) so the rounded screen corners never clip the top bar; .ds is 412×947 design px, scaled to the bezel with --s = screen width / 412 (.6845 desktop, .6456 under 600px). Inside the phone the product speaks in the RaccoonAI Design System tokens (`.rds`: --surface-*, --text-*, --status-*, --radius-*), set in Medeo Sans as in the app; the DS night tokens live in style.css so both pages share them. Icons are the Figma exports in `images/driverapp/icons/`; the truck marker is the Figma «Truck on map / enroute · container» component (`images/driverapp/truck.svg`). 2ГИС green and Яндекс yellow are product truth in the mock.
   - **Shared chrome:** the Figma top bar (avatar photo, plate 384BCJ02, «Асаубаев Ерлан», «На линии») with its side padding raised to 16px, and the tab bar (История / Маршруты / Профиль, Маршруты selected).
   - **Map:** one map layer under every bottom sheet, the frames' own 2GIS rasters (`images/driverapp/map-city.webp`, `map-near.webp`, with night recolors) placed exactly as in Figma (object-fit cover at 0.85, frame px). Selecting the job zooms from the city view into the street view around pin 1 (1s). Bottom sheets are separate states anchored above the tab bar with the map tools (alert, flag, my location, back) riding on top; a state change fades the old sheet and lifts the new one in, and buttons that arrive with a state (Следующее задание, Завершить маршрут) open the sheet upward (grid-rows fold).
   - **The story (autoplay, ≈54s):** route list «Рейс 1» (the jobs scroll under the fixed header and come back) → tap job 1 → job sheet (2ГИС / Яндекс Карты / «Начать задание» swipe) → tap 2ГИС: the truck drives a blue route traced on the street centrelines with a turn at each crossing (up Чайковского, east on Шевченко, up to Жамбыла, east to the site), easing off into each turn, the line consumed behind it → swipe «Начать задание» (white knob, the green Figma progress trailing it; the idle swipe carries the Figma «Animated Light» glint) → task «Сделайте фото ДО», chip Начато → ДО → «Фотографии» (count 5 → 6 with +) → «Сделать фото»: the whole phone turns −90° into a landscape camera (frame corners, two hint pills, shutter; overfilled site photo) → shutter with a white flash → back upright to «Фотографии ДО» with the shot → Готово → ДО green, «Сделайте фото ПОСЛЕ» → a clock card on a dimmed screen, «10 минут спустя» (Onest: narration, not app UI) → ПОСЛЕ → camera with the clean site («Пустые контейнеры») → shot → «Фотографии ПОСЛЕ» with the shot → Готово → «Задание 1 выполнено», both green, «Следующее задание» → «3 часа спустя» → route list end (job 13, МСК «Точка разгрузки», 12 из 17, 85% fill) → swipe «Поехать на Разгрузку» → «Едем на Разгрузку»: the truck drives back through the grid and west on Курмангазы to the МСК flag → «Вы прибыли на точку» → swipe «Завершить маршрут» → «Рейс 1 · Успешно завершен в 16:23», 88:33 green. A finger ring marks each tap and drag. The Platform card follows the same job: Машина в пути → Начато (on the swipe) → the ДО thumbnail → Выполнено with both thumbnails; it steps back for the camera and after the job.
@@ -420,7 +420,7 @@ On driverapp.html, under 860px the DriverApp copy column dissolves (display: con
 
 ### Scheduled Collection and Client Registry
 Page order follows one job from request to report: #top Platform (tint), #intake (white), #dispatcher (tint), #schedule (white), the #driverapp teaser (tint; the full DriverApp story is on driverapp.html), #weighing (white), #zhasyl (tint), the site photo pause, #clients (white), the crew photo pause, #products (tint), proof «Пилоты и партнёры» (white), demo. The "Одна заявка, четыре экрана" block and the #city Sentinel block were removed; the Sentinel row was later removed from #products as well, and the products h2 no longer mentions the city.
-- **#schedule (tint band):** a 1:1 split. On the left are the Headline, the lead and a ruled, numbered `ol.cycle` with four steps: route group, generation at a set hour, approval, DriverApp. The numbers are Inter and muted, and the sequence is real. On the right is the route-group panel: the group name, its trucks, its sites and the daily generation time, then tomorrow's route sheets in a tint table with white rows (plate, crew, points, status) and an ink "Утвердить все". Clicking the button turns each neutral "Ждёт утверждения" chip (`status-wait`: tint fill, slate dot) into the done-green "Утверждён", staggered by 160ms, and the footer reads "Отправлено в DriverApp". It is not AI, so there is no violet. Below the split, "Три типа графиков" (Headline Small) sits beside a one-line explainer, then the **schedule matrix**: a white floating table for November 2026 with one row per site (name and type · rule) and one column per day. Weekends are faintly shaded, pickups are 16px ink squares, and the next shift's column (6 ноября) is outlined in ink and tagged "лист на 6 ноября". Phones show the first 10 days. An sr-only paragraph summarises the matrix.
+- **#schedule (tint band):** a 1:1 split. On the left are the Headline, the lead and a ruled, numbered `ol.cycle` with four steps: route group, generation at a set hour, approval, DriverApp. The numbers are Medeo Sans and muted, and the sequence is real. On the right is the route-group panel: the group name, its trucks, its sites and the daily generation time, then tomorrow's route sheets in a tint table with white rows (plate, crew, points, status) and an ink "Утвердить все". Clicking the button turns each neutral "Ждёт утверждения" chip (`status-wait`: tint fill, slate dot) into the done-green "Утверждён", staggered by 160ms, and the footer reads "Отправлено в DriverApp". It is not AI, so there is no violet. Below the split, "Три типа графиков" (Headline Small) sits beside a one-line explainer, then the **schedule matrix**: a white floating table for November 2026 with one row per site (name and type · rule) and one column per day. Weekends are faintly shaded, pickups are 16px ink squares, and the next shift's column (6 ноября) is outlined in ink and tagged "лист на 6 ноября". Phones show the first 10 days. An sr-only paragraph summarises the matrix.
 - **#clients (white):** the registry as a split, then «Заказчики по нормативу» and «Двусторонняя синхронизация с 1С» side by side (`.clients-pair`, stacked under 860px), each a Headline Small h3, one paragraph and its card:
   - **Registry:** a BIN search field in the focused-input style, a floating client card with a "БИН проверен" chip and the contract's tariff table (task type → price per м³ or per request), and a muted duplicate-guard note.
   - **Clients on norm:** a site card listing attached legal entities with fixed monthly fees and a load meter. The meter is an ink fill up to capacity, a status-fail overflow segment and an ink capacity tick, with the % in error ink. Under it is the suggested schedule change.
@@ -462,7 +462,7 @@ Field photographs give the replicas a real place: the depot behind the fleet pan
 ## Do's and Don'ts
 
 ### Do:
-- **Do** rebuild product UI in HTML/CSS at real density, set in Inter, without a "demo data" caption.
+- **Do** rebuild product UI in HTML/CSS at real density, set in Medeo Sans, without a "demo data" caption.
 - **Do** keep AI Violet for AI-made or AI-proposed things, and pair AI Violet Text with AI Soft for labels.
 - **Do** use the product status ramps (soft fill + ink text + currentColor dot) for any job state, with the product's wording.
 - **Do** set vehicle plates in the Plate style everywhere.
@@ -475,4 +475,4 @@ Field photographs give the replicas a real place: the depot behind the fleet pan
 - **Don't** replace a product replica with a static screenshot or a row of equal feature cards.
 - **Don't** add gradients, glass, blur, or a second shadow level.
 - **Don't** put uppercase tracked labels above marketing headings; caps live only inside product UI headers.
-- **Don't** set product UI in Onest or marketing headings in Inter.
+- **Don't** set product UI in Onest or marketing headings in Medeo Sans.

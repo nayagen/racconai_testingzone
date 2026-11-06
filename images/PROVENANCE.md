@@ -65,5 +65,6 @@ Not varied: the top-down truck markers (`platform/trucks/*.png`, transparent) an
 - `map-city.webp`, `map-near.webp`: the frames' «Route Trace» 2GIS rasters (1919×1079), WebP q80. Map data © 2GIS. `*-dark.webp` are the same deterministic per-pixel recolor as the other maps (slate-navy ground, amber arterials, muted parks).
 - `site-before.webp`, `site-after.webp`: the camera-frame photos (overfilled and emptied container site, 800×600), WebP q82. Real field photos from the design file.
 - `avatar.webp`: the Figma «Profile Pictures» image, 120px.
-- `truck.svg`: the «Truck on map / Truck / enroute · container» component export, with the export's canvas fill removed.
-- `icons/*.svg`: icon exports from the same frames, unchanged.
+- `driver-photo.webp`: the photo in the Figma «Profile» frame (15310:30337), 1024px PNG downscaled to 320px WebP q84.
+- `truck-tbo.png`: a copy of `images/Truck on map/Мусоровоз ТБО/State=Default.png` (56×56), the map marker on the DriverApp phone and tablet and in the «КП запаркована» illustration. It replaced `truck-musorovoz.svg`, the Platform replica's inline render of the same component, which drew stray white wheel shapes.
+- `icons/*.svg`: icon exports from the same frames, unchanged; `icons/month-prev.svg` joins the two layers of the «Back Icon» export (white disc, dark chevron) into one file.

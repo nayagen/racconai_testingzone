@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DriverApp — приложение водителя RaccoonAI</title>
-  <meta name="description" content="DriverApp — приложение для экипажей МВО: маршрутный лист на смену, фотоотчёт до и после вывоза, сообщение о проблеме, график и заработок. Работает без связи.">
+  <meta name="description" content="DriverApp — приложение для экипажей МВО: маршрутный лист на смену, фотоотчёт до и после вывоза, сообщение о проблеме, график смен. Работает без связи.">
   <meta name="color-scheme" content="light dark">
   <script>/* theme before first paint: a stored choice wins, otherwise the OS preference */(function(){var t;try{t=localStorage.getItem("raccoon-theme")}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.setAttribute("data-theme",t)})();</script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -107,9 +107,8 @@
         </picture>
         <div class="wrap dh-grid">
           <div class="pf-hero-copy dh-copy">
-            <div class="pf-badge">Raccoon AI DriverApp</div>
             <h1 id="drv-hero-title"><span class="h1-line">Смена водителя</span> <span class="h1-line">в&nbsp;одном приложении</span></h1>
-            <p>Приложение для&nbsp;экипажей МВО: маршрутный лист на&nbsp;смену, фотоотчёт до&nbsp;и&nbsp;после вывоза и&nbsp;связь с&nbsp;диспетчером. Всё, что отмечает водитель, попадает в&nbsp;Платформу.</p>
+            <p>DriverApp&nbsp;— приложение для&nbsp;экипажей МВО: маршрутный лист на&nbsp;смену, фотоотчёт до&nbsp;и&nbsp;после вывоза и&nbsp;связь с&nbsp;диспетчером. Всё, что отмечает водитель, попадает в&nbsp;Платформу.</p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="#demo">Запросить демо</a>
               <a class="btn btn-quiet" href="#screens">Посмотреть экраны</a>
@@ -131,21 +130,33 @@
       <div class="wrap split driver-split">
         <div class="split-copy">
           <h2 id="driver-title">Что водитель делает в&nbsp;приложении</h2>
-          <p>Утверждённый маршрутный лист приходит экипажу на&nbsp;телефон. Водитель идёт по&nbsp;точкам по&nbsp;порядку, снимает фото до&nbsp;и&nbsp;после вывоза и&nbsp;сообщает о&nbsp;проблеме в&nbsp;два касания. Диспетчер видит всё это в&nbsp;Платформе в&nbsp;том&nbsp;же статусе.</p>
-          <!-- Tab icons: Lucide (list-ordered, camera, triangle-alert, wallet), ISC License, lucide.dev -->
+          <p>Утверждённый маршрутный лист приходит водителю на&nbsp;Водительское приложение DriverApp. Водитель едет по&nbsp;точкам по&nbsp;порядку, снимает фото до&nbsp;и&nbsp;после вывоза или&nbsp;сообщает о&nbsp;проблеме в&nbsp;два касания. Диспетчер видит всё это в&nbsp;Платформе в&nbsp;том&nbsp;же статусе.</p>
+          <!-- Tab icons: Lucide (warehouse, list-ordered, camera, triangle-alert, wallet), ISC License, lucide.dev -->
           <div class="drv-tabs" role="tablist" aria-label="Экраны DriverApp" aria-orientation="vertical">
-            <button type="button" role="tab" id="drv-t1" aria-controls="drv-p1" aria-selected="true"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 12h11"/><path d="M10 18h11"/><path d="M10 6h11"/><path d="M4 10h2"/><path d="M4 6h1v4"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></span><strong>Маршрут по&nbsp;порядку</strong><span>Площадки рейса по&nbsp;порядку: адрес, контейнеры и&nbsp;статус машины.</span></button>
+            <button type="button" role="tab" id="drv-t0" aria-controls="drv-p1" aria-selected="true"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35A2 2 0 0 1 3.26 6.5l8-3.2a2 2 0 0 1 1.48 0l8 3.2A2 2 0 0 1 22 8.35Z"/><path d="M6 18h12"/><path d="M6 14h12"/><rect width="12" height="12" x="6" y="10"/></svg></span><strong>Автовыпуск транспорта из&nbsp;депо</strong><span>Медработник выдал путевой лист после медосмотра: водитель сам выходит на&nbsp;линию и&nbsp;получает маршрут.</span></button>
+            <button type="button" role="tab" id="drv-t1" aria-controls="drv-p1" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 12h11"/><path d="M10 18h11"/><path d="M10 6h11"/><path d="M4 10h2"/><path d="M4 6h1v4"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></span><strong>Маршрут по&nbsp;порядку</strong><span>Площадки рейса по&nbsp;порядку: адрес, контейнеры и&nbsp;статус машины.</span></button>
             <button type="button" role="tab" id="drv-t2" aria-controls="drv-p2" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></span><strong>Фотоотчёт до&nbsp;и&nbsp;после</strong><span>Водитель указывает, сколько контейнеров опустошил, и&nbsp;снимает фото до&nbsp;и&nbsp;после. Их видят диспетчер и&nbsp;клиент.</span></button>
             <button type="button" role="tab" id="drv-t3" aria-controls="drv-p3" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><strong>Сообщить о&nbsp;проблеме</strong><span>КП запаркована, контейнер повреждён, поломка ТС: диспетчер узнаёт сразу.</span></button>
-            <button type="button" role="tab" id="drv-t4" aria-controls="drv-p4" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span><strong>График и&nbsp;заработок</strong><span>Смены на&nbsp;неделю и&nbsp;начисления за&nbsp;месяц.</span></button>
+            <button type="button" role="tab" id="drv-t4" aria-controls="drv-p1" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></span><strong>Поездка на&nbsp;разгрузку</strong><span>Площадки рейса пройдены: водитель едет на&nbsp;точку разгрузки и&nbsp;закрывает маршрут.</span></button>
+            <button type="button" role="tab" id="drv-t5" aria-controls="drv-p4" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg></span><strong>График смен</strong><span>Смены на&nbsp;месяц: какие пройдены, пропущены и&nbsp;запланированы.</span></button>
           </div>
         </div>
 
-        <!-- One shift in DriverApp, played end to end (Figma «Raccoon AI Mobile Apps», DriverApp frames): the route list, job 1,
-             2ГИС and the drive along the streets, the before / after photo report with the phone turned for the camera, the next
-             job, the drive to the unload point and the closed route. Tabs 1-2 follow the story; tabs 3-4 are static screens.
+        <!-- One shift in DriverApp, played end to end (Figma «Raccoon AI Mobile Apps», DriverApp frames): the app starts, the medical
+             check is passed and the driver releases himself from the depot, picks his shift and waits for the route; the route list, job 1,
+             2ГИС and the drive along the streets, the before / after photo report with the phone turned for the camera, job 2 blocked
+             by parked cars and the problem report, the drive to the unload point and the closed route. Then the Профиль tab:
+             the month of shifts and a tooltip per day type. Six tabs, one per chapter, in story order; each arrival draws its geofence.
+             The switch above plays it on a landscape cab tablet instead (data-device="tablet"): the tabs centred in the top bar,
+             the bottom sheets in the bottom-left corner over a wider map, larger map buttons, pins and truck, two-column photo
+             and profile screens, and a camera that needs no turning.
              The markup is the first frame; script.js plays the rest and the list keeps pace with it. -->
         <figure class="drv-stage">
+          <!-- Device: the same shift on the driver's smartphone or on a cab tablet in landscape (Lucide smartphone, tablet; ISC) -->
+          <div class="dh-device" role="group" aria-label="Устройство" hidden>
+            <button type="button" aria-pressed="true" data-device="phone"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg>Смартфон</button>
+            <button type="button" aria-pressed="false" data-device="tablet"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M18 12h.01"/></svg>Планшет</button>
+          </div>
           <div class="dh-proto" id="dh-proto" data-scr="map" data-sheet="route" data-task="start" data-pg="before" data-zoom="city">
             <div class="dphone">
               <div class="dphone-screen">
@@ -153,8 +164,8 @@
                   <!-- Status bar: keeps the app's top bar clear of the rounded screen corners -->
                   <div class="da-status" aria-hidden="true"><span>9:41</span><i class="da-punch"></i><span class="da-sys"><svg viewBox="0 0 18 12"><path d="M1 11h2V8H1zm4 0h2V6H5zm4 0h2V3.5H9zm4 0h2V1h-2z" fill="currentColor"/></svg><svg viewBox="0 0 16 12"><path d="M8 11.2 5.6 8.6a3.4 3.4 0 0 1 4.8 0zM3.2 6.1a6.8 6.8 0 0 1 9.6 0l-1.6 1.7a4.5 4.5 0 0 0-6.4 0zM.8 3.6a10.2 10.2 0 0 1 14.4 0l-1.6 1.7a7.9 7.9 0 0 0-11.2 0z" fill="currentColor"/></svg><svg viewBox="0 0 26 12"><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.5" fill="currentColor"/><path d="M23.8 4.2v3.6c.8-.3 1.3-1 1.3-1.8s-.5-1.5-1.3-1.8" fill="currentColor" fill-opacity=".45"/></svg></span></div>
                   <div class="da-top" aria-hidden="true">
-                    <span class="da-who"><img class="da-ava" src="images/driverapp/avatar.webp" width="40" height="40" alt="" decoding="async"><span><b>384BCJ02</b><small>Асаубаев Ерлан</small></span></span>
-                    <span class="da-online">На&nbsp;линии</span>
+                    <span class="da-who"><img class="da-ava" src="images/driverapp/avatar.webp" width="40" height="40" alt="" decoding="async"><span><b><span class="da-plan">-</span><span class="da-on">384BCJ02</span></b><small>Асаубаев Ерлан</small></span></span>
+                    <span class="da-online"><span class="da-plan">Смена запланирована</span><span class="da-on">На&nbsp;линии</span></span>
                   </div>
                   <div class="ds-body">
                     <!-- Map screens: one map under every bottom sheet -->
@@ -163,26 +174,61 @@
                         <div class="da-layer da-city">
                           <picture class="themed"><source data-theme-dark media="(prefers-color-scheme: dark)" srcset="images/driverapp/map-city-dark.webp"><img src="images/driverapp/map-city.webp" width="1919" height="1079" alt="" decoding="async" loading="lazy"></picture>
                           <span class="da-mpin" style="--x: 337px; --y: 158px"><img src="images/driverapp/icons/location-pin.svg" alt=""><b>1</b></span>
-                          <img class="da-truck" src="images/driverapp/truck.svg" width="48" height="48" alt="" style="--x: 88px; --y: 494px">
+                          <img class="da-truck" src="images/driverapp/truck-tbo.png" width="66" height="66" alt="" style="--x: 88px; --y: 494px">
                         </div>
                         <div class="da-layer da-near">
                           <picture class="themed"><source data-theme-dark media="(prefers-color-scheme: dark)" srcset="images/driverapp/map-near-dark.webp"><img src="images/driverapp/map-near.webp" width="1919" height="1079" alt="" decoding="async" loading="lazy"></picture>
+                          <!-- Geofences: the circle round each destination inside which the arrival is geovalidated -->
+                          <svg class="da-geo" viewBox="0 0 412 917"><g class="da-geo-1"><circle class="da-geo-pulse" cx="353" cy="190" r="56"/><circle class="da-geo-fill" cx="353" cy="190" r="56"/><circle class="da-geo-line" cx="353" cy="190" r="56" pathLength="100"/></g><g class="da-geo-2"><circle class="da-geo-pulse" cx="76" cy="182" r="56"/><circle class="da-geo-fill" cx="76" cy="182" r="56"/><circle class="da-geo-line" cx="76" cy="182" r="56" pathLength="100"/></g><g class="da-geo-dump"><circle class="da-geo-pulse" cx="88" cy="561" r="56"/><circle class="da-geo-fill" cx="88" cy="561" r="56"/><circle class="da-geo-line" cx="88" cy="561" r="56" pathLength="100"/></g></svg>
                           <svg class="da-route" viewBox="0 0 412 917"><path class="da-route-case"/><path class="da-route-line"/></svg>
                           <span class="da-mpin" style="--x: 337px; --y: 158px"><img src="images/driverapp/icons/location-pin.svg" alt=""><b>1</b></span>
+                          <span class="da-mpin da-mpin-2" style="--x: 60px; --y: 150px"><img src="images/driverapp/icons/location-pin.svg" alt=""><b>2</b></span>
                           <span class="da-mflag" style="--x: 88px; --y: 561px"><img src="images/driverapp/icons/finish-flag-blue.svg" alt=""></span>
-                          <img class="da-truck da-truck-run" src="images/driverapp/truck.svg" width="48" height="48" alt="">
+                          <img class="da-truck da-truck-run" src="images/driverapp/truck-tbo.png" width="66" height="66" alt="">
                         </div>
+                      </div>
+
+                      <!-- 0. Автовыпуск из депо (Figma 19480:17074 … 6882:3616): «Выйти на линию», the shifts of the day, «Вы не в ДЕПО»,
+                           then on the line, «Готов к новому маршруту» and the wait for the route -->
+                      <div class="da-sheetbox da-sh-out">
+                        <div class="da-tools"><span></span><span class="da-rtools"><i class="da-fab"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
+                        <div class="da-bar"><span class="da-btn da-btn-out">Выйти на&nbsp;линию</span></div>
+                      </div>
+                      <div class="da-sheetbox da-sh-pick">
+                        <div class="da-tools"><span></span><span class="da-rtools"><i class="da-fab"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
+                        <div class="da-fold da-depot-fold"><div><p class="da-depot">Вы не в&nbsp;ДЕПО</p></div></div>
+                        <div class="da-sheet">
+                          <div class="da-phead"><b>Ваши смены на&nbsp;сегодня</b><small>Выберите запланированную смену</small></div>
+                          <ul class="da-shifts">
+                            <li class="da-shift da-shift-1"><span><b>283BVG01</b><small>Запланировано на&nbsp;06:00</small></span><em>18&nbsp;заданий на&nbsp;смене</em></li>
+                            <li class="da-shift is-empty"><span><b>283BVG01</b><small>Запланировано на&nbsp;18:00</small></span><em>Нет заданий на&nbsp;смене</em></li>
+                          </ul>
+                          <div class="da-btns">
+                            <div class="da-swipe-off"><b>Выберите ТС</b><span>Чтобы начать смену</span></div>
+                            <div class="da-swipe" data-swipe="shift"><i class="da-swipe-fill"></i><i class="da-swipe-light"></i><span class="da-swipe-txt"><b>Начать запланированную смену</b><span>Потяните направо</span></span><span class="da-swipe-knob"><img src="images/driverapp/icons/back-to.svg" alt=""></span></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="da-sheetbox da-sh-go">
+                        <div class="da-tools"><span></span><span class="da-rtools"><i class="da-fab"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
+                        <div class="da-bar">
+                          <div class="da-swipe" data-swipe="ready"><i class="da-swipe-fill"></i><i class="da-swipe-light"></i><span class="da-swipe-txt"><b>Готов к&nbsp;новому маршруту</b><span>Потяните чтобы получить маршрут</span></span><span class="da-swipe-knob"><img src="images/driverapp/icons/back-to.svg" alt=""></span></div>
+                        </div>
+                      </div>
+                      <div class="da-sheetbox da-sh-wait">
+                        <div class="da-tools"><span></span><span class="da-rtools"><i class="da-fab"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
+                        <div class="da-bar"><span class="da-btn da-btn-wait">Ожидаем маршрут</span></div>
                       </div>
 
                       <!-- 1. Route: «Рейс 1», the job list scrolls under its fixed header -->
                       <div class="da-sheetbox da-sh-route">
                         <div class="da-tools"><span></span><span class="da-rtools"><i class="da-fab"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/finish-flag.svg" alt=""></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
                         <div class="da-sheet">
-                          <div class="da-shead"><i class="da-grab"></i><p class="da-title"><b>Рейс 1</b><span class="da-chips"><span>М345</span><span>0 из&nbsp;17</span><span>0%</span><span class="is-time">00:03</span></span></p><p class="da-hint">Выберите площадку</p></div>
+                          <div class="da-shead"><i class="da-grab"></i><p class="da-title"><b>Рейс 1</b><span class="da-chips"><span>М345</span><span class="da-j1">0 из&nbsp;17</span><span class="da-j2">1 из&nbsp;17</span><span class="da-j1">0%</span><span class="da-j2">6%</span><span class="is-time">00:03</span></span></p><p class="da-hint">Выберите площадку</p></div>
                           <div class="da-list">
                             <ol class="da-jobs">
-                              <li class="da-job-first"><span class="da-rail"><span class="da-pin"><img src="images/driverapp/icons/pin-blue-2563eb.svg" alt=""><b>1</b></span></span><div class="da-card"><b>Кабанбай батыра 45</b><small>ТОО «Алатау Сервис Групп»</small><small>Акимат г.Алматы</small><span class="da-card-foot"><small>1.1 евро (5) &nbsp;|&nbsp; РСО (1)</small><span class="da-st da-st-move">Машина в&nbsp;пути</span></span><small class="da-more">2 задания на&nbsp;площадке</small></div></li>
-                              <li><span class="da-rail"><span class="da-pin"><img src="images/driverapp/icons/pin-blue-2563eb.svg" alt=""><b>2</b></span></span><div class="da-card"><b>Радостовца 34</b><small>ИП Сапарова А.</small><small>Акимат г.Алматы</small><span class="da-card-foot"><small>1.1 евро (5) &nbsp;|&nbsp; РСО (1)</small><span class="da-st">Назначено</span></span><small class="da-more">2 задания на&nbsp;площадке</small></div></li>
+                              <li class="da-job-first"><span class="da-rail"><span class="da-pin"><img src="images/driverapp/icons/pin-blue-2563eb.svg" alt=""><b>1</b></span></span><div class="da-card"><b>Кабанбай батыра 45</b><small>ТОО «Алатау Сервис Групп»</small><small>Акимат г.Алматы</small><span class="da-card-foot"><small>1.1 евро (5) &nbsp;|&nbsp; РСО (1)</small><span class="da-st da-st-move da-j1">Машина в&nbsp;пути</span><span class="da-st da-st-done da-j2">Выполнено</span></span><small class="da-more">2 задания на&nbsp;площадке</small></div></li>
+                              <li class="da-job-second"><span class="da-rail"><span class="da-pin"><img src="images/driverapp/icons/pin-blue-2563eb.svg" alt=""><b>2</b></span></span><div class="da-card"><b>Радостовца 34</b><small>ИП Сапарова А.</small><small>Акимат г.Алматы</small><span class="da-card-foot"><small>1.1 евро (5) &nbsp;|&nbsp; РСО (1)</small><span class="da-st">Назначено</span></span><small class="da-more">2 задания на&nbsp;площадке</small></div></li>
                               <li><span class="da-rail"><span class="da-pin"><img src="images/driverapp/icons/pin-blue-2563eb.svg" alt=""><b>3</b></span></span><div class="da-card"><b>Карасай батыра 23</b><small>КСК «Самал-2»</small><small>Акимат г.Алматы</small><span class="da-card-foot"><small>1.1 евро (5) &nbsp;|&nbsp; РСО (1)</small><span class="da-st">Назначено</span></span><small class="da-more">2 задания на&nbsp;площадке</small></div></li>
                               <li><span class="da-rail"><span class="da-pin"><img src="images/driverapp/icons/pin-blue-2563eb.svg" alt=""><b>4</b></span></span><div class="da-card"><b>Толе би 56</b><small>ТОО «Береке Маркет»</small><small>Акимат г.Алматы</small><span class="da-card-foot"><small>1.1 евро (5) &nbsp;|&nbsp; РСО (1)</small><span class="da-st">Назначено</span></span><small class="da-more">2 задания на&nbsp;площадке</small></div></li>
                               <li><span class="da-rail"><span class="da-pin"><img src="images/driverapp/icons/pin-blue.svg" alt=""><b>5</b></span></span><div class="da-card"><b>Ауезова 13</b><small>ОСИ «Жетысу»</small><small>Акимат г.Алматы</small><span class="da-card-foot"><small>1.1 евро (5) &nbsp;|&nbsp; РСО (1)</small><span class="da-st">Назначено</span></span><small class="da-more">2 задания на&nbsp;площадке</small></div></li>
@@ -196,12 +242,12 @@
 
                       <!-- 2. Job selected: the job card, 2ГИС / Яндекс Карты and the «Начать задание» swipe -->
                       <div class="da-sheetbox da-sh-job">
-                        <div class="da-tools"><span class="da-fab"><img src="images/driverapp/icons/back-to.svg" alt=""></span><span class="da-rtools"><i class="da-fab"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/finish-flag-muted.svg" alt=""></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
+                        <div class="da-tools"><span class="da-fab"><img src="images/driverapp/icons/back-to.svg" alt=""></span><span class="da-rtools"><i class="da-fab da-fab-err"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/finish-flag-muted.svg" alt=""></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
                         <div class="da-sheet">
-                          <div class="da-shead"><i class="da-grab"></i><p class="da-title"><b>Кабанбай батыра 45</b><span class="da-chips"><span class="is-time">00:03</span></span></p><p class="da-hint">Задания на&nbsp;площадке</p></div>
+                          <div class="da-shead"><i class="da-grab"></i><p class="da-title"><b><span class="da-j1">Кабанбай батыра 45</span><span class="da-j2">Радостовца 34</span></b><span class="da-chips"><span class="is-time">00:03</span></span></p><p class="da-hint">Задания на&nbsp;площадке</p></div>
                           <div class="da-taskbox"><div class="da-task is-picked">
                             <p class="da-task-top"><b>1.1 евро <span>5 конт.</span></b><small>Задание 1</small></p>
-                            <small class="da-task-client">ТОО «Алатау Сервис Групп»</small>
+                            <small class="da-task-client"><span class="da-j1">ТОО «Алатау Сервис Групп»</span><span class="da-j2">ИП Сапарова А.</span></small>
                             <p class="da-task-line"><img src="images/driverapp/icons/task.svg" alt="">Вывоз ТБО</p>
                             <p class="da-task-line"><img src="images/driverapp/icons/chat.svg" alt="">Позвонить на&nbsp;номер +77014332525</p>
                             <p class="da-task-foot"><small>Z52625623526</small><span class="da-st">Назначено</span></p>
@@ -231,6 +277,24 @@
                               <span class="da-btn da-btn-photo da-btn-after"><img class="da-ic-cam" src="images/driverapp/icons/camera-white.svg" alt=""><img class="da-ic-ok" src="images/driverapp/icons/check-square.svg" alt="">ПОСЛЕ</span>
                             </div>
                             <div class="da-fold"><div><span class="da-btn da-btn-next">Следующее задание</span></div></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 3b. After «КП запаркована машинами»: the problem banner and the flagged site, sent to the end of the trip -->
+                      <div class="da-sheetbox da-sh-issue">
+                        <div class="da-tools"><span class="da-fab"><img src="images/driverapp/icons/back-to.svg" alt=""></span><span class="da-rtools"><i class="da-fab"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/finish-flag.svg" alt=""></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
+                        <div class="da-alert">
+                          <p class="da-alert-t"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.25"/><path d="M10 6v4.6M10 13.6v.1"/></svg>Проблема на&nbsp;маршруте</p>
+                          <p class="da-alert-s">Задание отправлено в&nbsp;конец рейса. Попытайтесь выполнить позже ещё раз.</p>
+                        </div>
+                        <div class="da-sheet">
+                          <div class="da-shead"><i class="da-grab"></i><p class="da-title"><b>Рейс 1</b><span class="da-chips"><span>М345</span><span>1 из&nbsp;17</span><span>6%</span><span class="is-time">00:03</span></span></p><p class="da-hint">Выберите площадку</p></div>
+                          <div class="da-list da-list-issue">
+                            <ol class="da-jobs">
+                              <li class="da-job-bad"><span class="da-rail"><span class="da-pin"><img src="images/driverapp/icons/pin-blue-2563eb.svg" alt=""><b>2</b></span></span><div class="da-card"><b>Радостовца 34</b><small>ИП Сапарова А.</small><small>Акимат г.Алматы</small><strong class="da-bad-why">КП запаркована</strong><span class="da-card-foot"><small>1.1 евро (5) &nbsp;|&nbsp; РСО (1)</small><span class="da-chips"><span class="da-st da-st-bad">Невывоз</span><span class="da-st da-st-bad">12:34</span></span></span><small class="da-more">Невыполнены 2 задания на&nbsp;площадке</small></div></li>
+                              <li><span class="da-rail"><span class="da-pin"><img src="images/driverapp/icons/pin-blue-2563eb.svg" alt=""><b>3</b></span></span><div class="da-card"><b>Карасай батыра 23</b><small>КСК «Самал-2»</small><small>Акимат г.Алматы</small><span class="da-card-foot"><small>1.1 евро (5) &nbsp;|&nbsp; РСО (1)</small><span class="da-st">Назначено</span></span><small class="da-more">2 задания на&nbsp;площадке</small></div></li>
+                            </ol>
                           </div>
                         </div>
                       </div>
@@ -279,42 +343,85 @@
                       <span class="da-btn da-ready">Готово</span>
                     </div>
 
-                    <div class="dp-panel ds-issue" role="tabpanel" id="drv-p3" aria-labelledby="drv-t3" hidden>
-                      <div class="ds-pad">
-                        <p class="ds-title ds-title-x">Сообщить о&nbsp;проблеме на&nbsp;задаче<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#101828"/><path d="m8.5 8.5 7 7m0-7-7 7" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></p>
-                        <p class="ds-sub">Выберите причину, мы&nbsp;сообщим диспетчеру</p>
-                        <ul class="ds-reasons">
-                          <li>КП запаркована машинами</li>
-                          <li>Нет доступа к&nbsp;КП (закрыто)</li>
-                          <li>Неподходящая техника</li>
-                          <li>Контейнер(ы) повреждены</li>
-                          <li>Поломка ТС</li>
-                          <li>Произошло ДТП</li>
-                          <li>Грузчикам нездоровится</li>
-                          <li>Водителю нездоровится</li>
-                          <li>Другое (с&nbsp;вами свяжется диспетчер)</li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div class="dp-panel ds-legacy" role="tabpanel" id="drv-p4" aria-labelledby="drv-t4" hidden>
-                      <p class="dp-title">Мой график</p>
-                      <ol class="dp-week" aria-label="Смены на неделю">
-                        <li class="is-shift"><span>Пн</span>2</li><li class="is-shift"><span>Вт</span>3</li><li><span>Ср</span>4</li><li class="is-shift"><span>Чт</span>5</li><li class="is-shift is-today"><span>Пт</span>6</li><li><span>Сб</span>7</li><li><span>Вс</span>8</li>
-                      </ol>
-                      <div class="dp-earn">
-                        <p class="dp-sub">Начислено за&nbsp;ноябрь</p>
-                        <p class="dp-sum">142&nbsp;600&nbsp;₸</p>
-                        <p class="dp-sub">4 смены · 87 точек</p>
-                      </div>
-                      <ul class="dp-pay">
-                        <li><span>Чт, 5 ноября</span><b>36&nbsp;400&nbsp;₸</b></li>
-                        <li><span>Вт, 3 ноября</span><b>35&nbsp;100&nbsp;₸</b></li>
-                        <li><span>Пн, 2 ноября</span><b>37&nbsp;900&nbsp;₸</b></li>
+                    <!-- Problem report: «Сообщить о проблеме на задаче», the reasons go to the dispatcher -->
+                    <div class="hp-pane da-issue" role="tabpanel" id="drv-p3" aria-labelledby="drv-t3" hidden>
+                      <p class="da-is-title">Сообщить о&nbsp;проблеме на&nbsp;задаче<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="m8.5 8.5 7 7m0-7-7 7"/></svg></p>
+                      <p class="da-is-sub">Выберите причину, мы&nbsp;сообщим диспетчеру</p>
+                      <ul class="da-reasons">
+                        <li class="da-reason-1">КП запаркована машинами</li>
+                        <li>Нет доступа к&nbsp;КП (закрыто)</li>
+                        <li>Неподходящая техника</li>
+                        <li>Контейнер(ы) повреждены</li>
+                        <li>Поломка ТС</li>
+                        <li>Произошло ДТП</li>
+                        <li>Грузчикам нездоровится</li>
+                        <li>Водителю нездоровится</li>
+                        <li>Другое (с&nbsp;вами свяжется диспетчер)</li>
                       </ul>
                     </div>
+
+                    <!-- 4. Profile (Figma «Profile» 15310:30337): the driver card, the month of shifts, a tooltip per day type (18934:16311) -->
+                    <div class="hp-pane da-prof" role="tabpanel" id="drv-p4" aria-labelledby="drv-t5" hidden>
+                      <div class="da-pcard da-pin-in" style="--o: 0">
+                        <img class="da-pphoto" src="images/driverapp/driver-photo.webp" width="320" height="320" alt="" decoding="async" loading="lazy">
+                        <div class="da-pinfo">
+                          <b>Асаубаев Ерлан</b>
+                          <span class="da-pphone">+7 707 123 45 67</span>
+                          <span class="da-prate"><img src="images/driverapp/icons/star.svg" alt="">97%</span>
+                          <span class="da-pedit">Редактировать</span>
+                        </div>
+                      </div>
+                      <p class="da-ptitle da-pin-in" style="--o: 1">Мой график смен</p>
+                      <div class="da-cal da-pin-in" style="--o: 2">
+                        <p class="da-cal-head"><img src="images/driverapp/icons/month-prev.svg" alt="">Январь 2026<img class="da-cal-next" src="images/driverapp/icons/month-prev.svg" alt=""></p>
+                        <ol class="da-wdays"><li>пн</li><li>вт</li><li>ср</li><li>чт</li><li>пт</li><li class="is-we">сб</li><li class="is-we">вс</li></ol>
+                        <ol class="da-days">
+                          <li class="da-day is-d" data-d="1" style="grid-column: 4">1</li>
+                          <li class="da-day is-d" data-d="2">2</li>
+                          <li class="da-day is-e" data-d="3">3</li>
+                          <li class="da-day is-d" data-d="4">4</li>
+                          <li class="da-day is-d" data-d="5">5</li>
+                          <li class="da-day is-m" data-d="6">6</li>
+                          <li class="da-day is-e" data-d="7">7</li>
+                          <li class="da-day is-e" data-d="8">8</li>
+                          <li class="da-day is-d" data-d="9">9</li>
+                          <li class="da-day is-d" data-d="10">10</li>
+                          <li class="da-day is-o" data-d="11">11</li>
+                          <li class="da-day is-e" data-d="12">12</li>
+                          <li class="da-day is-e" data-d="13">13</li>
+                          <li class="da-day is-a" data-d="14">14</li>
+                          <li class="da-day is-mo" data-d="15">15</li>
+                          <li class="da-day is-e" data-d="16">16</li>
+                          <li class="da-day is-p" data-d="17">17</li>
+                          <li class="da-day is-p" data-d="18">18</li>
+                          <li class="da-day is-e" data-d="19">19</li>
+                          <li class="da-day is-e" data-d="20">20</li>
+                          <li class="da-day is-n" data-d="21">21</li>
+                          <li class="da-day is-n" data-d="22">22</li>
+                          <li class="da-day is-o" data-d="23">23</li>
+                          <li class="da-day is-e" data-d="24">24</li>
+                          <li class="da-day is-p" data-d="25">25</li>
+                          <li class="da-day is-p" data-d="26">26</li>
+                          <li class="da-day is-p" data-d="27">27</li>
+                          <li class="da-day is-e" data-d="28">28</li>
+                          <li class="da-day is-n" data-d="29">29</li>
+                          <li class="da-day is-p" data-d="30">30</li>
+                          <li class="da-day is-n" data-d="31">31</li>
+                        </ol>
+                        <p class="da-tip">
+                          <span class="da-tip-v is-m"><b>Пропущенная смена</b><span>Вы пропустили эту смену</span></span>
+                          <span class="da-tip-v is-d"><b>Смена завершена</b><span>Смена длилась 8&nbsp;часов 7&nbsp;мин</span></span>
+                          <span class="da-tip-v is-o"><b>Выходной</b><span>Приятного отдыха</span></span>
+                          <span class="da-tip-v is-a"><b>Смена активна</b><span>Смена началась в&nbsp;07:22</span></span>
+                          <span class="da-tip-v is-mo"><b>Утренняя смена</b><span>Вас ожидают в <em>06:00</em></span></span>
+                          <span class="da-tip-v is-p"><b>Смена запланирована</b><span>Запланирована на <em>06:00</em></span></span>
+                          <span class="da-tip-v is-n"><b>Ночная смена</b><span>Вас ожидают в <em>18:00</em></span></span>
+                        </p>
+                      </div>
+                      <span class="da-btn da-logout da-pin-in" style="--o: 3">Выйти из&nbsp;аккаунта</span>
+                    </div>
                   </div>
-                  <div class="da-tabs" aria-hidden="true"><span><i><img src="images/driverapp/icons/admin.svg" alt=""></i>История</span><span class="is-on"><i><img src="images/driverapp/icons/journey.svg" alt=""></i>Маршруты</span><span><i><img src="images/driverapp/icons/user-contact.svg" alt=""></i>Профиль</span></div>
+                  <div class="da-tabs" aria-hidden="true"><span><i><img src="images/driverapp/icons/admin.svg" alt=""></i>История</span><span class="da-tab-routes"><i><img src="images/driverapp/icons/journey.svg" alt=""></i>Маршруты</span><span class="da-tab-prof"><i><img src="images/driverapp/icons/user-contact.svg" alt=""></i>Профиль</span></div>
 
                   <!-- Camera: a landscape screen, laid sideways in the portrait phone; the whole phone turns to show it -->
                   <div class="da-cam" aria-hidden="true">
@@ -332,6 +439,14 @@
                     </div>
                   </div>
 
+                  <!-- Before the shift: the medical check passed, the waybill issued, so the driver releases himself onto the line -->
+                  <div class="da-skip da-med" aria-hidden="true">
+                    <div class="da-skip-card">
+                      <svg class="da-medic" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path class="da-medic-ok" d="m9 14 2 2 4-4" pathLength="100"/></svg>
+                      <p><b>Медосмотр пройден</b><small>Медработник выдал путевой лист: водитель сам выходит на&nbsp;линию</small></p>
+                    </div>
+                  </div>
+
                   <!-- Time passes between taps: the crew empties the containers, then works through the route -->
                   <div class="da-skip" aria-hidden="true">
                     <div class="da-skip-card">
@@ -339,23 +454,27 @@
                       <p><b class="da-v-s1">10 минут спустя</b><b class="da-v-s2">3 часа спустя</b><small class="da-v-s1">Экипаж опустошает контейнеры</small><small class="da-v-s2">Ещё 11 площадок по&nbsp;маршруту</small></p>
                     </div>
                   </div>
+                  <!-- On arrival at job 2: parked cars close the way to the containers -->
+                  <div class="da-skip da-block" aria-hidden="true">
+                    <div class="da-skip-card">
+                      <svg class="da-blk" viewBox="0 0 256 168">
+                        <rect class="da-blk-ground" width="256" height="168" rx="18"/>
+                        <path class="da-blk-curb" d="M0 70h256"/>
+                        <rect class="da-blk-pad" x="52" y="14" width="152" height="46" rx="6"/>
+                        <g class="da-blk-bins"><rect x="64" y="22" width="36" height="30" rx="3"/><rect x="110" y="22" width="36" height="30" rx="3"/><rect x="156" y="22" width="36" height="30" rx="3"/><path d="M64 30h36M110 30h36M156 30h36"/></g>
+                        <g class="da-blk-car da-blk-car-l"><rect x="58" y="78" width="60" height="28" rx="9"/><rect class="da-blk-glass" x="96" y="82" width="12" height="20" rx="3"/><rect class="da-blk-glass" x="66" y="83" width="9" height="18" rx="2"/></g>
+                        <g class="da-blk-car da-blk-car-r"><rect x="138" y="78" width="60" height="28" rx="9"/><rect class="da-blk-glass" x="148" y="82" width="12" height="20" rx="3"/><rect class="da-blk-glass" x="181" y="83" width="9" height="18" rx="2"/></g>
+                        <g class="da-blk-truck"><image href="images/driverapp/truck-tbo.png" x="82" y="100" width="92" height="92" transform="rotate(-90 128 146)"/></g>
+                        <g class="da-blk-stop"><circle cx="128" cy="92" r="15"/><path d="M120 92h16"/></g>
+                      </svg>
+                      <p><b>КП запаркована</b><small>Машины закрыли подъезд к&nbsp;контейнерам</small></p>
+                    </div>
+                  </div>
                   <i class="hp-tap" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
 
-            <!-- The same job in the Platform: its status follows the driver's swipes and photos -->
-            <div class="dh-sync">
-              <p class="dh-sync-top"><span>Платформа</span><span class="plate">384 BCJ 02</span></p>
-              <b>Кабанбай батыра, 45</b>
-              <small><span>Задание 1</span> · <span>Вывоз ТБО</span></small>
-              <div class="dh-sync-foot">
-                <span class="dh-thumbs"><img loading="lazy" class="dh-th-b" src="images/driverapp/site-before.webp" width="800" height="600" alt="" decoding="async"><img loading="lazy" class="dh-th-a" src="images/driverapp/site-after.webp" width="800" height="600" alt="" decoding="async"></span>
-                <span class="status status-progress dh-st-move">Машина в&nbsp;пути</span>
-                <span class="status status-created dh-st-start">Начато</span>
-                <span class="status status-done dh-st-done">Выполнено</span>
-              </div>
-            </div>
           </div>
           <figcaption class="stage-note">Смена в&nbsp;DriverApp листается сама, экраны можно выбрать в&nbsp;списке</figcaption>
           <button type="button" class="seq-toggle" id="dh-toggle" aria-pressed="false" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path class="seq-ic-pause" d="M7 5v10M13 5v10"/><path class="seq-ic-play" d="M7 4.5v11l8.5-5.5z"/></svg><span>Остановить анимацию</span></button>
@@ -367,8 +486,8 @@
     <section class="section drv-stop" id="stop" aria-labelledby="stop-title">
       <div class="wrap drv-more">
         <div class="drv-more-copy">
-          <h2 id="stop-title">В&nbsp;пути навигатор, на&nbsp;точке DriverApp. Связь не&nbsp;обязательна</h2>
-          <p>Кнопка «2ГИС» открывает точку в&nbsp;2ГИС Навигаторе, и&nbsp;тот строит маршрут для&nbsp;крупногабаритного транспорта. Маршрут заранее сохранён на&nbsp;телефоне, а&nbsp;фото до&nbsp;и&nbsp;после при плохой связи ждут в&nbsp;очереди и&nbsp;сами уходят в&nbsp;Платформу. Водитель не&nbsp;ждёт загрузки и&nbsp;продолжает маршрут.</p>
+          <h2 id="stop-title">В&nbsp;пути навигатор, на&nbsp;точке DriverApp. Потеря интернет-сигнала не&nbsp;критична</h2>
+          <p>Кнопка «2ГИС» открывает точку в&nbsp;2ГИС Навигаторе, и&nbsp;тот строит маршрут для&nbsp;крупногабаритного транспорта. Маршрут заранее сохранён на&nbsp;Устройстве, а&nbsp;фото ДО&nbsp;и&nbsp;ПОСЛЕ даже при плохой связи ждут в&nbsp;очереди и&nbsp; когда связь восстановится - отправятся в&nbsp;Платформу. Водитель не&nbsp;ждёт загрузки и&nbsp;продолжает маршрут.</p>
         </div>
 
         <figure class="flow" id="flow" aria-label="Одна точка маршрута: от выбора задания до фотоотчёта в Платформе">
@@ -376,27 +495,46 @@
             <li class="flow-step">
               <p class="flow-title"><span class="flow-ix">1</span>Выбирает задание и&nbsp;жмёт «2ГИС»</p>
               <p class="flow-net is-on"><svg viewBox="0 0 16 16"><path d="M2 6.5a9 9 0 0 1 12 0M4.2 9a5.8 5.8 0 0 1 7.6 0M6.4 11.4a2.6 2.6 0 0 1 3.2 0"/></svg><span class="flow-net-text">Связь есть · маршрут сохранён на&nbsp;телефоне</span></p>
-              <div class="fphone" aria-hidden="true">
-                <div class="fphone-screen">
-                  <div class="fp-head"><span class="fp-ava">ДС</span><span class="fp-who"><b>123 ABC 02</b><small>Сериков Данияр</small></span><span class="fp-online">На линии</span></div>
-                  <div class="fp-map">
-                    <img src="images/dispatch-map-1020.webp" width="1020" height="500" alt="" loading="lazy" decoding="async">
-                    <span class="fp-pin" style="--x: 64%; --y: 34%">1</span>
-                    <img class="fp-truck" src="images/platform/trucks/musorovoz.png" width="64" height="64" alt="" loading="lazy" decoding="async" style="--x: 30%; --y: 70%">
-                  </div>
-                  <div class="fp-sheet">
-                    <div class="fp-sheet-head"><b>Кабанбай батыра, 45</b><span class="fp-timer">00:03</span></div>
-                    <p class="fp-hint">Задания на&nbsp;площадке</p>
-                    <div class="fp-job is-sel">
-                      <div class="fp-job-top"><b>1,1 евро · 5&nbsp;конт.</b><small>Задание 1</small></div>
-                      <p class="fp-client">ТОО «Алатау Сервис Групп»</p>
-                      <p class="fp-type"><svg viewBox="0 0 16 16"><path d="M5 2.5h6M4 4.5h8l-.8 9H4.8z"/></svg>Вывоз ТБО</p>
-                      <div class="fp-job-foot"><small>№ 25625623526</small><span class="fp-chip fp-chip-assigned">Назначено</span></div>
+              <!-- Figma «Android Compact - 165» (15860:18793): the job picked, the finger presses 2ГИС -->
+              <div class="fphone-da dh-proto" data-play="2gis" data-scr="map" data-sheet="job" data-task="start" data-zoom="near" aria-hidden="true">
+                <div class="dphone">
+                  <div class="dphone-screen">
+                    <div class="ds rds">
+                      <div class="da-status" aria-hidden="true"><span>9:41</span><i class="da-punch"></i><span class="da-sys"><svg viewBox="0 0 18 12"><path d="M1 11h2V8H1zm4 0h2V6H5zm4 0h2V3.5H9zm4 0h2V1h-2z" fill="currentColor"/></svg><svg viewBox="0 0 16 12"><path d="M8 11.2 5.6 8.6a3.4 3.4 0 0 1 4.8 0zM3.2 6.1a6.8 6.8 0 0 1 9.6 0l-1.6 1.7a4.5 4.5 0 0 0-6.4 0zM.8 3.6a10.2 10.2 0 0 1 14.4 0l-1.6 1.7a7.9 7.9 0 0 0-11.2 0z" fill="currentColor"/></svg><svg viewBox="0 0 26 12"><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.5" fill="currentColor"/><path d="M23.8 4.2v3.6c.8-.3 1.3-1 1.3-1.8s-.5-1.5-1.3-1.8" fill="currentColor" fill-opacity=".45"/></svg></span></div>
+                      <div class="da-top" aria-hidden="true">
+                        <span class="da-who"><img class="da-ava" src="images/driverapp/avatar.webp" width="40" height="40" alt="" decoding="async"><span><b>384BCJ02</b><small>Асаубаев Ерлан</small></span></span>
+                        <span class="da-online">На&nbsp;линии</span>
+                        </div>
+                      <div class="ds-body">
+                        <div class="da-mapscr">
+                          <div class="da-map"><div class="da-layer da-near">
+                            <picture class="themed"><source data-theme-dark media="(prefers-color-scheme: dark)" srcset="images/driverapp/map-near-dark.webp"><img src="images/driverapp/map-near.webp" width="1919" height="1079" alt="" decoding="async" loading="lazy"></picture>
+                            <span class="da-mpin" style="--x: 337px; --y: 158px"><img src="images/driverapp/icons/location-pin.svg" alt=""><b>1</b></span>
+                            <img class="da-truck" src="images/driverapp/truck-tbo.png" width="66" height="66" alt="" style="--x: 88px; --y: 494px">
+                          </div></div>
+                        <div class="da-sheetbox da-sh-job">
+                        <div class="da-tools"><span class="da-fab"><img src="images/driverapp/icons/back-to.svg" alt=""></span><span class="da-rtools"><i class="da-fab da-fab-err"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/finish-flag-muted.svg" alt=""></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
+                        <div class="da-sheet">
+                        <div class="da-shead"><i class="da-grab"></i><p class="da-title"><b><span class="da-j1">Кабанбай батыра 45</span><span class="da-j2">Радостовца 34</span></b><span class="da-chips"><span class="is-time">00:03</span></span></p><p class="da-hint">Задания на&nbsp;площадке</p></div>
+                        <div class="da-taskbox"><div class="da-task is-picked">
+                        <p class="da-task-top"><b>1.1 евро <span>5 конт.</span></b><small>Задание 1</small></p>
+                        <small class="da-task-client"><span class="da-j1">ТОО «Алатау Сервис Групп»</span><span class="da-j2">ИП Сапарова А.</span></small>
+                        <p class="da-task-line"><img src="images/driverapp/icons/task.svg" alt="">Вывоз ТБО</p>
+                        <p class="da-task-line"><img src="images/driverapp/icons/chat.svg" alt="">Позвонить на&nbsp;номер +77014332525</p>
+                        <p class="da-task-foot"><small>Z52625623526</small><span class="da-st">Назначено</span></p>
+                        </div></div>
+                        <div class="da-btns">
+                        <div class="da-row"><span class="da-btn da-btn-2gis">2ГИС</span><span class="da-btn da-btn-ya">Яндекс Карты</span></div>
+                        <div class="da-swipe" data-swipe="start"><i class="da-swipe-fill"></i><i class="da-swipe-light"></i><span class="da-swipe-txt"><b>Начать задание</b><span>Потяните вправо чтобы начать</span></span><span class="da-swipe-knob"><img src="images/driverapp/icons/back-to.svg" alt=""></span></div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                      </div>
+                      <div class="da-tabs" aria-hidden="true"><span><i><img src="images/driverapp/icons/admin.svg" alt=""></i>История</span><span class="da-tab-routes"><i><img src="images/driverapp/icons/journey.svg" alt=""></i>Маршруты</span><span class="da-tab-prof"><i><img src="images/driverapp/icons/user-contact.svg" alt=""></i>Профиль</span></div>
+                      <i class="hp-tap"></i>
                     </div>
-                    <div class="fp-navs"><span class="fp-2gis">2ГИС</span><span class="fp-ya">Яндекс Карты</span></div>
-                    <div class="fp-slide"><i><svg viewBox="0 0 16 16"><path d="M6 3.5l4.5 4.5L6 12.5"/></svg></i><span>Начать задание<small>Потяните вправо</small></span></div>
                   </div>
-                  <div class="fp-tabs"><span>История</span><span class="is-on">Маршруты</span><span>Профиль</span></div>
                 </div>
               </div>
               <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>
@@ -425,29 +563,63 @@
             <li class="flow-step">
               <p class="flow-title"><span class="flow-ix">3</span>Снимает фото до&nbsp;и&nbsp;после</p>
               <p class="flow-net is-off"><svg viewBox="0 0 16 16"><path d="M2 6.5a9 9 0 0 1 4-2.1M9.6 4.3A9 9 0 0 1 14 6.5M6.4 11.4a2.6 2.6 0 0 1 3.2 0M2.5 2.5l11 11"/></svg><span class="flow-net-text">Нет связи · фото ждут в&nbsp;очереди</span></p>
-              <div class="fphone" aria-hidden="true">
-                <div class="fphone-screen">
-                  <div class="fp-head"><span class="fp-ava">ДС</span><span class="fp-who"><b>123 ABC 02</b><small>Сериков Данияр</small></span><span class="fp-online is-off">Офлайн</span></div>
-                  <div class="fp-map fp-map-short">
-                    <img src="images/dispatch-map-1020.webp" width="1020" height="500" alt="" loading="lazy" decoding="async">
-                    <img class="fp-truck" src="images/platform/trucks/musorovoz.png" width="64" height="64" alt="" loading="lazy" decoding="async" style="--x: 64%; --y: 46%">
-                    <span class="fp-offline"><svg viewBox="0 0 16 16"><path d="M2 6.5a9 9 0 0 1 4-2.1M9.6 4.3A9 9 0 0 1 14 6.5M6.4 11.4a2.6 2.6 0 0 1 3.2 0M2.5 2.5l11 11"/></svg>Нет связи · 2&nbsp;фото в&nbsp;очереди</span>
-                  </div>
-                  <div class="fp-sheet">
-                    <div class="fp-sheet-head"><b>Кабанбай батыра, 45</b><span class="fp-timer">00:12</span></div>
-                    <p class="fp-hint">Задание 1 выполнено</p>
-                    <div class="fp-job">
-                      <div class="fp-job-top"><b>1,1 евро · 5&nbsp;конт.</b><small>Задание 1</small></div>
-                      <div class="fp-shots">
-                        <span><img src="images/platform/proof/b1.webp" width="1280" height="960" alt="" loading="lazy" decoding="async"><small>До</small></span>
-                        <span><img src="images/platform/proof/a1.webp" width="1280" height="960" alt="" loading="lazy" decoding="async"><small>После</small></span>
+              <!-- Figma «Android Compact - 147» (15527:24964): ДО and ПОСЛЕ taken, the job done. script.js replays the two shots, quickly -->
+              <div class="fphone-da dh-proto" data-play="photos" data-scr="map" data-sheet="task" data-task="done" data-zoom="near" aria-hidden="true">
+                <div class="dphone">
+                  <div class="dphone-screen">
+                    <div class="ds rds">
+                      <div class="da-status" aria-hidden="true"><span>9:41</span><i class="da-punch"></i><span class="da-sys"><svg viewBox="0 0 18 12"><path d="M1 11h2V8H1zm4 0h2V6H5zm4 0h2V3.5H9zm4 0h2V1h-2z" fill="currentColor"/></svg><svg viewBox="0 0 16 12"><path d="M8 11.2 5.6 8.6a3.4 3.4 0 0 1 4.8 0zM3.2 6.1a6.8 6.8 0 0 1 9.6 0l-1.6 1.7a4.5 4.5 0 0 0-6.4 0zM.8 3.6a10.2 10.2 0 0 1 14.4 0l-1.6 1.7a7.9 7.9 0 0 0-11.2 0z" fill="currentColor"/></svg><svg viewBox="0 0 26 12"><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.5" fill="currentColor"/><path d="M23.8 4.2v3.6c.8-.3 1.3-1 1.3-1.8s-.5-1.5-1.3-1.8" fill="currentColor" fill-opacity=".45"/></svg></span></div>
+                      <div class="da-top" aria-hidden="true">
+                        <span class="da-who"><img class="da-ava" src="images/driverapp/avatar.webp" width="40" height="40" alt="" decoding="async"><span><b>384BCJ02</b><small>Асаубаев Ерлан</small></span></span>
+                        <span class="da-online">На&nbsp;линии</span>
+                        </div>
+                      <div class="ds-body">
+                        <div class="da-mapscr">
+                          <div class="da-map"><div class="da-layer da-near">
+                            <picture class="themed"><source data-theme-dark media="(prefers-color-scheme: dark)" srcset="images/driverapp/map-near-dark.webp"><img src="images/driverapp/map-near.webp" width="1919" height="1079" alt="" decoding="async" loading="lazy"></picture>
+                            <span class="da-mpin" style="--x: 337px; --y: 158px"><img src="images/driverapp/icons/location-pin.svg" alt=""><b>1</b></span>
+                            <img class="da-truck" src="images/driverapp/truck-tbo.png" width="66" height="66" alt="" style="--x: 88px; --y: 494px">
+                          </div></div>
+                        <div class="da-sheetbox da-sh-task">
+                        <div class="da-tools"><span class="da-fab"><img src="images/driverapp/icons/back-to.svg" alt=""></span><span class="da-rtools"><i class="da-fab"><img src="images/driverapp/icons/error.svg" alt="" class="is-24"></i><i class="da-fab"><img src="images/driverapp/icons/finish-flag-muted.svg" alt=""></i><i class="da-fab"><img src="images/driverapp/icons/my-location.svg" alt=""></i></span></div>
+                        <div class="da-sheet">
+                        <div class="da-shead"><i class="da-grab"></i><p class="da-title"><b>Кабанбай батыра 45</b><span class="da-chips"><span class="is-time">00:03</span></span></p><p class="da-hint"><span class="da-v-start">Сделайте фото ДО</span><span class="da-v-do">Сделайте фото ПОСЛЕ</span><span class="da-v-done">Задание 1 выполнено</span></p></div>
+                        <div class="da-taskbox"><div class="da-task">
+                        <p class="da-task-top"><b>1.1 евро <span>5 конт.</span></b><small>Задание 1</small></p>
+                        <small class="da-task-client">ТОО «Алатау Сервис Групп»</small>
+                        <p class="da-task-line"><img src="images/driverapp/icons/task.svg" alt="">Вывоз ТБО</p>
+                        <p class="da-task-line"><img src="images/driverapp/icons/chat.svg" alt="">Позвонить на&nbsp;номер +77014332525</p>
+                        <p class="da-task-foot"><small>Z52625623526</small><span class="da-st da-st-started da-v-open">Начато</span><span class="da-st da-st-done da-v-done">Выполнено</span></p>
+                        </div></div>
+                        <div class="da-btns">
+                        <div class="da-row">
+                        <span class="da-btn da-btn-photo da-btn-before"><img class="da-ic-cam" src="images/driverapp/icons/camera-white.svg" alt=""><img class="da-ic-ok" src="images/driverapp/icons/check-square.svg" alt="">ДО</span>
+                        <span class="da-btn da-btn-photo da-btn-after"><img class="da-ic-cam" src="images/driverapp/icons/camera-white.svg" alt=""><img class="da-ic-ok" src="images/driverapp/icons/check-square.svg" alt="">ПОСЛЕ</span>
+                        </div>
+                        <div class="da-fold"><div><span class="da-btn da-btn-next">Следующее задание</span></div></div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
                       </div>
-                      <div class="fp-job-foot"><small>Ждут связи</small><span class="fp-chip fp-chip-done">Выполнено</span></div>
+                      <div class="da-tabs" aria-hidden="true"><span><i><img src="images/driverapp/icons/admin.svg" alt=""></i>История</span><span class="da-tab-routes"><i><img src="images/driverapp/icons/journey.svg" alt=""></i>Маршруты</span><span class="da-tab-prof"><i><img src="images/driverapp/icons/user-contact.svg" alt=""></i>Профиль</span></div>
+                      <div class="da-cam" aria-hidden="true">
+                        <div class="da-cam-land">
+                        <div class="da-cam-bar"><span class="da-cam-flash"><img src="images/driverapp/icons/flash.svg" alt=""></span></div>
+                        <div class="da-cam-view">
+                        <img class="da-cam-b" src="images/driverapp/site-before.webp" width="800" height="600" alt="" decoding="async" loading="lazy">
+                        <img class="da-cam-a" src="images/driverapp/site-after.webp" width="800" height="600" alt="" decoding="async" loading="lazy">
+                        <i class="da-corner is-tl"></i><i class="da-corner is-tr"></i><i class="da-corner is-bl"></i><i class="da-corner is-br"></i>
+                        <span class="da-cam-hint is-top">Сфотографируйте<b class="da-cam-b">Заполненные контейнеры</b><b class="da-cam-a">Пустые контейнеры</b></span>
+                        <span class="da-cam-hint is-bot">Постарайтесь поместить<br>контейнеры в&nbsp;эту зону</span>
+                        <i class="da-cam-flashfx"></i>
+                        </div>
+                        <div class="da-cam-ctrl"><img class="da-cam-x" src="images/driverapp/icons/cam-close.svg" alt=""><span class="da-shutter"><img src="images/driverapp/icons/shutter.svg" alt=""></span></div>
+                        </div>
+                        </div>
+                      <i class="hp-tap"></i>
                     </div>
-                    <div class="fp-navs fp-photo-btns"><span><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7"/></svg>ДО</span><span><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7"/></svg>ПОСЛЕ</span></div>
-                    <span class="fp-next">Следующее задание</span>
                   </div>
-                  <div class="fp-tabs"><span>История</span><span class="is-on">Маршруты</span><span>Профиль</span></div>
                 </div>
               </div>
               <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>

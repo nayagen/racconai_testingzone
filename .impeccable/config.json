@@ -296,6 +296,24 @@
         ],
         "createdAt": "2026-11-05T07:27:47.208Z",
         "reason": "user confirmed: 10px design-system counters and badges in the platform block stay as is"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "driverapp.html"
+        ],
+        "createdAt": "2026-11-06T14:37:01.957Z",
+        "reason": "Claude: all 7 remaining hits are false positives, checked in Chrome: sections keep 40px/16px gutters, the device screen is edge-to-edge by nature, the swipe button's flush children are its fill/glint layers. Real hits (store badges) were fixed first."
+      },
+      {
+        "rule": "buried-raster",
+        "value": "*",
+        "files": [
+          "driverapp.html"
+        ],
+        "createdAt": "2026-11-06T14:37:31.211Z",
+        "reason": "Claude: the opacity-0 images are the mock's story states (camera view, after-photo, map layer) that fade in on cue; they do reach the screen"
       }
     ]
   }
