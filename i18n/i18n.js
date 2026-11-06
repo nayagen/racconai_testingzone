@@ -130,11 +130,97 @@
     document.head.appendChild(s);
   }
 
+  /* ---------- The switch, animated ----------
+     When the visitor picks a language, the new text writes itself over the old one sign by sign, left to right (new
+     head + the rest of the old text), top rows a beat earlier than the bottom ones. Only text nodes in the viewport take
+     part (not the aria-hidden device screens, whose stories rewrite their own text); the rest of the page is translated
+     at once. Blocks hold the taller of their two heights while it runs, so nothing below jumps. The observer is off while
+     it runs (the mixed text must not be taken for new source text), and a final walk catches whatever page scripts changed
+     meanwhile. Reduced motion: instant. */
+  var motionOk = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: no-preference)") : { matches: false };
+  var DUR_MAX = 900, WAVE = 200;
+  var running = null;
+
+  function onScreen() {
+    var out = [], vh = window.innerHeight, range = document.createRange();
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (!/[^\s ]/.test(n.data)) { return NodeFilter.FILTER_REJECT; }
+        var p = n.parentElement;
+        if (!p || p.closest('[data-i18n-skip], script, style, [aria-hidden="true"], [hidden]')) { return NodeFilter.FILTER_REJECT; }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var n;
+    while ((n = w.nextNode()) && out.length < 220) {
+      range.selectNodeContents(n);
+      var r = range.getBoundingClientRect();
+      if (r.width && r.bottom > 0 && r.top < vh) { out.push({ n: n, top: r.top / vh }); }
+    }
+    return out;
+  }
+  // the nearest box that is not inline: its height is held while the text is away
+  function holdBox(n) {
+    var el = n.parentElement;
+    while (el && el !== document.body && /^inline/.test(getComputedStyle(el).display)) { el = el.parentElement; }
+    return el;
+  }
+
+  function switchAnimated(next) {
+    if (running) { running.finish(); }
+    var items = onScreen();
+    if (!items.length) { next(); return; }
+    var holds = [];
+    items.forEach(function (it) {
+      it.from = it.n.data;
+      var b = holdBox(it.n);
+      if (b && holds.indexOf(b) < 0) { holds.push(b); b.__minH = b.style.minHeight; b.style.minHeight = b.offsetHeight + "px"; }
+    });
+    // translate at once, read the new text, then put the old text back and overwrite it sign by sign
+    next();
+    observer.disconnect();
+    holds.forEach(function (b) { b.style.minHeight = Math.max(parseFloat(b.style.minHeight) || 0, b.offsetHeight) + "px"; });
+    items.forEach(function (it) {
+      it.to = it.n.data;
+      it.len = Math.max(it.from.length, it.to.length);
+      it.dur = Math.min(DUR_MAX, 220 + it.len * 11);
+      it.delay = it.top * WAVE;
+      it.n.data = it.from;
+    });
+    var t0 = performance.now(), raf = 0, done = false;
+    function finish() {
+      if (done) { return; }
+      done = true; cancelAnimationFrame(raf); running = null;
+      items.forEach(function (it) { if (it.n.data !== it.to) { it.n.data = it.to; } });
+      holds.forEach(function (b) { b.style.minHeight = b.__minH || ""; delete b.__minH; });
+      // catch up with text the page scripts rewrote meanwhile, then listen again
+      walk(document.body);
+      if (lang !== "ru") { observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTRS }); }
+    }
+    function frame(now) {
+      var t = now - t0, end = true;
+      items.forEach(function (it) {
+        var p = Math.min(1, Math.max(0, (t - it.delay) / it.dur));
+        if (p < 1) { end = false; }
+        var k = Math.round(it.len * p);
+        var s = it.to.slice(0, k) + it.from.slice(k);
+        if (it.n.data !== s) { it.n.data = s; }
+      });
+      if (end) { finish(); return; }
+      raf = requestAnimationFrame(frame);
+    }
+    running = { finish: finish };
+    raf = requestAnimationFrame(frame);
+  }
+
   function setLang(l, persist) {
     if (LANGS.indexOf(l) < 0) { return; }
     if (persist) { remember(l); }
+    var changed = l !== lang;
     lang = l;
-    load(l, apply);
+    load(l, function () {
+      if (persist && changed && ready && motionOk.matches) { switchAnimated(apply); } else { apply(); }
+    });
   }
 
   /* ---------- Switchers (header menu and the mobile menu row) ---------- */

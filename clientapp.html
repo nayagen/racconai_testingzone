@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Client App — приложение клиента RaccoonAI</title>
+  <meta name="description" content="Client App — приложение для клиентов МВО: заявка на вывоз, её статус и фотоотчёт до и после. Заявки принимает и WhatsApp-бот.">
+  <meta name="color-scheme" content="light dark">
+  <script>/* theme before first paint: a stored choice wins, otherwise the OS preference */(function(){var t;try{t=localStorage.getItem("raccoon-theme")}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.setAttribute("data-theme",t)})();</script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/onest-cyrillic-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="platform-ds.css">
+  <script src="i18n/i18n.js"></script>
+</head>
+<body class="page-clientapp">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="mark" viewBox="0 0 48 48"><rect width="48" height="48" rx="2.5" fill="#fff"/><path fill-rule="evenodd" clip-rule="evenodd" d="M48 10.87V2.51C48 1.12 46.87 0 45.48 0H2.51C1.12 0 0 1.12 0 2.51v42.97C0 46.870 1.12 48 2.51 48h7.44c3.290-3.050 6.740-7.010 6.650-7.590-.11-.73-1.760-3.530-3.600-4.650-.41-.25-1.680-.85-1.750-.94-.07-.1-.16-.37-.05-.48 1.370-1.290 4.480-5.860 7.410-10.710 0 0-1.820-1.720-3.660-3.800-1.830-2.090-3.030-6.480-2.790-11.100.24-4.610 5.750-1.470 7.830-.67 2.070.8 10.840 5.330 10.840 5.330 3.480-1.830 11.410-2.850 17.170-2.510ZM33.78 48h7.79c-.73-.06-5.380-3.980-6.430-5.770-2.040-3.510-3.480-4.850-.4-6.340 2.220-1.070 10.320-3.410 10.310-9.090 0-2.800-1.790-5.780-5.580-5.900-5.870-.17-7.530 2.890-11.550 7.530-4.740 5.460-6.170 4.610-2.300 9.650 1.450 1.890 6.210 8.050 8.160 9.920ZM48 35.54c-2.320.21-4.360.57-4.390 1.190-.1 2.890 3.140 3.760 4.390 3.980v-5.170ZM38.63 24.29c1.570 0 2.840 1.300 2.840 2.910s-1.270 2.900-2.840 2.900-2.840-1.300-2.840-2.900 1.270-2.910 2.840-2.910ZM21.23 21.13l2.870-2.420c-4.510-3.080-6.600-5.780-8.010-8.220-.05 4.130 1.260 7.340 5.140 10.640Z" fill="#080A11"/></symbol>
+    <symbol id="flag-ru" viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice"><path fill="#fff" d="M0 0h30v7H0z"/><path fill="#0039a6" d="M0 6.67h30v6.67H0z"/><path fill="#d52b1e" d="M0 13.33h30V20H0z"/></symbol>
+    <symbol id="flag-kz" viewBox="0 0 600 300" preserveAspectRatio="xMidYMid slice"><path fill="#00afca" d="M0 0h600v300H0z"/><g fill="#fec50c"><circle cx="300" cy="128" r="40"/><path d="M345.9 125.5L378.0 128.0L345.9 130.5ZM345.5 134.5L376.5 143.2L344.6 139.4ZM343.4 143.3L372.1 157.8L341.5 147.9ZM339.6 151.5L364.9 171.3L336.8 155.6ZM334.2 158.7L355.2 183.2L330.7 162.2ZM327.6 164.8L343.3 192.9L323.5 167.6ZM319.9 169.5L329.8 200.1L315.3 171.4ZM311.4 172.6L315.2 204.5L306.5 173.5ZM302.5 173.9L300.0 206.0L297.5 173.9ZM293.5 173.5L284.8 204.5L288.6 172.6ZM284.7 171.4L270.2 200.1L280.1 169.5ZM276.5 167.6L256.7 192.9L272.4 164.8ZM269.3 162.2L244.8 183.2L265.8 158.7ZM263.2 155.6L235.1 171.3L260.4 151.5ZM258.5 147.9L227.9 157.8L256.6 143.3ZM255.4 139.4L223.5 143.2L254.5 134.5ZM254.1 130.5L222.0 128.0L254.1 125.5ZM254.5 121.5L223.5 112.8L255.4 116.6ZM256.6 112.7L227.9 98.2L258.5 108.1ZM260.4 104.5L235.1 84.7L263.2 100.4ZM265.8 97.3L244.8 72.8L269.3 93.8ZM272.4 91.2L256.7 63.1L276.5 88.4ZM280.1 86.5L270.2 55.9L284.7 84.6ZM288.6 83.4L284.8 51.5L293.5 82.5ZM297.5 82.1L300.0 50.0L302.5 82.1ZM306.5 82.5L315.2 51.5L311.4 83.4ZM315.3 84.6L329.8 55.9L319.9 86.5ZM323.5 88.4L343.3 63.1L327.6 91.2ZM330.7 93.8L355.2 72.8L334.2 97.3ZM336.8 100.4L364.9 84.7L339.6 104.5ZM341.5 108.1L372.1 98.2L343.4 112.7ZM344.6 116.6L376.5 112.8L345.5 121.5Z"/><path d="M190 222c40-26 80-34 110-30 30-4 70 4 110 30-34-8-70-10-110-4-40-6-76-4-110 4z"/><path d="M42 18l14 14-14 14-14-14zM42 62l14 14-14 14-14-14zM42 106l14 14-14 14-14-14zM42 150l14 14-14 14-14-14zM42 194l14 14-14 14-14-14zM42 238l14 14-14 14-14-14zM42 282l14 14-14 14-14-14z"/></g></symbol>
+    <symbol id="flag-gb" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice"><clipPath id="flag-gb-c"><path d="M30 15h30v15zv15H0zH0V0zV0h30z"/></clipPath><path fill="#012169" d="M0 0h60v30H0z"/><path stroke="#fff" stroke-width="6" d="M0 0l60 30m0-30L0 30"/><path stroke="#c8102e" stroke-width="4" d="M0 0l60 30m0-30L0 30" clip-path="url(#flag-gb-c)"/><path stroke="#fff" stroke-width="10" d="M30 0v30M0 15h60"/><path stroke="#c8102e" stroke-width="6" d="M30 0v30M0 15h60"/></symbol>
+  </svg>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="index.html" aria-label="RaccoonAI — на главную">
+        <svg class="brand-mark" width="32" height="32" aria-hidden="true"><use href="#mark"/></svg>
+        <span>RaccoonAI</span>
+      </a>
+      <details class="lang" translate="no" data-i18n-skip>
+        <summary data-lang-current aria-label="Язык · Тіл · Language"><svg class="flag" aria-hidden="true"><use href="#flag-ru"/></svg><span class="lang-code">RU</span><svg class="lang-chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+        <div class="lang-menu" role="group" aria-label="Язык · Тіл · Language">
+          <button type="button" data-lang="ru" lang="ru" aria-pressed="true"><svg class="flag" aria-hidden="true"><use href="#flag-ru"/></svg><span>Русский</span></button>
+          <button type="button" data-lang="kk" lang="kk" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-kz"/></svg><span>Қазақша</span></button>
+          <button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-gb"/></svg><span>English</span></button>
+        </div>
+      </details>
+      <button type="button" class="theme-btn" data-theme-toggle aria-pressed="false" aria-label="Тёмная тема"><svg class="theme-ic" viewBox="0 0 24 24" aria-hidden="true"><path class="theme-moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/><g class="theme-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></g></svg></button>
+      <a class="btn btn-primary btn-sm" href="#demo">Запросить демо</a>
+      <details class="m-nav">
+        <summary aria-label="Разделы страницы"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="m-nav-open" d="M4 7h16M4 12h16M4 17h16"/><path class="m-nav-close" d="M6 6l12 12M18 6L6 18"/></svg></summary>
+        <nav class="m-nav-panel" aria-label="Разделы страницы">
+          <a href="#top">Обзор</a>
+          <a href="#screens">Экраны приложения</a>
+          <a href="#report">Отчёт за период</a>
+          <div class="m-pages">
+            <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>Платформа</a>
+            <a href="driverapp.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>DriverApp</a>
+          </div>
+          <div class="m-lang" translate="no" data-i18n-skip role="group" aria-label="Язык · Тіл · Language">
+            <button type="button" data-lang="ru" lang="ru" aria-pressed="true"><svg class="flag" aria-hidden="true"><use href="#flag-ru"/></svg><span>RU</span></button>
+            <button type="button" data-lang="kk" lang="kk" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-kz"/></svg><span>KK</span></button>
+            <button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" aria-hidden="true"><use href="#flag-gb"/></svg><span>EN</span></button>
+          </div>
+          <button type="button" class="m-theme" data-theme-toggle aria-pressed="false"><svg class="theme-ic" viewBox="0 0 24 24" aria-hidden="true"><path class="theme-moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/><g class="theme-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></g></svg><span>Тёмная тема</span></button>
+        </nav>
+      </details>
+    </div>
+  </header>
+
+  <!-- Desktop navigation (≥1280px), as on the main page: this page's sections on the rail, the site's pages below it. -->
+  <nav class="tree-nav" aria-label="Разделы страницы" data-tree>
+    <div class="tree-card">
+      <a class="tree-brand" href="index.html" aria-label="RaccoonAI — на главную">
+        <svg class="brand-mark" width="32" height="32" aria-hidden="true"><use href="#mark"/></svg>
+        <span class="tree-txt">RaccoonAI</span>
+      </a>
+      <div class="tree-body">
+        <span class="tree-pill" aria-hidden="true"></span>
+        <ul class="tree-list">
+          <li><a href="#top">Обзор</a></li>
+          <li><a href="#screens">Экраны приложения</a></li>
+          <li><a href="#report">Отчёт за период</a></li>
+        </ul>
+        <span class="tree-rail" aria-hidden="true">
+          <span class="tree-line"></span>
+          <span class="tree-fill"></span>
+          <span class="tree-marker"></span>
+        </span>
+      </div>
+      <ul class="tree-pages" aria-label="Страницы">
+        <li><a href="index.html"><svg class="tree-pg-ic" viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span class="tree-txt">Платформа</span></a></li>
+        <li><a href="driverapp.html"><svg class="tree-pg-ic" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg><span class="tree-txt">DriverApp</span></a></li>
+      </ul>
+      <div class="tree-foot">
+        <button type="button" class="tree-theme" data-theme-toggle aria-pressed="false"><svg class="theme-ic" viewBox="0 0 24 24" aria-hidden="true"><path class="theme-moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/><g class="theme-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></g></svg><span class="tree-txt">Тёмная тема</span></button>
+        <details class="lang tree-lang" translate="no" data-i18n-skip>
+          <summary data-lang-current aria-label="Язык · Тіл · Language"><span class="lang-code">RU</span><svg class="lang-chev tree-txt" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+          <div class="lang-menu" role="group" aria-label="Язык · Тіл · Language">
+            <button type="button" data-lang="ru" lang="ru" aria-pressed="true"><span>Русский</span></button>
+            <button type="button" data-lang="kk" lang="kk" aria-pressed="false"><span>Қазақша</span></button>
+            <button type="button" data-lang="en" lang="en" aria-pressed="false"><span>English</span></button>
+          </div>
+        </details>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- ============ CLIENT APP: PAGE OPENER ============
+         Built like the DriverApp opener (full-bleed photo, two-line h1, lead, actions, proof strip).
+         Photo: the shared container site (site-*, illustrative, see images/PROVENANCE.md), standing in until a Client App photo exists. -->
+    <section class="section section-tint platform-hero drv-hero" id="top" aria-labelledby="ca-hero-title">
+      <div class="pf-hero dh ch">
+        <picture class="themed">
+          <source data-theme-dark media="(prefers-color-scheme: dark)" srcset="images/site-960-dark.webp 960w, images/site-1600-dark.webp 1600w, images/site-2400-dark.webp 2400w, images/site-3840-dark.webp 3840w" sizes="100vw">
+          <img class="pf-hero-img" src="images/site-1600.webp" srcset="images/site-960.webp 960w, images/site-1600.webp 1600w, images/site-2400.webp 2400w, images/site-3840.webp 3840w" sizes="100vw" width="3840" height="1648" alt="" fetchpriority="high" decoding="async">
+        </picture>
+        <div class="wrap dh-grid">
+          <div class="pf-hero-copy dh-copy">
+            <h1 id="ca-hero-title"><span class="h1-line">Заявка на&nbsp;вывоз</span> <span class="h1-line">в&nbsp;два касания</span></h1>
+            <p>Client App&nbsp;— приложение для&nbsp;клиентов МВО: заявка на&nbsp;вывоз, её&nbsp;статус и&nbsp;фотоотчёт до&nbsp;и&nbsp;после. Каждая заявка сразу становится заданием в&nbsp;Платформе.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#demo">Запросить демо</a>
+              <a class="btn btn-quiet" href="#screens">Посмотреть экраны</a>
+            </div>
+            <div class="dh-proof">
+              <p class="hero-proof"><span>Без приложения тоже можно: <strong>WhatsApp&#8209;бот</strong> узнаёт клиента по&nbsp;номеру телефона и&nbsp;создаёт задание</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCREENS ============
+         Same split as driverapp.html #screens: a vertical tablist beside a device stage. The stage holds an animation placeholder per
+         tab (.anim-ph); script.js switches them like a plain tablist until the Client App prototype replaces them. -->
+    <section class="section section-tint driver client" id="screens" aria-labelledby="ca-screens-title">
+      <div class="wrap split driver-split">
+        <div class="split-copy">
+          <h2 id="ca-screens-title">Что клиент делает в&nbsp;приложении</h2>
+          <p>Клиент оформляет вывоз сам, без звонка в&nbsp;абонентский отдел. Заявка попадает в&nbsp;Платформу, и&nbsp;дальше клиент видит тот&nbsp;же статус, что и&nbsp;диспетчер: от&nbsp;назначенной машины до&nbsp;фото пустой площадки.</p>
+          <!-- Tab icons: Lucide (clipboard-plus, truck, camera, message-circle), ISC License, lucide.dev -->
+          <div class="drv-tabs ca-tabs" role="tablist" aria-label="Экраны Client App" aria-orientation="vertical">
+            <button type="button" role="tab" id="ca-t1" aria-controls="ca-p1" aria-selected="true"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14h6"/><path d="M12 17v-6"/></svg></span><strong>Заявка на&nbsp;вывоз</strong><span>Клиент выбирает площадку и&nbsp;услугу и&nbsp;отправляет заявку. Она сразу появляется в&nbsp;очереди Платформы.</span></button>
+            <button type="button" role="tab" id="ca-t2" aria-controls="ca-p1" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></span><strong>Статус заявки</strong><span>Назначено, машина в&nbsp;пути, выполнено: клиент видит тот&nbsp;же статус, что диспетчер в&nbsp;Платформе.</span></button>
+            <button type="button" role="tab" id="ca-t3" aria-controls="ca-p1" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></span><strong>Фотоотчёт до&nbsp;и&nbsp;после</strong><span>Фото, которые водитель снял на&nbsp;площадке, приходят клиенту вместе с&nbsp;отметкой «Выполнено».</span></button>
+            <button type="button" role="tab" id="ca-t4" aria-controls="ca-p4" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><strong>Заявка через WhatsApp</strong><span>Клиент пишет в&nbsp;WhatsApp, бот узнаёт его по&nbsp;номеру телефона и&nbsp;создаёт задание в&nbsp;Платформе.</span></button>
+          </div>
+        </div>
+
+        <!-- CLIENT APP PROTOTYPE: the Client App Figma frames (Raccoon AI Mobile Apps) built at 412 x 917 plus the status bar, one story
+             on one clock. Tab 1, the request: the app starts on an empty «Активные заявки», «Новая заявка» opens the order sheet over
+             the map, an info message says the form filled itself (the client has one container site), «Далее», «Кто встретит» →
+             «Добавить нового человека» → the three fields typed → «Добавить сотрудника» → «Готово», «Запланировать на» → 23 April →
+             «Создать заявку» → the confirm alert → «Подтвердить заявку» and the order lands in the list. Tab 2, the status: the card
+             opens the order on the map; Запланирована, Назначено, Машина в пути (the truck drives the streets to the pin), Машина
+             прибыла, Выполнено (it turns round and leaves the map), 3s each. Tab 3, the photo report: it slides up, then the
+             Фотографии and GPS tabs. Then it loops. Tab 4 (WhatsApp) holds its placeholder. The markup is the first frame. -->
+        <figure class="drv-stage ca-stage">
+          <div class="ca-proto" id="ca-p1" role="tabpanel" aria-labelledby="ca-t1" data-scr="list" data-list="empty">
+            <div class="dphone" role="img" aria-label="Прототип Client App: клиент создаёт заявку на вывоз, следит за машиной на карте и открывает фотоотчёт">
+              <div class="dphone-screen">
+                <div class="ds rds" aria-hidden="true">
+                  <div class="da-status"><span>9:41</span><i class="da-punch"></i><span class="da-sys"><svg viewBox="0 0 18 12"><path d="M1 11h2V8H1zm4 0h2V6H5zm4 0h2V3.5H9zm4 0h2V1h-2z" fill="currentColor"/></svg><svg viewBox="0 0 16 12"><path d="M8 11.2 5.6 8.6a3.4 3.4 0 0 1 4.8 0zM3.2 6.1a6.8 6.8 0 0 1 9.6 0l-1.6 1.7a4.5 4.5 0 0 0-6.4 0zM.8 3.6a10.2 10.2 0 0 1 14.4 0l-1.6 1.7a7.9 7.9 0 0 0-11.2 0z" fill="currentColor"/></svg><svg viewBox="0 0 26 12"><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.5" fill="currentColor"/><path d="M23.8 4.2v3.6c.8-.3 1.3-1 1.3-1.8s-.5-1.5-1.3-1.8" fill="currentColor" fill-opacity=".45"/></svg></span></div>
+                  <div class="ds-body ca-body">
+
+                    <!-- Активные заявки: empty at start, the new order card after «Подтвердить заявку» -->
+                    <div class="ca-scr ca-list">
+                      <div class="ca-lhead"><img src="images/clientapp/icons/tasklist-blue.svg" width="24" height="24" alt=""><b>Активные заявки</b><span class="ca-count">1&nbsp;заявка</span></div>
+                      <div class="ca-lbody">
+                        <div class="ca-empty">
+                          <i><img src="images/clientapp/icons/empty-cancel.svg" width="40" height="40" alt=""></i>
+                          <b>Активных заявок нет</b>
+                          <span>Подайте заявку, она появится здесь</span>
+                        </div>
+                        <div class="ca-card">
+                          <div class="ca-ctop"><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>20 Апр 2026</span><span>08:34</span></small></div>
+                          <div class="ca-cbody">
+                            <div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>2 конт.</span><span>2.2 м<sup>3</sup></span></span></div>
+                            <div class="ca-cplan"><span>Вывоз запланирован на</span><span>23 Апр 2026</span></div>
+                          </div>
+                          <div class="ca-cfoot"><span><span>TOO Resurs Ysyraptama</span><span>O12676773</span></span><i><img src="images/clientapp/icons/more-dots.svg" width="16" height="16" alt=""></i></div>
+                        </div>
+                      </div>
+                      <div class="ca-newbar"><span class="ca-btn ca-btn-new"><img src="images/clientapp/icons/add-circle-white.svg" width="20" height="20" alt="">Новая заявка</span></div>
+                      <div class="da-tabs ca-tabbar"><span><i><img src="images/clientapp/icons/tab-history.svg" width="24" height="24" alt=""></i>История</span><span class="ca-tab-on"><i><img src="images/clientapp/icons/tab-orders-on.svg" width="24" height="24" alt=""></i>Заявки</span><span><i><img src="images/clientapp/icons/tab-profile.svg" width="24" height="24" alt=""></i>Профиль</span></div>
+                    </div>
+
+                    <!-- Map screens: order creation sheets and the order card share one map -->
+                    <div class="ca-scr ca-mapscr">
+                      <div class="ca-map">
+                        <picture class="themed"><source data-theme-dark media="(prefers-color-scheme: dark)" srcset="images/driverapp/map-near-dark.webp"><img class="ca-map-img" src="images/driverapp/map-near.webp" width="1919" height="1079" alt="" decoding="async" loading="lazy"></picture>
+                        <img class="ca-zone" src="images/clientapp/icons/gps-zone-polygon.svg" width="157" height="199" alt="">
+                        <span class="ca-park"><img src="images/clientapp/icons/truck-container-blue.svg" width="48" height="48" alt=""></span>
+                        <span class="ca-pin"><img src="images/clientapp/icons/map-pin-blue.svg" width="27" height="32" alt=""><b>1</b></span>
+                        <span class="ca-truck"><img src="images/clientapp/icons/truck-garbage-green.svg" width="51" height="48" alt=""></span>
+                      </div>
+
+                      <!-- Info message: the client has one container site, so the form fills itself -->
+                      <div class="ca-toast"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></i><span><b>Заполнено автоматически</b>У&nbsp;вас одна контейнерная площадка, поэтому площадка, контейнер и&nbsp;тип работы уже выбраны</span></div>
+
+                      <!-- Sheet 1: Основная информация -->
+                      <div class="ca-sheet ca-sh-main">
+                        <div class="ca-shead"><span><b>Создание заявки</b><small>Основная информация</small></span><img src="images/clientapp/icons/close-dark.svg" width="32" height="32" alt=""></div>
+                        <div class="ca-rows">
+                          <div class="ca-row ca-fill" style="--k:0"><img src="images/clientapp/icons/f-location.svg" width="24" height="24" alt=""><span><b>Площадка<em>*</em></b><span class="ca-val"><span><span>Royal Petrol #1</span><small>08:00 - 23:00</small></span></span></span><i class="ca-chev"></i></div>
+                          <div class="ca-row ca-fill" style="--k:1"><img src="images/clientapp/icons/f-container.svg" width="24" height="24" alt=""><span><b>Тип контейнера<em>*</em></b><span class="ca-val"><span><span>1.1 евро(2)</span><small>2.2 м<sup>3</sup></small></span></span></span><i class="ca-chev"></i></div>
+                          <div class="ca-row ca-fill" style="--k:2"><img src="images/clientapp/icons/f-task.svg" width="24" height="24" alt=""><span><b>Тип работы<em>*</em></b><span class="ca-val"><span><span>Вывоз ТБО</span></span></span></span><i class="ca-chev"></i></div>
+                          <div class="ca-row ca-row-qty"><img src="images/clientapp/icons/f-hash.svg" width="21" height="24" alt=""><span><b>Количество заявок<em>*</em></b></span><span class="ca-qty"><img src="images/clientapp/icons/minus-circle.svg" width="32" height="32" alt=""><b>1</b><img src="images/clientapp/icons/plus-circle.svg" width="32" height="32" alt=""></span></div>
+                        </div>
+                        <div class="ca-btns"><span class="ca-btn ca-btn-next">Далее</span></div>
+                      </div>
+
+                      <!-- Sheet 2: Дополнительная информация -->
+                      <div class="ca-sheet ca-sh-extra">
+                        <div class="ca-shead"><span><b>Создание заявки</b><small>Дополнительная информация</small></span><img src="images/clientapp/icons/close-dark.svg" width="32" height="32" alt=""></div>
+                        <div class="ca-rows">
+                          <div class="ca-row ca-row-who"><img src="images/clientapp/icons/user-contact.svg" width="24" height="24" alt=""><span><b>Кто встретит</b><span class="ca-swap"><small class="ca-v0">Укажите</small><span class="ca-v1"><span>Айдос</span><small>+7 701 545 44 22</small></span></span></span><i class="ca-chev"></i></div>
+                          <div class="ca-row ca-row-date"><img src="images/clientapp/icons/calendar.svg" width="24" height="24" alt=""><span><b>Запланировать на</b><span class="ca-swap"><span class="ca-v0">21 Апр 2026 (автоматически)</span><span class="ca-v1">23 Апр 2026</span></span></span><i class="ca-chev"></i></div>
+                          <div class="ca-row"><img src="images/clientapp/icons/picture.svg" width="24" height="24" alt=""><span><b>Добавить фото</b><small>Не добавлено</small></span><i class="ca-chev"></i></div>
+                          <div class="ca-row"><img src="images/clientapp/icons/message.svg" width="24" height="24" alt=""><span><b>Комментарий</b><small>Нет комментария</small></span><i class="ca-chev"></i></div>
+                        </div>
+                        <div class="ca-btns"><span class="ca-btn ca-btn-2">Назад</span><span class="ca-btn ca-btn-create">Создать заявку</span></div>
+                      </div>
+
+                      <!-- The order: one sheet whose badge, info card and buttons follow the status (data-st) -->
+                      <div class="ca-det">
+                        <div class="ca-fabs"><i><img src="images/clientapp/icons/back-circle.svg" width="32" height="32" alt=""></i><i><img src="images/clientapp/icons/my-location.svg" width="32" height="32" alt=""></i></div>
+                        <div class="ca-dsheet">
+                          <div class="ca-dtitle"><span class="ca-plate">384BCJ02</span>
+                            <span class="ca-badges"><span class="ca-badge" data-s="planned">Запланирована</span><span class="ca-badge" data-s="assigned">Назначено</span><span class="ca-badge" data-s="enroute">Машина в&nbsp;пути</span><span class="ca-badge" data-s="onsite">Машина прибыла</span><span class="ca-badge" data-s="done">Выполнено</span></span></div>
+                          <div class="ca-dinfo">
+                            <div class="ca-dsite"><img src="images/clientapp/icons/f-location.svg" width="24" height="24" alt=""><b>Royal Petrol #1</b></div>
+                            <div class="ca-dline"><span><span>Z167622</span><span>Вывоз ТБО</span></span><span class="ca-route"><span class="ca-r0">Маршрута еще нет</span><span class="ca-r1">М1323</span></span></div>
+                            <div class="ca-dline ca-dline-2"><span><span>1.1 евро (2)</span><span>2.2 м<sup>3</sup></span></span></div>
+                          </div>
+                          <div class="ca-infos">
+                            <div class="ca-info" data-s="planned"><span><b>Ваша заявка запланирована</b><small>Мы сообщим вам когда заявка будет назначена на Вывоз</small></span><i><b>2 дня</b></i></div>
+                            <div class="ca-info" data-s="assigned"><span><b>Ваша заявка назначена на машину</b><small>Ориентировочное время прибытия<br>11:23 - 13:43 23 Апр 2026</small></span><i><b>2 часа<br>58 мин</b></i></div>
+                            <div class="ca-info" data-s="enroute"><span><b>Машина в пути на площадку</b><small>Ориентировочное время прибытия<br>16:43</small></span><i><b>1 час<br>58 мин</b></i></div>
+                            <div class="ca-info ca-info-warn" data-s="onsite"><span><b>Машина прибыла на площадку</b><small>Убедитесь, что у машины есть доступ к контейнеру(-ам)</small></span><i><b>!</b></i></div>
+                            <div class="ca-info ca-info-ok" data-s="done"><span><b>Вывоз выполнен, заявка будет хранится во вкладке История</b><small>Информация о захоронении отходов будет доступна когда машина завершит свой рейс.</small></span><i><img src="images/clientapp/icons/check-success.svg" width="32" height="32" alt=""></i></div>
+                          </div>
+                          <div class="ca-dbtns">
+                            <div class="ca-dbtns-a"><span class="ca-btn ca-btn-2">Поделиться маршрутом</span><span class="ca-btn ca-btn-2">Связаться с диспетчером</span></div>
+                            <div class="ca-dbtns-b"><span class="ca-btn ca-btn-2 ca-btn-report">Посмотреть фото-отчёт</span></div>
+                          </div>
+                        </div>
+                        <div class="da-tabs ca-tabbar"><span><i><img src="images/clientapp/icons/tab-history.svg" width="24" height="24" alt=""></i>История</span><span class="ca-tab-on"><i><img src="images/clientapp/icons/tab-orders-on.svg" width="24" height="24" alt=""></i>Заявки</span><span><i><img src="images/clientapp/icons/tab-profile.svg" width="24" height="24" alt=""></i>Профиль</span></div>
+                      </div>
+                    </div>
+
+                    <!-- Кто встретит: empty, then the added employee, selected -->
+                    <div class="ca-scr ca-page ca-pg-who">
+                      <div class="ca-phead ca-phead-l"><img src="images/clientapp/icons/back-circle.svg" width="32" height="32" alt=""><b>Кто встретит</b></div>
+                      <div class="ca-pbody"><div class="ca-person"><img src="images/clientapp/icons/radio-on.svg" width="24" height="24" alt=""><span>Айдос</span><small>+7 701 545 44 22</small></div></div>
+                      <div class="ca-btns"><span class="ca-btn ca-btn-2 ca-btn-addnew">Добавить нового человека</span><span class="ca-btn ca-btn-done"><span class="ca-v0">Выберите</span><span class="ca-v1">Готово</span></span></div>
+                    </div>
+
+                    <!-- Добавить сотрудника: the three fields are typed in -->
+                    <div class="ca-scr ca-page ca-pg-add">
+                      <div class="ca-phead"><img src="images/clientapp/icons/back-circle.svg" width="32" height="32" alt=""><b>Добавить сотрудника</b><i></i></div>
+                      <div class="ca-form">
+                        <span class="ca-field" style="--k:0"><small>Имя</small><span class="ca-type" style="--n:5">Айдос</span></span>
+                        <span class="ca-field" style="--k:1"><small>Номер телефона</small><span class="ca-type" style="--n:12">+77015454422</span><img src="images/clientapp/icons/user-contact-blue-20.svg" width="20" height="20" alt=""></span>
+                        <span class="ca-field" style="--k:2"><small>Должность</small><span class="ca-type" style="--n:6">Мастер</span></span>
+                      </div>
+                      <div class="ca-btns"><span class="ca-btn ca-btn-2">Выбрать из Контактов</span><span class="ca-btn ca-btn-addp">Добавить сотрудника</span></div>
+                    </div>
+
+                    <!-- Дата вывоза: today is 20 April, the earliest day 21 April; 23 April is picked -->
+                    <div class="ca-scr ca-page ca-pg-date">
+                      <div class="ca-dhead"><b>Дата вывоза</b><small>1.&nbsp;&nbsp;Выберите дату вывоза</small></div>
+                      <div class="ca-wdays"><span>пн</span><span>вт</span><span>ср</span><span>чт</span><span>пт</span><span class="ca-we">сб</span><span class="ca-we">вс</span></div>
+                      <div class="ca-cal">
+                        <div class="ca-month"><b>Апрель 2026</b><div class="ca-days" style="--s:3"><span class="ca-off">1</span><span class="ca-off">2</span><span class="ca-off">3</span><span class="ca-off">4</span><span class="ca-off">5</span><span class="ca-off">6</span><span class="ca-off">7</span><span class="ca-off">8</span><span class="ca-off">9</span><span class="ca-off">10</span><span class="ca-off">11</span><span class="ca-off">12</span><span class="ca-off">13</span><span class="ca-off">14</span><span class="ca-off">15</span><span class="ca-off">16</span><span class="ca-off">17</span><span class="ca-off">18</span><span class="ca-off">19</span><span class="ca-off">20</span><span>21</span><span>22</span><span class="ca-d23">23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span></div></div>
+                        <div class="ca-month"><b>Май 2026</b><div class="ca-days" style="--s:5"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span>31</span></div></div>
+                      </div>
+                      <div class="ca-btns ca-dfoot"><span class="ca-btn ca-btn-plan"><span class="ca-v0">Выберите дату</span><span class="ca-v1">Запланировать на 23 Апр 2026</span></span><span class="ca-btn ca-btn-2">Назад</span></div>
+                    </div>
+
+                    <!-- Confirm: the alert over the order sheet -->
+                    <div class="ca-alert">
+                      <div class="ca-modal">
+                        <div class="ca-mtop">
+                          <span class="ca-chip-err">Проверьте данные заявки</span>
+                          <b class="ca-caps">Детали заявки</b>
+                          <span class="ca-mrow"><img src="images/clientapp/icons/f-location.svg" width="24" height="24" alt=""><span>Площадка</span><em>Royal Petrol #1</em></span>
+                          <span class="ca-mrow"><img src="images/clientapp/icons/f-container.svg" width="24" height="24" alt=""><span>Контейнерная группа</span><em>1.1 евро (2)</em></span>
+                          <span class="ca-mrow"><img src="images/clientapp/icons/f-task.svg" width="24" height="24" alt=""><span>Тип работы</span><em>Вывоз ТБО</em></span>
+                          <span class="ca-mrow"><img src="images/clientapp/icons/calendar.svg" width="24" height="24" alt=""><span>Запланировано на</span><em>23 Апр 2026</em></span>
+                        </div>
+                        <div class="ca-btns"><span class="ca-btn ca-btn-confirm">Подтвердить заявку</span><span class="ca-btn ca-btn-2">Назад</span></div>
+                      </div>
+                    </div>
+
+                    <!-- Фото-отчёт: slides up from the bottom; three tabs, the blue pill slides between them -->
+                    <div class="ca-rep">
+                      <div class="ca-rhead"><span><b>Отчет о выполнении заявки</b><small>Z167622</small></span><img src="images/clientapp/icons/close-dark.svg" width="32" height="32" alt=""></div>
+                      <div class="ca-seg"><i></i><span class="ca-seg-1">Заявка</span><span class="ca-seg-2">Фотографии</span><span class="ca-seg-3">GPS</span></div>
+                      <div class="ca-rview">
+                        <div class="ca-rtrack">
+                          <div class="ca-rpane ca-rp-order">
+                            <div class="ca-rcards">
+                              <div class="ca-rc">
+                                <div class="ca-rc-h"><b class="ca-caps">Заявка на</b><span><span>13:00 - 18:00</span><span>23 Апр 2026</span></span></div>
+                                <div class="ca-rc-b ca-muted"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>2 конт.</span><span>2.2 м<sup>3</sup></span></span></div>
+                              </div>
+                              <div class="ca-rc ca-rc-ok">
+                                <div class="ca-rc-h"><b class="ca-caps">Вывоз выполнен</b><span><span>23 Апр 2026</span><span>16:06</span></span></div>
+                                <div class="ca-rc-rows">
+                                  <div><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>2 конт.</span><span class="ca-over">2.6 м<sup>3</sup><img src="images/clientapp/icons/arrow-down-left-red.svg" width="16" height="16" alt=""></span></span></div>
+                                  <div><span>Тариф по договору</span><span class="ca-tag">3200 тг за м<sup>3</sup></span></div>
+                                  <div><span>Стоимость фактического вывоза</span><span class="ca-tag ca-tag-sum">8320 тг</span></div>
+                                </div>
+                              </div>
+                            </div>
+                            <dl class="ca-facts">
+                              <div><dt>Дата подачи</dt><dd><span>20 Апр 2026</span><span>08:34</span></dd></div>
+                              <div><dt>Площадка</dt><dd class="ca-split"><span>Royal Petrol #1</span><small>PL23222</small></dd></div>
+                              <div><dt>Заказчик</dt><dd class="ca-split"><span>ИП Альжанов</span><small>БИН 123456789123</small></dd><dd class="ca-link">Альжанов Берик</dd></div>
+                              <div><dt>МВО</dt><dd>TOO RESURS YSYRAPTAMA</dd></div>
+                              <div><dt>Договор</dt><dd>№423 от 21.08.2025 до 22.08.2026</dd></div>
+                            </dl>
+                          </div>
+                          <div class="ca-rpane ca-rp-photo">
+                            <div class="ca-rmeta"><span class="ca-plate">384BCJ02</span><span><span>23 Апр 2026</span><span>16:06</span></span></div>
+                            <figure class="ca-shot"><img src="images/clientapp/photo-before-1.jpg" width="800" height="600" alt="" loading="lazy" decoding="async"><b>До вывоза</b></figure>
+                            <span class="ca-dots"><i></i><i></i></span>
+                            <figure class="ca-shot"><img src="images/clientapp/photo-after-1.jpg" width="800" height="600" alt="" loading="lazy" decoding="async"><b>После вывоза</b></figure>
+                            <span class="ca-dots"><i></i><i></i></span>
+                          </div>
+                          <div class="ca-rpane ca-rp-gps">
+                            <div class="ca-rmeta"><span class="ca-plate">384BCJ02</span><span><span>23 Апр 2026</span><span>16:06</span></span></div>
+                            <div class="ca-gps">
+                              <picture class="themed"><source data-theme-dark media="(prefers-color-scheme: dark)" srcset="images/driverapp/map-near-dark.webp"><img src="images/driverapp/map-near.webp" width="1919" height="1079" alt="" decoding="async" loading="lazy"></picture>
+                              <img class="ca-gzone" src="images/clientapp/icons/gps-zone-polygon.svg" width="157" height="199" alt="">
+                              <span class="ca-gtruck"><img src="images/clientapp/icons/truck-garbage-green.svg" width="51" height="48" alt=""></span>
+                              <span class="ca-pin ca-gpin"><img src="images/clientapp/icons/map-pin-blue.svg" width="27" height="32" alt=""><b>1</b></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="ca-rfoot"><span class="ca-btn">Поделиться отчётом</span></div>
+                    </div>
+                  </div>
+                  <span class="hp-tap"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="anim-ph anim-ph-phone" role="tabpanel" id="ca-p4" aria-labelledby="ca-t4" hidden>
+            <div class="anim-ph-panel">
+              <span class="anim-ph-tag">Место для&nbsp;анимации</span>
+              <b>Заявка через WhatsApp</b>
+              <small>Переписка с&nbsp;ботом: клиент узнан по&nbsp;номеру, заявка подтверждена и&nbsp;создана в&nbsp;Платформе</small>
+            </div>
+          </div>
+          <figcaption class="stage-note">Заявка в&nbsp;Client App листается сама, экраны можно выбрать в&nbsp;списке</figcaption>
+          <button type="button" class="seq-toggle" id="ca-toggle" aria-pressed="false" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path class="seq-ic-pause" d="M7 5v10M13 5v10"/><path class="seq-ic-play" d="M7 4.5v11l8.5-5.5z"/></svg><span>Остановить анимацию</span></button>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ PERIOD REPORT ============
+         The Client App «История» tab: the client picks a period and downloads the PDF report of completed pickups for it, to hand
+         to management or accounting without waiting for the АВР (акт выполненных работ). One story clock (script.js) sets data-*
+         states on .cr-proto, as in #screens: «История» from the request list, the history scrolls under its fixed summary, the
+         calendar sheet takes 1–31 March, the numbers recount and the cards filter, the green button downloads the PDF, and the
+         PDF opens beside the phone and zooms to its columns and totals. March data is coherent: 13 requests, 11 completed,
+         124.3 m³ at 3200 тг/m³ (contract №423) plus one 2000 тг idle trip = 399 760 тг. -->
+    <section class="section drv-stop" id="report" aria-labelledby="report-title">
+      <div class="wrap drv-more">
+        <div class="drv-more-copy">
+          <h2 id="report-title">Отчёт о&nbsp;вывозах за&nbsp;любой период, не&nbsp;дожидаясь АВР</h2>
+          <p>Клиент выбирает период в&nbsp;истории заявок и&nbsp;скачивает PDF: каждая заявка с&nbsp;датой, статусом и&nbsp;фактическим объёмом, итог вывозов и&nbsp;сумма к&nbsp;оплате. Отчёт сразу можно передать руководству или в&nbsp;бухгалтерию, не&nbsp;дожидаясь акта выполненных работ.</p>
+        </div>
+
+        <figure class="drv-stage cr-stage">
+          <div class="ca-proto cr-proto" id="cr-p" data-scr="list" data-list="seen" data-per="apr" data-sel="apr">
+            <div class="dphone" role="img" aria-label="Прототип Client App: клиент открывает историю заявок, выбирает период с 1 по 31 марта и скачивает PDF-отчёт о выполненных вывозах">
+              <div class="dphone-screen">
+                <div class="ds rds" aria-hidden="true">
+                  <div class="da-status"><span>9:41</span><i class="da-punch"></i><span class="da-sys"><svg viewBox="0 0 18 12"><path d="M1 11h2V8H1zm4 0h2V6H5zm4 0h2V3.5H9zm4 0h2V1h-2z" fill="currentColor"/></svg><svg viewBox="0 0 16 12"><path d="M8 11.2 5.6 8.6a3.4 3.4 0 0 1 4.8 0zM3.2 6.1a6.8 6.8 0 0 1 9.6 0l-1.6 1.7a4.5 4.5 0 0 0-6.4 0zM.8 3.6a10.2 10.2 0 0 1 14.4 0l-1.6 1.7a7.9 7.9 0 0 0-11.2 0z" fill="currentColor"/></svg><svg viewBox="0 0 26 12"><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.5" fill="currentColor"/><path d="M23.8 4.2v3.6c.8-.3 1.3-1 1.3-1.8s-.5-1.5-1.3-1.8" fill="currentColor" fill-opacity=".45"/></svg></span></div>
+                  <div class="ds-body ca-body">
+
+                    <!-- Активные заявки (20150:16825): the request from #screens -->
+                    <div class="ca-scr ca-list">
+                      <div class="ca-lhead"><img src="images/clientapp/icons/tasklist-blue.svg" width="24" height="24" alt=""><b>Активные заявки</b><span class="ca-count">1&nbsp;заявка</span></div>
+                      <div class="ca-lbody">
+                        <div class="ca-card">
+                          <div class="ca-ctop"><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>20 Апр 2026</span><span>08:34</span></small></div>
+                          <div class="ca-cbody">
+                            <div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>2 конт.</span><span>2.2 м<sup>3</sup></span></span></div>
+                            <div class="ca-cplan"><span>Вывоз запланирован на</span><span>23 Апр 2026</span></div>
+                          </div>
+                          <div class="ca-cfoot"><span><span>TOO Resurs Ysyraptama</span><span>O12676773</span></span><i><img src="images/clientapp/icons/more-dots.svg" width="16" height="16" alt=""></i></div>
+                        </div>
+                      </div>
+                      <div class="ca-newbar"><span class="ca-btn"><img src="images/clientapp/icons/add-circle-white.svg" width="20" height="20" alt="">Новая заявка</span></div>
+                      <div class="da-tabs ca-tabbar"><span class="cr-tab-hist"><i><img src="images/clientapp/icons/tab-history.svg" width="24" height="24" alt=""></i>История</span><span class="cr-tab-orders ca-tab-on"><i><img src="images/clientapp/icons/tab-orders-on.svg" width="24" height="24" alt=""></i>Заявки</span><span><i><img src="images/clientapp/icons/tab-profile.svg" width="24" height="24" alt=""></i>Профиль</span></div>
+                    </div>
+
+                    <!-- История заявок (12995:22254, 20151:17820): the summary stays put, the cards scroll under it -->
+                    <div class="ca-scr cr-hist">
+                      <div class="ca-lhead"><img src="images/clientapp/icons/history-head-blue.svg" width="24" height="24" alt=""><b>История заявок</b></div>
+                      <div class="cr-sum">
+                        <div class="cr-sum-top">
+                          <span class="cr-per"><img src="images/clientapp/icons/calendar.svg" width="20" height="20" alt=""><span class="cr-per-v cr-per-apr"><span>1 Апр 2026</span><span>-</span><span>30 Апр 2026</span></span><span class="cr-per-v cr-per-mar"><span>1 Мар 2026</span><span>-</span><span>31 Мар 2026</span></span></span>
+                          <span class="cr-dl"><img src="images/clientapp/icons/download-white.svg" width="20" height="20" alt=""><i class="cr-spin"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                        </div>
+                        <div class="cr-stats">
+                          <span class="cr-stat"><small>Выполнено<br>вывозов</small><b><span class="cr-n" data-k="c">12</span></b></span>
+                          <span class="cr-stat"><small>Факт.объем<br>вывоза</small><b><span class="cr-n" data-k="v">151.4</span> м<sup>3</sup></b></span>
+                          <span class="cr-stat"><small>К оплате<br>за период</small><b><span class="cr-n" data-k="m">484&nbsp;480</span> тг</b></span>
+                        </div>
+                      </div>
+                      <div class="cr-hbody">
+                        <div class="cr-hl cr-hl-apr">
+                        <div class="cr-hc" style="--i:0">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>17 Апр 2026</span><span>08:34</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span class="ca-over">14.2 м<sup>3</sup></span></span></div><div class="cr-st cr-st-ok"><span>Вывоз выполнен</span><span>10:12 18 Апр 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость фактического вывоза</span><b>45 440 тг</b></div>
+                        </div>
+                        <div class="cr-hc" style="--i:1">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>15 Апр 2026</span><span>09:05</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span class="ca-over">0 м<sup>3</sup></span></span></div><div class="cr-st cr-st-err"><span><b>Невывоз</b><small>Нет доступа к&nbsp;контейнеру(-ам)</small></span><span>11:40 16 Апр 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость холостого выезда</span><b>2 000 тг</b></div>
+                        </div>
+                        <div class="cr-hc" style="--i:2">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>13 Апр 2026</span><span>17:22</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span>0 м<sup>3</sup></span></span></div><div class="cr-st cr-st-off"><span><b>Заявка отменена</b><small>Айбол Чикчиров</small></span><span>08:15 14 Апр 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость фактического вывоза</span><b>0 тг</b></div>
+                        </div>
+                        <div class="cr-hc" style="--i:3">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>10 Апр 2026</span><span>08:50</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span>13.1 м<sup>3</sup></span></span></div><div class="cr-st cr-st-ok"><span>Вывоз выполнен</span><span>09:47 11 Апр 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость фактического вывоза</span><b>41 920 тг</b></div>
+                        </div>
+                        <div class="cr-hc" style="--i:4">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>8 Апр 2026</span><span>18:03</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span>12.8 м<sup>3</sup></span></span></div><div class="cr-st cr-st-ok"><span>Вывоз выполнен</span><span>10:30 9 Апр 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость фактического вывоза</span><b>40 960 тг</b></div>
+                        </div>
+                        </div>
+                        <div class="cr-hl cr-hl-mar">
+                        <div class="cr-hc" style="--i:0">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>29 Мар 2026</span><span>18:55</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span>9.1 м<sup>3</sup></span></span></div><div class="cr-st cr-st-ok"><span>Вывоз выполнен</span><span>09:44 30 Мар 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость фактического вывоза</span><b>29 120 тг</b></div>
+                        </div>
+                        <div class="cr-hc" style="--i:1">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>26 Мар 2026</span><span>09:22</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span>8.9 м<sup>3</sup></span></span></div><div class="cr-st cr-st-ok"><span>Вывоз выполнен</span><span>10:48 27 Мар 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость фактического вывоза</span><b>28 480 тг</b></div>
+                        </div>
+                        <div class="cr-hc" style="--i:2">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>24 Мар 2026</span><span>08:40</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span class="ca-over">14.1 м<sup>3</sup></span></span></div><div class="cr-st cr-st-ok"><span>Вывоз выполнен</span><span>11:15 25 Мар 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость фактического вывоза</span><b>45 120 тг</b></div>
+                        </div>
+                        <div class="cr-hc" style="--i:3">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>22 Мар 2026</span><span>19:03</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span>10.5 м<sup>3</sup></span></span></div><div class="cr-st cr-st-ok"><span>Вывоз выполнен</span><span>10:21 23 Мар 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость фактического вывоза</span><b>33 600 тг</b></div>
+                        </div>
+                        <div class="cr-hc" style="--i:4">
+                          <div class="cr-hc-top"><span><span><img src="images/clientapp/icons/location-pin-20.svg" width="20" height="20" alt=""><b>Royal Petrol #1</b></span><small><span>19 Мар 2026</span><span>10:16</span><span>Айбек Санжарбеков</span></small></span><i><img src="images/clientapp/icons/go-circle-dark.svg" width="24" height="24" alt=""></i></div>
+                          <div class="cr-hc-mid"><div class="ca-cline"><span>Вывоз ТБО</span><span class="ca-nums"><span>1.1 евро</span><span>12 конт.</span><span>0 м<sup>3</sup></span></span></div><div class="cr-st cr-st-off"><span><b>Заявка отменена</b><small>Айбол Чикчиров</small></span><span>08:05 20 Мар 2026</span></div></div>
+                          <div class="cr-hc-foot"><span>Стоимость фактического вывоза</span><b>0 тг</b></div>
+                        </div>
+                        </div>
+                      </div>
+                      <div class="cr-snack"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></i><span><b>Отчет_01.03.2026-31.03.2026.pdf</b><span class="cr-sv0">Скачивание…</span><span class="cr-sv1">Скачано</span></span><em class="cr-prog"><i></i></em></div>
+                      <div class="da-tabs ca-tabbar"><span class="cr-tab-hist ca-tab-on"><i><img src="images/clientapp/icons/tab-history-on.svg" width="24" height="24" alt=""></i>История</span><span class="cr-tab-orders"><i><img src="images/clientapp/icons/tab-orders.svg" width="24" height="24" alt=""></i>Заявки</span><span><i><img src="images/clientapp/icons/tab-profile.svg" width="24" height="24" alt=""></i>Профиль</span></div>
+                    </div>
+
+                    <!-- Дата выполнения заявки (19225:2345): the period sheet; real March and April 2026 -->
+                    <div class="ca-scr ca-page cr-pg-cal">
+                      <div class="ca-dhead"><b>Дата выполнения заявки</b><small>Период для&nbsp;фильтрации</small></div>
+                      <div class="ca-wdays"><span>пн</span><span>вт</span><span>ср</span><span>чт</span><span>пт</span><span class="ca-we">сб</span><span class="ca-we">вс</span></div>
+                      <div class="ca-cal">
+                        <div class="ca-month"><b>Март 2026</b><div class="ca-days" style="--s:7"><span class="cr-m1">1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span class="cr-m31">31</span></div></div>
+                        <div class="ca-month"><b>Апрель 2026</b><div class="ca-days" style="--s:3"><span class="cr-a1">1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span class="cr-a30">30</span></div></div>
+                      </div>
+                      <div class="ca-btns ca-dfoot"><span class="ca-btn cr-btn-apply"><span class="cr-bv cr-bv-apr">1 Апр 2026 - 30 Апр 2026</span><span class="cr-bv cr-bv-m1">1 Мар 2026</span><span class="cr-bv cr-bv-mar">1 Мар 2026 - 31 Мар 2026</span></span><span class="ca-btn ca-btn-2">Назад</span></div>
+                    </div>
+                  </div>
+                  <span class="hp-tap"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- The downloaded PDF (19242:4294), a 1361 x 1926 page scaled to the stage, then zoomed to its columns and totals -->
+            <div class="cr-doc" aria-hidden="true">
+              <div class="cr-dbar"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></i><span>Отчет_01.03.2026-31.03.2026.pdf</span><small>PDF</small></div>
+              <div class="cr-dview">
+                <div class="cr-paper">
+                  <div class="cr-p-head">
+                    <b>Отчет о&nbsp;выполненных заявках на&nbsp;вывоз мусора</b>
+                    <span><span class="cr-p-per">1 Мар 2026 - 31 Мар 2026</span><span>Сформирован 20 Апр 2026</span></span>
+                  </div>
+                  <dl class="cr-p-meta">
+                    <div><dt>МВО</dt><dd>TOO RESURS YSYRAPTAMA</dd></div>
+                    <div><dt>Автор заявок</dt><dd>Айбек Санжарбеков</dd></div>
+                    <div><dt>Заказчик</dt><dd>ИП Альжанов</dd></div>
+                    <div><dt>БИН</dt><dd>123456789123</dd></div>
+                    <div><dt>Договор</dt><dd>№423 от 21.08.2025</dd></div>
+                  </dl>
+                  <div class="cr-p-tbl">
+                    <table>
+                      <colgroup><col style="width:44px"><col style="width:108px"><col style="width:156px"><col style="width:156px"><col style="width:104px"><col><col style="width:110px"><col style="width:110px"><col style="width:112px"></colgroup>
+                      <thead><tr><th>#</th><th>ID задания</th><th>Дата подачи</th><th>Дата вывоза</th><th>Статус</th><th>Площадка</th><th>Заявленный объём (м<sup>3</sup>)</th><th>Фактический объём (м<sup>3</sup>)</th><th>К оплате</th></tr></thead>
+                      <tbody>
+                            <tr><td class="cr-t-mute">1</td><td class="cr-t-mute">Z151204</td><td><span class="cr-t-dt"><span>1 Мар 2026</span><small>09:12</small></span></td><td><span class="cr-t-dt"><span>2 Мар 2026</span><small>10:40</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>11.8</td><td>37 760 тг</td></tr>
+                            <tr><td class="cr-t-mute">2</td><td class="cr-t-mute">Z151377</td><td><span class="cr-t-dt"><span>3 Мар 2026</span><small>08:47</small></span></td><td><span class="cr-t-dt"><span>4 Мар 2026</span><small>11:05</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>10.9</td><td>34 880 тг</td></tr>
+                            <tr><td class="cr-t-mute">3</td><td class="cr-t-mute">Z151590</td><td><span class="cr-t-dt"><span>5 Мар 2026</span><small>09:30</small></span></td><td><span class="cr-t-dt"><span>6 Мар 2026</span><small>09:52</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>12.4</td><td>39 680 тг</td></tr>
+                            <tr><td class="cr-t-mute">4</td><td class="cr-t-mute">Z152031</td><td><span class="cr-t-dt"><span>8 Мар 2026</span><small>18:20</small></span></td><td><span class="cr-t-dt"><span>9 Мар 2026</span><small>10:14</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>13.6</td><td>43 520 тг</td></tr>
+                            <tr><td class="cr-t-mute">5</td><td class="cr-t-mute">Z152248</td><td><span class="cr-t-dt"><span>10 Мар 2026</span><small>08:34</small></span></td><td><span class="cr-t-dt"><span>11 Мар 2026</span><small>12:26</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>9.7</td><td>31 040 тг</td></tr>
+                            <tr><td class="cr-t-mute">6</td><td class="cr-t-mute">Z152460</td><td><span class="cr-t-dt"><span>12 Мар 2026</span><small>09:05</small></span></td><td><span class="cr-t-dt"><span>13 Мар 2026</span><small>11:48</small></span></td><td class="cr-t-err">Невывоз</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>0</td><td>2 000 тг</td></tr>
+                            <tr><td class="cr-t-mute">7</td><td class="cr-t-mute">Z152913</td><td><span class="cr-t-dt"><span>15 Мар 2026</span><small>17:41</small></span></td><td><span class="cr-t-dt"><span>16 Мар 2026</span><small>10:02</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>11.2</td><td>35 840 тг</td></tr>
+                            <tr><td class="cr-t-mute">8</td><td class="cr-t-mute">Z153122</td><td><span class="cr-t-dt"><span>17 Мар 2026</span><small>08:58</small></span></td><td><span class="cr-t-dt"><span>18 Мар 2026</span><small>09:37</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>12.1</td><td>38 720 тг</td></tr>
+                            <tr><td class="cr-t-mute">9</td><td class="cr-t-mute">Z153340</td><td><span class="cr-t-dt"><span>19 Мар 2026</span><small>10:16</small></span></td><td><span class="cr-t-dt"><span>20 Мар 2026</span><small></small></span></td><td class="cr-t-off">Отменено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>0</td><td>0 тг</td></tr>
+                            <tr><td class="cr-t-mute">10</td><td class="cr-t-mute">Z153786</td><td><span class="cr-t-dt"><span>22 Мар 2026</span><small>19:03</small></span></td><td><span class="cr-t-dt"><span>23 Мар 2026</span><small>10:21</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>10.5</td><td>33 600 тг</td></tr>
+                            <tr><td class="cr-t-mute">11</td><td class="cr-t-mute">Z153995</td><td><span class="cr-t-dt"><span>24 Мар 2026</span><small>08:40</small></span></td><td><span class="cr-t-dt"><span>25 Мар 2026</span><small>11:15</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>14.1</td><td>45 120 тг</td></tr>
+                            <tr><td class="cr-t-mute">12</td><td class="cr-t-mute">Z154207</td><td><span class="cr-t-dt"><span>26 Мар 2026</span><small>09:22</small></span></td><td><span class="cr-t-dt"><span>27 Мар 2026</span><small>10:48</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>8.9</td><td>28 480 тг</td></tr>
+                            <tr><td class="cr-t-mute">13</td><td class="cr-t-mute">Z154641</td><td><span class="cr-t-dt"><span>29 Мар 2026</span><small>18:55</small></span></td><td><span class="cr-t-dt"><span>30 Мар 2026</span><small>09:44</small></span></td><td class="cr-t-ok">Выполнено</td><td><span class="cr-t-dt"><span>Royal Petrol #1</span><small>1.1 евро (12)</small></span></td><td>13.2</td><td>9.1</td><td>29 120 тг</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="cr-p-total">
+                    <b>Итого</b>
+                    <span><small>Всего выполненных заявок за&nbsp;период</small><strong>11 заявок</strong></span>
+                    <span><small>Общий вывезенный объём за&nbsp;период</small><strong>124.3 м<sup>3</sup></strong></span>
+                    <span><small>Сумма к&nbsp;оплате за&nbsp;период</small><strong>399 760 тг</strong></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <figcaption class="stage-note">Отчёт за&nbsp;март формируется в&nbsp;Client App и&nbsp;скачивается в&nbsp;PDF</figcaption>
+          <button type="button" class="seq-toggle" id="cr-toggle" aria-pressed="false" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path class="seq-ic-pause" d="M7 5v10M13 5v10"/><path class="seq-ic-play" d="M7 4.5v11l8.5-5.5z"/></svg><span>Остановить анимацию</span></button>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ DEMO FORM ============ -->
+    <section class="section section-tint demo" id="demo" aria-labelledby="demo-title">
+      <div class="wrap demo-grid">
+        <div class="demo-copy">
+          <h2 id="demo-title">Покажем RaccoonAI на&nbsp;данных вашего МВО</h2>
+          <p>Оставьте контакты, и&nbsp;мы&nbsp;свяжемся с&nbsp;вами, чтобы договориться о&nbsp;демо.</p>
+          <h3 class="demo-steps-title">Что будет после заявки</h3>
+          <ol class="demo-steps">
+            <li><strong>Созвонимся</strong><span>Уточним размер парка, типы отходов и&nbsp;как сейчас работает ваша диспетчерская.</span></li>
+            <li><strong>Покажем демо на&nbsp;ваших маршрутах</strong><span>Платформа, AI&#8209;диспетчер и&nbsp;DriverApp на&nbsp;примере ваших площадок и&nbsp;машин.</span></li>
+            <li><strong>Обсудим пилот</strong><span>Какие районы и&nbsp;машины подключить первыми и&nbsp;что для&nbsp;этого понадобится от&nbsp;вас.</span></li>
+          </ol>
+          <!-- Filled from CONTACT in script.js; each row stays hidden until its value is real. -->
+          <dl class="contacts" hidden>
+            <div data-contact="phone" hidden><dt>Телефон</dt><dd><a href="#"></a></dd></div>
+            <div data-contact="email" hidden><dt>Почта</dt><dd><a href="#"></a></dd></div>
+          </dl>
+        </div>
+
+        <form class="form" id="demo-form" action="https://formspree.io/f/FORM_ID" method="POST" novalidate>
+          <div class="field">
+            <label for="f-name">Имя</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required>
+            <p class="field-error" id="e-name">Укажите имя</p>
+          </div>
+          <div class="field">
+            <label for="f-company">Компания</label>
+            <input id="f-company" name="company" type="text" autocomplete="organization" required>
+            <p class="field-error" id="e-company">Укажите компанию</p>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-role">Должность <span class="opt">необязательно</span></label>
+              <input id="f-role" name="role" type="text" autocomplete="organization-title">
+            </div>
+            <div class="field">
+              <label for="f-fleet">Машин в&nbsp;парке <span class="opt">необязательно</span></label>
+              <select id="f-fleet" name="fleet">
+                <option value="">Выберите</option>
+                <option>До 20</option>
+                <option>20–50</option>
+                <option>50–150</option>
+                <option>Больше 150</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-phone">Телефон или WhatsApp</label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 700 000 00 00" required>
+            <p class="field-error" id="e-phone">Укажите номер, чтобы мы могли связаться</p>
+          </div>
+          <div class="field">
+            <label for="f-email">Почта <span class="opt">необязательно</span></label>
+            <input id="f-email" name="email" type="email" autocomplete="email">
+            <p class="field-error" id="e-email">Проверьте адрес почты</p>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit" id="f-submit">Запросить демо</button>
+          <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <div class="brand brand-footer">
+        <svg class="brand-mark" viewBox="0 0 48 48" width="28" height="28" aria-hidden="true"><use href="#mark"/></svg>
+        <span>RaccoonAI</span>
+      </div>
+      <p>Алматы, Казахстан</p>
+      <nav class="footer-nav" aria-label="Навигация в подвале">
+        <a href="index.html">Платформа</a>
+        <a href="driverapp.html">DriverApp</a>
+        <a href="#screens">Экраны приложения</a>
+        <a href="#report">Отчёт за период</a>
+        <a href="#demo">Запросить демо</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="vendor/lenis.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

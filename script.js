@@ -6,6 +6,35 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------- Smooth scroll ----------
+     Lenis (vendor/lenis.min.js, MIT, darkroom.engineering) eases mouse-wheel and trackpad scrolling; touch keeps the
+     platform's own scrolling, and so does the page under reduced motion. Boxes that scroll by themselves (the Platform
+     replica's tables and Gantt rows, sheets) keep native wheel scrolling. In-page links glide to their target at the
+     page's scroll-padding; the skip link keeps its native jump so keyboard focus moves with it. */
+  var lenis = null;
+  if (!reduceMotion && window.Lenis) {
+    var nestedScroll = function (node) {
+      if (!node || node.nodeType !== 1 || node === document.body || node === document.documentElement) { return false; }
+      if (node.hasAttribute("data-lenis-prevent")) { return true; }
+      var oy = getComputedStyle(node).overflowY;
+      return (oy === "auto" || oy === "scroll") && node.scrollHeight > node.clientHeight + 1;
+    };
+    lenis = new window.Lenis({ lerp: 0.085, wheelMultiplier: 1.4, prevent: nestedScroll });
+    var lenisRaf = function (t) { lenis.raf(t); requestAnimationFrame(lenisRaf); };
+    requestAnimationFrame(lenisRaf);
+    document.addEventListener("click", function (e) {
+      if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { return; }
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a || a.classList.contains("skip") || a.hash.length < 2) { return; }
+      var el = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+      if (!el) { return; }
+      e.preventDefault();
+      var pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      lenis.scrollTo(el, { offset: -pad, duration: 1.1, easing: function (x) { return 1 - Math.pow(1 - x, 4); } });
+      if (history.pushState) { history.pushState(null, "", a.hash); }
+    });
+  }
+
   /* ---------- Light / dark theme ----------
      The inline head script sets html[data-theme] before paint (stored choice, else the OS preference). The dock and header
      buttons flip it and remember the pick. Every image has a "-dark" twin: photos switch through their <picture> source
@@ -35,14 +64,23 @@
   new MutationObserver(function (list) {
     list.forEach(function (m) { Array.prototype.forEach.call(m.addedNodes, function (n) { if (n.nodeType === 1) { themeImages(n); } }); });
   }).observe(document.body, { childList: true, subtree: true });
+  /* The switch is a one-second cross-fade of the whole page (View Transitions), so photos, maps, shadows and the device
+     screens change together with the colours and running animations keep their own transitions. Browsers without it
+     ease the colours over the same second; reduced motion switches at once. */
+  var themeMotion = window.matchMedia("(prefers-reduced-motion: no-preference)");
   themeToggles.forEach(function (b) {
     b.addEventListener("click", function () {
       var next = isDark() ? "light" : "dark";
+      var flip = function () {
+        root.setAttribute("data-theme", next);
+        try { window.localStorage.setItem(THEME_KEY, next); } catch (e) { /* private mode: the pick lasts for this page */ }
+        applyTheme();
+      };
+      if (!themeMotion.matches) { flip(); return; }
+      if (document.startViewTransition) { document.startViewTransition(flip); return; }
       root.classList.add("theme-anim");
-      root.setAttribute("data-theme", next);
-      try { window.localStorage.setItem(THEME_KEY, next); } catch (e) { /* private mode: the pick lasts for this page */ }
-      applyTheme();
-      window.setTimeout(function () { root.classList.remove("theme-anim"); }, 400);
+      flip();
+      window.setTimeout(function () { root.classList.remove("theme-anim"); }, 1000);
     });
   });
   // With no stored pick, follow the OS when it switches (e.g. at sunset)
@@ -830,6 +868,470 @@
     }
   }
 
+  /* ---------- Client App prototype (clientapp.html #screens) ----------
+     One story clock, as on the DriverApp page: keyframes set data-* states on .ca-proto (CSS draws them) and the truck is
+     placed from the clock each frame, so pausing, seeking from the tab list and resuming all land on a coherent picture.
+     Taps are transient and skipped when seeking. Tab 1 is the request (start, auto-fill, who meets, the date, confirm),
+     tab 2 the status (Запланирована → Назначено → Машина в пути → Машина прибыла → Выполнено, 3s each, the truck driving
+     the streets to the pin and away), tab 3 the photo report; tab 4 (WhatsApp) is a static placeholder. It runs only while
+     the stage is 35% visible and the page is shown; the text button pauses it (WCAG 2.2.2) and keyboard focus in the list
+     pauses too. Reduced motion: no autoplay; the tabs jump to still frames. */
+  var caProto = document.getElementById("ca-p1");
+  var caTabs = Array.prototype.slice.call(document.querySelectorAll('.ca-tabs [role="tab"]'));
+  var caToggle = document.getElementById("ca-toggle");
+  if (caProto && caToggle && caTabs.length === 4 && caProto.querySelector(".ca-truck")) {
+    var caTabList = document.querySelector(".ca-tabs");
+    var caStatic = document.getElementById("ca-p4");
+    var cTap = caProto.querySelector(".hp-tap"), cDs = caProto.querySelector(".ds"), cTruck = caProto.querySelector(".ca-truck");
+    var cS = function (k, v) { if (v == null) { caProto.removeAttribute("data-" + k); } else { caProto.setAttribute("data-" + k, v); } };
+    var cC = function (k, on) { caProto.classList.toggle(k, !!on); };
+
+    /* Two columns: the stage is 80% of the viewport tall (CSS) and the phone takes the room the caption row leaves */
+    var caStage = caProto.closest(".drv-stage");
+    if (caStage && window.ResizeObserver) {
+      var caWide = window.matchMedia("(min-width: 861px)");
+      var caOuter = function (el) { var c = getComputedStyle(el); return el.offsetHeight + (parseFloat(c.marginTop) || 0) + (parseFloat(c.marginBottom) || 0); };
+      var caFit = function () {
+        if (!caWide.matches) { caProto.style.removeProperty("--s"); return; }
+        var cs = getComputedStyle(caStage), row = 0;
+        Array.prototype.forEach.call(caStage.children, function (c) {
+          if (c === caProto || c === caStatic || c.offsetParent === null) { return; }
+          row = Math.max(row, caOuter(c));
+        });
+        var h = caStage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - row;
+        var w = caStage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        caProto.style.setProperty("--s", Math.max(.2, Math.min((h - 18) / 947, (w - 18) / 412)).toFixed(4));
+      };
+      new ResizeObserver(function () { caFit(); }).observe(caStage);
+      caWide.addEventListener("change", caFit);
+    }
+
+    /* The truck's drives on the street raster, map px (412 x 916): down the street west of the site and into its yard;
+       then, turned round, back out, down to Шевченко and south on Чайковского until it leaves the map under the sheet.
+       Corners are rounded; the truck eases off into each turn. */
+    var cProbeSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    cProbeSvg.setAttribute("width", "0"); cProbeSvg.setAttribute("height", "0");
+    cProbeSvg.style.position = "absolute";
+    caProto.appendChild(cProbeSvg);
+    var caRoute = function (pts, r) {
+      var d = "M" + pts[0][0] + " " + pts[0][1];
+      for (var i = 1; i < pts.length - 1; i++) {
+        var p = pts[i], a = pts[i - 1], b = pts[i + 1];
+        var la = Math.hypot(p[0] - a[0], p[1] - a[1]), lb = Math.hypot(b[0] - p[0], b[1] - p[1]), k = Math.min(r, la / 2, lb / 2);
+        d += " L" + (p[0] - (p[0] - a[0]) / la * k).toFixed(1) + " " + (p[1] - (p[1] - a[1]) / la * k).toFixed(1) +
+          " Q" + p[0] + " " + p[1] + " " + (p[0] + (b[0] - p[0]) / lb * k).toFixed(1) + " " + (p[1] + (b[1] - p[1]) / lb * k).toFixed(1);
+      }
+      d += " L" + pts[pts.length - 1][0] + " " + pts[pts.length - 1][1];
+      var probe = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      probe.setAttribute("d", d);
+      cProbeSvg.appendChild(probe);
+      var L = probe.getTotalLength(), N = Math.ceil(L / 2), xs = [], ys = [], ts = [0], turnS = [], acc = 0;
+      for (var j = 0; j <= N; j++) { var q = probe.getPointAtLength(L * j / N); xs.push(q.x); ys.push(q.y); }
+      for (var c = 1; c < pts.length - 1; c++) {
+        var best = 0, bd = 1e9;
+        for (var m = 0; m <= N; m++) { var dd = Math.hypot(xs[m] - pts[c][0], ys[m] - pts[c][1]); if (dd < bd) { bd = dd; best = m; } }
+        turnS.push(L * best / N);
+      }
+      for (var n = 1; n <= N; n++) {
+        var s = L * n / N, v = Math.min(1, .25 + s / 50, .25 + (L - s) / 60);
+        turnS.forEach(function (t0) { v = Math.min(v, .4 + Math.abs(s - t0) / 45); });
+        acc += (L / N) / v; ts.push(acc);
+      }
+      probe.remove();
+      return { L: L, N: N, xs: xs, ys: ys, ts: ts, total: acc };
+    };
+    var caAt = function (R, p) {
+      var want = p * R.total, lo = 0, hi = R.N;
+      while (lo < hi) { var mid = (lo + hi) >> 1; if (R.ts[mid] < want) { lo = mid + 1; } else { hi = mid; } }
+      var i = Math.max(1, Math.min(R.N - 1, lo));
+      return { x: R.xs[lo], y: R.ys[lo], a: Math.atan2(R.ys[i + 1] - R.ys[i - 1], R.xs[i + 1] - R.xs[i - 1]) * 180 / Math.PI };
+    };
+    var C_IN = caRoute([[113.3, 46.5], [121, 186], [127, 277], [178.2, 274.4]], 16);
+    var C_OUT = caRoute([[178.2, 274.4], [131, 277], [137, 366], [146, 366], [149.3, 408.5], [161, 700], [165, 990]], 14);
+
+    // The press: a ring on the element's centre (design px in the 412 x 947 screen), and the element dips
+    var cPress = function (sel) {
+      var el = caProto.querySelector(sel);
+      var s = cDs.getBoundingClientRect(), r = el.getBoundingClientRect(), k = s.width / cDs.offsetWidth || 1;
+      cTap.style.setProperty("--tx", ((r.left - s.left + r.width / 2) / k).toFixed(1) + "px");
+      cTap.style.setProperty("--ty", ((r.top - s.top + r.height / 2) / k).toFixed(1) + "px");
+      cTap.classList.remove("is-pressing");
+      void cTap.offsetWidth;
+      cTap.classList.add("is-pressing");
+      el.classList.add("is-press");
+      window.setTimeout(function () { el.classList.remove("is-press"); }, 220);
+    };
+    var tapF = function (sel) { return function () { cPress(sel); }; };
+    var C_INIT = function () {
+      cS("scr", "list"); cS("list", "empty");
+      ["sheet", "fill", "toast", "pg", "who", "add", "day", "date", "alert", "st", "rep"].forEach(function (k) { cS(k, null); });
+      cC("is-boot", false);
+    };
+    /* The story: [ms, state setter, transient?] */
+    var C_DRIVE_IN = [32100, 35100], C_TURN = [38100, 38800], C_DRIVE_OUT = [38800, 41800];
+    var CA_STORY = [
+      // 1. the app starts on an empty list; «Новая заявка» opens the order sheet over the map
+      [0, function () { C_INIT(); cC("is-boot", true); }],
+      [250, function () { cC("is-boot", false); }],
+      [1900, tapF(".ca-btn-new"), 1],
+      [2200, function () { cS("scr", "create"); cS("sheet", "main"); }],
+      // the client has one container site: the message, then the form fills itself and the site appears on the map
+      [3300, function () { cS("toast", "1"); }],
+      [3900, function () { cS("fill", "new"); }],
+      [5000, function () { cS("fill", "1"); }],
+      [6300, function () { cS("toast", null); }],
+      [6900, tapF(".ca-btn-next"), 1],
+      [7200, function () { cS("sheet", "extra"); }],
+      // who meets the truck: a new person, typed in, added and chosen
+      [8400, tapF(".ca-row-who"), 1],
+      [8700, function () { cS("pg", "who"); }],
+      [9900, tapF(".ca-btn-addnew"), 1],
+      [10200, function () { cS("pg", "add"); }],
+      [10500, function () { cS("add", "1"); }],
+      [14700, tapF(".ca-btn-addp"), 1],
+      [15000, function () { cS("pg", "who"); cS("who", "1"); }],
+      [16300, tapF(".ca-btn-done"), 1],
+      [16600, function () { cS("pg", null); }],
+      // the date: 23 April
+      [17700, tapF(".ca-row-date"), 1],
+      [18000, function () { cS("pg", "date"); }],
+      [19200, tapF(".ca-d23"), 1],
+      [19300, function () { cS("day", "1"); }],
+      [20400, tapF(".ca-btn-plan"), 1],
+      [20700, function () { cS("pg", null); cS("date", "1"); }],
+      // «Создать заявку», the check, «Подтвердить заявку»: the order lands in the list
+      [21900, tapF(".ca-btn-create"), 1],
+      [22200, function () { cS("alert", "1"); }],
+      [23700, tapF(".ca-btn-confirm"), 1],
+      [24000, function () { cS("alert", null); cS("scr", "list"); cS("list", "card"); }],
+      // 2. the order on the map, one status every 3 seconds
+      [25800, tapF(".ca-card"), 1],
+      [26100, function () { cS("scr", "detail"); cS("st", "planned"); cS("list", "seen"); }],
+      [29100, function () { cS("st", "assigned"); }],
+      [C_DRIVE_IN[0], function () { cS("st", "enroute"); }],
+      [C_DRIVE_IN[1], function () { cS("st", "onsite"); }],
+      [C_TURN[0], function () { cS("st", "done"); }],
+      // 3. the photo report
+      [40800, tapF(".ca-btn-report"), 1],
+      [41100, function () { cS("rep", "order"); }],
+      [43900, tapF(".ca-seg-2"), 1],
+      [44050, function () { cS("rep", "photo"); }],
+      [47200, tapF(".ca-seg-3"), 1],
+      [47350, function () { cS("rep", "gps"); }]
+    ];
+    var CA_SEG = [[0, 0], [25800, 1], [40800, 2]], CA_END = 51500;
+    var CA_STILL = [21000, 35800, 45000]; // reduced motion: the filled order sheet, the truck on site, the photos
+    var caSegAt = function (t) { var k = 0; CA_SEG.forEach(function (s, i) { if (t >= s[0]) { k = i; } }); return k; };
+
+    var caPlace = function (t) {
+      var q;
+      if (t < C_DRIVE_IN[0]) { q = caAt(C_IN, 0); }
+      else if (t < C_TURN[0]) { q = caAt(C_IN, Math.min(1, (t - C_DRIVE_IN[0]) / (C_DRIVE_IN[1] - C_DRIVE_IN[0]))); }
+      else if (t < C_DRIVE_OUT[0]) { // turning round in the yard: from facing east to facing west, swinging left
+        q = caAt(C_IN, 1);
+        var a1 = caAt(C_OUT, 0).a, k = (t - C_TURN[0]) / (C_TURN[1] - C_TURN[0]), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        var da = ((a1 - q.a) % 360 + 540) % 360 - 180;
+        if (da > 0) { da -= 360; }
+        q.a += da * e;
+      } else { q = caAt(C_OUT, Math.min(1, (t - C_DRIVE_OUT[0]) / (C_DRIVE_OUT[1] - C_DRIVE_OUT[0]))); }
+      cTruck.style.transform = "translate(" + (q.x - 24).toFixed(1) + "px," + (q.y - 24).toFixed(1) + "px) rotate(" + q.a.toFixed(1) + "deg)";
+    };
+    var caShowSeg = function (k) {
+      var tab = CA_SEG[k][1];
+      caTabs.forEach(function (t, n) { t.setAttribute("aria-selected", String(n === tab)); t.tabIndex = n === tab ? 0 : -1; });
+      caProto.setAttribute("aria-labelledby", caTabs[tab].id);
+      caProto.hidden = false; caStatic.hidden = true;
+    };
+
+    var ca = { t: 0, seg: -1, raf: 0, last: 0, visible: false, paused: false, focus: false, running: false, fresh: true, tab: 0 };
+    var caBar = function (running) {
+      var k = ca.seg, a = CA_SEG[k][0], b = k + 1 < CA_SEG.length ? CA_SEG[k + 1][0] : CA_END, tab = CA_SEG[k][1];
+      caTabs.forEach(function (t, n) {
+        t.classList.toggle("is-auto", n === tab && !ca.paused && caProto.hidden === false);
+        t.classList.remove("is-running");
+        if (n !== tab) { return; }
+        t.style.setProperty("--auto-from", String((ca.t - a) / (b - a)));
+        t.style.setProperty("--auto-left", Math.max(0, b - ca.t) + "ms");
+        void t.offsetWidth;
+        if (running) { t.classList.add("is-running"); }
+      });
+    };
+    // Rebuild the picture at time t without transitions: replay every state keyframe up to t, skip the taps
+    var caSeek = function (t) {
+      cC("is-reset", true);
+      CA_STORY.forEach(function (e) { if (e[0] <= t && !e[2]) { e[1](); } });
+      cTap.classList.remove("is-pressing");
+      ca.t = t; ca.seg = caSegAt(t);
+      caShowSeg(ca.seg); caPlace(t);
+      void caProto.offsetWidth;
+      cC("is-reset", false);
+    };
+    var caTick = function (now) {
+      var dt = Math.min(100, now - ca.last), t0 = ca.t, t1 = t0 + dt;
+      ca.last = now;
+      if (t1 >= CA_END) { caSeek(0); caBar(true); ca.raf = requestAnimationFrame(caTick); return; }
+      CA_STORY.forEach(function (e) { if (e[0] > t0 && e[0] <= t1) { e[1](); } });
+      ca.t = t1;
+      var k = caSegAt(t1);
+      if (k !== ca.seg) { ca.seg = k; caShowSeg(k); caBar(true); }
+      if (t1 >= C_DRIVE_IN[0] - 50 && t0 <= C_DRIVE_OUT[1] + 50) { caPlace(t1); }
+      ca.raf = requestAnimationFrame(caTick);
+    };
+    var caSync = function () {
+      var go = ca.visible && !ca.paused && !ca.focus && !document.hidden;
+      if (go === ca.running) { return; }
+      ca.running = go;
+      cC("is-held", !go);
+      if (go) {
+        if (ca.fresh) { ca.fresh = false; caSeek(0); }
+        else if (caProto.hidden) { caShowSeg(ca.seg); }
+        caBar(true);
+        ca.last = performance.now();
+        ca.raf = requestAnimationFrame(caTick);
+      } else {
+        cancelAnimationFrame(ca.raf);
+        caBar(false);
+      }
+    };
+    var caSetPaused = function (p) {
+      ca.paused = p;
+      caToggle.setAttribute("aria-pressed", String(p));
+      caToggle.querySelector("span").textContent = p ? "Запустить анимацию" : "Остановить анимацию";
+      caToggle.classList.toggle("is-paused", p);
+    };
+    var caMotion = !reduceMotion && "IntersectionObserver" in window;
+    // The WhatsApp tab has no story yet: its placeholder takes the stage and the story holds where it was
+    var caShowStatic = function () {
+      caTabs.forEach(function (t, n) { t.setAttribute("aria-selected", String(n === 3)); t.tabIndex = n === 3 ? 0 : -1; });
+      caProto.hidden = true; caStatic.hidden = false;
+    };
+    var caPick = function (tab) {
+      if (tab === 3) {
+        cancelAnimationFrame(ca.raf); ca.running = false;
+        if (caMotion) { caSetPaused(true); }
+        caShowStatic(); caBar(false);
+        return;
+      }
+      if (!caMotion) { caSeek(CA_STILL[tab]); return; }
+      cancelAnimationFrame(ca.raf);
+      ca.running = false; ca.fresh = false;
+      caSeek(Math.max(0, CA_SEG[tab][0] - 200));
+      caSetPaused(false);
+      caBar(false);
+      caSync();
+    };
+    caTabs.forEach(function (tab, i) {
+      tab.addEventListener("click", function () { caPick(i); });
+      tab.addEventListener("keydown", function (e) {
+        var k = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+        var n = e.key === "Home" ? 0 : e.key === "End" ? caTabs.length - 1 : k ? (i + k + caTabs.length) % caTabs.length : -1;
+        if (n < 0) { return; }
+        e.preventDefault();
+        caPick(n);
+        caTabs[n].focus();
+      });
+    });
+
+    caPlace(0);
+    if (caMotion) {
+      caToggle.hidden = false;
+      caToggle.addEventListener("click", function () {
+        caSetPaused(!ca.paused);
+        if (!ca.paused && caProto.hidden) { ca.focus = false; caShowSeg(ca.seg); } // play from the WhatsApp tab: back to the story
+        caBar(false); caSync();
+      });
+      new IntersectionObserver(function (entries) {
+        ca.visible = entries[0].isIntersecting;
+        if (!ca.visible && !ca.paused) { ca.fresh = true; }
+        caSync();
+      }, { threshold: 0.35 }).observe(caStage || caProto);
+      document.addEventListener("visibilitychange", caSync);
+      // Only keyboard focus in the list pauses; a resting mouse cursor must not freeze the autoplay.
+      caTabList.addEventListener("focusin", function (e) { if (e.target.matches(":focus-visible")) { ca.focus = true; caSync(); } });
+      caTabList.addEventListener("focusout", function (e) { if (!caTabList.contains(e.relatedTarget)) { ca.focus = false; caSync(); } });
+    } else {
+      caSeek(CA_STILL[0]);
+    }
+  }
+
+  /* ---------- Client App period report (clientapp.html #report) ----------
+     The same kind of story clock as #screens: keyframes set data-* states on .cr-proto, CSS draws them, taps are transient
+     and skipped when seeking. «История» from the request list, the history scrolls under its fixed summary, the calendar sheet
+     takes 1–31 March, the totals recount and the cards filter, the green button downloads the PDF, and the PDF opens beside the
+     phone and zooms to its columns, its rows and its totals. Runs only while 35% visible and the page is shown; the text
+     button pauses it (WCAG 2.2.2). Reduced motion: one still frame, the March history with the PDF beside it. */
+  var crProto = document.getElementById("cr-p");
+  var crToggle = document.getElementById("cr-toggle");
+  if (crProto && crToggle) {
+    var crStage = crProto.closest(".drv-stage");
+    var crTap = crProto.querySelector(".hp-tap"), crDs = crProto.querySelector(".ds");
+    var crView = crProto.querySelector(".cr-dview"), crPaper = crProto.querySelector(".cr-paper");
+    var crNums = Array.prototype.slice.call(crProto.querySelectorAll(".cr-n"));
+    var rS = function (k, v) { if (v == null) { crProto.removeAttribute("data-" + k); } else { crProto.setAttribute("data-" + k, v); } };
+
+    /* Fit: two columns share the stage (80% of the viewport tall); the phone scale and the page width come from its room.
+       Phone: 412 x 947 design px + 9px bezel; the page bar is 38px over a 1361 x 1926 page. */
+    var crWide = window.matchMedia("(min-width: 861px)");
+    var crFit = function () {
+      if (crWide.matches && crStage) {
+        var cs = getComputedStyle(crStage), row = 0;
+        Array.prototype.forEach.call(crStage.children, function (c) {
+          if (c === crProto || c.offsetParent === null) { return; }
+          var m = getComputedStyle(c);
+          row = Math.max(row, c.offsetHeight + (parseFloat(m.marginTop) || 0) + (parseFloat(m.marginBottom) || 0));
+        });
+        // the copy's 5/7 columns: the phone fits the left one, the page the right one, both the stage height
+        var h = crStage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - row - 18;
+        var w = crProto.clientWidth, gap = parseFloat(getComputedStyle(crProto).columnGap) || 48;
+        var c1 = (w - gap) * 5 / 12, c2 = (w - gap) * 7 / 12, r = 1361 / 1926;
+        var s = Math.max(.2, Math.min((h - 18) / 947, (c1 - 18) / 412, (c2 / r + 20) / 947));
+        var dw = Math.max(160, (947 * s + 18 - 38) * r), pw = 412 * s + 18;
+        crProto.style.setProperty("--s", s.toFixed(4));
+        crProto.style.setProperty("--cr-dw", dw.toFixed(1) + "px");
+        crProto.style.setProperty("--cr-shift", (w / 2 - c1 + pw / 2).toFixed(1) + "px"); // centred on the stage before the PDF
+      } else {
+        crProto.style.removeProperty("--s"); crProto.style.removeProperty("--cr-dw"); crProto.style.removeProperty("--cr-shift");
+      }
+      if (crView.clientWidth) { crPaper.style.setProperty("--ps", (crView.clientWidth / 1361).toFixed(5)); }
+    };
+    if (window.ResizeObserver) {
+      new ResizeObserver(crFit).observe(crStage || crProto);
+      new ResizeObserver(function () { if (crView.clientWidth) { crPaper.style.setProperty("--ps", (crView.clientWidth / 1361).toFixed(5)); } }).observe(crView);
+    }
+    crWide.addEventListener("change", crFit);
+    crFit();
+
+    /* The zoom: page px of the region to bring to the top-left corner, and the magnification over the fitted page */
+    var crZoom = function (k) {
+      var tbl = crPaper.querySelector(".cr-p-tbl"), meta = crPaper.querySelector(".cr-p-meta"), tot = crPaper.querySelector(".cr-p-total");
+      var z = 1, x = 0, y = 0;
+      if (k === "z1") { z = 2.3; x = tbl.offsetLeft - 20; y = meta.offsetTop - 24; }
+      else if (k === "z2") { z = 2.3; x = 1361 - 1361 / z; y = meta.offsetTop - 24; }
+      else if (k === "z3") { z = 1.5; x = tot.offsetLeft - 24; y = tot.offsetTop + tot.offsetHeight + 120 - 1926 / z; }
+      crPaper.style.setProperty("--z", z);
+      crPaper.style.setProperty("--zx", Math.max(0, x).toFixed(1));
+      crPaper.style.setProperty("--zy", Math.max(0, y).toFixed(1));
+      rS("doc", k);
+    };
+
+    var crPress = function (sel) {
+      var el = crProto.querySelector(sel);
+      var s = crDs.getBoundingClientRect(), r = el.getBoundingClientRect(), k = s.width / crDs.offsetWidth || 1;
+      crTap.style.setProperty("--tx", ((r.left - s.left + r.width / 2) / k).toFixed(1) + "px");
+      crTap.style.setProperty("--ty", ((r.top - s.top + r.height / 2) / k).toFixed(1) + "px");
+      crTap.classList.remove("is-pressing");
+      void crTap.offsetWidth;
+      crTap.classList.add("is-pressing");
+      el.classList.add("is-press");
+      window.setTimeout(function () { el.classList.remove("is-press"); }, 220);
+    };
+    var crTapF = function (sel) { return function () { crPress(sel); }; };
+
+    /* The totals: April (12, 151.4 m³, 484 480 тг) recount to March (11, 124.3 m³, 399 760 тг) on the clock */
+    var CR_CALC = [10500, 11500];
+    var CR_FROM = { c: 12, v: 151.4, m: 484480 }, CR_TO = { c: 11, v: 124.3, m: 399760 };
+    var crFmt = function (k, n) {
+      if (k === "c") { return String(Math.round(n)); }
+      if (k === "v") { return n.toFixed(1); }
+      return String(Math.round(n / 10) * 10).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    };
+    var crCount = function (t) {
+      var p = t <= CR_CALC[0] ? 0 : t >= CR_CALC[1] ? 1 : (t - CR_CALC[0]) / (CR_CALC[1] - CR_CALC[0]);
+      var e = 1 - Math.pow(1 - p, 3);
+      crNums.forEach(function (el) {
+        var k = el.getAttribute("data-k"), v = crFmt(k, CR_FROM[k] + (CR_TO[k] - CR_FROM[k]) * e);
+        if (el.textContent !== v) { el.textContent = v; }
+      });
+    };
+
+    var CR_INIT = function () {
+      rS("scr", "list"); rS("per", "apr"); rS("sel", "apr");
+      ["scroll", "pg", "calc", "dl"].forEach(function (k) { rS(k, null); });
+      crZoom(null); rS("doc", null);
+    };
+    var CR_STORY = [
+      [0, CR_INIT],
+      // «История» on the tab bar; the history slides in and scrolls under its summary
+      [1300, crTapF(".ca-list .cr-tab-hist"), 1],
+      [1600, function () { rS("scr", "hist"); }],
+      [2900, function () { rS("scroll", "1"); }],
+      // the period: the calendar sheet, 1 March, 31 March, apply
+      [6200, crTapF(".cr-per"), 1],
+      [6500, function () { rS("pg", "cal"); }],
+      [7800, crTapF(".cr-m1"), 1],
+      [7900, function () { rS("sel", "m1"); }],
+      [8800, crTapF(".cr-m31"), 1],
+      [8900, function () { rS("sel", "mar"); }],
+      [10000, crTapF(".cr-btn-apply"), 1],
+      [10300, function () { rS("pg", null); rS("per", "mar"); rS("calc", "1"); }],
+      [CR_CALC[1] + 300, function () { rS("calc", null); }],
+      // the PDF: download, then it opens beside the phone and zooms to the columns, across them, and to the totals
+      [12700, crTapF(".cr-dl"), 1],
+      [12900, function () { rS("dl", "1"); }],
+      [14800, function () { rS("dl", "2"); }],
+      [15400, function () { crZoom("in"); }],
+      [17200, function () { rS("dl", null); }],
+      [17600, function () { crZoom("z1"); }],
+      [21200, function () { crZoom("z2"); }],
+      [24600, function () { crZoom("z3"); }],
+      [28000, function () { crZoom("in"); }],
+      // back to the request list, and round again
+      [30400, crTapF(".cr-hist .cr-tab-orders"), 1],
+      [30700, function () { rS("scr", "list"); crZoom(null); }]
+    ];
+    var CR_END = 32200, CR_STILL = 16000;
+
+    var cr = { t: 0, raf: 0, last: 0, visible: false, paused: false, running: false, fresh: true };
+    var crSeek = function (t) {
+      crProto.classList.add("is-reset");
+      CR_STORY.forEach(function (e) { if (e[0] <= t && !e[2]) { e[1](); } });
+      crTap.classList.remove("is-pressing");
+      cr.t = t; crCount(t);
+      void crProto.offsetWidth;
+      crProto.classList.remove("is-reset");
+    };
+    var crTick = function (now) {
+      var dt = Math.min(100, now - cr.last), t0 = cr.t, t1 = t0 + dt;
+      cr.last = now;
+      if (t1 >= CR_END) { crSeek(0); cr.raf = requestAnimationFrame(crTick); return; }
+      CR_STORY.forEach(function (e) { if (e[0] > t0 && e[0] <= t1) { e[1](); } });
+      cr.t = t1;
+      if (t1 >= CR_CALC[0] - 50 && t0 <= CR_CALC[1] + 50) { crCount(t1); }
+      cr.raf = requestAnimationFrame(crTick);
+    };
+    var crSync = function () {
+      var go = cr.visible && !cr.paused && !document.hidden;
+      if (go === cr.running) { return; }
+      cr.running = go;
+      crProto.classList.toggle("is-held", !go);
+      if (go) {
+        if (cr.fresh) { cr.fresh = false; crSeek(0); }
+        cr.last = performance.now();
+        cr.raf = requestAnimationFrame(crTick);
+      } else {
+        cancelAnimationFrame(cr.raf);
+      }
+    };
+    if (!reduceMotion && "IntersectionObserver" in window) {
+      crToggle.hidden = false;
+      crToggle.addEventListener("click", function () {
+        cr.paused = !cr.paused;
+        crToggle.setAttribute("aria-pressed", String(cr.paused));
+        crToggle.querySelector("span").textContent = cr.paused ? "Запустить анимацию" : "Остановить анимацию";
+        crToggle.classList.toggle("is-paused", cr.paused);
+        crSync();
+      });
+      new IntersectionObserver(function (entries) {
+        cr.visible = entries[0].isIntersecting;
+        if (!cr.visible && !cr.paused) { cr.fresh = true; }
+        crSync();
+      }, { threshold: 0.35 }).observe(crStage || crProto);
+      document.addEventListener("visibilitychange", crSync);
+    } else {
+      crSeek(CR_STILL);
+    }
+  }
+
   /* ---------- DriverApp, one stop: the steps cascade in once, then stay; only the highlight moves from step to step ---------- */
   var flow = document.getElementById("flow");
   /* Its phones are DriverApp screens (412 x 947 design px) scaled to the column */
@@ -1253,7 +1755,8 @@
   var magView = document.getElementById("pf-viewport");
   if (magView && !reduceMotion) {
     var magArmed = true, magSelf = false, magSkip = false, magTouch = false, magTimer = 0;
-    var magEnd = "onscrollend" in window;
+    // Lenis scrolls frame by frame, and each frame would end a native scroll: with it, settle after a quiet spell instead
+    var magEnd = !lenis && "onscrollend" in window;
     var magOffset = function () { // > 0: the screen sits below its spot
       var pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
       return magView.getBoundingClientRect().top - pad;
@@ -1269,7 +1772,8 @@
       magArmed = false;
       if (Math.abs(d) < 2) { return; }
       magSelf = true;
-      window.scrollTo({ top: window.scrollY + d, behavior: "smooth" });
+      if (lenis) { lenis.scrollTo(window.scrollY + d, { duration: .9, easing: function (x) { return 1 - Math.pow(1 - x, 3); } }); }
+      else { window.scrollTo({ top: window.scrollY + d, behavior: "smooth" }); }
     };
     window.addEventListener("scroll", function () {
       if (!magArmed && Math.abs(magOffset()) > magZone()) { magArmed = true; }

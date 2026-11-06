@@ -68,3 +68,9 @@ Not varied: the top-down truck markers (`platform/trucks/*.png`, transparent) an
 - `driver-photo.webp`: the photo in the Figma «Profile» frame (15310:30337), 1024px PNG downscaled to 320px WebP q84.
 - `truck-tbo.png`: a copy of `images/Truck on map/Мусоровоз ТБО/State=Default.png` (56×56), the map marker on the DriverApp phone and tablet and in the «КП запаркована» illustration. It replaced `truck-musorovoz.svg`, the Platform replica's inline render of the same component, which drew stray white wheel shapes.
 - `icons/*.svg`: icon exports from the same frames, unchanged; `icons/month-prev.svg` joins the two layers of the «Back Icon» export (white disc, dark chevron) into one file.
+
+**Client App phone** (`clientapp/`) — not generated. From the same Figma file (Client App frames: order creation, Кто встретит, Дата вывоза, the order statuses, the photo report), exported through the Figma MCP on 2026-11-07:
+- `photo-before-1.jpg`, `photo-after-1.jpg`: the report photos (800×600 JPEG), real field photos from the design file.
+- `icons/*.svg`: icon exports from the same frames; `truck-container-blue.svg` and `truck-garbage-green.svg` are the «Truck on map» components with the export's background and clip rectangles removed.
+- `icons/history-head-blue.svg`, `tab-history-on.svg`, `tab-orders.svg`, `download-white.svg`, `go-circle-dark.svg`: icon exports from the «История заявок» frames (12995:22254, 20151:17820) for the #report phone.
+- The map is not a new file: the Client App frames use the same «Route Trace» 2GIS raster as DriverApp, so the phone shows `driverapp/map-near.webp` (and its dark recolor).

@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Radio Button">
+<g id="Ellipse 237">
+<ellipse cx="12" cy="12" rx="12" ry="12" fill="white"/>
+<mask id="stroke0_0_88" fill="white">
+<path d="M24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12C0 5.37258 5.37258 0 12 0C18.6274 0 24 5.37258 24 12Z"/>
+</mask>
+<ellipse cx="12" cy="12" rx="12" ry="12" stroke-width="2" stroke="#155DFC" mask="url(#stroke0_0_88)"/>
+</g>
+<ellipse id="Ellipse 238" cx="12" cy="12" rx="6" ry="6" fill="#155DFC"/>
+</g>
+</svg>
