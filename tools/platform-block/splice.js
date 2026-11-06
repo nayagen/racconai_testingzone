@@ -19,7 +19,7 @@ const block=`    <!-- ============ PLATFORM (built from Figma 4296:5593 with the
 ${f}
           </div>
         </div>
-        <figcaption class="wrap pf-caption"><span>Интерфейс Платформы · демонстрационные данные</span><span class="pf-hint">Листайте вбок, чтобы увидеть весь экран</span></figcaption>
+        <figcaption class="wrap pf-caption"><span>Интерфейс Платформы</span><span class="pf-hint">Листайте вбок, чтобы увидеть весь экран</span></figcaption>
       </figure>
     </section>
 

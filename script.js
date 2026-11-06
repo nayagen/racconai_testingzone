@@ -6,6 +6,54 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------- Light / dark theme ----------
+     The inline head script sets html[data-theme] before paint (stored choice, else the OS preference). The dock and header
+     buttons flip it and remember the pick. Every image has a "-dark" twin: photos switch through their <picture> source
+     (its media query serves dark-OS visitors on first load), maps, proof photos and the truck illustration by src, including
+     those script.js renders later. */
+  var root = document.documentElement, THEME_KEY = "raccoon-theme";
+  var DARK_IMG = /(images\/(?:dispatch-map-\d+|platform\/map-almaty|platform\/garbage-truck-green|platform\/proof\/[ab]\d))(?:-dark)?\.webp/g;
+  var themeToggles = Array.prototype.slice.call(document.querySelectorAll("[data-theme-toggle]"));
+  function isDark() { return root.getAttribute("data-theme") === "dark"; }
+  function themeSrc(s) { return s.replace(DARK_IMG, function (m, base) { return base + (isDark() ? "-dark" : "") + ".webp"; }); }
+  function themeImages(scope) {
+    var imgs = scope.tagName === "IMG" ? [scope] : scope.querySelectorAll("img, a[download]");
+    Array.prototype.forEach.call(imgs, function (el) {
+      ["src", "srcset", "href"].forEach(function (a) {
+        var v = el.getAttribute(a), t = v && themeSrc(v);
+        if (t && t !== v) { el.setAttribute(a, t); }
+      });
+    });
+  }
+  function applyTheme() {
+    var dark = isDark();
+    Array.prototype.forEach.call(document.querySelectorAll("source[data-theme-dark]"), function (s) { s.media = dark ? "all" : "not all"; });
+    themeImages(document);
+    themeToggles.forEach(function (b) { b.setAttribute("aria-pressed", dark ? "true" : "false"); });
+  }
+  applyTheme();
+  new MutationObserver(function (list) {
+    list.forEach(function (m) { Array.prototype.forEach.call(m.addedNodes, function (n) { if (n.nodeType === 1) { themeImages(n); } }); });
+  }).observe(document.body, { childList: true, subtree: true });
+  themeToggles.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var next = isDark() ? "light" : "dark";
+      root.classList.add("theme-anim");
+      root.setAttribute("data-theme", next);
+      try { window.localStorage.setItem(THEME_KEY, next); } catch (e) { /* private mode: the pick lasts for this page */ }
+      applyTheme();
+      window.setTimeout(function () { root.classList.remove("theme-anim"); }, 400);
+    });
+  });
+  // With no stored pick, follow the OS when it switches (e.g. at sunset)
+  var osDark = window.matchMedia("(prefers-color-scheme: dark)");
+  var onOs = function (e) {
+    var s = null;
+    try { s = window.localStorage.getItem(THEME_KEY); } catch (err) { s = null; }
+    if (s !== "light" && s !== "dark") { root.setAttribute("data-theme", e.matches ? "dark" : "light"); applyTheme(); }
+  };
+  if (osDark.addEventListener) { osDark.addEventListener("change", onOs); } else if (osDark.addListener) { osDark.addListener(onOs); }
+
   /* ---------- Header border once the page scrolls ---------- */
   var header = document.querySelector(".site-header");
   function onScroll() { header.classList.toggle("is-scrolled", window.scrollY > 8); }
@@ -288,17 +336,45 @@
     at(LOOP, playSequence);
   }
 
-  // Loop only while the stage is on screen; the markup (and reduced motion) shows the assigned end state.
+  // The assigned end state, as in the markup: what reduced motion and the pause button show.
+  function showEnd() {
+    timers.forEach(window.clearTimeout);
+    timers = [];
+    stopDriving();
+    stage.classList.remove("is-step-0", "is-step-1", "is-proposing", "hide-ai", "is-done");
+    stage.removeAttribute("data-focus");
+    setRequest(false);
+    aiBadge.textContent = finalText.badge;
+    aiBadge.classList.remove("is-proposed");
+    aiSub.innerHTML = finalText.sub;
+    cands.forEach(function (row, i) { setCand(i, "done"); });
+    aiMask.style.transition = "none";
+    aiMask.style.strokeDashoffset = "0";
+    setReached(pinNext, false);
+    setReached(pinNew, false);
+    legLive.classList.remove("is-passed");
+    placeTruck(legLive, 0);
+    finishSteps();
+  }
+
+  // Loop only while the stage is on screen and not paused; the markup (and reduced motion) shows the assigned end state.
+  var seqToggle = document.getElementById("seq-toggle");
   if (reduceMotion || !("IntersectionObserver" in window)) {
     finishSteps();
+    if (seqToggle) { seqToggle.hidden = true; }
   } else {
-    var playing = false;
+    var playing = false, paused = false, stageVisible = false;
+    var setToggle = function () {
+      seqToggle.setAttribute("aria-pressed", String(paused));
+      seqToggle.querySelector("span").textContent = paused ? "Запустить анимацию" : "Остановить анимацию";
+      seqToggle.classList.toggle("is-paused", paused);
+    };
     var io = new IntersectionObserver(function (entries) {
-      var visible = entries[0].isIntersecting;
-      if (visible && !playing) {
+      stageVisible = entries[0].isIntersecting;
+      if (stageVisible && !playing && !paused) {
         playing = true;
         playSequence();
-      } else if (!visible && playing) {
+      } else if (!stageVisible && playing) {
         playing = false;
         timers.forEach(window.clearTimeout);
         timers = [];
@@ -306,6 +382,14 @@
       }
     }, { threshold: 0.35 });
     io.observe(stage);
+    if (seqToggle) {
+      seqToggle.addEventListener("click", function () {
+        paused = !paused;
+        setToggle();
+        if (paused) { playing = false; showEnd(); }
+        else if (stageVisible) { playing = true; playSequence(); }
+      });
+    }
   }
 
 
@@ -479,7 +563,12 @@
     var flowLoop = function () {
       flowStop();
       flow.classList.add("is-looping");
-      (function next() { flowAt(FLOW_DWELL, function () { flowMark((flowCur + 1) % flowSteps.length); next(); }); })();
+      (function next() {
+        flowAt(FLOW_DWELL, function () {
+          if (flowCur >= flowSteps.length - 1) { flow.classList.remove("is-looping"); flowMark(-1); return; }
+          flowMark(flowCur + 1); next();
+        });
+      })();
     };
     var flowIntro = function () {
       flowStop();
@@ -491,7 +580,7 @@
     flow.classList.add("is-anim");
     flowShow(flowSteps.length); // fully visible until it scrolls into view
     new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) { if (flowPlayed) { flowLoop(); } else { flowIntro(); } }
+      if (entries[0].isIntersecting) { if (!flowPlayed) { flowIntro(); } }
       else { flowStop(); flowShow(flowSteps.length); }
     }, { threshold: 0.3 }).observe(flow);
   }
@@ -564,23 +653,201 @@
     });
   }
 
-  /* ---------- Intake: an incoming call becomes a request in the queue ---------- */
-  var callBtn = document.getElementById("call-create");
-  if (callBtn) {
-    callBtn.addEventListener("click", function () {
-      var list = document.getElementById("inbox-list");
-      var row = list.firstElementChild.cloneNode(true);
-      row.querySelector(".src").innerHTML = list.lastElementChild.querySelector(".src").innerHTML;
-      row.querySelector(".inbox-main b").textContent = "ТОО «Береке Трейд»";
-      row.querySelector(".inbox-main small").textContent = "Вывоз ТБО · Жибек Жолы, 115";
+  /* ---------- Intake: three channels feed the Platform queue ----------
+     Each channel card is wired to the Platform port with a dashed line. A signal runs down one wire at a time;
+     when it reaches the port, that request lands at the top of the queue and the rows below move on a status
+     (Неназначено → Назначено AI → Машина в пути). Two requests per channel rotate, so the loop has no seam. */
+  var intake = document.getElementById("intake-stage");
+  if (intake) {
+    var feeds = [].slice.call(intake.querySelectorAll(".feed"));
+    var wires = intake.querySelector(".wires");
+    var wBase = wires.querySelector(".wires-base");
+    var wSig = wires.querySelector(".wires-sig");
+    var port = intake.querySelector(".inbox-port");
+    var iList = document.getElementById("inbox-list");
+    var iClip = intake.querySelector(".inbox-clip");
+    var iCount = document.getElementById("inbox-n");
+    var iToggle = document.getElementById("intake-toggle");
+    var SVGNS = "http://www.w3.org/2000/svg";
+    var ROWS = 4;
+    var srcIcon = feeds.map(function (f) { return f.querySelector(".src-ic").innerHTML; });
+    var srcName = ["Client App", "WhatsApp", "Звонок"];
+    // [feed index, client, task · address, card fields]
+    var POOL = [
+      [1, "ИП Сапарова А.", "Вывоз ТБО · Абая, 52", { msg: "Нужен вывоз на Абая, 52, два контейнера" }],
+      [0, "ТОО «Медеу Фуд»", "Дезинфекция · Достык, 9", { task: "Дезинфекция", addr: "Достык, 9" }],
+      [2, "ТОО «Алатау Сервис Групп»", "Вывоз ТБО · Самал-2, 58", { num: "+7 727 345 12 08" }],
+      [1, "ТОО «Тау Маркет»", "Вывоз ТБО · Сейфуллина, 404", { msg: "Контейнер переполнен, заберите сегодня" }],
+      [0, "КСК «Орбита»", "Вывоз КГМ · Орбита-3, 21", { task: "Вывоз КГМ", addr: "Орбита-3, 21" }],
+      [2, "ТОО «Береке Трейд»", "Вывоз ТБО · Жибек Жолы, 115", { num: "+7 701 228 40 17" }]
+    ];
+    var paths = [];
+
+    var fill = function (feed, fields) {
+      Object.keys(fields).forEach(function (k) { feed.querySelector("[data-f=" + k + "]").textContent = fields[k]; });
+    };
+
+    var drawWires = function () {
+      var box = wires.getBoundingClientRect();
+      var pr = port.getBoundingClientRect();
+      var tx = pr.left + pr.width / 2 - box.left, ty = pr.top - box.top;
+      wires.setAttribute("viewBox", "0 0 " + box.width + " " + box.height);
+      wBase.textContent = "";
+      paths = feeds.map(function (f) {
+        var r = f.getBoundingClientRect();
+        var x = r.left + r.width / 2 - box.left, y = r.bottom - box.top;
+        var k = (ty - y) * 0.55;
+        var p = document.createElementNS(SVGNS, "path");
+        p.setAttribute("d", "M" + x + " " + y + " C" + x + " " + (y + k) + " " + tx + " " + (ty - k) + " " + tx + " " + ty);
+        wBase.appendChild(p);
+        return p;
+      });
+    };
+
+    var clipRows = function () {
+      var items = iList.children, h = 0;
+      for (var i = 0; i < Math.min(ROWS, items.length); i++) { h += items[i].offsetHeight; }
+      iClip.style.height = (h - 1) + "px"; // the last visible row's hairline would sit on the card edge
+    };
+    var layout = function () { drawWires(); clipRows(); };
+    layout();
+    if ("ResizeObserver" in window) { new ResizeObserver(layout).observe(intake); } else { window.addEventListener("resize", layout); }
+
+    var setStatus = function (li, cls, text) {
+      var s = li.querySelector(".status");
+      s.className = "status " + cls;
+      s.textContent = text;
+    };
+
+    var land = function (item) {
+      var rows = iList.children;
+      var row = rows[0].cloneNode(true);
+      row.querySelector(".src").innerHTML = srcIcon[item[0]] + srcName[item[0]];
+      row.querySelector(".inbox-main b").textContent = item[1];
+      row.querySelector(".inbox-main small").textContent = item[2];
+      setStatus(row, "status-created", "Неназначено");
+      [].forEach.call(rows, function (li) { li.classList.remove("is-new"); });
+      if (rows[0]) { setStatus(rows[0], "status-ai", "Назначено AI"); }
+      if (rows[1]) { setStatus(rows[1], "status-progress", "Машина в пути"); }
       row.classList.add("is-new");
-      list.insertBefore(row, list.firstElementChild);
-      var n = document.getElementById("inbox-n");
-      n.textContent = String(+n.textContent + 1);
-      callBtn.disabled = true;
-      callBtn.textContent = "Заявка создана";
-      document.getElementById("call-state").textContent = "Звонок завершён";
-      document.getElementById("call-note").textContent = "№ 10486 · в очереди";
+      iList.insertBefore(row, rows[0]);
+      // FLIP: the list starts one row higher and settles; the oldest row slides out under the clip
+      iList.classList.remove("is-shifting");
+      iList.style.transform = "translateY(" + -row.offsetHeight + "px)";
+      void iList.offsetHeight;
+      iList.classList.add("is-shifting");
+      iList.style.transform = "";
+      clipRows();
+      while (iList.children.length > ROWS + 1) { iList.removeChild(iList.lastElementChild); }
+      iCount.textContent = String(+iCount.textContent + 1);
+      port.classList.remove("is-hit");
+      void port.offsetWidth;
+      port.classList.add("is-hit");
+    };
+
+    var step = 0, timers = [], sigAnim = null;
+    var later = function (fn, ms) { timers.push(setTimeout(fn, ms)); };
+    var SIG = 1100, TICK = 2800;
+
+    var fire = function () {
+      var item = POOL[step % POOL.length];
+      var next = POOL[(step + 3) % POOL.length];
+      var feed = feeds[item[0]], base = paths[item[0]];
+      step++;
+      feed.classList.add("is-sending");
+      base.classList.add("is-live");
+      later(function () {
+        var len = base.getTotalLength(), SEG = 22;
+        var sig = document.createElementNS(SVGNS, "path");
+        sig.setAttribute("d", base.getAttribute("d"));
+        sig.setAttribute("stroke-dasharray", SEG + " " + (len + SEG));
+        wSig.appendChild(sig);
+        sigAnim = sig.animate([{ strokeDashoffset: SEG }, { strokeDashoffset: -len }], { duration: SIG, easing: "cubic-bezier(.45, 0, .2, 1)", fill: "forwards" });
+        sigAnim.onfinish = function () { sig.remove(); sigAnim = null; };
+        later(function () {
+          land(item);
+          feed.classList.remove("is-sending");
+          base.classList.remove("is-live");
+          // The idle card takes its channel's next request
+          later(function () {
+            feed.classList.add("is-swapping");
+            later(function () { fill(feed, next[3]); feed.classList.remove("is-swapping"); }, 320);
+          }, 400);
+        }, SIG * 0.94);
+      }, 320);
+      later(fire, TICK);
+    };
+
+    var stopLoop = function () {
+      timers.forEach(clearTimeout);
+      timers = [];
+      if (sigAnim) { sigAnim.cancel(); sigAnim = null; }
+      wSig.textContent = "";
+      feeds.forEach(function (f) { f.classList.remove("is-sending", "is-swapping"); });
+      paths.forEach(function (p) { p.classList.remove("is-live"); });
+    };
+
+    if (!reduceMotion && "IntersectionObserver" in window && Element.prototype.animate) {
+      var iRunning = false, iPaused = false, iVisible = false;
+      var sync = function () {
+        var run = iVisible && !iPaused && !document.hidden;
+        if (run && !iRunning) { iRunning = true; later(fire, 600); }
+        else if (!run && iRunning) { iRunning = false; stopLoop(); }
+      };
+      iToggle.hidden = false;
+      iToggle.addEventListener("click", function () {
+        iPaused = !iPaused;
+        iToggle.setAttribute("aria-pressed", String(iPaused));
+        iToggle.querySelector("span").textContent = iPaused ? "Запустить анимацию" : "Остановить анимацию";
+        iToggle.classList.toggle("is-paused", iPaused);
+        sync();
+      });
+      new IntersectionObserver(function (entries) { iVisible = entries[0].isIntersecting; sync(); }, { threshold: 0.35 }).observe(intake);
+      document.addEventListener("visibilitychange", sync);
+    }
+  }
+
+  /* ---------- Platform screen magnet ----------
+     A manual scroll that comes to rest near the Platform screen glides on to the spot the «Посмотреть интерфейс» anchor lands on
+     (the screen's top at the page's scroll-padding), so the whole screen is in view and its tour can start.
+     One pull per approach: after a pull, or a stop inside the zone that needed none, it stays off until the screen has left the
+     zone, so the reader can still nudge the page. It waits for a lifted finger, skips anchor jumps, and is off under reduced motion. */
+  var magView = document.getElementById("pf-viewport");
+  if (magView && !reduceMotion) {
+    var magArmed = true, magSelf = false, magSkip = false, magTouch = false, magTimer = 0;
+    var magEnd = "onscrollend" in window;
+    var magOffset = function () { // > 0: the screen sits below its spot
+      var pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      return magView.getBoundingClientRect().top - pad;
+    };
+    var magZone = function () { return Math.min(260, window.innerHeight * 0.3); };
+    var magSettle = function () {
+      if (magTimer) { clearTimeout(magTimer); magTimer = 0; }
+      if (magTouch) { return; }
+      var d = magOffset(), inZone = Math.abs(d) <= magZone();
+      if (magSelf || magSkip) { magSelf = magSkip = false; magArmed = !inZone; return; }
+      if (!inZone) { magArmed = true; return; }
+      if (!magArmed) { return; }
+      magArmed = false;
+      if (Math.abs(d) < 2) { return; }
+      magSelf = true;
+      window.scrollTo({ top: window.scrollY + d, behavior: "smooth" });
+    };
+    window.addEventListener("scroll", function () {
+      if (!magArmed && Math.abs(magOffset()) > magZone()) { magArmed = true; }
+      if (!magEnd) { // no scrollend: settle after a short quiet spell
+        if (magTimer) { clearTimeout(magTimer); }
+        magTimer = setTimeout(magSettle, 180);
+      }
+    }, { passive: true });
+    if (magEnd) { window.addEventListener("scrollend", magSettle); }
+    window.addEventListener("touchstart", function () { magTouch = true; }, { passive: true });
+    window.addEventListener("touchend", function () { magTouch = false; if (!magEnd) { magTimer = setTimeout(magSettle, 180); } }, { passive: true });
+    window.addEventListener("touchcancel", function () { magTouch = false; }, { passive: true });
+    // An in-page link already lands where it means to; the scroll it starts is left alone.
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (a && a.hash.length > 1) { magSkip = true; }
     });
   }
 
@@ -699,7 +966,7 @@
        spacing and icons shrink together. The scale fits the frame width and the window height below the sticky header
        (the caption row takes 62px), but never drops below 0.8 to fit the height: below that the screen runs past the
        fold and the page scrolls. The frame narrows to the scaled width (--pf-fit) and stays centred. */
-    var PF_W = 1600, PF_MIN = 0.5, PF_H = 980, PF_HFLOOR = 0.8;
+    var PF_W = 1600, PF_MIN = 0.5, PF_PAN = 0.72, PF_H = 980, PF_HFLOOR = 0.8, pfPanned = false;
     var pfHeader = document.querySelector(".site-header");
     var pfFrame = pfView.closest(".pf-frame");
     var fitPlatform = function () {
@@ -710,11 +977,14 @@
       var sH = Math.max(PF_HFLOOR, avail / PF_H);
       var s = Math.min(sW, sH);
       var pan = s < PF_MIN;
-      if (pan) { s = PF_MIN; }
+      if (pan) { s = PF_PAN; }
       pfView.style.setProperty("--pf-s", String(s));
       pfView.style.setProperty("--pf-h", PF_H + "px");
       pfFrame.style.setProperty("--pf-fit", pan ? "none" : Math.ceil(PF_W * s) + "px");
       pfView.classList.toggle("is-pan", pan);
+      // first time it pans: start on the right, where the map meets the truck card
+      if (pan && !pfPanned) { pfPanned = true; requestAnimationFrame(function () { pfView.scrollLeft = pfView.scrollWidth; }); } // next frame: the tour wrapper re-parents the viewport, which resets its scroll
+      if (!pan) { pfPanned = false; }
     };
     fitPlatform();
     if ("ResizeObserver" in window) { new ResizeObserver(fitPlatform).observe(pfFrame); }
@@ -1467,7 +1737,7 @@
           '<p class="pf-tour-bar__state"><span>Обзор интерфейса</span><span class="pf-tour-bar__count" aria-live="polite"></span></p>' +
           '<button type="button" class="pf-tour-step" data-tour-step="1" title="Следующий шаг обзора"><span>Далее</span><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>' +
           '<button type="button" class="btn btn-primary btn-sm" data-tour-take>Попробовать интерфейс самому</button>';
-        var tPrev = tBar.querySelector('[data-tour-step="-1"]'), tNext = tBar.querySelector('[data-tour-step="1"]');
+        var tPrevBtn = tBar.querySelector('[data-tour-step="-1"]'), tNext = tBar.querySelector('[data-tour-step="1"]');
         var tCount = tBar.querySelector(".pf-tour-bar__count");
         var capEl = tourFrame.querySelector(".pf-caption");
         var tReplay = document.createElement("button");
@@ -1478,7 +1748,7 @@
         var tExplore = document.createElement("p");
         tExplore.className = "pf-explore";
         tExplore.innerHTML = '<span class="pf-explore__badge"><svg width="16" height="16" viewBox="0 0 30 30" aria-hidden="true"><path d="M6 3.5v20.2l5.1-4.9 3.6 8.2 3.6-1.6-3.6-8.1 7.1-.4z"/></svg>Интерфейс кликабельный</span>' +
-          '<span class="pf-explore__text">Нажимайте на&nbsp;машины и&nbsp;точки на&nbsp;карте, рейсы и&nbsp;вкладки. Данные демонстрационные.</span>';
+          '<span class="pf-explore__text">Нажимайте на&nbsp;машины и&nbsp;точки на&nbsp;карте, рейсы и&nbsp;вкладки.</span>';
         if (capEl) { capEl.appendChild(tExplore); capEl.appendChild(tReplay); capEl.appendChild(tBar); capEl.classList.add("has-explore"); } else { tWrap.appendChild(tBar); }
 
         /* hand-over hints: labelled rings on a few things worth clicking, gone after the first click or a few seconds */
@@ -1936,7 +2206,7 @@
         var tourMark = function (k) {
           T.idx = k;
           tCount.textContent = (k + 1) + " / " + STEPS.length;
-          tPrev.disabled = k <= 0;
+          tPrevBtn.disabled = k <= 0;
           tNext.disabled = false;
         };
         var start = function (from) {

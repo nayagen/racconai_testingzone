@@ -29,3 +29,32 @@ Generated 2026-11-05 with Higgsfield GPT Image 2.5 (`gpt_image_2_5`), quality `h
 ## AI-dispatcher stage map (`images/dispatch-map-1020.webp`, `images/dispatch-map-2040.webp`)
 
 A 1020 × 500 crop (map x 550–1570, y 280–780) of `images/platform/map-almaty.webp`, the 2GIS backdrop already used by the Platform screen. The 2040px version was upscaled on 2026-11-05 with Higgsfield Topaz (`topaz_image`, variant Text Refine). The upscale misspelled two labels («Парк Карагайлы», «Сапаргали Бегалина»), so those areas were replaced with a Lanczos upscale of the original pixels. The «High Fidelity V2» variant was tried and rejected because it rewrote more labels. Map data © 2GIS; the stage shows the credit.
+
+## Dark-theme variants (`*-dark.webp`, generated 2026-11-06)
+
+Every image has a `-dark` twin next to it, shown when the page is in dark mode (toggle in the dock and the header; script.js swaps them). Masters are not committed.
+
+**Photos** — Higgsfield GPT Image 2.5 (`gpt_image_2_5`) image edits of the light masters: same camera, framing and objects, re-lit as a pre-dawn Almaty night (street and work lights on, lit windows). Encoded to the same widths and qualities as the light files. The hero keeps a clean navy sky at upper left for the headline.
+
+| Files | Job id |
+|---|---|
+| `hero-{960,1600,2400,3840}-dark.webp` | `afa221d1-6d62-4e36-af88-237a6f48d7a0` (xhigh, 4k) |
+| `depot-{640,960,1280,1792}-dark.webp` | `2b4ba756-69ad-43cb-a084-350ead2341e7` (xhigh, 2k) |
+| `cab-{960,1600,2400,3840}-dark.webp` | `b495eac9-cf06-4208-8593-b54faa95e606` (xhigh, 4k) |
+| `site-{960,1600,2400,3840}-dark.webp` | `7d0eed17-917d-456b-abbb-2c58a93e111b` (xhigh, 4k) |
+| `crew-{960,1600,2400,3840}-dark.webp` | `3c82a595-6de0-4286-918f-3de4f6af2f0d` (xhigh, 4k) |
+
+**Photo proof** (`platform/proof/{a,b}{1-4}-dark.webp`) — quality high, 2k, 1280px WebP q76. Each night "before" is an edit of the light "before"; each night "after" is an edit of the clean light "after" with its night "before" as the lighting reference, so a pair stays one camera position. (Editing the night "before" to remove waste was tried first and left the waste in place.)
+
+| Pair | Before job id | After job id |
+|---|---|---|
+| 1 | `edfeeb34-cb71-4c13-b73f-477da86c962d` | `7ceeecd6-6ab5-4aa2-835c-87e79e16e5f8` |
+| 2 | `3be63135-5a8f-4551-8790-4ccbb839205b` | `6005930d-eec3-4e13-8ec0-45aed63befc5` |
+| 3 | `4346a926-da50-4833-a0de-4be6147b9dac` | `89219d7c-e6c7-4ca4-bc33-a9f842d02a4e` |
+| 4 | `a450a052-36fd-4898-851c-e51aea132966` | `51cbd104-201a-45e5-9b6f-6ccde0f1d200` |
+
+**Truck illustration** (`platform/garbage-truck-green-dark.webp`) — the same truck re-cut by GPT Image 2.5 onto a transparent background (the light file sits on opaque white), job `225c45ca-e802-4beb-92f3-4bb8b246f9cc`, 192px WebP with alpha.
+
+**Maps** (`dispatch-map-{1020,2040}-dark.webp`, `platform/map-almaty-dark.webp`) — not generated: a generative redraw garbles the 2GIS street labels (see the Topaz note above). They are a deterministic per-pixel recolor of the light maps (sharp): neutral ground, roads and labels invert onto a slate-navy ramp, arterials and metro marks keep their amber/red, parks and hills become a muted teal-green. Labels stay pixel-exact. Map data © 2GIS.
+
+Not varied: the top-down truck markers (`platform/trucks/*.png`, transparent) and `message-state.svg` read on both themes.

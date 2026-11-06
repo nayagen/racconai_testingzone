@@ -10,13 +10,13 @@
 .pf-hero { position: relative; isolation: isolate; min-height: calc(100svh - var(--header-h)); display: flex; align-items: center; }
 .pf-hero-img {
   position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: 62% 58%;
-  background: #e6ecf2;
+  background: var(--tint);
   -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%); mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
 }
 /* a soft daylight wash under the copy keeps ink text above 4.5:1 wherever the sky darkens */
 .pf-hero::before {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(100deg, rgba(241, 245, 249, .9) 0%, rgba(241, 245, 249, .7) 36%, rgba(241, 245, 249, 0) 60%);
+  background: linear-gradient(100deg, color-mix(in srgb, var(--tint) 90%, transparent) 0%, color-mix(in srgb, var(--tint) 70%, transparent) 36%, color-mix(in srgb, var(--tint) 0%, transparent) 60%);
 }
 .pf-hero-copy { width: 100%; padding-block: clamp(64px, 10svh, 128px); }
 .pf-hero-copy h1 { font-size: clamp(32px, 3.6vw, 50px); line-height: 1.08; letter-spacing: -.03em; }
@@ -25,13 +25,13 @@
 /* Product badge above the headline: the product name in tracked capitals, on white like the proof strip */
 .pf-badge {
   display: inline-flex; align-items: center; margin-bottom: clamp(20px, 2.6svh, 28px); padding: 8px 12px;
-  border-radius: 10px; background: #fff; box-shadow: inset 0 0 0 1px var(--line);
+  border-radius: 10px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
   font: 600 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); white-space: nowrap;
 }
 .pf-hero-copy p { margin-top: clamp(24px, 3svh, 36px); font-size: clamp(17px, 1.3vw, 19px); line-height: 1.55; color: var(--body); max-width: 40ch; }
 .pf-hero-copy .hero-actions { margin-top: clamp(32px, 4.5svh, 48px); }
 /* Proof under the actions: the three facts the page can back, set quietly so the buttons stay first. */
-.pf-hero-copy .hero-proof { max-width: none; margin-top: clamp(24px, 3.5svh, 36px); display: inline-flex; flex-wrap: wrap; gap: 4px 0; padding: 10px 16px; border-radius: 12px; background: #fff; font-size: 14px; line-height: 1.45; color: var(--body); }
+.pf-hero-copy .hero-proof { max-width: none; margin-top: clamp(24px, 3.5svh, 36px); display: inline-flex; flex-wrap: wrap; gap: 4px 0; padding: 10px 16px; border-radius: 12px; background: var(--surface); font-size: 14px; line-height: 1.45; color: var(--body); }
 .hero-proof span { display: inline-flex; align-items: center; white-space: nowrap; }
 .hero-proof span + span::before { content: ""; width: 4px; height: 4px; margin: 0 12px; border-radius: 50%; background: var(--line-strong); }
 @media (max-width: 600px) {
@@ -39,8 +39,8 @@
   .hero-proof span { white-space: normal; }
   .hero-proof span + span::before { display: none; }
 }
-.pf-hero-copy .btn-quiet { background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
-.pf-hero-copy .btn-quiet:hover { background: #f8fafc; }
+.pf-hero-copy .btn-quiet { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.pf-hero-copy .btn-quiet:hover { background: var(--surface-2); }
 /* Interface block: the screen on the same tint the hero photo fades into */
 .platform-screen { padding-top: clamp(48px, 6vw, 88px); }
 @media (max-width: 860px) {
@@ -55,8 +55,8 @@
 .pf-frame > .pf-viewport, .pf-frame > .pf-tourwrap, .pf-frame > .pf-caption { max-width: var(--pf-fit, none); margin-inline: auto; }
 .pf-frame { width: min(100% - 2 * max(var(--gutter), var(--edge)), max(1600px, min(80vw, (100svh - var(--header-h) - 93px) * 1.633))); margin: 0 auto; }
 .pf-viewport {
-  --pf-s: .5; --pf-h: 980px; overflow: hidden; border-radius: 20px; background: #f1f5f9;
-  box-shadow: inset 0 0 0 1px #e2e8f0, 0 1px 2px rgba(8, 10, 17, .06), 0 12px 32px -8px rgba(8, 10, 17, .16);
+  --pf-s: .5; --pf-h: 980px; overflow: hidden; border-radius: 20px; background: var(--tint);
+  box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px rgba(8, 10, 17, .06), 0 12px 32px -8px rgba(8, 10, 17, .16);
 }
 .pf-stage { position: relative; width: calc(1600px * var(--pf-s)); height: calc(var(--pf-h) * var(--pf-s)); }
 .pf-stage .pf-screen { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
@@ -81,7 +81,7 @@
 .pf-ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* Map */
-.pf-map { position: relative; overflow: hidden; border-radius: var(--radius-lg); border: 1px solid var(--border-primary); background: #f3eedf; }
+.pf-map { position: relative; overflow: hidden; border-radius: var(--radius-lg); border: 1px solid var(--border-primary); background: var(--map-ground); }
 .pf-map__bg { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; max-width: none; }
 .pf-map__pin { position: absolute; display: block; }
 .pf-map__depot { position: absolute; left: 610px; top: 288px; width: 32px; height: 32px; display: grid; place-items: center; background: var(--surface-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-md); }
@@ -93,7 +93,7 @@
 .pf-map__tools { display: flex; gap: 8px; }
 .pf-map__tools .rc-filterbtn { box-shadow: var(--shadow-sm); }
 .pf-map__tools .rc-ibtn { background: var(--surface-primary); box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
-.pf-map__attr { position: absolute; right: 6px; bottom: 4px; padding: 1px 4px; border-radius: 3px; background: rgba(255, 255, 255, .8); font: 500 10px/12px var(--font-sans); color: var(--text-secondary); }
+.pf-map__attr { position: absolute; right: 6px; bottom: 4px; padding: 1px 4px; border-radius: 3px; background: color-mix(in srgb, var(--surface) 80%, transparent); font: 500 10px/12px var(--font-sans); color: var(--text-secondary); }
 
 /* Truck selected on map */
 .pf-truck { display: flex; flex-direction: column; min-width: 0; background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
@@ -305,7 +305,7 @@
 .pf-route.is-on { opacity: 1; }
 .pf-route path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .pf-route__past { stroke: var(--icons-default); stroke-width: 3; }
-.pf-route__case { stroke: #fff; stroke-width: 7; stroke-dasharray: 10 9; }
+.pf-route__case { stroke: var(--map-halo); stroke-width: 7; stroke-dasharray: 10 9; }
 .pf-route__plan { stroke: var(--icons-action); stroke-width: 3.5; stroke-dasharray: 10 9; }
 @media (prefers-reduced-motion: reduce) { .pf-route { transition: none; } }
 
@@ -555,21 +555,21 @@
 .pf-tour-spot.is-on { opacity: 1; }
 .pf-tour-cursor { position: absolute; left: 0; top: 0; z-index: 50; width: 26px; height: 26px; pointer-events: none; will-change: transform; }
 .pf-tour-cursor svg { display: block; overflow: visible; filter: drop-shadow(0 2px 3px rgba(8, 10, 17, .28)); }
-.pf-tour-cursor path { fill: var(--ink); stroke: #fff; stroke-width: 1.6; stroke-linejoin: round; }
+.pf-tour-cursor path { fill: var(--ink); stroke: var(--on-ink); stroke-width: 1.6; stroke-linejoin: round; }
 .pf-tour-cursor__ring { position: absolute; left: 5px; top: 3px; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%;
-  border: 2px solid #fff; box-shadow: 0 0 0 2px var(--ink); opacity: 0; transform: scale(.3); }
+  border: 2px solid var(--on-ink); box-shadow: 0 0 0 2px var(--ink); opacity: 0; transform: scale(.3); }
 .pf-tour-cursor.is-click .pf-tour-cursor__ring { animation: pf-tour-ring 460ms cubic-bezier(.16, 1, .3, 1); }
 @keyframes pf-tour-ring { 0% { opacity: .85; transform: scale(.3); } 100% { opacity: 0; transform: scale(1.35); } }
 
 .pf-tour-call { position: absolute; z-index: 40; width: 330px; box-sizing: border-box; padding: 16px 20px 18px; border-radius: 14px;
-  background: var(--ink); color: #fff; font-family: var(--font); text-align: left; box-shadow: var(--shadow); pointer-events: none;
+  background: var(--ink); color: var(--on-ink); font-family: var(--font); text-align: left; box-shadow: var(--shadow); pointer-events: none;
   opacity: 0; transform: translateY(6px); transition: opacity 240ms var(--ease), transform 320ms var(--ease); }
 .pf-tour-call.is-on { opacity: 1; transform: none; }
 .pf-tour-call.is-dim { opacity: .25; }
 .pf-tour-call p { margin: 0; }
-.pf-tour-call__step { font: 600 13px/1 var(--font); color: rgba(255, 255, 255, .62); font-variant-numeric: tabular-nums; }
+.pf-tour-call__step { font: 600 13px/1 var(--font); color: color-mix(in srgb, var(--on-ink) 62%, transparent); font-variant-numeric: tabular-nums; }
 .pf-tour-call .pf-tour-call__title { margin-top: 8px; font: 600 18px/1.25 var(--font); letter-spacing: -.015em; text-wrap: balance; }
-.pf-tour-call .pf-tour-call__text { margin-top: 6px; font: 400 15px/1.5 var(--font); color: rgba(255, 255, 255, .84); text-wrap: pretty; }
+.pf-tour-call .pf-tour-call__text { margin-top: 6px; font: 400 15px/1.5 var(--font); color: color-mix(in srgb, var(--on-ink) 84%, transparent); text-wrap: pretty; }
 .pf-tour-veil { position: absolute; inset: 0; z-index: 35; background: color-mix(in srgb, var(--ink) 30%, transparent); }
 .pf-tour-call.is-final, .pf-tour-ask { width: 480px; padding: 24px 28px 26px; background: var(--page); color: var(--ink); pointer-events: auto; }
 .pf-tour-ask { z-index: 45; width: 420px; }
@@ -612,9 +612,9 @@
 .pf-explore { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; margin: 0; font: 500 15px/1.4 var(--font); color: var(--body); }
 .pf-explore[hidden] { display: none; }
 .pf-explore__badge { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px 0 10px; border-radius: 999px;
-  background: var(--ink); color: #fff; font: 600 14px/1 var(--font); white-space: nowrap; }
+  background: var(--ink); color: var(--on-ink); font: 600 14px/1 var(--font); white-space: nowrap; }
 .pf-explore__badge svg { display: block; flex: none; }
-.pf-explore__badge path { fill: #fff; stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; }
+.pf-explore__badge path { fill: var(--on-ink); stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; }
 .pf-caption.has-explore .pf-tour-replay { font-size: 15px; white-space: nowrap; }
 @media (max-width: 860px) {
   .pf-caption.has-explore { flex-direction: column; align-items: flex-start; gap: 10px; }
@@ -628,12 +628,12 @@
   transition: opacity 260ms var(--ease), transform 420ms var(--ease); transition-delay: calc(var(--i) * 110ms); }
 .pf-hints.is-on .pf-hint-dot { opacity: 1; transform: none; }
 .pf-hint-dot__ring { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%;
-  border: 2px solid #fff; box-shadow: 0 0 0 2px var(--ink), 0 4px 12px rgba(8, 10, 17, .22);
+  border: 2px solid var(--on-ink); box-shadow: 0 0 0 2px var(--ink), 0 4px 12px rgba(8, 10, 17, .22);
 }
 .pf-hint-dot__ring::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--ink);
   animation: pf-hint-pulse 1600ms cubic-bezier(.16, 1, .3, 1) infinite; animation-delay: calc(var(--i) * 110ms); }
 .pf-hint-dot__label { position: absolute; left: 0; top: -64px; transform: translateX(-50%); height: 30px; padding: 0 12px; border-radius: 999px; display: inline-flex; align-items: center;
-  background: var(--ink); color: #fff; font: 600 14px/1 var(--font); white-space: nowrap; box-shadow: 0 4px 12px rgba(8, 10, 17, .22); }
+  background: var(--ink); color: var(--on-ink); font: 600 14px/1 var(--font); white-space: nowrap; box-shadow: 0 4px 12px rgba(8, 10, 17, .22); }
 /* labels sit above their ring so they never cover the control they point at */
 @keyframes pf-hint-pulse { 0% { transform: scale(.9); opacity: .9; } 80%, 100% { transform: scale(1.6); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
@@ -650,3 +650,97 @@
   .pf-tour-call { transform: none; transition: opacity 200ms linear; }
   .pf-stage .pf-screen.is-cam, .pf-tour-spot { transition: none; }
 }
+
+/* ---------- Dark theme for the Platform replica ----------
+   The RaccoonAI Design System for Claude ships light tokens only, so this is its night counterpart on the same scales:
+   slate surfaces stepped page < secondary < primary < tertiary, light text, brighter action/status hues, deep tinted
+   "subtle" fills with light inks. Kept here (hand-written), not in the generated platform-ds.css. */
+:root[data-theme="dark"] .rds {
+  --text-headings: #f1f5f9;
+  --text-body: #c5cfdc;
+  --text-secondary: #8f9db2;
+  --text-action: #6ea2ff;
+  --text-action-hover: #8ec5ff;
+  --text-action-2: #6ea2ff;
+  --text-action-2-hover: #8ec5ff;
+  --text-disabled: #55647a;
+  --text-information-subtle: #6ea2ff;
+  --text-information: #8ec5ff;
+  --text-warning-subtle: #ff8a3d;
+  --text-warning: #ffb86a;
+  --text-attention-subtle: #f0b100;
+  --text-attention: #fcd34d;
+  --text-success-subtle: #22d36b;
+  --text-success: #7bf1a8;
+  --text-error-subtle: #ff6467;
+  --text-error: #ffa2a2;
+  --text-ai-subtle: #a684ff;
+  --text-ai: #c4b4ff;
+  --text-invert: #0a0f17;
+  --text-selected: #8ec5ff;
+  --icons-default: #e2e8f0;
+  --icons-secondary: #8f9db2;
+  --icons-action: #6ea2ff;
+  --icons-action-hover: #8ec5ff;
+  --icons-action-2: #6ea2ff;
+  --icons-action-2-hover: #8ec5ff;
+  --icons-disabled: #55647a;
+  --icons-information: #6ea2ff;
+  --icons-warning: #ff8a3d;
+  --icons-attention: #f0b100;
+  --icons-success: #22d36b;
+  --icons-error: #ff6467;
+  --icons-ai: #a684ff;
+  --icons-invert: #0a0f17;
+  --surface-page: #0e1520;
+  --surface-primary: #151d2b;
+  --surface-secondary: #1a2333;
+  --surface-tertiary: #222d3e;
+  --surface-action: #2b7fff;
+  --surface-action-hover: #155dfc;
+  --surface-action-2: #13274a;
+  --surface-action-2-hover: #1a3462;
+  --surface-disabled: #222d3e;
+  --surface-information-subtle: #132748;
+  --surface-warning-subtle: #36200d;
+  --surface-attention-subtle: #33290b;
+  --surface-success-subtle: #0e2a1b;
+  --surface-error-subtle: #3a1316;
+  --surface-ai-subtle: #221a3d;
+  --surface-invert: #e2e8f0;
+  --surface-selected: #13274a;
+  --border-primary: #222d3e;
+  --border-information: #6ea2ff;
+  --border-error: #ff6467;
+  --border-attention: #f0b100;
+  --border-success: #22d36b;
+  --border-warning: #ff8a3d;
+  --border-ai: #a684ff;
+  --border-action: #2b7fff;
+  --border-action-hover: #6ea2ff;
+  --border-disabled: #314058;
+  --border-invert: #cbd5e1;
+  --border-action-subtle: #1f3d73;
+  --border-success-subtle: #165c36;
+  --border-warning-subtle: #6b3a12;
+  --border-information-subtle: #1f3d73;
+  --border-attention-subtle: #5c4a0c;
+  --border-error-subtle: #6b2226;
+  --border-ai-subtle: #45307f;
+  --status-assigned-idle: #1f3d73;
+  --status-assigned-selected: #2b7fff;
+  --status-cancelled-idle: #8f9db2;
+  --status-cancelled-selected: #c5cfdc;
+  --chart-sequential-1: #13274a;
+  --chart-diverging-neutral: #314058;
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, .5), 0 1px 2px 0 rgba(0, 0, 0, .35);
+  --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, .5), 0 2px 4px -2px rgba(0, 0, 0, .35);
+  --shadow-lg: 0 20px 24px -4px rgba(0, 0, 0, .55), 0 8px 8px -4px rgba(0, 0, 0, .35);
+}
+/* the DS logo is a white tile with an ink raccoon in fixed fills: at night it inverts, like the dock mark */
+:root[data-theme="dark"] .rds .rc-logo path[fill="white"] { fill: var(--surface-tertiary); }
+:root[data-theme="dark"] .rds .rc-logo path[fill="#080A11"] { fill: var(--text-headings); }
+:root[data-theme="dark"] .pf-pm__map { background-image: url("images/platform/map-almaty-dark.webp"); }
+:root[data-theme="dark"] .pf-tour-spot { box-shadow: 0 0 0 2px rgba(255, 255, 255, .9), 0 0 0 200vmax rgba(0, 0, 0, .55); }
+/* themed photos: the <picture> wrapper stays out of layout, so the <img> keeps its flex/position rules */
+picture.themed { display: contents; }

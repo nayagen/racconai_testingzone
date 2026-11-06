@@ -415,7 +415,7 @@ function scheduleTools() {
     'aria-pressed': on ? 'true' : 'false', 'aria-label': label, title: label }, h(Icon, { name: icon, size: 20 }));
   const deco = el => h('div', { className: 'pf-contents', ...hide }, el);
   return div('pf-status__tools pf-status__tools--schedule',
-    deco(h(DateButton, { value: '6 Янв 2026', arrows: true })),
+    deco(h(DateButton, { value: '6 Ноя 2026', arrows: true })),
     div('pf-tools__group',
       h('div', { className: 'pf-iseg', role: 'group', 'aria-label': 'Строки графика' },
         vbtn('truck', 'garbage-truck', 'По машинам', true), vbtn('driver', 'user-contact', 'По водителям', false)),
@@ -443,7 +443,7 @@ function statusBlock() {
       h('div', { className: 'pf-ftabs', role: 'tablist', 'aria-label': 'Вкладки дэшборда' },
         tab('status', 'Статус вывоза', true), tab('schedule', 'Расписание маршрутов', false)),
       h('div', { className: 'pf-tools' },
-        h('div', { 'data-pf-tools': 'status', className: 'pf-status__tools', ...hide }, h(DateButton, { value: '6 Янв 2026', arrows: true }), h(Select, { value: 'Депо №1', width: 160 })),
+        h('div', { 'data-pf-tools': 'status', className: 'pf-status__tools', ...hide }, h(DateButton, { value: '6 Ноя 2026', arrows: true }), h(Select, { value: 'Депо №1', width: 160 })),
         h('div', { 'data-pf-tools': 'schedule', hidden: true }, scheduleTools()))),
     h('div', { className: 'pf-panel', role: 'tabpanel', id: 'pf-panel-schedule', 'aria-labelledby': 'pf-tab-schedule', hidden: true },
       h('p', { className: 'pf-sr' }, 'Расписание маршрутов: рейсы машин по часам с 6:00 до 18:00, сгруппированные по типам техники; выполненные, текущие, назначенные и предложенные AI-диспетчером рейсы.'),
