@@ -32,8 +32,8 @@
     var tPill = tree.querySelector(".tree-pill");
     var tFill = tree.querySelector(".tree-fill");
     var tMarker = tree.querySelector(".tree-marker");
-    var tWideMq = window.matchMedia("(min-width: 1680px)");
-    var tShowMq = window.matchMedia("(min-width: 1081px)");
+    var tWideMq = window.matchMedia("(min-width: 1280px)"); // the page column always leaves room for the labels
+    var tShowMq = window.matchMedia("(min-width: 1280px)");
     // Blocks wider than the page column; while one is behind the open card the dock stays a strip.
     var tAvoid = Array.prototype.slice.call(document.querySelectorAll(".pf-frame"));
     var tCenters = [], tFirst = 0, tLast = 0;
@@ -348,9 +348,9 @@
       approveBtn.textContent = "Утверждено";
       sheets.forEach(function (chip, i) {
         window.setTimeout(function () {
-          chip.textContent = "Утверждён";
+          chip.textContent = "Назначено";
           chip.classList.remove("status-wait");
-          chip.classList.add("status-done");
+          chip.classList.add("status-progress");
           if (i === sheets.length - 1) {
             rgFoot.textContent = "Отправлено в DriverApp: " + sheets.length + " экипажа получили маршрутные листы";
             rgFoot.classList.add("is-sent");
@@ -494,6 +494,74 @@
       if (entries[0].isIntersecting) { if (flowPlayed) { flowLoop(); } else { flowIntro(); } }
       else { flowStop(); flowShow(flowSteps.length); }
     }, { threshold: 0.3 }).observe(flow);
+  }
+
+  /* ---------- Customer registry: a BIN is typed, looked up, and the matching customer and contract appear ---------- */
+  var reg = document.getElementById("reg");
+  if (reg && !reduceMotion && "IntersectionObserver" in window) {
+    var regCards = Array.prototype.slice.call(reg.querySelectorAll(".reg-card[data-bin]"));
+    var regQ = reg.querySelector(".reg-q-text");
+    var regField = reg.querySelector(".reg-search");
+    var REG_DWELL = 4200, REG_FIRST = 1800;
+    var regCur = 0, regTimers = [], regRunning = false, regInView = false;
+    var regAt = function (ms, fn) { regTimers.push(window.setTimeout(fn, ms)); };
+    var regShow = function (n) {
+      regCur = n;
+      regCards.forEach(function (c, i) {
+        c.classList.toggle("is-on", i === n);
+        c.classList.remove("is-stale");
+        c.setAttribute("aria-hidden", String(i !== n));
+      });
+    };
+    var regStop = function () {
+      regTimers.forEach(window.clearTimeout); regTimers = []; regRunning = false;
+      // Leave a coherent picture: the query and the card always match when the loop is not running.
+      regField.classList.remove("is-typing", "is-searching");
+      regQ.classList.remove("is-selected");
+      regQ.textContent = regCards[regCur].getAttribute("data-bin");
+      regShow(regCur);
+    };
+    var regType = function (bin, done) {
+      // Digits arrive in the rhythm people read a BIN: a short beat after each group of four.
+      var t = 0;
+      for (var k = 1; k <= bin.length; k++) {
+        t += 62 + (k > 1 && (k - 1) % 4 === 0 ? 120 : 0);
+        regAt(t, (function (s) { return function () { regQ.textContent = s; }; })(bin.slice(0, k)));
+      }
+      regAt(t + 240, done);
+    };
+    var regNext = function (delay) {
+      regAt(delay, function () {
+        var next = (regCur + 1) % regCards.length;
+        regQ.classList.add("is-selected"); // select-all before the new query replaces it
+        regAt(420, function () {
+          regQ.classList.remove("is-selected");
+          regQ.textContent = "";
+          regCards[regCur].classList.add("is-stale");
+          regField.classList.add("is-typing");
+          regType(regCards[next].getAttribute("data-bin"), function () {
+            regField.classList.remove("is-typing");
+            regField.classList.add("is-searching");
+            regAt(440, function () {
+              regField.classList.remove("is-searching");
+              regShow(next);
+              regNext(REG_DWELL);
+            });
+          });
+        });
+      });
+    };
+    var regStart = function (first) { if (regRunning) { return; } regRunning = true; regNext(first ? REG_FIRST : REG_DWELL); };
+    var regPlayed = false;
+
+    reg.classList.add("is-anim");
+    new IntersectionObserver(function (entries) {
+      regInView = entries[0].isIntersecting;
+      if (regInView && !document.hidden) { regStart(!regPlayed); regPlayed = true; } else if (regRunning) { regStop(); }
+    }, { threshold: 0.4 }).observe(reg);
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { if (regRunning) { regStop(); } } else if (regInView) { regStart(false); }
+    });
   }
 
   /* ---------- Intake: an incoming call becomes a request in the queue ---------- */

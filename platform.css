@@ -4,10 +4,10 @@
 
 /* Landing frame: the screen keeps its 1600 x 980 design size and scales by --pf-s (set in script.js) */
 .platform .section-head { margin-bottom: clamp(32px, 4vw, 48px); }
-/* Page opener: a full-bleed dawn photograph carries the headline; the real screen rises over its lower edge,
-   so the first viewport shows only the top of the interface (--pf-glimpse) */
-.platform-hero { --pf-glimpse: clamp(88px, 13svh, 148px); --pf-rise: clamp(64px, 7vw, 112px); margin-top: 0; padding-top: 0; }
-.pf-hero { position: relative; isolation: isolate; min-height: calc(100svh - var(--header-h) - var(--pf-glimpse) + var(--pf-rise)); padding-bottom: var(--pf-rise); display: flex; }
+/* Page opener: a full-bleed dawn photograph fills the first viewport and carries the headline, lead, actions and proof.
+   The real screen follows in its own block (.platform-screen). */
+.platform-hero { margin-top: 0; padding: 0; }
+.pf-hero { position: relative; isolation: isolate; min-height: calc(100svh - var(--header-h)); display: flex; align-items: center; }
 .pf-hero-img {
   position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: 62% 58%;
   background: #e6ecf2;
@@ -18,9 +18,17 @@
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background: linear-gradient(100deg, rgba(241, 245, 249, .9) 0%, rgba(241, 245, 249, .7) 36%, rgba(241, 245, 249, 0) 60%);
 }
-.pf-hero-copy { width: 100%; padding-top: clamp(64px, 13svh, 168px); padding-bottom: clamp(56px, 10svh, 120px); }
-.pf-hero-copy h1 { font-size: clamp(44px, 6vw, 88px); line-height: 1; letter-spacing: -.04em; max-width: 12ch; }
-.pf-hero-copy p { margin-top: clamp(24px, 3svh, 36px); font-size: clamp(18px, 1.45vw, 21px); line-height: 1.55; color: var(--body); max-width: 40ch; }
+.pf-hero-copy { width: 100%; padding-block: clamp(64px, 10svh, 128px); }
+.pf-hero-copy h1 { font-size: clamp(32px, 3.6vw, 50px); line-height: 1.08; letter-spacing: -.03em; }
+/* the headline breaks where the copy reads: what, then where */
+.pf-hero-copy .h1-line { display: block; }
+/* Product badge above the headline: the product name in tracked capitals, on white like the proof strip */
+.pf-badge {
+  display: inline-flex; align-items: center; margin-bottom: clamp(20px, 2.6svh, 28px); padding: 8px 12px;
+  border-radius: 10px; background: #fff; box-shadow: inset 0 0 0 1px var(--line);
+  font: 600 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); white-space: nowrap;
+}
+.pf-hero-copy p { margin-top: clamp(24px, 3svh, 36px); font-size: clamp(17px, 1.3vw, 19px); line-height: 1.55; color: var(--body); max-width: 40ch; }
 .pf-hero-copy .hero-actions { margin-top: clamp(32px, 4.5svh, 48px); }
 /* Proof under the actions: the three facts the page can back, set quietly so the buttons stay first. */
 .pf-hero-copy .hero-proof { max-width: none; margin-top: clamp(24px, 3.5svh, 36px); display: inline-flex; flex-wrap: wrap; gap: 4px 0; padding: 10px 16px; border-radius: 12px; background: #fff; font-size: 14px; line-height: 1.45; color: var(--body); }
@@ -33,9 +41,9 @@
 }
 .pf-hero-copy .btn-quiet { background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
 .pf-hero-copy .btn-quiet:hover { background: #f8fafc; }
-.platform-hero .pf-frame { position: relative; z-index: 1; margin-top: calc(-1 * var(--pf-rise)); }
+/* Interface block: the screen on the same tint the hero photo fades into */
+.platform-screen { padding-top: clamp(48px, 6vw, 88px); }
 @media (max-width: 860px) {
-  .platform-hero { --pf-rise: 56px; }
   .pf-hero { flex-direction: column; min-height: 0; }
   .pf-hero-img { order: 2; position: relative; inset: auto; display: block; height: auto; aspect-ratio: 4 / 3; object-position: 68% 50%; }
   .pf-hero::before { display: none; }
