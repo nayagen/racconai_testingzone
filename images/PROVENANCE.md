@@ -10,7 +10,8 @@ Generated 2026-11-04 with Higgsfield, model GPT Image 2.5 (`gpt_image_2_5`), qua
 | `city-{640,960,1280,1792}.webp` | Not used since the Sentinel section was removed (was behind the Sentinel panel) | `99764daa-0154-42d6-9323-4dcdd1a587f7` | 1792×2240, 4:5, 2k | Elevated view of Almaty at blue hour: microdistricts, lit avenues, Zailiysky Alatau. No text or signage. |
 | `hero-{960,1600,2400,3840}.webp` | Page opener, full-bleed behind the headline (generated 2026-11-05) | `6549a7cc-95cb-409a-8b2d-b19f8b461aa8` (image id) | 3840×1648, 21:9, 4k | Documentary dawn in Almaty: four unbranded white rear-loaders on an empty poplar-lined avenue heading toward the snow-capped Zailiysky Alatau; open pale sky upper left for the headline. No logos, lettering, readable plates or people. |
 | `crew-{960,1600,2400,3840}.webp` | Proof section, full-width band | `32c973e4-eb64-4a25-bafe-cd580bffc3a9` | 3840×1648, 21:9, 4k | Candid early-morning shot: a worker wheels a container to an unbranded garbage truck on a microdistrict street. No logos, lettering or readable plates. |
-| `cab-{960,1600,2400,3840}.webp` | Photo pause before #driverapp (generated 2026-11-06, quality xhigh, 4k) | `b2a14344-2084-4f9e-b6f8-bf1e074ea4b3` | 3840×1648, 21:9, 4k | Early morning in Almaty, inside the cab of a white garbage truck at a microdistrict container site: gloved hand on the wheel, a rugged tablet in a dashboard mount with its screen lost in glare, euro containers under a shelter, Alatau in haze. No logos, lettering, readable plates or faces. |
+| `cab-{960,1600,2400,3840}.webp` | Photo pause before #driverapp on the landing page; was also the DriverApp page opener until 2026-11-06 (generated 2026-11-06, quality xhigh, 4k) | `b2a14344-2084-4f9e-b6f8-bf1e074ea4b3` | 3840×1648, 21:9, 4k | Early morning in Almaty, inside the cab of a white garbage truck at a microdistrict container site: gloved hand on the wheel, a rugged tablet in a dashboard mount with its screen lost in glare, euro containers under a shelter, Alatau in haze. No logos, lettering, readable plates or faces. |
+| `driver-{960,1600,2400,3840}.webp` | DriverApp page opener (driverapp.html #top), full-bleed behind the headline and the app prototype (generated 2026-11-06, quality xhigh, 4k) | `919c2d60-e526-45ae-ba8c-d570e3f91295` | 3840×1648, 21:9, 4k | Sunrise at an Almaty microdistrict container site: a driver in a navy hi-vis jacket checks his route on a rugged tablet (screen turned toward him, no interface visible), an unbranded white rear-loader behind him on the right, four grey and green euro containers under a shelter on his left, panel blocks and the Alatau in haze. No logos, lettering, readable plates or signage. |
 | `site-{960,1600,2400,3840}.webp` | Photo pause before #clients (generated 2026-11-06, quality xhigh, 4k) | `0c00e7f4-4f84-4e4c-87de-428f141f1518` | 3840×1648, 21:9, 4k | A municipal container site in an Almaty microdistrict: five grey and green euro containers under a light shelter between a Soviet-era block and ground-floor shops with blank awnings. No logos, signage text, readable plates or recognizable faces. |
 
 ## Platform photo-proof modal (`images/platform/proof/`)
@@ -42,6 +43,7 @@ Every image has a `-dark` twin next to it, shown when the page is in dark mode (
 | `depot-{640,960,1280,1792}-dark.webp` | `2b4ba756-69ad-43cb-a084-350ead2341e7` (xhigh, 2k) |
 | `cab-{960,1600,2400,3840}-dark.webp` | `b495eac9-cf06-4208-8593-b54faa95e606` (xhigh, 4k) |
 | `site-{960,1600,2400,3840}-dark.webp` | `7d0eed17-917d-456b-abbb-2c58a93e111b` (xhigh, 4k) |
+| `driver-{960,1600,2400,3840}-dark.webp` | `818ce214-a0e0-4c66-a08c-907b4d8d15eb` (xhigh, 4k) |
 | `crew-{960,1600,2400,3840}-dark.webp` | `3c82a595-6de0-4286-918f-3de4f6af2f0d` (xhigh, 4k) |
 
 **Photo proof** (`platform/proof/{a,b}{1-4}-dark.webp`) — quality high, 2k, 1280px WebP q76. Each night "before" is an edit of the light "before"; each night "after" is an edit of the clean light "after" with its night "before" as the lighting reference, so a pair stays one camera position. (Editing the night "before" to remove waste was tried first and left the waste in place.)
@@ -58,3 +60,10 @@ Every image has a `-dark` twin next to it, shown when the page is in dark mode (
 **Maps** (`dispatch-map-{1020,2040}-dark.webp`, `platform/map-almaty-dark.webp`) — not generated: a generative redraw garbles the 2GIS street labels (see the Topaz note above). They are a deterministic per-pixel recolor of the light maps (sharp): neutral ground, roads and labels invert onto a slate-navy ramp, arterials and metro marks keep their amber/red, parks and hills become a muted teal-green. Labels stay pixel-exact. Map data © 2GIS.
 
 Not varied: the top-down truck markers (`platform/trucks/*.png`, transparent) and `message-state.svg` read on both themes.
+
+**DriverApp phone** (`driverapp/`) — not generated. From the Figma file «Raccoon AI Mobile Apps» (DriverApp frames), exported through the Figma MCP on 2026-11-06:
+- `map-city.webp`, `map-near.webp`: the frames' «Route Trace» 2GIS rasters (1919×1079), WebP q80. Map data © 2GIS. `*-dark.webp` are the same deterministic per-pixel recolor as the other maps (slate-navy ground, amber arterials, muted parks).
+- `site-before.webp`, `site-after.webp`: the camera-frame photos (overfilled and emptied container site, 800×600), WebP q82. Real field photos from the design file.
+- `avatar.webp`: the Figma «Profile Pictures» image, 120px.
+- `truck.svg`: the «Truck on map / Truck / enroute · container» component export, with the export's canvas fill removed.
+- `icons/*.svg`: icon exports from the same frames, unchanged.

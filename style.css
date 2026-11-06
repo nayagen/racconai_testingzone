@@ -426,6 +426,7 @@ html[lang="kk"] { --font: "Medeo Sans", "Inter", system-ui, sans-serif; }
   border: 0; border-radius: 10px; background: transparent; color: var(--muted); font: 500 14px/1 var(--font); cursor: pointer;
   transition: background-color .2s var(--ease), color .2s var(--ease);
 }
+.seq-toggle[hidden] { display: none; }
 .seq-toggle:hover { background: var(--tint-hover, var(--tint-hover)); color: var(--ink); }
 .seq-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .seq-toggle .seq-ic-play { display: none; fill: currentColor; stroke-width: 1.5; }
@@ -967,6 +968,92 @@ html[lang="kk"] { --font: "Medeo Sans", "Inter", system-ui, sans-serif; }
   .sync-end { font-size: 14px; padding: 10px 8px; }
 }
 
+/* ---------- Dark theme for the Platform replica ----------
+   The RaccoonAI Design System for Claude ships light tokens only, so this is its night counterpart on the same scales:
+   slate surfaces stepped page < secondary < primary < tertiary, light text, brighter action/status hues, deep tinted
+   "subtle" fills with light inks. Hand-written, not in the generated platform-ds.css; shared by the Platform replica and the DriverApp phone. */
+:root[data-theme="dark"] .rds {
+  --text-headings: #f1f5f9;
+  --text-body: #c5cfdc;
+  --text-secondary: #8f9db2;
+  --text-action: #6ea2ff;
+  --text-action-hover: #8ec5ff;
+  --text-action-2: #6ea2ff;
+  --text-action-2-hover: #8ec5ff;
+  --text-disabled: #55647a;
+  --text-information-subtle: #6ea2ff;
+  --text-information: #8ec5ff;
+  --text-warning-subtle: #ff8a3d;
+  --text-warning: #ffb86a;
+  --text-attention-subtle: #f0b100;
+  --text-attention: #fcd34d;
+  --text-success-subtle: #22d36b;
+  --text-success: #7bf1a8;
+  --text-error-subtle: #ff6467;
+  --text-error: #ffa2a2;
+  --text-ai-subtle: #a684ff;
+  --text-ai: #c4b4ff;
+  --text-invert: #0a0f17;
+  --text-selected: #8ec5ff;
+  --icons-default: #e2e8f0;
+  --icons-secondary: #8f9db2;
+  --icons-action: #6ea2ff;
+  --icons-action-hover: #8ec5ff;
+  --icons-action-2: #6ea2ff;
+  --icons-action-2-hover: #8ec5ff;
+  --icons-disabled: #55647a;
+  --icons-information: #6ea2ff;
+  --icons-warning: #ff8a3d;
+  --icons-attention: #f0b100;
+  --icons-success: #22d36b;
+  --icons-error: #ff6467;
+  --icons-ai: #a684ff;
+  --icons-invert: #0a0f17;
+  --surface-page: #0e1520;
+  --surface-primary: #151d2b;
+  --surface-secondary: #1a2333;
+  --surface-tertiary: #222d3e;
+  --surface-action: #2b7fff;
+  --surface-action-hover: #155dfc;
+  --surface-action-2: #13274a;
+  --surface-action-2-hover: #1a3462;
+  --surface-disabled: #222d3e;
+  --surface-information-subtle: #132748;
+  --surface-warning-subtle: #36200d;
+  --surface-attention-subtle: #33290b;
+  --surface-success-subtle: #0e2a1b;
+  --surface-error-subtle: #3a1316;
+  --surface-ai-subtle: #221a3d;
+  --surface-invert: #e2e8f0;
+  --surface-selected: #13274a;
+  --border-primary: #222d3e;
+  --border-information: #6ea2ff;
+  --border-error: #ff6467;
+  --border-attention: #f0b100;
+  --border-success: #22d36b;
+  --border-warning: #ff8a3d;
+  --border-ai: #a684ff;
+  --border-action: #2b7fff;
+  --border-action-hover: #6ea2ff;
+  --border-disabled: #314058;
+  --border-invert: #cbd5e1;
+  --border-action-subtle: #1f3d73;
+  --border-success-subtle: #165c36;
+  --border-warning-subtle: #6b3a12;
+  --border-information-subtle: #1f3d73;
+  --border-attention-subtle: #5c4a0c;
+  --border-error-subtle: #6b2226;
+  --border-ai-subtle: #45307f;
+  --status-assigned-idle: #1f3d73;
+  --status-assigned-selected: #2b7fff;
+  --status-cancelled-idle: #8f9db2;
+  --status-cancelled-selected: #c5cfdc;
+  --chart-sequential-1: #13274a;
+  --chart-diverging-neutral: #314058;
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, .5), 0 1px 2px 0 rgba(0, 0, 0, .35);
+  --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, .5), 0 2px 4px -2px rgba(0, 0, 0, .35);
+  --shadow-lg: 0 20px 24px -4px rgba(0, 0, 0, .55), 0 8px 8px -4px rgba(0, 0, 0, .35);
+}
 /* ---------- DriverApp ---------- */
 .driver-split { align-items: center; }
 .drv-tabs { margin-top: 32px; display: grid; gap: 4px; max-width: 34rem; }
@@ -995,111 +1082,288 @@ html[lang="kk"] { --font: "Medeo Sans", "Inter", system-ui, sans-serif; }
 
 .drv-stage { background: var(--surface); border-radius: 20px; padding: clamp(32px, 4vw, 56px) 24px 20px; display: grid; justify-items: center; }
 .drv-stage .stage-note { justify-self: start; margin-top: 20px; }
-/* The phone screen is built at the Figma frame size (412 x 917) and scaled to the bezel: --s = screen width / 412 */
+/* ---------- DriverApp phone (#screens) ----------
+   Built from the DriverApp Figma frames (Raccoon AI Mobile Apps) at their 412 x 917 size, plus a 30px status bar that keeps the
+   top bar clear of the rounded screen corners, then scaled to the bezel: --s = screen width / 412. Inside, the RaccoonAI Design
+   System tokens (.rds) and Inter, as in the app. Coordinates in comments are Figma frame px. */
 .dphone { --s: .6845; width: 300px; max-width: 100%; padding: 9px; border-radius: 42px; background: var(--ink); box-shadow: var(--shadow); }
-.dphone-screen { width: calc(412px * var(--s)); height: calc(917px * var(--s)); border-radius: 34px; background: var(--surface); overflow: hidden; font-family: var(--font-ui); color: var(--body); }
-.ds { width: 412px; height: 917px; transform: scale(var(--s)); transform-origin: 0 0; display: flex; flex-direction: column; color: var(--ink); }
+.dphone-screen { width: calc(412px * var(--s)); height: calc(947px * var(--s)); border-radius: 34px; background: var(--surface); overflow: hidden; font-family: var(--font-ui); color: var(--body); }
+.ds { position: relative; width: 412px; height: 947px; transform: scale(var(--s)); transform-origin: 0 0; display: flex; flex-direction: column; background: var(--surface-primary); color: var(--text-body); letter-spacing: -.01px; }
 .ds svg { display: block; flex: none; }
-.ds-head { flex: none; height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 8px; background: var(--surface); border-bottom: 1px solid var(--line); }
-.ds-ava { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 600; background: var(--line); }
-.ds-who { display: grid; }
-.ds-who b { font-size: 16px; font-weight: 600; line-height: 1.25; }
-.ds-who small { font-size: 14px; color: var(--body); }
-.ds-online { margin-left: auto; padding: 10px 16px; border-radius: 8px; background: var(--ok-soft); color: #008236; font-size: 16px; font-weight: 600; }
-.ds-body { flex: 1; min-height: 0; position: relative; overflow: hidden; background: var(--tint); }
+.ds img { display: block; }
+.ds-body { flex: 1; min-height: 0; position: relative; overflow: hidden; background: var(--surface-page); }
 .ds-body > .dp-panel { position: absolute; inset: 0; padding: 0; }
 .ds-body > [hidden] { display: none !important; }
-.ds-tabs { flex: none; height: 72px; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border-top: 1px solid var(--line); }
-.ds-tabs > span { display: grid; justify-items: center; align-content: center; gap: 4px; font-size: 13px; }
-.ds-tabs > span > svg { width: 24px; height: 24px; margin-block: 4px; }
-.ds-tabs .is-on { color: var(--action); }
-.ds-tabs .is-on i { width: 56px; height: 32px; border-radius: 999px; display: grid; place-items: center; background: var(--action); color: #fff; }
-.ds-tabs .is-on i svg { width: 24px; height: 24px; }
 
-/* Map with the right-hand controls */
-.ds-map { position: relative; overflow: hidden; background: var(--map-ground); }
-.ds-map > img:first-child { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.ds-map-city { flex: none; height: 464px; }
-.ds-map-city > img:first-child { object-position: 38% 50%; }
-.ds-map-near { flex: 1; min-height: 0; }
-.ds-map-near > img:first-child { object-position: 30% 42%; }
-.ds-map-line { position: absolute; inset: 0; width: 100%; height: 100%; }
-.ds-map-line path { fill: none; stroke: #f59e0b; stroke-width: 8; stroke-linecap: round; }
-.ds-mpin { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 700; color: #fff; background: var(--action); box-shadow: 0 0 0 3px #fff, 0 2px 8px rgba(8, 10, 17, .3); }
-.ds-mtruck { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; width: 46px; height: 46px; }
-.ds-ctrl, .ds-backmap { position: absolute; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); box-shadow: 0 2px 8px rgba(8, 10, 17, .18); }
-.ds-ctrl { right: 8px; }
-.ds-ctrl svg { width: 26px; height: 26px; }
-.ds-ctrl-warn { bottom: 128px; }
-.ds-ctrl-flag { bottom: 72px; }
-.ds-ctrl-loc { bottom: 16px; }
-.ds-map-near .ds-ctrl-warn { bottom: 140px; }
-.ds-map-near .ds-ctrl-flag { bottom: 84px; }
-.ds-map-near .ds-ctrl-loc { bottom: 28px; }
-.ds-backmap { left: 8px; bottom: 28px; width: 40px; height: 40px; }
-.ds-backmap svg { width: 24px; height: 24px; }
+/* Status bar and the Figma top bar (side padding raised from 8 to 16 so the corners never touch the avatar or the chip) */
+.da-status { flex: none; position: relative; height: 30px; display: flex; align-items: center; justify-content: space-between; padding: 2px 30px 0 34px; background: var(--surface-primary); color: var(--text-headings); font: 600 14px/1 var(--font-ui); font-variant-numeric: tabular-nums; }
+.da-punch { position: absolute; left: 50%; top: 9px; width: 13px; height: 13px; margin-left: -6.5px; border-radius: 50%; background: #0b0f17; }
+.da-sys { display: flex; align-items: center; gap: 6px; }
+.da-sys svg { height: 12px; width: auto; }
+.da-top { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; background: var(--surface-primary); border-bottom: 1px solid var(--border-primary); }
+.da-who { display: flex; align-items: center; gap: 8px; }
+.da-ava { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.da-who > span { display: grid; gap: 4px; }
+.da-who b { font: 600 16px/16px var(--font-ui); }
+.da-who small { font: 400 14px/16px var(--font-ui); }
+.da-online { height: 40px; padding: 0 16px; display: grid; place-items: center; border-radius: var(--radius-md); background: var(--surface-success-subtle); color: var(--text-success); font: 600 16px/16px var(--font-ui); }
+.da-tabs { flex: none; height: 72px; display: flex; padding: 8px 16px; background: var(--surface-primary); border-top: 1px solid var(--border-primary); }
+.da-tabs > span { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 6px; font: 500 12px/16px var(--font-ui); }
+.da-tabs i { width: 56px; height: 32px; border-radius: 16px; display: grid; place-items: center; }
+.da-tabs img { width: 24px; height: 24px; }
+.da-tabs .is-on { color: var(--text-action-2); }
+.da-tabs .is-on i { background: var(--surface-action); }
 
-/* Bottom sheet */
-.ds-sheet { position: relative; flex: none; margin-top: -16px; padding: 20px 16px 0; border-radius: 16px 16px 0 0; background: var(--surface); }
-.ds-grab { position: absolute; left: 50%; top: 8px; translate: -50% 0; width: 100px; height: 4px; border-radius: 999px; background: var(--line-strong); }
-.ds-trip { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.ds-trip b { font-size: 16px; font-weight: 600; }
-.ds-chips { display: flex; gap: 6px; }
-.ds-chips span { padding: 4px 10px; border-radius: 999px; background: var(--line); font-size: 13px; color: var(--body); }
-.ds-chips .is-time { background: var(--action); color: #fff; }
-.ds-hint { margin-top: 6px; font-size: 14px; color: var(--body); }
+/* Screens: the map (with its bottom sheets) and the photo page slide past each other */
+.da-mapscr, .da-page { position: absolute; inset: 0; transition: opacity .45s var(--ease), translate .55s var(--ease), visibility 0s; }
+.dh-proto[data-scr="page"] .da-mapscr { opacity: 0; translate: -48px 0; visibility: hidden; transition: opacity .35s var(--ease), translate .5s var(--ease), visibility 0s .5s; }
+.dh-proto:not([data-scr="page"]) .da-page { opacity: 0; translate: 48px 0; visibility: hidden; transition: opacity .3s var(--ease), translate .45s var(--ease), visibility 0s .45s; }
 
-/* 1. Route: sites in order */
-.ds-route { display: flex; flex-direction: column; background: var(--surface); }
-.ds-route .ds-sheet { flex: 1; overflow: hidden; }
-.ds-route .ds-hint { margin-inline: -16px; padding: 0 16px 14px; border-bottom: 1px solid var(--line); }
-.ds-sites { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 12px; }
-.ds-sites li { position: relative; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; }
-.ds-sites li::before { content: ""; position: absolute; left: 10px; top: 42px; bottom: -14px; border-left: 2px dashed var(--action); }
-.ds-sites li:last-child::before { display: none; }
-.ds-n { margin-top: 16px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600; color: #fff; background: var(--action); }
-.ds-site { padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; }
-.ds-site b { display: block; font-size: 14px; font-weight: 500; }
-.ds-site small { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); }
-.ds-site-foot { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.ds-site-foot small { margin: 0; }
-.ds-chip-move { padding: 4px 12px; border-radius: 999px; background: var(--action); color: #fff; font-size: 12px; font-weight: 500; }
-.ds-link { display: block; margin-top: 12px; font-size: 12px; color: var(--action); }
+/* Map: the frame's own 2GIS rasters (city, then the street view), placed as in Figma (object-fit cover at 0.85) */
+.da-map { position: absolute; left: 0; top: -57px; width: 412px; height: 917px; overflow: hidden; background: var(--surface-tertiary); }
+.da-layer { position: absolute; inset: 0; transform-origin: 353px 176px; transition: opacity .8s var(--ease), scale 1s cubic-bezier(.65, 0, .35, 1); }
+.da-layer picture img { position: absolute; left: -609.5px; top: 0; width: 1631px; height: 917px; max-width: none; }
+.dh-proto[data-zoom="near"] .da-city { opacity: 0; scale: 2.6; }
+.dh-proto[data-zoom="city"] .da-near { opacity: 0; scale: .4; }
+.da-mpin { position: absolute; left: var(--x); top: var(--y); width: 32px; height: 32px; }
+.da-mpin img { position: absolute; left: 2.67px; top: 0; width: 26.67px; height: 32px; }
+.da-mpin b { position: absolute; left: 8px; right: 8px; top: 6.67px; bottom: 13.33px; display: grid; place-items: center; font: 700 14px/20px var(--font-ui); color: #155dfc; }
+.da-mflag { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-primary); box-shadow: 0 2px 6px rgba(16, 24, 40, .25); opacity: 0; scale: .6; transition: opacity .4s var(--ease), scale .5s var(--ease); }
+.da-mflag img { width: 24px; height: 24px; }
+.dh-proto:is([data-sheet="list"], [data-sheet="unload"], [data-sheet="fin"]) .da-mflag { opacity: 1; scale: 1; }
+.dh-proto:is([data-sheet="list"], [data-sheet="unload"], [data-sheet="fin"]) .da-near .da-mpin { opacity: 0; }
+.da-near .da-mpin { transition: opacity .4s var(--ease); }
+.da-truck { position: absolute; left: 0; top: 0; width: 48px; height: 48px; translate: calc(var(--x) - 24px) calc(var(--y) - 24px); }
+.da-truck-run { translate: none; will-change: transform; }
+.da-route { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.da-route { opacity: 0; transition: opacity .45s var(--ease); }
+.dh-proto[data-route] .da-route { opacity: 1; }
+.da-route path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.da-route-case { stroke: #fff; stroke-width: 10; stroke-opacity: .9; }
+.da-route-line { stroke: var(--status-in-progress-idle); stroke-width: 5; }
+.dh-proto.is-arrived .da-near .da-mpin img { animation: da-pin 1s var(--ease); }
+@keyframes da-pin { 0% { translate: 0 0; } 30% { translate: 0 -8px; } 60% { translate: 0 0; } 80% { translate: 0 -3px; } }
 
-/* 2. Photo report: before, then the finished task once the after photo is uploaded */
-.ds-photo { overflow: hidden; }
-.ds-state { position: absolute; inset: 0; display: flex; flex-direction: column; transition: opacity .5s var(--ease), translate .6s var(--ease); }
-.ds-after { opacity: 0; translate: 32px 0; background: var(--surface); }
-.ds-photo.is-after .ds-before { opacity: 0; translate: -32px 0; }
-.ds-photo.is-after .ds-after { opacity: 1; translate: 0 0; }
+/* Bottom sheets: each state is its own sheet with the map tools riding on top of it, anchored above the tab bar */
+.da-sheetbox { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 8px; opacity: 0; translate: 0 32px; visibility: hidden; transition: opacity .25s var(--ease), translate .4s var(--ease), visibility 0s .4s; }
+.dh-proto[data-sheet="route"] .da-sh-route, .dh-proto[data-sheet="job"] .da-sh-job, .dh-proto[data-sheet="task"] .da-sh-task,
+.dh-proto[data-sheet="list"] .da-sh-list, .dh-proto[data-sheet="unload"] .da-sh-unload, .dh-proto[data-sheet="fin"] .da-sh-fin {
+  opacity: 1; translate: 0 0; visibility: visible; transition: opacity .4s var(--ease) .1s, translate .55s var(--ease) .1s, visibility 0s;
+}
+.da-tools { display: flex; justify-content: space-between; align-items: flex-end; }
+.da-tools > :first-child { min-width: 64px; min-height: 48px; }
+.da-tools > .da-fab { min-width: 0; margin-left: 8px; }
+.da-rtools { display: flex; flex-direction: column; gap: 8px; padding: 0 8px; }
+.da-fab { width: 48px; height: 48px; border-radius: 32px; display: grid; place-items: center; background: var(--surface-primary); box-shadow: 0 1px 2px rgba(16, 24, 40, .1), 0 0 0 1px rgba(16, 24, 40, .03); }
+.da-fab img { width: 32px; height: 32px; }
+.da-fab img.is-24 { width: 24px; height: 24px; }
+.da-sheet { background: var(--surface-primary); border: 1px solid var(--border-primary); border-bottom: 0; border-radius: 24px 24px 0 0; box-shadow: 0 1px 2px rgba(0, 0, 0, .05); overflow: hidden; }
+.da-shead { display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 16px; border-bottom: 1px solid var(--border-primary); }
+.da-grab { align-self: center; width: 104px; height: 6px; border-radius: var(--radius-lg); background: var(--border-primary); }
+.da-title { height: 24px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.da-title > b { font: 600 16px/16px var(--font-ui); white-space: nowrap; }
+.da-chips { display: flex; gap: 8px; }
+.da-chips span { padding: 4px 8px; border-radius: 16px; background: var(--border-primary); font: 500 12px/16px var(--font-ui); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.da-chips .is-time { background: var(--status-in-progress-idle); color: var(--text-on-action); }
+.da-chips .is-ok { background: var(--status-completed-idle); }
+.da-hint { height: 16px; font: 400 14px/16px var(--font-ui); white-space: nowrap; }
+
+/* 1. Route list: the header stays, the jobs scroll under it */
+.da-list { height: 244px; overflow: hidden; padding: 8px; }
+.da-jobs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; transition: translate 1.1s cubic-bezier(.45, 0, .2, 1); }
+.da-jobs li { position: relative; display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 4px; }
+.da-jobs li::before { content: ""; position: absolute; left: 11px; top: 35px; bottom: -15px; width: 2px; background: repeating-linear-gradient(to bottom, var(--border-invert) 0 4px, transparent 4px 8px); }
+.da-jobs li:last-child::before { display: none; }
+.da-pin { position: absolute; left: 0; top: 7px; width: 24px; height: 24px; }
+.da-pin img { position: absolute; left: 2px; top: 0; width: 20px; height: 24px; }
+.da-pin b { position: absolute; left: 3px; right: 3px; top: 5px; height: 9px; display: grid; place-items: center; font: 700 12px/12px var(--font-ui); color: #fff; letter-spacing: -.3px; }
+.da-job-unload .da-pin img { left: 0; width: 24px; }
+.da-card { grid-column: 2; display: flex; flex-direction: column; padding: 16px; border: 1px solid var(--border-primary); border-radius: var(--radius-lg); background: var(--surface-primary); transition: border-color .25s var(--ease), box-shadow .25s var(--ease); }
+.da-card > b { font: 500 14px/16px var(--font-ui); letter-spacing: -.2px; margin-bottom: 8px; }
+.da-card small { font: 500 12px/16px var(--font-ui); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.da-card small + small { margin-top: 4px; }
+.da-card-foot { margin-top: 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.da-card .da-more { margin-top: 12px; color: var(--text-information); }
+.da-st { flex: none; height: 24px; display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 16px; background: var(--status-assigned-idle); color: var(--text-information); font: 500 12px/16px var(--font-ui); white-space: nowrap; }
+.da-st-move { background: var(--status-in-progress-idle); color: var(--text-on-action); }
+.da-st-started { background: var(--surface-attention); color: #242a35; }
+.da-st-done { background: var(--status-completed-idle); color: var(--text-on-action); }
+.dh-proto[data-scroll="1"] .da-sh-route .da-jobs { translate: 0 -150px; }
+.dh-proto[data-scroll="2"] .da-sh-route .da-jobs { translate: 0 -480px; }
+.dh-proto[data-scroll="3"] .da-sh-route .da-jobs { translate: 0 -910px; }
+.dh-proto.is-pick .da-job-first .da-card { border-color: var(--border-action); box-shadow: inset 0 0 0 1px var(--border-action); }
+.da-list-end { display: flex; flex-direction: column; justify-content: flex-end; }
+.da-list-end li:first-child::after { content: ""; position: absolute; left: 11px; top: -60px; height: 64px; width: 2px; background: repeating-linear-gradient(to bottom, var(--border-invert) 0 4px, transparent 4px 8px); }
+.da-job-unload .da-card { border: 2px solid var(--border-action); padding: 15px; }
+.da-job-unload .da-card > b { margin-bottom: 12px; }
+.da-job-unload .da-card .da-more { margin-top: 0; }
+
+/* 2-3. Job and task */
+.da-taskbox { padding: 8px; border-bottom: 1px solid var(--border-primary); }
+.da-task { display: flex; flex-direction: column; padding: 16px; border-radius: var(--radius-lg); }
+.da-task.is-picked { border: 2px solid var(--border-action); padding: 14px; }
+.da-task-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.da-task-top b { font: 500 14px/16px var(--font-ui); letter-spacing: -.2px; }
+.da-task-top b span { margin-left: 8px; }
+.da-task-top small, .da-task-foot small { font: 500 12px/16px var(--font-ui); color: var(--text-secondary); }
+.da-task-client { margin-top: 8px; font: 500 12px/16px var(--font-ui); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.da-task-line { margin-top: 4px; display: flex; align-items: center; gap: 4px; font: 500 12px/16px var(--font-ui); }
+.da-task-client + .da-task-line { margin-top: 12px; }
+.da-task-line img { width: 20px; height: 20px; }
+.da-task-foot { margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+.da-btns { display: flex; flex-direction: column; gap: 8px; padding: 8px; }
+.da-row { display: flex; gap: 8px; }
+.da-row > * { flex: 1; }
+.da-btn { height: 48px; padding: 12px 16px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; gap: 4px; background: var(--surface-action); color: var(--text-on-action); font: 500 16px/16px var(--font-ui); white-space: nowrap; transition: background-color .3s var(--ease), scale .15s var(--ease); }
+.da-btn img { width: 20px; height: 20px; }
+.da-btn-2gis { background: #34c759; color: #f2f4f7; font-weight: 600; } /* 2ГИС and Яндекс brand fills are product truth in the mock */
+.da-btn-ya { background: #fc0; color: #1d1f23; font-weight: 600; }
+.ds .da-ic-ok { display: none; }
+.dh-proto:is([data-task="do"], [data-task="done"]) .da-btn-before, .dh-proto[data-task="done"] .da-btn-after { background: var(--surface-success); }
+.dh-proto:is([data-task="do"], [data-task="done"]) .ds .da-btn-before .da-ic-cam, .dh-proto[data-task="done"] .ds .da-btn-after .da-ic-cam { display: none; }
+.dh-proto:is([data-task="do"], [data-task="done"]) .ds .da-btn-before .da-ic-ok, .dh-proto[data-task="done"] .ds .da-btn-after .da-ic-ok { display: block; }
+.dh-proto.is-press-2gis .da-btn-2gis, .dh-proto.is-press-before .da-btn-before, .dh-proto.is-press-after .da-btn-after, .dh-proto.is-press-next .da-btn-next, .dh-proto.is-press-ready .da-ready { scale: .96; }
+.da-sh-task .da-btns { gap: 0; }
+.da-btn-next { margin-top: 8px; }
+/* the button that arrives with a state opens the sheet upward instead of jumping */
+.da-fold { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s var(--ease); }
+.da-fold > div { min-height: 0; overflow: hidden; }
+.dh-proto[data-task="done"] .da-sh-task .da-fold, .dh-proto.is-here .da-sh-unload .da-fold { grid-template-rows: 1fr; }
+.da-v-start, .da-v-do, .da-v-done, .da-v-open, .da-v-here { display: none; }
+.da-v-go { display: inline; }
+.dh-proto[data-task="start"] .da-v-start, .dh-proto[data-task="do"] .da-v-do, .dh-proto[data-task="done"] .da-v-done { display: inline; }
+.dh-proto[data-task="done"] .da-task-foot .da-v-done { display: inline-flex; }
+.dh-proto:not([data-task="done"]) .da-v-open { display: inline-flex; }
+.dh-proto.is-here .da-v-go { display: none; }
+.dh-proto.is-here .da-hint .da-v-here { display: inline; }
+
+/* 5. Unload point row */
+.da-dump { display: flex; align-items: flex-start; gap: 4px; padding: 8px; border-bottom: 1px solid var(--border-primary); }
+.da-dump > img { width: 24px; height: 24px; margin-top: 12px; }
+.da-dump > span { display: grid; gap: 12px; padding: 16px; }
+.da-dump b { font: 500 14px/16px var(--font-ui); letter-spacing: -.2px; }
+.da-dump small { font: 500 12px/16px var(--font-ui); color: var(--text-information); }
+
+/* Swipe button: the knob drags right, the green progress trails it; a faint glint sweeps the idle button (Figma «Animated Light») */
+.da-swipe { position: relative; height: 64px; border-radius: var(--radius-xl); background: var(--surface-action); color: var(--text-on-action); overflow: hidden; isolation: isolate; }
+.da-swipe-txt { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; white-space: nowrap; }
+.da-swipe-txt b { font: 600 16px/16px var(--font-ui); }
+.da-swipe-txt span { font: 400 14px/16px var(--font-ui); }
+.da-swipe-knob { position: absolute; z-index: 2; left: 8px; top: 8px; width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid var(--border-primary); border-radius: var(--radius-lg); background: #fff; }
+.da-swipe-knob img { width: 32px; height: 32px; rotate: 180deg; }
+.da-swipe-fill { position: absolute; z-index: 1; left: 0; top: -10px; width: 430px; height: 84px; translate: -430px 0; background: linear-gradient(to right, #16a34a 75%, rgba(8, 61, 28, 0)); }
+.da-swipe-light { position: absolute; left: 0; top: -60px; width: 75px; height: 190px; background: rgba(255, 255, 255, .1); filter: blur(1px); rotate: -35.55deg; translate: -140px 0; animation: da-glint 3.2s ease-in-out infinite; }
+@keyframes da-glint { 0% { translate: -140px 0; } 55%, 100% { translate: 480px 0; } }
+.da-swipe-knob, .da-swipe-fill { transition: translate 1s cubic-bezier(.55, 0, .15, 1); }
+.dh-proto[data-swipe="start"] .da-swipe[data-swipe="start"] .da-swipe-knob,
+.dh-proto[data-swipe="unload"] .da-swipe[data-swipe="unload"] .da-swipe-knob,
+.dh-proto[data-swipe="finish"] .da-swipe[data-swipe="finish"] .da-swipe-knob { translate: 332px 0; }
+.dh-proto[data-swipe="start"] .da-swipe[data-swipe="start"] .da-swipe-fill,
+.dh-proto[data-swipe="unload"] .da-swipe[data-swipe="unload"] .da-swipe-fill,
+.dh-proto[data-swipe="finish"] .da-swipe[data-swipe="finish"] .da-swipe-fill { translate: 0 0; }
+.dh-proto[data-swipe] .da-swipe .da-swipe-light { animation-play-state: paused; opacity: 0; }
+
+/* Photo page: «Фотографии ДО» (count, shot, Готово), then «Фотографии ПОСЛЕ»; data-pg = b0 | b1 | a0 | a1 */
+.da-page { display: flex; flex-direction: column; gap: 16px; padding: 8px; background: var(--surface-page); }
+.da-pg-title { display: flex; align-items: center; gap: 4px; font: 700 18px/20px var(--font-ui); color: var(--text-headings); }
+.da-pg-title img { width: 32px; height: 32px; }
+.da-pg-sub { height: 24px; margin-top: -12px; display: flex; align-items: center; font: 400 14px/16px var(--font-ui); }
+.da-v-b0, .da-v-b1, .da-v-a { display: none; }
+.dh-proto[data-pg="b0"] .da-v-b0, .dh-proto[data-pg="b1"] .da-v-b1, .dh-proto:is([data-pg="a0"], [data-pg="a1"]) .da-v-a { display: inline; }
+.dh-proto:is([data-pg="a0"], [data-pg="a1"]) :is(.da-pg-sub, .da-count) { display: none; }
+.da-count { display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid var(--border-primary); border-radius: var(--radius-lg); background: var(--surface-primary); }
+.da-count > span:first-child { flex: 1; padding: 0 10px; font: 500 14px/20px var(--font-ui); }
+.da-step { display: flex; align-items: center; gap: 8px; }
+.da-step img { width: 48px; height: 48px; transition: scale .15s var(--ease); }
+.da-step b { min-width: 32px; text-align: center; font: 700 24px/32px var(--font-ui); letter-spacing: -.04px; font-variant-numeric: tabular-nums; }
+.da-n6 { display: none; }
+.dh-proto.is-six .da-n5 { display: none; }
+.dh-proto.is-six .da-n6 { display: inline; animation: da-num .35s var(--ease); }
+@keyframes da-num { from { opacity: 0; translate: 0 -10px; } }
+.dh-proto.is-press-plus .da-plus { scale: .88; }
+.da-grid { flex: 1; min-height: 0; display: grid; grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.da-take { display: flex; align-items: center; justify-content: center; gap: 10px; border: 2px dashed var(--border-information); border-radius: 16px; color: var(--text-information); font: 600 16px/16px var(--font-ui); transition: background-color .2s var(--ease); }
+.da-take img { width: 32px; height: 32px; }
+.dh-proto.is-press-take .da-take { background: var(--surface-action-2); }
+.da-shot { display: none; position: relative; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md); }
+.da-shot > img:not(.da-del) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.da-del { position: absolute; right: 16px; top: 50%; translate: 0 -50%; width: 48px; height: 48px; }
+.dh-proto:is([data-pg="b1"], [data-pg="a1"]) .da-shot { display: block; animation: da-land .7s var(--ease); }
+.dh-proto[data-pg="b1"] .da-shot-a, .dh-proto[data-pg="a1"] .da-shot-b { display: none; }
+@keyframes da-land { from { opacity: 0; scale: .9; translate: 0 -16px; } }
+.da-ready { flex: none; background: var(--surface-disabled); color: var(--text-disabled); }
+.dh-proto:is([data-pg="b1"], [data-pg="a1"]) .da-ready { background: var(--surface-action); color: var(--text-on-action); }
+
+/* Camera: a landscape screen (947 x 412) laid sideways in the portrait screen; the phone turns -90deg to show it upright */
+.da-cam { position: absolute; inset: 0; z-index: 5; background: #000; opacity: 0; visibility: hidden; transition: opacity .25s var(--ease), visibility 0s .25s; }
+.dh-proto[data-cam] .da-cam { opacity: 1; visibility: visible; transition: opacity .25s var(--ease), visibility 0s; }
+.da-cam-land { position: absolute; left: 0; top: 0; width: 947px; height: 412px; display: flex; transform: translate(412px, 0) rotate(90deg); transform-origin: 0 0; }
+.da-cam-bar { flex: none; width: 184px; position: relative; }
+.da-cam-flash { position: absolute; right: 20px; top: 20px; width: 40px; height: 40px; display: grid; place-items: center; }
+.da-cam-flash img { width: 24px; height: 24px; }
+.da-cam-view { flex: none; position: relative; width: 549px; overflow: hidden; }
+.da-cam-view > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.dh-proto[data-cam="a"] .da-cam-b, .dh-proto[data-cam="b"] .da-cam-a { display: none; }
+.da-corner { position: absolute; width: 64px; height: 64px; border: 4px solid #fff; }
+.da-corner.is-tl { left: 24px; top: 19px; border-width: 4px 0 0 4px; border-top-left-radius: 8px; }
+.da-corner.is-tr { right: 24px; top: 19px; border-width: 4px 4px 0 0; border-top-right-radius: 8px; }
+.da-corner.is-bl { left: 24px; bottom: 19px; border-width: 0 0 4px 4px; border-bottom-left-radius: 8px; }
+.da-corner.is-br { right: 24px; bottom: 19px; border-width: 0 4px 4px 0; border-bottom-right-radius: 8px; }
+.da-cam-hint { position: absolute; left: 50%; translate: -50% 0; display: grid; gap: 4px; padding: 8px 16px; border-radius: 16px; background: rgba(0, 0, 0, .6); backdrop-filter: blur(8px); color: #fff; font: 600 16px/20px var(--font-ui); text-align: center; white-space: nowrap; }
+.da-cam-hint.is-top { top: 26px; padding: 16px; line-height: 16px; }
+.da-cam-hint.is-top b { color: #ff4d55; font-weight: 600; }
+.da-cam-hint.is-bot { bottom: 25px; }
+.da-cam-flashfx { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+.da-cam-ctrl { flex: 1; position: relative; }
+.da-shutter { position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; translate: -50% -50%; }
+.da-shutter img { width: 72px; height: 72px; }
+.da-cam-x { position: absolute; right: 24px; top: 24px; width: 40px; height: 40px; }
+.dh-proto.is-shot .da-cam-flashfx { animation: da-flash .55s ease-out; }
+.dh-proto.is-shot .da-shutter img { animation: da-shutter .4s var(--ease); }
+@keyframes da-flash { 0% { opacity: .95; } 100% { opacity: 0; } }
+@keyframes da-shutter { 40% { scale: .84; } }
+
+/* The phone turns for the camera, then back */
+.dh-proto { --shift: 0px; }
+.dh-proto .dphone { position: relative; transition: rotate .8s cubic-bezier(.65, 0, .35, 1), scale .8s cubic-bezier(.65, 0, .35, 1), translate .8s cubic-bezier(.65, 0, .35, 1); }
+.dh-proto[data-cam] .dphone { rotate: -90deg; scale: .72; translate: calc(var(--shift) * -1) 0; }
+
+/* Time passes between two taps: a clock on a dimmed screen */
+.da-skip { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; background: rgba(8, 10, 17, .55); opacity: 0; visibility: hidden; transition: opacity .35s var(--ease), visibility 0s .35s; }
+.dh-proto[data-skip] .da-skip { opacity: 1; visibility: visible; transition: opacity .35s var(--ease), visibility 0s; }
+.da-skip-card { width: 304px; display: grid; justify-items: center; gap: 20px; padding: 32px 24px 28px; border-radius: 28px; background: var(--surface-primary); box-shadow: var(--shadow); text-align: center; scale: .94; transition: scale .45s var(--ease); }
+.dh-proto[data-skip] .da-skip-card { scale: 1; }
+.da-clock { width: 112px; height: 112px; fill: none; stroke: var(--text-headings); stroke-linecap: round; }
+.da-clock circle:first-child { stroke-width: 4; }
+.da-ticks { stroke-width: 4; }
+.da-clock .da-hand-h { stroke-width: 6; }
+.da-clock .da-hand-m { stroke-width: 4; stroke: var(--text-action); }
+.da-clock .da-hub { fill: var(--text-headings); stroke: none; }
+.da-hand-h, .da-hand-m { transform-origin: 48px 48px; }
+.dh-proto[data-skip="1"] .da-hand-m { animation: da-min10 1.9s cubic-bezier(.45, 0, .2, 1) .2s both; }
+.dh-proto[data-skip="1"] .da-hand-h { animation: da-hour10 1.9s cubic-bezier(.45, 0, .2, 1) .2s both; }
+.dh-proto[data-skip="2"] .da-hand-m { animation: da-min3h 2.2s cubic-bezier(.45, 0, .2, 1) .2s both; }
+.dh-proto[data-skip="2"] .da-hand-h { animation: da-hour3h 2.2s cubic-bezier(.45, 0, .2, 1) .2s both; }
+@keyframes da-min10 { to { rotate: 60deg; } }
+@keyframes da-hour10 { to { rotate: 5deg; } }
+@keyframes da-min3h { to { rotate: 1080deg; } }
+@keyframes da-hour3h { to { rotate: 90deg; } }
+.da-skip-card p { display: grid; gap: 6px; }
+.da-skip-card b { font: 600 26px/1.15 var(--font); letter-spacing: -.02em; color: var(--text-headings); }
+.da-skip-card small { font: 400 17px/1.4 var(--font); color: var(--text-secondary); }
+.da-v-s1, .da-v-s2 { display: none; }
+.dh-proto[data-skip="1"] .da-v-s1, .dh-proto[data-skip="2"] .da-v-s2 { display: block; }
+
+/* Night: the neutral glyphs baked dark in the Figma icons turn light on the night surfaces */
+:root[data-theme="dark"] .ds :is(.da-fab img, .da-pg-title img, .da-tabs span:not(.is-on) img, .da-swipe-knob img) { filter: invert(1) hue-rotate(180deg) brightness(1.15); }
+:root[data-theme="dark"] .da-swipe-knob { background: var(--surface-tertiary); border-color: var(--border-disabled); }
+:root[data-theme="dark"] .da-st-started { color: #1d1f23; }
+
+/* 3. Problem report (static tab) */
 .ds-pad { padding: 16px 8px 0; }
-.ds-title { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.ds-title { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; letter-spacing: -.01em; color: var(--text-headings); }
 .ds-title svg { width: 24px; height: 24px; }
-.ds-sub { margin-top: 12px; font-size: 14px; color: var(--body); }
-.ds-count { margin-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; border-radius: 12px; background: var(--surface); font-size: 14px; }
-.ds-count b { flex: none; width: 80px; height: 52px; border-radius: 8px; display: grid; place-items: center; background: var(--line); font-size: 22px; font-weight: 600; }
-.ds-shot { position: relative; margin-top: 16px; height: 172px; border-radius: 16px; overflow: hidden; }
-.ds-shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.ds-shot i { position: absolute; right: 10px; top: 50%; translate: 0 -50%; }
-.ds-shot i svg { width: 34px; height: 34px; }
-.ds-take { margin-top: 16px; height: 172px; border: 2px dashed var(--action); border-radius: 12px; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; color: var(--action); }
-.ds-take svg { width: 30px; height: 30px; }
-.ds-btn { display: grid; place-items: center; height: 48px; border-radius: 8px; background: var(--action); color: #fff; font-size: 16px; font-weight: 500; }
-.ds-btn-bottom { margin: auto 8px 8px; }
-.ds-after .ds-sheet .ds-btn { margin: 8px -8px 8px; }
-.ds-task { margin: 14px -16px 0; padding: 16px; border-block: 1px solid var(--line); }
-.ds-task-top { display: flex; justify-content: space-between; align-items: baseline; }
-.ds-task-top b { font-size: 14px; font-weight: 500; }
-.ds-task-top small, .ds-task-client { font-size: 12px; color: var(--muted); }
-.ds-task-client { display: block; margin-top: 6px; }
-.ds-task-line { margin-top: 10px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
-.ds-task-line svg { width: 20px; height: 20px; }
-.ds-task-foot { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; }
-.ds-task-foot small { font-size: 12px; color: var(--muted); }
-.ds-chip-done { padding: 4px 12px; border-radius: 999px; background: #00c950; color: #fff; font-size: 12px; font-weight: 500; }
-.ds-pair { margin: 8px -8px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.ds-pair span { height: 48px; border-radius: 6px; display: flex; justify-content: center; align-items: center; gap: 8px; background: #00c950; color: #fff; font-size: 16px; font-weight: 500; }
-.ds-pair svg { width: 22px; height: 22px; }
+.ds-sub { margin-top: 12px; font-size: 14px; color: var(--text-body); }
 
 /* 3. Problem report */
 .ds-issue { background: var(--tint); }
@@ -1487,6 +1751,198 @@ html[lang="kk"] { --font: "Medeo Sans", "Inter", system-ui, sans-serif; }
   .field-row { grid-template-columns: 1fr; }
   .bars li { grid-template-columns: 1fr; gap: 6px; }
   .footer-nav { margin-left: 0; }
+}
+
+/* ---------- Site pages ----------
+   After the sections, the dock and the mobile menu link the site's other page: DriverApp on index.html, Платформа on driverapp.html.
+   In the dock it is a 36px row like the theme switch: a 20px Lucide icon on the x = 24px line (visible in the strip),
+   its label at 52px, muted, turning ink on hover. */
+@media (min-width: 1280px) {
+  .tree-pages { position: relative; display: grid; gap: 2px; padding: 6px; }
+  .tree-pages::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 0; height: 1px; background: var(--line); }
+  .tree-pages a {
+    display: flex; align-items: center; gap: 18px; height: 36px; padding: 0 10px 0 8px; border-radius: 10px;
+    font: 500 14px/1 var(--font); color: var(--muted); text-decoration: none; white-space: nowrap;
+    transition: color .15s, background-color .15s;
+  }
+  .tree-pages a:hover { color: var(--ink); background: var(--tint); }
+  .tree-pages a:focus-visible { outline-offset: -3px; }
+  .tree-pg-ic { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+}
+/* Mobile menu: the other page as one full-width outlined button under the sections */
+.m-pages { display: grid; gap: 8px; padding-top: 16px; }
+.m-nav-panel .m-pages a {
+  display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0; border: 0; border-radius: 10px;
+  box-shadow: inset 0 0 0 1px var(--line-strong); font: 600 15px/1 var(--font);
+}
+.m-pages svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+/* Under 600px the header has room for the brand, the CTA and the menu only: the theme switch moves into the menu (as the languages do) */
+.m-theme { display: none; }
+@media (max-width: 600px) {
+  .header-row > .theme-btn { display: none; }
+  .m-theme {
+    display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; margin-top: 8px; border: 0; border-radius: 10px;
+    background: none; box-shadow: inset 0 0 0 1px var(--line-strong); color: var(--ink); cursor: pointer; font: 600 15px/1 var(--font);
+  }
+  .m-theme .theme-ic { width: 18px; height: 18px; }
+}
+
+/* Links that lead to another page: an underlined word in running text, and a «more» link with a right arrow */
+.inline-link { color: inherit; text-decoration: underline; text-decoration-color: var(--line-strong); text-decoration-thickness: 1.5px; text-underline-offset: 4px; transition: text-decoration-color .2s var(--ease); }
+.inline-link:hover { text-decoration-color: currentColor; }
+.more-link-page:hover svg, .products .more-link-page:hover svg { transform: translateX(3px); }
+
+/* ---------- DriverApp on the main page: a short split that hands over to driverapp.html ---------- */
+.drv-teaser-split { align-items: center; }
+.drv-teaser-list { margin-top: 28px; display: grid; grid-template-columns: repeat(2, max-content); gap: 14px 32px; }
+.drv-teaser-list li { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 500; line-height: 1.35; color: var(--ink); }
+.drv-teaser .src-ic { width: 32px; height: 32px; border-radius: 9px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.drv-teaser .src-ic svg { width: 18px; height: 18px; }
+.drv-teaser .src-ic svg.lc { stroke-width: 1.75; }
+.drv-teaser-photo img { display: block; width: 100%; height: auto; aspect-ratio: 5 / 4; object-fit: cover; object-position: 38% 72%; border-radius: 20px; background: var(--line); }
+@media (max-width: 600px) {
+  .drv-teaser-list { grid-template-columns: minmax(0, 1fr); }
+  .drv-teaser-photo img { aspect-ratio: 4 / 3; }
+}
+
+/* ---------- Page opener (shared by index.html and driverapp.html) ----------
+   A full-bleed photograph fills the first viewport and carries the badge, headline, lead, actions and proof.
+   On index.html the real screen follows in its own block (.platform-screen); driverapp.html adds the app beside the copy (.dh). */
+.platform-hero { margin-top: 0; padding: 0; }
+.pf-hero { position: relative; isolation: isolate; min-height: calc(100svh - var(--header-h)); display: flex; align-items: center; }
+.pf-hero-img {
+  position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: 62% 58%;
+  background: var(--tint);
+  -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%); mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
+}
+/* a soft daylight wash under the copy keeps ink text above 4.5:1 wherever the sky darkens */
+.pf-hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(100deg, color-mix(in srgb, var(--tint) 90%, transparent) 0%, color-mix(in srgb, var(--tint) 70%, transparent) 36%, color-mix(in srgb, var(--tint) 0%, transparent) 60%);
+}
+.pf-hero-copy { width: 100%; padding-block: clamp(64px, 10svh, 128px); }
+.pf-hero-copy h1 { font-size: clamp(32px, 3.6vw, 50px); line-height: 1.08; letter-spacing: -.03em; }
+/* the headline breaks where the copy reads: what, then where */
+.pf-hero-copy .h1-line { display: block; }
+/* Product badge above the headline: the product name in tracked capitals, on white like the proof strip */
+.pf-badge {
+  display: inline-flex; align-items: center; margin-bottom: clamp(20px, 2.6svh, 28px); padding: 8px 12px;
+  border-radius: 10px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
+  font: 600 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); white-space: nowrap;
+}
+.pf-hero-copy p { margin-top: clamp(24px, 3svh, 36px); font-size: clamp(17px, 1.3vw, 19px); line-height: 1.55; color: var(--body); max-width: 40ch; }
+.pf-hero-copy .hero-actions { margin-top: clamp(32px, 4.5svh, 48px); }
+/* Proof under the actions: the three facts the page can back, set quietly so the buttons stay first. */
+.pf-hero-copy .hero-proof { max-width: none; margin-top: clamp(24px, 3.5svh, 36px); display: inline-flex; flex-wrap: wrap; gap: 4px 0; padding: 10px 16px; border-radius: 12px; background: var(--surface); font-size: 14px; line-height: 1.45; color: var(--body); }
+.hero-proof span { display: inline-flex; align-items: center; white-space: nowrap; }
+.hero-proof span + span::before { content: ""; width: 4px; height: 4px; margin: 0 12px; border-radius: 50%; background: var(--line-strong); }
+@media (max-width: 600px) {
+  .pf-hero-copy .hero-proof { display: grid; gap: 6px; }
+  .hero-proof span { white-space: normal; }
+  .hero-proof span + span::before { display: none; }
+}
+.pf-hero-copy .btn-quiet { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.pf-hero-copy .btn-quiet:hover { background: var(--surface-2); }
+@media (max-width: 860px) {
+  .pf-hero { flex-direction: column; min-height: 0; }
+  .pf-hero-img { order: 2; position: relative; inset: auto; display: block; height: auto; aspect-ratio: 4 / 3; object-position: 68% 50%; }
+  .pf-hero::before { display: none; }
+  .pf-hero-copy { padding-top: clamp(40px, 9svh, 72px); padding-bottom: 32px; }
+}
+
+/* ---------- DriverApp page (driverapp.html) ----------
+   Opener (#top, tint): the main page's opener (driver photo full-bleed, daylight wash, badge, two-line h1, lead, actions, strip).
+   #screens (tint) is the tablist and the phone: tabs 1-2 play a single stop (the truck drives up, the driver taps the site,
+   takes the before photo, closes the task, and the Platform card beside the phone turns «Выполнено» at the same moment);
+   tabs 3-4 are static screens. #stop (white) is the navigator and offline flow on a tint panel, and the demo form closes on tint. */
+/* the picture sits under the daylight wash (both are z -1; the later picture would paint over it); the driver stands right of the copy */
+.dh .pf-hero-img { z-index: -2; object-position: 50% 50%; }
+.dh-grid { width: 100%; }
+.dh-copy { padding-inline: 0; }
+.dh-copy .h1-line { white-space: nowrap; }
+/* Store badges, then the device note on the white strip the main page uses for its proof line */
+.dh-proof { margin-top: clamp(28px, 4svh, 40px); display: grid; justify-items: start; gap: 12px; }
+.pf-hero-copy .dh-proof .hero-proof { margin-top: 0; }
+.dh-proof .hero-proof strong { color: var(--ink); font-weight: 600; }
+.dh-proof .hero-proof span { display: inline; white-space: normal; }
+
+/* #screens stage: the shift plays in the phone; the Platform card overlaps its left edge. Note and pause button share the last row. */
+.drv-stage:has(.dh-proto) { container: drv-stage / inline-size; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 16px; }
+.drv-stage .dh-proto { grid-column: 1 / -1; }
+/* the card needs ~144px left of the phone: with room, the phone moves right to make it; without, the card stacks under the phone */
+@container drv-stage (min-width: 444px) {
+  .dh-proto { --shift: min(50cqw - 150px, 120px); translate: var(--shift) 0; }
+}
+@container drv-stage (max-width: 560px) {
+  .dh-proto[data-cam] .dphone { scale: .62; }
+}
+@container drv-stage (max-width: 443.98px) {
+  .drv-stage .dh-sync { position: relative; inset: auto; width: min(100% - 32px, 284px); margin: 16px auto 0; }
+  .dh-proto[data-cam] .dphone { scale: .5; }
+}
+.drv-stage .dh-proto ~ .seq-toggle { margin-top: 20px; }
+.dh-proto { position: relative; }
+.dh-proto.is-held * { animation-play-state: paused !important; }
+.dh-proto.is-reset, .dh-proto.is-reset * { transition: none !important; animation: none !important; }
+
+/* The driver's finger: a ring that presses where --tx / --ty point (design px inside the 412 x 947 screen) */
+.hp-tap {
+  position: absolute; z-index: 7; left: var(--tx, 0); top: var(--ty, 0); width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%;
+  background: rgba(16, 24, 40, .22); box-shadow: 0 0 0 3px #fff, 0 2px 10px rgba(8, 10, 17, .3); opacity: 0; pointer-events: none;
+}
+.hp-tap.is-pressing { animation: hp-press .7s var(--ease) both; }
+.hp-tap.is-dragging { animation: hp-drag 1.1s cubic-bezier(.55, 0, .15, 1) both; }
+@keyframes hp-press {
+  0% { opacity: 0; scale: 1.5; }
+  35% { opacity: 1; scale: 1; }
+  55% { opacity: 1; scale: .82; }
+  100% { opacity: 0; scale: 1.15; }
+}
+@keyframes hp-drag {
+  0% { opacity: 0; scale: 1.4; translate: 0 0; }
+  15% { opacity: 1; scale: .85; translate: 0 0; }
+  85% { opacity: 1; scale: .85; translate: 332px 0; }
+  100% { opacity: 0; scale: 1.1; translate: 332px 0; }
+}
+
+/* The same job in the Platform: product UI, one shadow; its status and photos follow the driver */
+.dh-sync {
+  position: absolute; right: calc(100% - 52px); top: 30%; width: 248px; padding: 14px 16px 16px; border-radius: 14px;
+  background: var(--surface); box-shadow: var(--shadow); font-family: var(--font-ui); color: var(--ink);
+}
+.dh-sync-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: var(--muted); }
+.dh-sync-top .plate { padding: 2px 7px; border: 1.5px solid var(--ink); border-radius: 6px; font-size: 11px; color: var(--ink); }
+.dh-sync b { display: block; margin-top: 10px; font-size: 15px; font-weight: 600; line-height: 1.3; }
+.dh-sync small { display: block; margin-top: 2px; font-size: 13px; color: var(--body); }
+.dh-sync-foot { margin-top: 12px; display: flex; align-items: center; gap: 8px; min-height: 30px; }
+.dh-thumbs { display: flex; gap: 4px; }
+.dh-thumbs img { display: block; width: 40px; height: 30px; border-radius: 6px; object-fit: cover; opacity: 0; scale: .7; transition: opacity .4s var(--ease), scale .5s var(--ease); }
+.dh-proto:is([data-sync="do"], [data-sync="done"]) .dh-th-b, .dh-proto[data-sync="done"] .dh-th-a { opacity: 1; scale: 1; }
+.dh-sync .status { display: none; margin-left: auto; font-size: 12px; padding: 5px 9px; }
+.dh-proto:not([data-sync]) .dh-st-move, .dh-proto[data-sync="move"] .dh-st-move,
+.dh-proto:is([data-sync="start"], [data-sync="do"]) .dh-st-start, .dh-proto[data-sync="done"] .dh-st-done { display: inline-flex; }
+.dh-proto:is([data-sync="start"], [data-sync="do"], [data-sync="done"]) .dh-sync { animation: dh-land .7s var(--ease); }
+.dh-proto[data-sync="do"] .dh-sync { animation-name: dh-land-2; }
+@keyframes dh-land { 0% { box-shadow: 0 0 0 2px var(--action), var(--shadow); } 100% { box-shadow: 0 0 0 2px transparent, var(--shadow); } }
+@keyframes dh-land-2 { 0% { box-shadow: 0 0 0 2px var(--action), var(--shadow); } 100% { box-shadow: 0 0 0 2px transparent, var(--shadow); } }
+.dh-proto[data-sync="done"] .dh-sync { animation-name: dh-done; }
+@keyframes dh-done { 0% { box-shadow: 0 0 0 2px var(--st-done-strong), var(--shadow); } 100% { box-shadow: 0 0 0 2px transparent, var(--shadow); } }
+/* the card steps back while the phone turns for the camera, after the job, and on the static screens */
+.dh-sync { transition: opacity .35s var(--ease), translate .45s var(--ease), visibility 0s; }
+.dh-proto:is([data-cam], [data-sync="off"]) .dh-sync { opacity: 0; translate: -12px 0; visibility: hidden; transition: opacity .3s var(--ease), translate .3s var(--ease), visibility 0s .3s; }
+
+.drv-stop .drv-more { margin-top: 0; }
+.drv-stop .flow { background: var(--tint); }
+.section-tint .form { background: var(--surface); }
+@media (max-width: 1080px) {
+  .dh .pf-hero-img { object-position: 38% 50%; }
+}
+@media (max-width: 860px) {
+  /* like the main opener, the photo leaves the copy; framed on the driver */
+  .dh .pf-hero-img { object-position: 69% 50%; }
+}
+@media (max-width: 600px) {
+  .dh-copy .h1-line { white-space: normal; }
 }
 
 @media (prefers-reduced-motion: reduce) {

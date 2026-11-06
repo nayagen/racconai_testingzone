@@ -4,51 +4,8 @@
 
 /* Landing frame: the screen keeps its 1600 x 980 design size and scales by --pf-s (set in script.js) */
 .platform .section-head { margin-bottom: clamp(32px, 4vw, 48px); }
-/* Page opener: a full-bleed dawn photograph fills the first viewport and carries the headline, lead, actions and proof.
-   The real screen follows in its own block (.platform-screen). */
-.platform-hero { margin-top: 0; padding: 0; }
-.pf-hero { position: relative; isolation: isolate; min-height: calc(100svh - var(--header-h)); display: flex; align-items: center; }
-.pf-hero-img {
-  position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: 62% 58%;
-  background: var(--tint);
-  -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%); mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
-}
-/* a soft daylight wash under the copy keeps ink text above 4.5:1 wherever the sky darkens */
-.pf-hero::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(100deg, color-mix(in srgb, var(--tint) 90%, transparent) 0%, color-mix(in srgb, var(--tint) 70%, transparent) 36%, color-mix(in srgb, var(--tint) 0%, transparent) 60%);
-}
-.pf-hero-copy { width: 100%; padding-block: clamp(64px, 10svh, 128px); }
-.pf-hero-copy h1 { font-size: clamp(32px, 3.6vw, 50px); line-height: 1.08; letter-spacing: -.03em; }
-/* the headline breaks where the copy reads: what, then where */
-.pf-hero-copy .h1-line { display: block; }
-/* Product badge above the headline: the product name in tracked capitals, on white like the proof strip */
-.pf-badge {
-  display: inline-flex; align-items: center; margin-bottom: clamp(20px, 2.6svh, 28px); padding: 8px 12px;
-  border-radius: 10px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
-  font: 600 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); white-space: nowrap;
-}
-.pf-hero-copy p { margin-top: clamp(24px, 3svh, 36px); font-size: clamp(17px, 1.3vw, 19px); line-height: 1.55; color: var(--body); max-width: 40ch; }
-.pf-hero-copy .hero-actions { margin-top: clamp(32px, 4.5svh, 48px); }
-/* Proof under the actions: the three facts the page can back, set quietly so the buttons stay first. */
-.pf-hero-copy .hero-proof { max-width: none; margin-top: clamp(24px, 3.5svh, 36px); display: inline-flex; flex-wrap: wrap; gap: 4px 0; padding: 10px 16px; border-radius: 12px; background: var(--surface); font-size: 14px; line-height: 1.45; color: var(--body); }
-.hero-proof span { display: inline-flex; align-items: center; white-space: nowrap; }
-.hero-proof span + span::before { content: ""; width: 4px; height: 4px; margin: 0 12px; border-radius: 50%; background: var(--line-strong); }
-@media (max-width: 600px) {
-  .pf-hero-copy .hero-proof { display: grid; gap: 6px; }
-  .hero-proof span { white-space: normal; }
-  .hero-proof span + span::before { display: none; }
-}
-.pf-hero-copy .btn-quiet { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
-.pf-hero-copy .btn-quiet:hover { background: var(--surface-2); }
 /* Interface block: the screen on the same tint the hero photo fades into */
 .platform-screen { padding-top: clamp(48px, 6vw, 88px); }
-@media (max-width: 860px) {
-  .pf-hero { flex-direction: column; min-height: 0; }
-  .pf-hero-img { order: 2; position: relative; inset: auto; display: block; height: auto; aspect-ratio: 4 / 3; object-position: 68% 50%; }
-  .pf-hero::before { display: none; }
-  .pf-hero-copy { padding-top: clamp(40px, 9svh, 72px); padding-bottom: 32px; }
-}
 /* Up to 1600px the frame fills the wrap as before; on larger screens it grows to 80% of the viewport (the screen scales up past
    its design size), capped by the window height so the whole 980 design px tall screen fits under the header. */
 /* The screen and its caption row narrow to the scaled screen width when the window height limits the scale (script.js) */
@@ -651,92 +608,7 @@
   .pf-stage .pf-screen.is-cam, .pf-tour-spot { transition: none; }
 }
 
-/* ---------- Dark theme for the Platform replica ----------
-   The RaccoonAI Design System for Claude ships light tokens only, so this is its night counterpart on the same scales:
-   slate surfaces stepped page < secondary < primary < tertiary, light text, brighter action/status hues, deep tinted
-   "subtle" fills with light inks. Kept here (hand-written), not in the generated platform-ds.css. */
-:root[data-theme="dark"] .rds {
-  --text-headings: #f1f5f9;
-  --text-body: #c5cfdc;
-  --text-secondary: #8f9db2;
-  --text-action: #6ea2ff;
-  --text-action-hover: #8ec5ff;
-  --text-action-2: #6ea2ff;
-  --text-action-2-hover: #8ec5ff;
-  --text-disabled: #55647a;
-  --text-information-subtle: #6ea2ff;
-  --text-information: #8ec5ff;
-  --text-warning-subtle: #ff8a3d;
-  --text-warning: #ffb86a;
-  --text-attention-subtle: #f0b100;
-  --text-attention: #fcd34d;
-  --text-success-subtle: #22d36b;
-  --text-success: #7bf1a8;
-  --text-error-subtle: #ff6467;
-  --text-error: #ffa2a2;
-  --text-ai-subtle: #a684ff;
-  --text-ai: #c4b4ff;
-  --text-invert: #0a0f17;
-  --text-selected: #8ec5ff;
-  --icons-default: #e2e8f0;
-  --icons-secondary: #8f9db2;
-  --icons-action: #6ea2ff;
-  --icons-action-hover: #8ec5ff;
-  --icons-action-2: #6ea2ff;
-  --icons-action-2-hover: #8ec5ff;
-  --icons-disabled: #55647a;
-  --icons-information: #6ea2ff;
-  --icons-warning: #ff8a3d;
-  --icons-attention: #f0b100;
-  --icons-success: #22d36b;
-  --icons-error: #ff6467;
-  --icons-ai: #a684ff;
-  --icons-invert: #0a0f17;
-  --surface-page: #0e1520;
-  --surface-primary: #151d2b;
-  --surface-secondary: #1a2333;
-  --surface-tertiary: #222d3e;
-  --surface-action: #2b7fff;
-  --surface-action-hover: #155dfc;
-  --surface-action-2: #13274a;
-  --surface-action-2-hover: #1a3462;
-  --surface-disabled: #222d3e;
-  --surface-information-subtle: #132748;
-  --surface-warning-subtle: #36200d;
-  --surface-attention-subtle: #33290b;
-  --surface-success-subtle: #0e2a1b;
-  --surface-error-subtle: #3a1316;
-  --surface-ai-subtle: #221a3d;
-  --surface-invert: #e2e8f0;
-  --surface-selected: #13274a;
-  --border-primary: #222d3e;
-  --border-information: #6ea2ff;
-  --border-error: #ff6467;
-  --border-attention: #f0b100;
-  --border-success: #22d36b;
-  --border-warning: #ff8a3d;
-  --border-ai: #a684ff;
-  --border-action: #2b7fff;
-  --border-action-hover: #6ea2ff;
-  --border-disabled: #314058;
-  --border-invert: #cbd5e1;
-  --border-action-subtle: #1f3d73;
-  --border-success-subtle: #165c36;
-  --border-warning-subtle: #6b3a12;
-  --border-information-subtle: #1f3d73;
-  --border-attention-subtle: #5c4a0c;
-  --border-error-subtle: #6b2226;
-  --border-ai-subtle: #45307f;
-  --status-assigned-idle: #1f3d73;
-  --status-assigned-selected: #2b7fff;
-  --status-cancelled-idle: #8f9db2;
-  --status-cancelled-selected: #c5cfdc;
-  --chart-sequential-1: #13274a;
-  --chart-diverging-neutral: #314058;
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, .5), 0 1px 2px 0 rgba(0, 0, 0, .35);
-  --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, .5), 0 2px 4px -2px rgba(0, 0, 0, .35);
-  --shadow-lg: 0 20px 24px -4px rgba(0, 0, 0, .55), 0 8px 8px -4px rgba(0, 0, 0, .35);
-}
+/* The DS night tokens (:root[data-theme="dark"] .rds) live in style.css, shared with the DriverApp phone. */
 /* the DS logo is a white tile with an ink raccoon in fixed fills: at night it inverts, like the dock mark */
 :root[data-theme="dark"] .rds .rc-logo path[fill="white"] { fill: var(--surface-tertiary); }
 :root[data-theme="dark"] .rds .rc-logo path[fill="#080A11"] { fill: var(--text-headings); }
