@@ -807,6 +807,118 @@
     }
   }
 
+  /* ---------- Weighbridge: a landfill weighing lands in its trip ----------
+     The record is weighed (gross, tare, net), a signal runs down the wire to the Platform port, and the trip matched by plate
+     receives the net weight and its split by site. Two records alternate; the markup is the first one, landed. */
+  var wb = document.getElementById("wb-stage");
+  if (wb) {
+    var WB = [
+      { rec: "48213", plate: "123 ABC 02", time: "11:42", gross: "18 420 кг", tare: "11 580 кг", net: "6 840 кг", trip: "2",
+        crew: "Сериков Данияр · ТБО · 17 площадок", more: "и ещё 14 площадок",
+        sites: [["Кабанбай батыра, 45", "ТОО «Алатау Сервис Групп»", "5", "0,72 т"], ["Жибек Жолы, 115", "ТОО «Береке Трейд»", "4", "0,58 т"],
+          ["Радостовца, 34", "ИП Сапарова А.", "2", "0,29 т"]], rest: "5,25 т" },
+      { rec: "48217", plate: "482 KMT 02", time: "11:58", gross: "17 960 кг", tare: "11 240 кг", net: "6 720 кг", trip: "1",
+        crew: "Омаров Ерлан · ТБО · 18 площадок", more: "и ещё 15 площадок",
+        sites: [["Абая, 52", "ТОО «Тау Маркет»", "4", "0,64 т"], ["Самал-2, 58", "ТОО «Алатау Сервис Групп»", "3", "0,41 т"],
+          ["Сейфуллина, 404", "ТОО «Тау Маркет»", "4", "0,53 т"]], rest: "5,14 т" }
+    ];
+    var wf = function (k) { return wb.querySelector('[data-w="' + k + '"]'); };
+    var wbUnload = wb.querySelector(".wb-unload");
+    var wbPort = wb.querySelector(".wb-port");
+    var wbChip = wf("chip");
+    var wbToggle = document.getElementById("wb-toggle");
+    var wTimers = [], wIx = 0;
+    var wLater = function (fn, ms) { wTimers.push(setTimeout(fn, ms)); };
+    var setTxt = function (k, v) { var el = wf(k); if (el) { el.textContent = v; } };
+    var pend = function (keys, on) { keys.forEach(function (k) { wf(k).classList.toggle("is-pending", on); }); };
+    var WEIGHTS = ["gross", "tare", "net", "rec"];
+    var TRIPW = ["w0", "w1", "w2", "w3", "unet", "urec"];
+
+    // Show a record before it is weighed: plate and time only, the trip still waiting for it
+    var load = function (d) {
+      ["rec", "plate", "time", "gross", "tare", "net", "trip", "crew", "more"].forEach(function (k) { setTxt(k, d[k]); });
+      setTxt("plate2", d.plate);
+      d.sites.forEach(function (s, i) { setTxt("s" + i, s[0]); setTxt("c" + i, s[1]); setTxt("k" + i, s[2]); setTxt("w" + i, s[3]); });
+      setTxt("w3", d.rest);
+      setTxt("unet", d.net);
+      setTxt("urec", "Запись № " + d.rec + " · " + d.time);
+      pend(WEIGHTS.concat(TRIPW), true);
+      wbChip.className = "status status-wait";
+      wbChip.textContent = "Ждём заезд на весовую";
+      wbUnload.classList.remove("is-landed");
+    };
+    var landed = function () {
+      pend(WEIGHTS.concat(TRIPW), false);
+      wbChip.className = "status status-done";
+      wbChip.textContent = "Вес получен";
+      wbUnload.classList.remove("is-landed");
+      wb.classList.remove("is-sending");
+    };
+
+    var cycle = function () {
+      wIx = (wIx + 1) % WB.length;
+      load(WB[wIx]);
+      wLater(function () { pend(["gross"], false); }, 900);
+      wLater(function () { pend(["tare"], false); }, 1700);
+      wLater(function () { pend(["net", "rec"], false); }, 2400);
+      wLater(function () { wb.classList.remove("is-sending"); void wb.offsetWidth; wb.classList.add("is-sending"); }, 3000);
+      wLater(function () {
+        wbPort.classList.remove("is-hit"); void wbPort.offsetWidth; wbPort.classList.add("is-hit");
+        pend(["unet", "urec"], false);
+        wbUnload.classList.add("is-landed");
+        wbChip.className = "status status-done";
+        wbChip.textContent = "Вес получен";
+      }, 3850);
+      ["w0", "w1", "w2", "w3"].forEach(function (k, i) { wLater(function () { pend([k], false); }, 4300 + i * 140); });
+      wLater(function () { wbUnload.classList.remove("is-landed"); wb.classList.remove("is-sending"); }, 6200);
+      wLater(cycle, 9000);
+    };
+    var wStop = function () { wTimers.forEach(clearTimeout); wTimers = []; landed(); };
+
+    if (!reduceMotion && "IntersectionObserver" in window) {
+      var wRunning = false, wPaused = false, wVisible = false;
+      var wSync = function () {
+        var run = wVisible && !wPaused && !document.hidden;
+        if (run && !wRunning) { wRunning = true; wLater(cycle, 600); }
+        else if (!run && wRunning) { wRunning = false; wStop(); }
+      };
+      wbToggle.hidden = false;
+      wbToggle.addEventListener("click", function () {
+        wPaused = !wPaused;
+        wbToggle.setAttribute("aria-pressed", String(wPaused));
+        wbToggle.querySelector("span").textContent = wPaused ? "Запустить анимацию" : "Остановить анимацию";
+        wbToggle.classList.toggle("is-paused", wPaused);
+        wSync();
+      });
+      new IntersectionObserver(function (entries) { wVisible = entries[0].isIntersecting; wSync(); }, { threshold: 0.35 }).observe(wb);
+      document.addEventListener("visibilitychange", wSync);
+    }
+  }
+
+  // Tonnage split: Заказчики / Площадки tabs (click, arrow keys, Home / End)
+  var wbShare = document.getElementById("wb-share");
+  if (wbShare) {
+    var wTabs = [].slice.call(wbShare.querySelectorAll('[role="tab"]'));
+    var pickTab = function (t, focus) {
+      wTabs.forEach(function (o) {
+        var on = o === t;
+        o.setAttribute("aria-selected", String(on));
+        o.tabIndex = on ? 0 : -1;
+        document.getElementById(o.getAttribute("aria-controls")).hidden = !on;
+      });
+      if (focus) { t.focus(); }
+    };
+    wTabs.forEach(function (t, i) {
+      t.addEventListener("click", function () { pickTab(t); });
+      t.addEventListener("keydown", function (e) {
+        var n = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: wTabs.length - 1 }[e.key];
+        if (n === undefined) { return; }
+        e.preventDefault();
+        pickTab(wTabs[(n + wTabs.length) % wTabs.length], true);
+      });
+    });
+  }
+
   /* ---------- Platform screen magnet ----------
      A manual scroll that comes to rest near the Platform screen glides on to the spot the «Посмотреть интерфейс» anchor lands on
      (the screen's top at the page's scroll-padding), so the whole screen is in view and its tour can start.

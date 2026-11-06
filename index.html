@@ -47,6 +47,8 @@
           <a href="#dispatcher">AI-диспетчер</a>
           <a href="#schedule">Плановый вывоз</a>
           <a href="#driverapp">DriverApp</a>
+          <a href="#weighing">Весовая</a>
+          <a href="#zhasyl">Жасыл Даму</a>
           <a href="#clients">Заказчики</a>
           <a href="#products">Продукты</a>
           <div class="m-lang" translate="no" data-i18n-skip role="group" aria-label="Язык · Тіл · Language">
@@ -76,6 +78,8 @@
           <li><a href="#dispatcher">AI-диспетчер</a></li>
           <li><a href="#schedule">Плановый вывоз</a></li>
           <li><a href="#driverapp">DriverApp</a></li>
+          <li><a href="#weighing">Весовая</a></li>
+          <li><a href="#zhasyl">Жасыл Даму</a></li>
           <li><a href="#clients">Заказчики</a></li>
           <li><a href="#products">Продукты</a></li>
         </ul>
@@ -662,6 +666,189 @@
       </div>
     </section>
 
+    <!-- ============ WEIGHBRIDGE ============ -->
+    <section class="section weigh" id="weighing" aria-labelledby="weigh-title">
+      <div class="wrap split weigh-split">
+        <div class="split-copy">
+          <h2 id="weigh-title">Интеграция с&nbsp;весовой: вес каждого рейса без&nbsp;ручного ввода</h2>
+          <p>Весовая полигона сама передаёт заезды в&nbsp;Платформу. Платформа узнаёт машину по&nbsp;госномеру и&nbsp;записывает вес нетто в&nbsp;её&nbsp;рейс, поэтому тоннаж не&nbsp;нужно переносить из&nbsp;журнала весовой.</p>
+          <!-- Step icons: Lucide (weight, cloud-upload, link, chart-column), ISC License, lucide.dev -->
+          <ol class="cycle">
+            <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z"/></svg></span><strong>Взвешивание на&nbsp;полигоне</strong><span>Машина проезжает весы на&nbsp;въезде и&nbsp;после разгрузки. Весовая записывает госномер, время, брутто, тару и&nbsp;нетто.</span></li>
+            <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 13v8"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m8 17 4-4 4 4"/></svg></span><strong>Запись уходит в&nbsp;Платформу</strong><span>Интеграция передаёт каждый заезд автоматически, без&nbsp;выгрузок и&nbsp;ручного ввода.</span></li>
+            <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><strong>Привязка по&nbsp;госномеру</strong><span>Платформа находит машину и&nbsp;её&nbsp;рейс, который закончился разгрузкой на&nbsp;этом полигоне. Вес нетто появляется в&nbsp;карточке рейса.</span></li>
+            <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span><strong>Тоннаж в&nbsp;отчётах</strong><span>Вес складывается в&nbsp;итоги по&nbsp;машине и&nbsp;дню и&nbsp;раскладывается по&nbsp;площадкам и&nbsp;заказчикам рейса.</span></li>
+          </ol>
+        </div>
+
+        <figure class="wb-stage" id="wb-stage" aria-label="Пример: заезд на весовую полигона привязывается к рейсу в Платформе">
+          <div class="wb-ticket">
+            <div class="wb-t-head">
+              <p class="wb-t-title"><span class="src-ic" aria-hidden="true"><svg class="lc" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z"/></svg></span>Весовая · Полигон Айтей</p>
+              <p class="wb-t-no">Запись №&nbsp;<span data-w="rec">48213</span></p>
+            </div>
+            <div class="wb-t-main">
+              <span class="plate wb-plate" data-w="plate">123 ABC 02</span>
+              <span class="wb-t-time" data-w="time">11:42</span>
+            </div>
+            <dl class="wb-weights">
+              <div><dt>Брутто</dt><dd data-w="gross">18&nbsp;420 кг</dd></div>
+              <div><dt>Тара</dt><dd data-w="tare">11&nbsp;580 кг</dd></div>
+              <div class="is-net"><dt>Нетто</dt><dd data-w="net">6&nbsp;840 кг</dd></div>
+            </dl>
+          </div>
+
+          <div class="wb-link" aria-hidden="true"><span class="wb-sig"></span></div>
+
+          <div class="wb-trip">
+            <p class="inbox-port wb-port"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#mark"/></svg>Платформа · по&nbsp;госномеру</p>
+            <div class="wb-trip-head">
+              <p class="wb-trip-title">Рейс <span data-w="trip">2</span> · <span class="plate" data-w="plate2">123 ABC 02</span></p>
+              <p class="wb-trip-sub" data-w="crew">Сериков Данияр · ТБО · 17 площадок</p>
+            </div>
+            <div class="wb-pts" role="table" aria-label="Площадки рейса и их доля веса">
+              <div class="wb-th" role="row"><span role="columnheader">Площадка</span><span role="columnheader">Конт.</span><span role="columnheader">Вес</span></div>
+              <div class="wb-tr" role="row"><span role="cell"><b data-w="s0">Кабанбай батыра, 45</b><small data-w="c0">ТОО «Алатау Сервис Групп»</small></span><span role="cell" data-w="k0">5</span><span role="cell" class="wb-kg" data-w="w0">0,72 т</span></div>
+              <div class="wb-tr" role="row"><span role="cell"><b data-w="s1">Жибек Жолы, 115</b><small data-w="c1">ТОО «Береке Трейд»</small></span><span role="cell" data-w="k1">4</span><span role="cell" class="wb-kg" data-w="w1">0,58 т</span></div>
+              <div class="wb-tr" role="row"><span role="cell"><b data-w="s2">Радостовца, 34</b><small data-w="c2">ИП Сапарова А.</small></span><span role="cell" data-w="k2">2</span><span role="cell" class="wb-kg" data-w="w2">0,29 т</span></div>
+              <div class="wb-tr wb-tr-more" role="row"><span role="cell" data-w="more">и&nbsp;ещё 14 площадок</span><span role="cell"></span><span role="cell" class="wb-kg" data-w="w3">5,25 т</span></div>
+            </div>
+            <div class="wb-unload">
+              <div class="wb-u-main">
+                <p class="wb-u-title">Разгрузка · Полигон Айтей</p>
+                <p class="wb-u-rec" data-w="urec">Запись № 48213 · 11:42</p>
+              </div>
+              <p class="wb-u-net"><span>Нетто</span><b data-w="unet">6&nbsp;840 кг</b></p>
+              <span class="status status-done" data-w="chip">Вес получен</span>
+            </div>
+          </div>
+          <figcaption class="intake-foot">
+            <button type="button" class="seq-toggle" id="wb-toggle" aria-pressed="false" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path class="seq-ic-pause" d="M7 5v10M13 5v10"/><path class="seq-ic-play" d="M7 4.5v11l8.5-5.5z"/></svg><span>Остановить анимацию</span></button>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="wrap clients-row clients-pair weigh-pair">
+        <div class="clients-col">
+          <h3 class="sub-title">Тоннаж по&nbsp;рейсу, машине и&nbsp;дню</h3>
+          <p>Каждый рейс получает вес с&nbsp;весовой. Из&nbsp;рейсов складываются итоги по&nbsp;машине за&nbsp;смену и&nbsp;по&nbsp;всему парку за&nbsp;день.</p>
+          <figure class="wb-fleet" aria-label="Пример: тоннаж по машинам за день">
+            <div class="sl-head">
+              <p class="sl-title">Тоннаж · пт, 6&nbsp;ноября</p>
+              <p class="sl-sub">Вес нетто с&nbsp;весовой, каждый сегмент&nbsp;— один рейс</p>
+            </div>
+            <ul class="wb-trucks">
+              <li><span class="plate">123 ABC 02</span><span class="wb-bar" aria-hidden="true"><i style="--t: 6.12"></i><i style="--t: 6.84"></i><i style="--t: 5.90"></i></span><span class="wb-tot"><b>18,86 т</b><small>3 рейса</small></span></li>
+              <li><span class="plate">482 KMT 02</span><span class="wb-bar" aria-hidden="true"><i style="--t: 6.72"></i><i style="--t: 6.35"></i></span><span class="wb-tot"><b>13,07 т</b><small>2 рейса</small></span></li>
+              <li><span class="plate">915 AAR 02</span><span class="wb-bar" aria-hidden="true"><i style="--t: 5.48"></i><i style="--t: 6.10"></i><i style="--t: 6.41"></i></span><span class="wb-tot"><b>17,99 т</b><small>3 рейса</small></span></li>
+            </ul>
+            <p class="wb-day"><span>Весь парк за&nbsp;день · 42 машины на&nbsp;линии</span><b>278,5 т</b></p>
+          </figure>
+        </div>
+        <div class="clients-col">
+          <h3 class="sub-title">Тоннаж по&nbsp;заказчику и&nbsp;площадке</h3>
+          <p>Вес рейса раскладывается по&nbsp;площадкам, которые он&nbsp;обслужил, и&nbsp;по&nbsp;заказчикам этих площадок. Видно, сколько тонн вывезено для&nbsp;каждого заказчика и&nbsp;с&nbsp;каждой площадки.</p>
+          <figure class="wb-share" id="wb-share" aria-label="Пример: тоннаж по заказчикам и площадкам">
+            <div class="wb-share-head">
+              <p class="sl-title">Ноябрь, 1–6</p>
+              <div class="wb-seg" role="tablist" aria-label="Разрез тоннажа">
+                <button type="button" role="tab" id="wb-tab-c" aria-controls="wb-p-c" aria-selected="true">Заказчики</button>
+                <button type="button" role="tab" id="wb-tab-s" aria-controls="wb-p-s" aria-selected="false" tabindex="-1">Площадки</button>
+              </div>
+            </div>
+            <ul class="wb-list" role="tabpanel" id="wb-p-c" aria-labelledby="wb-tab-c">
+              <li style="--v: 100%"><span class="wb-name">ТОО «Алатау Сервис Групп»<small>12 площадок</small></span><b>41,6 т</b></li>
+              <li style="--v: 43.8%"><span class="wb-name">ТОО «Береке Трейд»<small>5 площадок</small></span><b>18,2 т</b></li>
+              <li style="--v: 31%"><span class="wb-name">КСК «Орбита»<small>3 площадки</small></span><b>12,9 т</b></li>
+              <li style="--v: 22.6%"><span class="wb-name">ТОО «Тау Маркет»<small>2 площадки</small></span><b>9,4 т</b></li>
+            </ul>
+            <ul class="wb-list" role="tabpanel" id="wb-p-s" aria-labelledby="wb-tab-s" hidden>
+              <li style="--v: 100%"><span class="wb-name">Кабанбай батыра, 45<small>6 вывозов · ТОО «Алатау Сервис Групп»</small></span><b>4,3 т</b></li>
+              <li style="--v: 30.2%"><span class="wb-name">Самал-2, 58<small>3 вывоза · ТОО «Алатау Сервис Групп»</small></span><b>1,3 т</b></li>
+              <li style="--v: 27.9%"><span class="wb-name">Жибек Жолы, 115<small>2 вывоза · ТОО «Береке Трейд»</small></span><b>1,2 т</b></li>
+              <li style="--v: 14%"><span class="wb-name">Абая, 52<small>1 вывоз · ТОО «Тау Маркет»</small></span><b>0,6 т</b></li>
+            </ul>
+            <figcaption class="stage-note">Переключатель работает</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ZHASYL DAMU (EPR operator reporting) ============ -->
+    <section class="section section-tint zd" id="zhasyl" aria-labelledby="zd-title">
+      <div class="wrap split zd-split">
+        <div class="split-copy">
+          <h2 id="zd-title">Отчётность для&nbsp;Жасыл&nbsp;Даму&nbsp;— без&nbsp;лишней работы</h2>
+          <p>Вывоз с&nbsp;городских контейнерных площадок теперь нужно подтверждать цифровыми данными. RaccoonAI собирает их&nbsp;во&nbsp;время работы и&nbsp;каждый день передаёт в&nbsp;Жасыл Даму сам.</p>
+          <h3 class="zd-how">Как это работает</h3>
+          <!-- Step icons: Lucide (settings, truck, send), ISC License, lucide.dev -->
+          <ol class="cycle zd-cycle">
+            <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg></span><strong>Подключение</strong><span>Вы подключаете RaccoonAI и&nbsp;заводите машины, водителей и&nbsp;контейнерные площадки.</span></li>
+            <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></span><strong>Работа как обычно</strong><span>Бригады работают как обычно: маршрут, фото, весовая.</span></li>
+            <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></span><strong>Отправка каждый день</strong><span>Каждый день RaccoonAI отправляет данные в&nbsp;Жасыл Даму по&nbsp;API, и&nbsp;вы&nbsp;видите статус отправки.</span></li>
+          </ol>
+        </div>
+
+        <figure class="zd-log" aria-label="Пример: журнал отправок в Жасыл Даму в Платформе">
+          <div class="zd-log-head">
+            <div>
+              <p class="zd-log-title">Отправка в&nbsp;Жасыл Даму</p>
+              <p class="zd-log-sub">Ежедневно по&nbsp;API · контейнерные площадки города</p>
+            </div>
+            <span class="zd-api"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#mark"/></svg><svg class="zd-api-arrow" viewBox="0 0 24 12" aria-hidden="true"><path d="M2 6h19M16 1.5 21 6l-5 4.5"/></svg>Жасыл Даму</span>
+          </div>
+          <div class="zd-table" role="table" aria-label="Отправки по дням">
+            <div class="zd-th" role="row"><span role="columnheader">День</span><span role="columnheader">Площадки</span><span role="columnheader">Фото</span><span role="columnheader">Рейсы</span><span role="columnheader">Статус</span></div>
+            <div class="zd-tr is-today" role="row"><span role="cell"><b>Пт, 6&nbsp;ноября</b><small>сегодня</small></span><span role="cell">846<span class="zd-unit"> площадок</span></span><span role="cell">1&nbsp;692<span class="zd-unit"> фото</span></span><span role="cell">75<span class="zd-unit"> рейсов</span></span><span role="cell"><span class="status status-wait">Сбор данных</span></span></div>
+            <div class="zd-tr" role="row"><span role="cell"><b>Чт, 5&nbsp;ноября</b></span><span role="cell">1&nbsp;238<span class="zd-unit"> площадок</span></span><span role="cell">2&nbsp;476<span class="zd-unit"> фото</span></span><span role="cell">96<span class="zd-unit"> рейсов</span></span><span role="cell"><span class="status status-done">Отправлено</span></span></div>
+            <div class="zd-tr" role="row"><span role="cell"><b>Ср, 4&nbsp;ноября</b></span><span role="cell">1&nbsp;209<span class="zd-unit"> площадок</span></span><span role="cell">2&nbsp;418<span class="zd-unit"> фото</span></span><span role="cell">94<span class="zd-unit"> рейсов</span></span><span role="cell"><span class="status status-done">Отправлено</span></span></div>
+            <div class="zd-tr" role="row"><span role="cell"><b>Вт, 3&nbsp;ноября</b></span><span role="cell">1&nbsp;247<span class="zd-unit"> площадок</span></span><span role="cell">2&nbsp;494<span class="zd-unit"> фото</span></span><span role="cell">97<span class="zd-unit"> рейсов</span></span><span role="cell"><span class="status status-done">Отправлено</span></span></div>
+          </div>
+          <p class="zd-log-foot">В&nbsp;каждой отправке: фото до&nbsp;и&nbsp;после, вес рейсов с&nbsp;весовой и&nbsp;GPS-треки машин</p>
+        </figure>
+      </div>
+
+      <div class="wrap zd-what">
+        <h3 class="sub-title">Что уходит в&nbsp;Жасыл Даму</h3>
+        <ul class="zd-cards">
+          <li class="zd-card">
+            <div class="zd-art zd-art-photo" aria-hidden="true">
+              <span><img src="images/platform/proof/b2.webp" width="1280" height="960" alt="" loading="lazy" decoding="async"><small>До · 07:52</small></span>
+              <span><img src="images/platform/proof/a2.webp" width="1280" height="960" alt="" loading="lazy" decoding="async"><small>После · 08:04</small></span>
+              <p class="zd-art-meta">Кабанбай батыра, 45 · Рейс 2 · <span class="plate">123 ABC 02</span></p>
+            </div>
+            <h4>Фото с&nbsp;каждой точки</h4>
+            <p>Водитель снимает площадку до&nbsp;и&nbsp;после вывоза в&nbsp;приложении. Фото сразу привязываются к&nbsp;рейсу и&nbsp;адресу.</p>
+          </li>
+          <li class="zd-card">
+            <div class="zd-art zd-art-weigh" aria-hidden="true">
+              <p class="zd-w-top"><span class="plate">123 ABC 02</span><span>Полигон Айтей · 11:42</span></p>
+              <p class="zd-w-net"><span>Нетто</span><b>6&nbsp;840 кг</b></p>
+              <p class="zd-art-meta">Запись №&nbsp;48213 · Рейс 2</p>
+            </div>
+            <h4>Данные с&nbsp;весовой</h4>
+            <p>Вес каждого рейса подтягивается с&nbsp;весов полигона. Вручную ничего вносить не&nbsp;нужно.</p>
+          </li>
+          <li class="zd-card">
+            <div class="zd-art zd-art-gps" aria-hidden="true">
+              <svg class="zd-map" viewBox="0 0 280 120">
+                <path class="zd-streets" d="M0 24h280M0 64h280M0 104h280M40 0v120M110 0v120M180 0v120M244 0v120"/>
+                <path class="zd-track" d="M40 104V64h70V24h70v40h64"/>
+                <circle class="zd-stop" cx="40" cy="104" r="5"/>
+                <circle class="zd-stop" cx="110" cy="64" r="5"/>
+                <circle class="zd-stop" cx="180" cy="24" r="5"/>
+                <circle class="zd-park" cx="180" cy="64" r="6"/>
+                <rect class="zd-end" x="236" y="56" width="16" height="16" rx="4"/>
+              </svg>
+              <p class="zd-art-meta"><span class="zd-park-key"></span>Стоянка 6&nbsp;мин · разгрузка на&nbsp;полигоне</p>
+            </div>
+            <h4>GPS-трек машины</h4>
+            <p>Маршрут фиксируется от&nbsp;первой точки до&nbsp;разгрузки. Видно, где была машина и&nbsp;сколько стояла.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
     <!-- Photo pause between blocks (illustrative, see images/PROVENANCE.md) -->
     <figure class="pause pause-site">
       <picture class="themed">
@@ -924,6 +1111,8 @@
         <a href="#dispatcher">AI-диспетчер</a>
         <a href="#schedule">Плановый вывоз</a>
         <a href="#driverapp">DriverApp</a>
+        <a href="#weighing">Весовая</a>
+        <a href="#zhasyl">Жасыл Даму</a>
         <a href="#clients">Заказчики</a>
         <a href="#products">Продукты</a>
         <a href="#demo">Запросить демо</a>

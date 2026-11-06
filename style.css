@@ -780,6 +780,167 @@ html[lang="kk"] { --font: "Medeo Sans", "Inter", system-ui, sans-serif; }
 .sync-docs li { font-size: 13px; font-weight: 600; color: var(--ink); background: var(--tint); border-radius: 8px; padding: 7px 10px; }
 .sync .stage-note { margin-top: 18px; }
 
+/* ---------- Weighbridge ----------
+   The landfill's weighing record (top) travels down one dashed wire to the Platform port and lands in the trip it belongs to
+   (matched by plate). Not AI, so no violet; the arrival uses the same Action Blue signal as #intake. script.js loops two records. */
+.weigh-split { align-items: start; }
+.wb-stage { font-family: var(--font-ui); color: var(--body); padding-left: clamp(0px, 3vw, 40px); }
+.wb-ticket { position: relative; z-index: 2; width: min(100%, 400px); margin-inline: auto; padding: 14px 16px 16px; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+.wb-t-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.wb-t-title { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 13px; font-weight: 600; color: var(--ink); }
+.wb-t-title .src-ic { width: 24px; height: 24px; border-radius: 7px; }
+.wb-t-title .src-ic svg { width: 14px; height: 14px; }
+.wb-t-no { flex: none; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wb-t-main { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
+.wb-plate { padding: 5px 12px; border: 1.5px solid var(--ink); border-radius: 8px; font-size: 17px; line-height: 1.25; color: var(--ink); }
+.wb-t-time { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wb-weights { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; margin-top: 14px; padding: 4px; border-radius: 12px; background: var(--tint); }
+.wb-weights > div { padding: 8px 10px; border-radius: 9px; background: var(--surface); }
+.wb-weights dt { font-size: 12px; color: var(--muted); }
+.wb-weights dd { margin-top: 3px; font-size: 15px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; transition: opacity .35s var(--ease); }
+.wb-weights .is-net { box-shadow: inset 0 0 0 1.5px var(--ink); }
+
+/* The wire: a dashed hairline from the record to the port; a short Action Blue segment runs it on each arrival */
+.wb-link { position: relative; z-index: 1; height: 56px; width: 2px; margin-inline: auto; background: repeating-linear-gradient(to bottom, var(--line-strong) 0 4px, transparent 4px 9px); overflow: hidden; }
+.wb-sig { position: absolute; left: 0; top: -22px; width: 2px; height: 22px; border-radius: 1px; background: var(--action); opacity: 0; }
+.wb-stage.is-sending .wb-sig { animation: wb-run .9s cubic-bezier(.45, 0, .2, 1) forwards; }
+@keyframes wb-run { 0% { opacity: 1; transform: translateY(0); } 92% { opacity: 1; } 100% { opacity: 0; transform: translateY(78px); } }
+.wb-port.is-hit { animation: port-hit .7s var(--ease); }
+
+.wb-trip { position: relative; z-index: 2; padding: 26px 16px 16px; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+.wb-trip-head { padding: 0 4px 12px; border-bottom: 1px solid var(--line); }
+.wb-trip-title { font-size: 16px; font-weight: 600; color: var(--ink); }
+.wb-trip-sub { margin-top: 3px; font-size: 13px; color: var(--muted); }
+.wb-pts { display: grid; gap: 4px; margin-top: 12px; padding: 6px; border-radius: 14px; background: var(--tint); }
+.wb-th, .wb-tr { display: grid; grid-template-columns: minmax(0, 1fr) 48px 72px; gap: 12px; align-items: center; padding: 9px 12px; }
+.wb-th { padding-block: 6px 2px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.wb-th > span:not(:first-child), .wb-tr > span:not(:first-child) { text-align: right; }
+.wb-tr { border-radius: 10px; background: var(--surface); font-size: 14px; font-variant-numeric: tabular-nums; }
+.wb-tr b, .wb-tr small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-tr b { font-weight: 600; color: var(--ink); }
+.wb-tr small { margin-top: 2px; font-size: 12px; color: var(--muted); }
+.wb-tr-more { color: var(--muted); }
+.wb-kg { font-weight: 600; color: var(--ink); transition: opacity .35s var(--ease); }
+.wb-unload { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px 16px; align-items: center; margin-top: 12px; padding: 12px 14px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .5s var(--ease), background-color .5s var(--ease); }
+.wb-u-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+.wb-u-rec { margin-top: 2px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wb-u-net { display: grid; justify-items: end; font-variant-numeric: tabular-nums; }
+.wb-u-net span { font-size: 12px; color: var(--muted); }
+.wb-u-net b { font-size: 16px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.wb-unload .status { font-size: 12px; padding: 5px 9px; }
+.wb-unload.is-landed { background: var(--sel-soft); box-shadow: inset 0 0 0 1px var(--action); }
+/* Pending: the record is still being weighed, the trip waits for it */
+.wb-stage .is-pending { opacity: .35; }
+
+/* Outcomes: fleet tonnage by trip (segmented bars) and the customer / site split */
+.wb-fleet, .wb-share { background: var(--surface); border-radius: 20px; padding: clamp(20px, 2.4vw, 28px); box-shadow: var(--shadow); font-family: var(--font-ui); color: var(--body); }
+.wb-trucks li { display: grid; grid-template-columns: 112px minmax(0, 1fr) 76px; gap: 16px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.wb-trucks .plate { justify-self: start; min-width: 112px; text-align: center; padding: 4px 10px; border: 1.5px solid var(--ink); border-radius: 8px; font-size: 14px; line-height: 1.3; color: var(--ink); }
+/* one segment per trip, width in tonnes against a 20 t scale */
+.wb-bar { display: flex; gap: 2px; height: 12px; border-radius: 999px; background: var(--tint); overflow: hidden; }
+.wb-bar i { flex: none; width: calc(var(--t) / 20 * 100%); background: var(--ink); }
+.wb-bar i:nth-child(even) { background: var(--muted); }
+.wb-tot { display: grid; justify-items: end; font-variant-numeric: tabular-nums; }
+.wb-tot b { font-size: 15px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.wb-tot small { font-size: 12px; color: var(--muted); }
+.wb-day { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: var(--tint); font-size: 14px; color: var(--ink); }
+.wb-day b { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.wb-share-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.wb-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--tint); }
+.wb-seg button { height: 32px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font: 500 13px/1 var(--font-ui); cursor: pointer; transition: background-color .2s var(--ease), color .2s var(--ease); }
+.wb-seg button:hover { color: var(--ink); }
+.wb-seg button[aria-selected="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(8, 10, 17, .08), inset 0 0 0 1px var(--line); }
+.wb-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: baseline; padding: 12px 0 14px; border-bottom: 1px solid var(--line); }
+.wb-list li::after { content: ""; grid-column: 1 / -1; height: 6px; margin-top: 6px; border-radius: 999px; background: linear-gradient(var(--ink), var(--ink)) 0 0 / var(--v) 100% no-repeat, var(--tint); }
+.wb-name { min-width: 0; font-size: 14px; font-weight: 600; color: var(--ink); }
+.wb-name small { display: block; margin-top: 2px; font-size: 12px; font-weight: 400; color: var(--muted); }
+.wb-list b { font-size: 15px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wb-list[hidden] { display: none; }
+
+/* ---------- Zhasyl Damu (EPR operator reporting) ----------
+   Tint band. Split: copy with the three-step cycle | the Platform's daily send log (floating). Below: what goes into each
+   send, three flat white cards, each opening on the data itself (photo pair, weighbridge record, GPS track). No violet. */
+.zd-split { align-items: start; }
+.zd-how { margin-top: 40px; font-size: 19px; line-height: 1.3; letter-spacing: -.01em; color: var(--ink); }
+.split-copy .zd-cycle { margin-top: 20px; }
+
+.zd-log { background: var(--surface); border-radius: 20px; padding: clamp(20px, 2.4vw, 28px); box-shadow: var(--shadow); font-family: var(--font-ui); color: var(--body); }
+.zd-log-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.zd-log-title { font-size: 18px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+.zd-log-sub { margin-top: 4px; font-size: 14px; color: var(--muted); }
+.zd-api { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 6px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line-strong); font-size: 12px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.zd-api svg:first-child { width: 20px; height: 20px; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--line); }
+.zd-api-arrow { width: 18px; height: 10px; fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.zd-table { margin-top: 16px; display: grid; gap: 4px; padding: 6px; border-radius: 14px; background: var(--tint); }
+.zd-th, .zd-tr { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, 56px) 112px; gap: 12px; align-items: center; padding: 10px 12px; }
+.zd-th { padding-block: 8px 4px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.zd-tr { border-radius: 10px; background: var(--surface); font-size: 14px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.zd-tr b { display: block; font-weight: 600; white-space: nowrap; }
+.zd-tr small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.zd-th > span:not(:first-child), .zd-tr > span:not(:first-child) { text-align: right; }
+.zd-tr > span:last-child { justify-self: end; }
+.zd-tr .status { font-size: 12px; padding: 5px 9px; }
+.zd-unit { display: none; } /* units show only on phones, where the column headers hide */
+.zd-log-foot { margin-top: 14px; padding: 0 4px; font-size: 13px; line-height: 1.45; color: var(--muted); }
+
+.zd-what { margin-top: clamp(80px, 9vw, 128px); }
+.zd-cards { margin-top: 32px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 24px); }
+.zd-card { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; align-content: start; padding: 12px 12px 24px; border-radius: 20px; background: var(--surface); }
+.zd-card h4 { margin: 20px 12px 0; font-size: 19px; line-height: 1.3; letter-spacing: -.01em; color: var(--ink); }
+.zd-card > p { margin: 8px 12px 0; font-size: 15px; line-height: 1.55; color: var(--body); }
+.zd-art { min-height: 168px; padding: 12px; border-radius: 14px; background: var(--tint); font-family: var(--font-ui); display: flex; flex-direction: column; }
+.zd-art-meta { margin-top: auto; padding-top: 10px; display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; font-size: 12px; color: var(--muted); }
+.zd-art .plate { font-size: 12px; color: var(--ink); }
+.zd-art-photo { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; align-content: start; }
+.zd-art-photo > span { position: relative; aspect-ratio: 4 / 3; border-radius: 8px; overflow: hidden; }
+.zd-art-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.zd-art-photo small { position: absolute; left: 5px; bottom: 5px; font-size: 10px; font-weight: 600; color: #fff; background: rgba(8, 10, 17, .74); border-radius: 5px; padding: 2px 5px; }
+.zd-art-photo .zd-art-meta { grid-column: 1 / -1; }
+.zd-w-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.zd-w-top .plate { padding: 3px 8px; border: 1.5px solid var(--ink); border-radius: 7px; }
+.zd-w-net { margin-top: 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 14px; border-radius: 10px; background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.zd-w-net span { font-size: 13px; color: var(--muted); }
+.zd-w-net b { font-size: 24px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.zd-map { display: block; width: 100%; height: auto; border-radius: 8px; background: var(--map-ground); }
+.zd-streets { fill: none; stroke: var(--map-halo); stroke-width: 7; }
+.zd-track { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.zd-stop { fill: var(--st-done-strong); stroke: var(--map-halo); stroke-width: 2; }
+.zd-park, .zd-park-key { fill: var(--st-created); stroke: var(--map-halo); stroke-width: 2; }
+.zd-park-key { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--st-created); }
+.zd-end { fill: var(--ink); stroke: var(--map-halo); stroke-width: 2; }
+
+@media (max-width: 1080px) {
+  .zd-cards { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 680px) {
+  .zd-cards { grid-template-columns: 1fr; }
+  .zd-log-head { flex-direction: column; }
+}
+/* the five-column log needs ~520px; narrower cards stack each day into two lines */
+@media (max-width: 680px), (min-width: 861px) and (max-width: 1240px) {
+  .zd-th { display: none; }
+  .zd-tr { grid-template-columns: repeat(3, auto) 1fr; row-gap: 6px; }
+  .zd-unit { display: inline; }
+  .zd-tr > span:nth-child(n+2):nth-child(-n+4) { grid-row: 2; font-size: 13px; color: var(--muted); }
+  .zd-tr > span:first-child { grid-column: 1 / 4; }
+  .zd-tr > span:last-child { grid-column: 4; grid-row: 1; justify-self: end; }
+  .zd-tr > span:nth-child(n+2):nth-child(-n+4) { text-align: left; margin-right: 10px; }
+}
+
+@media (max-width: 860px) {
+  .wb-stage { padding: 0; }
+}
+@media (max-width: 600px) {
+  .wb-weights > div { padding: 7px 8px; }
+  .wb-weights dd { font-size: 14px; }
+  .wb-th, .wb-tr { grid-template-columns: minmax(0, 1fr) 36px 60px; gap: 8px; padding-inline: 10px; }
+  .wb-unload { grid-template-columns: minmax(0, 1fr) auto; }
+  .wb-unload .status { grid-column: 1 / -1; justify-self: start; }
+  .wb-trucks li { grid-template-columns: minmax(0, 1fr) auto; gap: 10px 12px; }
+  .wb-trucks .wb-bar { grid-column: 1 / -1; grid-row: 2; }
+}
+
 @media (max-width: 860px) {
   .sched-types-head { grid-template-columns: 1fr; gap: 16px; }
 }
