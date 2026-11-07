@@ -30,7 +30,19 @@
 }
 .pf-screen p { margin: 0; }
 .pf-screen .rc-sidenav { min-height: 0; height: 100%; }
-.pf-main { display: grid; grid-template-rows: minmax(0, 1fr) clamp(384px, calc(var(--pf-h, 980px) * .43), 420px); gap: 16px; min-width: 0; min-height: 0; }
+/* the bottom status block hugs the Status tab's content and keeps that height on every tab; the map row takes the rest.
+   Both panels share one grid cell: the Status panel stays laid out (just invisible) when another tab is open, and the
+   Schedule panel is size-contained so it fills that height instead of setting it (its Gantt body scrolls). */
+.pf-main { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 16px; min-width: 0; min-height: 0; }
+.pf-main > .pf-status { max-height: clamp(384px, calc(var(--pf-h, 980px) * .43), 420px);
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+.pf-status > .pf-panel { grid-area: 2 / 1; }
+/* Schedule «Развернуть» (script.js): the block takes 80% of the main column's height, the map row keeps the rest */
+.pf-main > .pf-status { min-height: 0; transition: min-height 320ms cubic-bezier(.22, 1, .36, 1), max-height 320ms cubic-bezier(.22, 1, .36, 1); }
+.pf-main.is-expanded > .pf-status { min-height: calc((var(--pf-h, 980px) - 32px) * .8); max-height: calc((var(--pf-h, 980px) - 32px) * .8); }
+@media (prefers-reduced-motion: reduce) { .pf-main > .pf-status { transition: none; } }
+.pf-status > #pf-panel-status[hidden] { display: flex; visibility: hidden; }
+.pf-status > #pf-panel-schedule { contain: size; }
 .pf-top { display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 16px; min-width: 0; }
 .pf-muted { color: var(--text-secondary); }
 .pf-ink { color: var(--text-headings); }
@@ -47,6 +59,74 @@
 .pf-map__truck:not(.is-active) .pf-map__truckart--on, .pf-map__truck.is-active .pf-map__truckart--off { display: none; }
 .pf-map__top { position: absolute; left: 8px; right: 8px; top: 8px; display: flex; justify-content: space-between; gap: 8px; }
 .pf-map__top .rc-search { box-shadow: var(--shadow-sm); }
+/* live search and filter (script.js); the bar itself lets drags through to the map */
+.pf-map__top { z-index: 5; pointer-events: none; }
+.pf-map__top > * { pointer-events: auto; }
+.pf-map__top.is-on .rc-search { box-shadow: inset 0 0 0 1px var(--border-primary), var(--shadow-sm); }
+.pf-map__top.is-on .rc-search:focus-within { box-shadow: inset 0 0 0 1px var(--border-action), var(--shadow-sm); }
+.pf-map__tools { position: relative; }
+.pf-mpin.is-filtered { display: none; }
+/* pin clusters (script.js, live map): a round marker with the count, its ring split by the statuses inside */
+.pf-mpin.is-clustered { visibility: hidden; pointer-events: none; }
+.pf-map__clusters { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 1; }
+.pf-mcl { --s: 34px; position: absolute; left: 0; top: 0; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); padding: 4px; border: 0; border-radius: 50%; background: var(--ring); box-shadow: 0 1px 3px rgba(16, 24, 40, .3); cursor: pointer; animation: pf-mcl-in .2s ease-out; transition: transform .15s ease-out; }
+.pf-mcl--m { --s: 40px; }
+.pf-mcl--l { --s: 46px; padding: 5px; }
+.pf-mcl__n { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; background: var(--surface-primary); color: var(--text-headings); font: 600 13px/1 var(--font-sans); font-variant-numeric: tabular-nums; }
+.pf-mcl--m .pf-mcl__n { font-size: 14px; }
+.pf-mcl--l .pf-mcl__n { font-size: 15px; }
+.pf-mcl:hover { transform: scale(1.1); z-index: 2; }
+.pf-mcl:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; }
+@keyframes pf-mcl-in { from { opacity: 0; transform: scale(.6); } }
+@media (prefers-reduced-motion: reduce) { .pf-mcl { animation: none; transition: none; } }
+/* the fleet (platform-fleet.js): every type uses its own 56px top-down icon, the selected one outlined like the ТБО drawing */
+.rc-truck > img { display: block; width: 56px; height: 56px; margin: auto; }
+.pf-map__truckart--on .rc-truck > img { transform: scale(1.08); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .25)); }
+/* the dark outline would vanish on the night map: a light halo keeps the selected truck (any type) visible */
+:root[data-theme="dark"] .pf-map__truckart--on .rc-truck { filter: drop-shadow(0 0 1px rgba(255, 255, 255, .95)) drop-shadow(0 0 3px rgba(255, 255, 255, .45)); }
+.pf-map__truck.is-parked { z-index: 1; }
+.pf-map__truck.is-parked .pf-map__truckart { transform: scale(.8); }
+.pf-map.is-notrucks .pf-map__truck, .pf-map.is-notrucks .pf-route { display: none; }
+/* results list under the search field */
+.pf-ms { position: absolute; left: 0; top: 40px; width: 360px; max-height: 336px; overflow-y: auto; margin: 0; padding: 4px; list-style: none; border-radius: var(--radius-md);
+  background: var(--surface-primary); box-shadow: inset 0 0 0 1px var(--border-primary), var(--shadow-md); }
+.pf-ms__opt { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+.pf-ms__opt[aria-selected="true"] { background: var(--surface-secondary); }
+.pf-ms__txt { display: grid; min-width: 0; flex: 1; }
+.pf-ms__t, .pf-ms__s { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pf-ms__t { color: var(--text-headings); }
+.pf-ms mark { background: none; color: var(--text-action); font-weight: 600; }
+.pf-ms__truck { flex: none; width: 28px; height: 28px; display: grid; place-items: center; overflow: hidden; }
+.pf-ms__truck > * { transform: scale(.44); flex: none; }
+.pf-ms__truck > .rc-truck { width: 28px !important; height: 28px !important; transform: none !important; }
+.pf-ms__truck .rc-truck > img { width: 40px; height: 40px; flex: none; margin: -6px; }
+.pf-ms__off { flex: none; padding: 2px 6px; border-radius: var(--radius-full); background: var(--surface-secondary); color: var(--text-secondary); }
+.pf-ms__empty { padding: 10px 8px; color: var(--text-secondary); font: 400 13px/18px var(--font-sans); }
+.pf-mf__pin { flex: none; width: 20px; height: 20px; display: grid; place-items: center; }
+.pf-mf__pin .rc-pin { width: 20px !important; height: 20px !important; }
+.pf-mf__pin svg { width: 100%; height: 100%; }
+.pf-ms .pf-mf__pin { width: 28px; height: 28px; }
+.pf-ms .pf-mf__pin .rc-pin { width: 24px !important; height: 24px !important; }
+/* filter popover under the filter button */
+.pf-mf__count { min-width: 16px; height: 16px; padding: 0 4px; margin-left: 2px; border-radius: var(--radius-full); background: var(--icons-action); color: var(--text-on-action); font: 600 10px/16px var(--font-sans); text-align: center; }
+.pf-mf { position: absolute; right: 0; top: 40px; width: 288px; max-height: 420px; overflow-y: auto; overscroll-behavior: contain; padding: 12px 12px 0; border-radius: var(--radius-md); background: var(--surface-primary);
+  box-shadow: inset 0 0 0 1px var(--border-primary), var(--shadow-md); display: grid; gap: 12px; text-align: left; }
+.pf-mf[hidden] { display: none; }
+.pf-mf__set { margin: 0; padding: 0; border: 0; display: grid; gap: 2px; }
+.pf-mf__set legend { padding: 0 0 6px; }
+.pf-mf__row { position: relative; display: flex; align-items: center; gap: 8px; min-height: 30px; padding: 4px 6px; border-radius: 6px; cursor: pointer; font: 400 14px/18px var(--font-sans); color: var(--text-body); }
+.pf-mf__row:hover { background: var(--surface-secondary); }
+.pf-mf__row input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.pf-mf__box { flex: none; width: 16px; height: 16px; border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--border-secondary, var(--border-primary)); background: var(--surface-primary); display: grid; place-items: center; }
+.pf-mf__row input:checked + .pf-mf__box { background: var(--icons-action); box-shadow: none; }
+.pf-mf__row input:checked + .pf-mf__box::after { content: ""; width: 8px; height: 4px; border: solid var(--text-on-action); border-width: 0 0 2px 2px; transform: translateY(-1px) rotate(-45deg); }
+.pf-mf__row input:focus-visible + .pf-mf__box { outline: 2px solid var(--border-action); outline-offset: 2px; }
+.pf-mf__lbl { flex: 1; min-width: 0; }
+.pf-mf__n { flex: none; color: var(--text-secondary); font: 500 12px/16px var(--font-sans); font-variant-numeric: tabular-nums; }
+.pf-mf__foot { position: sticky; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 0 12px; border-top: 1px solid var(--border-primary); background: var(--surface-primary); }
+.pf-mf__reset { padding: 6px 10px; border: 0; border-radius: var(--radius-md); background: none; color: var(--text-action); font: 500 13px/16px var(--font-sans); cursor: pointer; }
+.pf-mf__reset:hover { background: var(--surface-secondary); }
+.pf-mf__reset:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; }
 .pf-map__tools { display: flex; gap: 8px; }
 .pf-map__tools .rc-filterbtn { box-shadow: var(--shadow-sm); }
 .pf-map__tools .rc-ibtn { background: var(--surface-primary); box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
@@ -59,7 +139,7 @@
 .pf-map.is-live .pf-map__live { background: var(--map-ground); }
 .pf-map.is-live .pf-map__live.leaflet-grab { cursor: grab; }
 .pf-map.is-live .pf-map__live.leaflet-dragging .leaflet-grab { cursor: grabbing; }
-.pf-map.is-zooming .pf-mpin, .pf-map.is-zooming .pf-map__truck, .pf-map.is-zooming .pf-map__depot { transition: translate .25s cubic-bezier(0, 0, .25, 1), transform .15s ease-out, filter .15s ease-out; }
+.pf-map.is-zooming .pf-mpin, .pf-map.is-zooming .pf-mcl, .pf-map.is-zooming .pf-map__truck, .pf-map.is-zooming .pf-map__depot { transition: translate .25s cubic-bezier(0, 0, .25, 1), transform .15s ease-out, filter .15s ease-out; }
 .pf-map.is-zooming .pf-route { transform-origin: 0 0; transition: transform .25s cubic-bezier(0, 0, .25, 1), opacity 200ms ease-out; }
 .pf-route path { vector-effect: non-scaling-stroke; }
 .pf-map__zoom { position: absolute; right: 8px; bottom: 24px; z-index: 3; display: none; flex-direction: column; gap: 4px; }
@@ -69,6 +149,35 @@
 .pf-map__zbtn:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; }
 .pf-map__zbtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 .pf-map__zhome { display: none; margin-top: 4px; }
+/* Full-screen map (script.js): the side nav slides out left, the Gantt block down and the upper-right card right, while the
+   map, lifted out of its grid cell (a .pf-map-slot keeps the cell), grows over the freed screen. Closing plays it backwards:
+   the map shrinks into its slot as the panels slide home. .is-mapanim holds the transitions for the whole round trip. */
+.pf-screen.is-mapanim { overflow: hidden; }
+.pf-screen.is-mapanim .pf-map { box-sizing: border-box; margin: 0; z-index: 6;
+  transition: left 520ms cubic-bezier(.65, 0, .35, 1), top 520ms cubic-bezier(.65, 0, .35, 1), width 520ms cubic-bezier(.65, 0, .35, 1), height 520ms cubic-bezier(.65, 0, .35, 1), box-shadow 400ms ease; }
+.pf-screen.is-mapfull .pf-map { box-shadow: 0 2px 4px rgba(8, 10, 17, .06), 0 24px 48px -12px rgba(8, 10, 17, .22);
+  transition: left 600ms cubic-bezier(.22, 1, .36, 1) 120ms, top 600ms cubic-bezier(.22, 1, .36, 1) 120ms, width 600ms cubic-bezier(.22, 1, .36, 1) 120ms, height 600ms cubic-bezier(.22, 1, .36, 1) 120ms, box-shadow 400ms ease 200ms; }
+/* returning panels ease in behind the shrinking map; leaving panels accelerate away */
+.pf-screen.is-mapanim .rc-sidenav, .pf-screen.is-mapanim .pf-side, .pf-screen.is-mapanim .pf-main > .pf-status {
+  transition: transform 520ms cubic-bezier(.22, 1, .36, 1) 140ms, opacity 360ms ease 140ms; }
+.pf-screen.is-mapfull .rc-sidenav, .pf-screen.is-mapfull .pf-side, .pf-screen.is-mapfull .pf-main > .pf-status {
+  opacity: 0; transition: transform 440ms cubic-bezier(.55, 0, .75, .25), opacity 300ms ease 140ms; }
+.pf-screen.is-mapfull .rc-sidenav { transform: translateX(calc(-100% - 48px)); }
+.pf-screen.is-mapfull .pf-side { transform: translateX(calc(100% + 48px)); }
+.pf-screen.is-mapfull .pf-main > .pf-status { transform: translateY(calc(100% + 48px)); }
+.pf-screen.is-mapfull .pf-main > .pf-status { transition-delay: 40ms, 180ms; } /* the Gantt drops a beat after the side columns */
+/* the big close button at the bottom of the full map */
+.pf-mapx { position: absolute; left: 50%; bottom: 32px; z-index: 6; display: grid; place-items: center; width: 64px; height: 64px; margin-left: -32px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--surface-primary); color: var(--icons-default); box-shadow: inset 0 0 0 1px var(--border-primary), 0 2px 4px rgba(8, 10, 17, .08), 0 12px 28px -6px rgba(8, 10, 17, .28); cursor: pointer;
+  opacity: 0; visibility: hidden; transform: translateY(24px) scale(.7); transition: opacity 180ms ease, transform 220ms cubic-bezier(.55, 0, .75, .25), visibility 0s 220ms, background-color 120ms ease; }
+.pf-mapx svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.pf-mapx:hover { background: var(--surface-secondary); color: var(--text-headings); }
+.pf-mapx:focus-visible { outline: 2px solid var(--border-action); outline-offset: 3px; }
+.pf-screen.is-mapfull .pf-mapx { opacity: 1; visibility: visible; transform: none;
+  transition: opacity 260ms ease 520ms, transform 420ms cubic-bezier(.34, 1.56, .64, 1) 520ms, visibility 0s 0s, background-color 120ms ease; }
+@media (prefers-reduced-motion: reduce) {
+  .pf-screen.is-mapanim .pf-map, .pf-screen.is-mapanim .rc-sidenav, .pf-screen.is-mapanim .pf-side, .pf-screen.is-mapanim .pf-main > .pf-status, .pf-mapx { transition: none !important; }
+}
 .pf-map.is-moved .pf-map__zhome { display: grid; }
 .pf-map__attr { z-index: 3; position: absolute; right: 6px; bottom: 4px; padding: 1px 4px; border-radius: 3px; background: color-mix(in srgb, var(--surface) 80%, transparent); font: 500 10px/12px var(--font-sans); color: var(--text-secondary); }
 
@@ -172,6 +281,10 @@
 .pf-gtruck { display: flex; align-items: center; height: 32px; padding-right: 8px; gap: 8px; border-radius: 8px 4px 4px 8px; background: var(--surface-tertiary); }
 .pf-gtruck__ai { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-right: 1px solid var(--surface-primary); }
 .pf-gtruck__plate { flex: 1; color: var(--text-body); }
+/* plate as a "find on map" button (script.js) */
+.pf-gtruck__find { appearance: none; margin: 0; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pf-gtruck__find:hover { color: var(--text-action); text-decoration: underline; text-underline-offset: 2px; }
+.pf-gtruck__find:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; border-radius: 2px; }
 .pf-gtruck__count { min-width: 20px; height: 20px; padding: 0 4px; box-sizing: border-box; display: grid; place-items: center; border-radius: var(--radius-md); background: var(--icons-secondary); color: var(--text-on-action); font: 600 10px/10px var(--font-sans); }
 .pf-gbars { position: relative; height: 32px; min-width: 0; }
 /* Shift container: same box as the row's track so its trips keep their clock positions. The outline (and its id/driver label)
