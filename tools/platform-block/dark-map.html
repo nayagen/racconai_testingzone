@@ -1,0 +1,15 @@
+<!doctype html>
+<!-- Builds images/platform/map-almaty-dark.webp from the light map: navy ground, lighter streets, light labels; highways, metro and parks keep their hue.
+     Copy map-almaty.webp next to this file as light.webp, run headless Chrome with --allow-file-access-from-files --dump-dom, and base64-decode the data URL it prints. -->
+function ss(a,b,x){x=Math.min(1,Math.max(0,(x-a)/(b-a)));return x*x*(3-2*x);}
+var P=[[0,.88],[.35,.70],[.65,.42],[.86,.17],[.90,.135],[.94,.115],[.975,.17],[1,.24]];
+function f(y){for(var i=1;i<P.length;i++){if(y<=P[i][0]){var a=P[i-1],b=P[i],t=(y-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*t;}}return P[P.length-1][1];}
+function hsl(h,s,l){var k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),g=n=>l-a*Math.max(-1,Math.min(k(n)-3,9-k(n),1));return[g(0),g(8),g(4)];}
+function hue(r,g,b){var mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(!d)return[0,0];var h=mx==r?((g-b)/d)%6:mx==g?(b-r)/d+2:(r-g)/d+4;var l=(mx+mn)/2;return[(h*60+360)%360,d/(1-Math.abs(2*l-1))];}
+var im=new Image();im.onload=function(){var c=document.createElement('canvas');c.width=1600;c.height=900;var x=c.getContext('2d');x.drawImage(im,0,0);var D=x.getImageData(0,0,1600,900),d=D.data;
+for(var i=0;i<d.length;i+=4){var r=d[i]/255,g=d[i+1]/255,b=d[i+2]/255,Y=.2126*r+.7152*g+.0722*b,C=Math.max(r,g,b)-Math.min(r,g,b);
+var ln=f(Y),sn=.30-.22*ss(.4,.85,ln),N=hsl(222,sn,ln);
+var w=ss(.14,.30,C),hs=hue(r,g,b),hh=hs[0]>60&&hs[0]<160?hs[0]+30:hs[0],lc=Math.max(.13+.40*ss(.35,.75,C),f(Y)),K=hsl(hh,Math.min(1,hs[1]*(.42+.43*ss(.35,.7,C))),lc);
+for(var j=0;j<3;j++)d[i+j]=Math.round(255*(N[j]*(1-w)+K[j]*w));}
+x.putImageData(D,0,0);document.getElementById('o').textContent=c.toDataURL('image/webp',.88);};im.src='light.webp';
+</script>

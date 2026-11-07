@@ -1907,18 +1907,15 @@
   var pfView = document.getElementById("pf-viewport");
   if (pfView) {
     /* The screen is always laid out at its full 1600 x 980 design size and scaled as a whole, like browser zoom, so text,
-       spacing and icons shrink together. The scale fits the frame width and the window height below the sticky header
-       (the caption row takes 62px), but never drops below 0.8 to fit the height: below that the screen runs past the
-       fold and the page scrolls. The frame narrows to the scaled width (--pf-fit) and stays centred. */
-    var PF_W = 1600, PF_MIN = 0.5, PF_PAN = 0.72, PF_H = 980, PF_HFLOOR = 0.8, pfPanned = false;
-    var pfHeader = document.querySelector(".site-header");
+       spacing and icons shrink together. The scale fits the frame width and caps the screen at 90% of the window height
+       (PF_VH; never below PF_MIN to fit the height). The frame narrows to the scaled width (--pf-fit) and stays centred. */
+    var PF_W = 1600, PF_MIN = 0.5, PF_PAN = 0.72, PF_H = 980, PF_VH = 0.9, pfPanned = false;
     var pfFrame = pfView.closest(".pf-frame");
     var fitPlatform = function () {
       var w = pfFrame.clientWidth;
       if (!w) { return; }
       var sW = w / PF_W;
-      var avail = window.innerHeight - (pfHeader ? pfHeader.offsetHeight : 0) - 32 - 62;
-      var sH = Math.max(PF_HFLOOR, avail / PF_H);
+      var sH = Math.max(PF_MIN, window.innerHeight * PF_VH / PF_H);
       var s = Math.min(sW, sH);
       var pan = s < PF_MIN;
       if (pan) { s = PF_PAN; }
@@ -2044,6 +2041,8 @@
          (remaining stops, blue dashed with a white casing). The build traces each stretch along the streets of the backdrop
          (tools/platform-block/trace-routes.js) and ships simplified polylines in PF.trucks; corners are rounded here. */
       var drawRoute = function () {};
+      /* backdrop px -> current map px; identity until the live map (below) takes over */
+      var mapPoint = function (p) { return p; }, routeRepaint = function () {}, routeSvg = null;
       var routeMap = pfView.querySelector(".pf-map");
       if (routeMap && PF.trucks) {
         var NS = "http://www.w3.org/2000/svg";
@@ -2061,6 +2060,7 @@
           var z = pts[pts.length - 1];
           return d + " L" + f(z[0]) + " " + f(z[1]);
         };
+        /* backdrop-pixel paths, used as they are by the route modal; the live map below redraws the main map's copy in its own pixels */
         var ROUTE_PATHS = {};
         Object.keys(PF.trucks).forEach(function (plate) { var r = PF.trucks[plate]; ROUTE_PATHS[plate] = { past: rounded(r.past), plan: rounded(r.plan) }; });
         var svg = document.createElementNS(NS, "svg");
@@ -2071,14 +2071,178 @@
         var mk = function (cls) { var p = document.createElementNS(NS, "path"); p.setAttribute("class", cls); svg.appendChild(p); return p; };
         var pPast = mk("pf-route__past"), pCase = mk("pf-route__case"), pPlan = mk("pf-route__plan");
         routeMap.insertBefore(svg, routeMap.querySelector(".pf-map__pins"));
-        drawRoute = function (el) {
-          var r = el && el.hasAttribute("data-pf-truck") ? ROUTE_PATHS[el.getAttribute("data-pf-truck")] : null;
+        var routePlate = null;
+        var paintRoute = function () {
+          var r = routePlate && PF.trucks[routePlate];
           svg.classList.toggle("is-on", !!r);
           if (!r) { return; }
-          pPast.setAttribute("d", r.past);
-          pCase.setAttribute("d", r.plan);
-          pPlan.setAttribute("d", r.plan);
+          var past = rounded(r.past.map(mapPoint)), plan = rounded(r.plan.map(mapPoint));
+          pPast.setAttribute("d", past);
+          pCase.setAttribute("d", plan);
+          pPlan.setAttribute("d", plan);
         };
+        drawRoute = function (el) {
+          routePlate = el && el.hasAttribute("data-pf-truck") && PF.trucks[el.getAttribute("data-pf-truck")] ? el.getAttribute("data-pf-truck") : null;
+          paintRoute();
+        };
+        routeRepaint = paintRoute;
+        routeSvg = svg;
+      }
+
+      /* Live map: Leaflet with 2GIS raster tiles under the pins, trucks, depot and routes. The build placed those in pixels of the
+         1600 x 900 backdrop (images/platform/map-almaty.webp); GEO ties backdrop pixels to Web Mercator (a * mercator + b, fitted
+         to the 2GIS tiles), so each overlay keeps its backdrop position as home and follows the map through the CSS translate
+         property. At night each tile is recoloured on a canvas with the curve of the dark backdrop. The backdrop stays as the
+         placeholder until tiles arrive, and as the fallback when Leaflet or the tiles fail. */
+      if (routeMap && window.L && L.GridLayer) {
+        (function () {
+          var GEO = { a: 3497284.9656436485, bx: -2495094.399519851, by: -1281326.2418159847 };
+          var Z0 = Math.log(GEO.a / 256) / Math.LN2;
+          var backdrop = routeMap.querySelector(".pf-map__bg");
+          var live = document.createElement("div");
+          live.className = "pf-map__live";
+          live.setAttribute("aria-hidden", "true");
+          routeMap.insertBefore(live, backdrop ? backdrop.nextSibling : routeMap.firstChild);
+
+          var touchOnly = L.Browser.mobile;
+          var map = L.map(live, {
+            zoomSnap: 0, zoomDelta: 1, minZoom: 11, maxZoom: 18, maxBounds: [[43.05, 76.6], [43.45, 77.25]], maxBoundsViscosity: 1,
+            attributionControl: false, zoomControl: false, keyboard: false, boxZoom: false, scrollWheelZoom: false,
+            dragging: !touchOnly, touchZoom: !touchOnly, doubleClickZoom: true, inertia: true,
+            zoomAnimation: !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          });
+          var geoOf = function (p) { return map.unproject(L.point(p[0] - GEO.bx, p[1] - GEO.by), Z0); };
+          /* home: the backdrop's own view, its top-left corner on the map's top-left corner */
+          var home = function () {
+            var s = map.getSize();
+            map.setView(geoOf([s.x / 2, s.y / 2]), Z0, { animate: false });
+          };
+          map.setView(geoOf([routeMap.clientWidth / 2, routeMap.clientHeight / 2]), Z0, { animate: false });
+          var moved = false, dead = false;
+
+          /* ---- tiles: 2GIS raster (512px HD on dense screens), recoloured at night ---- */
+          var HD = (window.devicePixelRatio || 1) > 1;
+          var root = document.documentElement;
+          var night = function () { return root.getAttribute("data-theme") === "dark"; };
+          var ss = function (a, b, x) { x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
+          var CURVE = [[0, .88], [.35, .70], [.65, .42], [.86, .17], [.90, .135], [.94, .115], [.975, .17], [1, .24]];
+          var curve = function (y) { for (var i = 1; i < CURVE.length; i++) { if (y <= CURVE[i][0]) { var a = CURVE[i - 1], b = CURVE[i]; return a[1] + (b[1] - a[1]) * (y - a[0]) / (b[0] - a[0]); } } return .24; };
+          var hsl = function (h, s, l) { var a = s * Math.min(l, 1 - l), f = function (n) { var k = (n + h / 30) % 12; return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); }; return [f(0), f(8), f(4)]; };
+          var NIGHT = {}; // tiles use small palettes, so each colour is worked out once
+          var nightRGB = function (R, G, B) {
+            var key = (R << 16) | (G << 8) | B, hit = NIGHT[key];
+            if (hit) { return hit; }
+            var r = R / 255, g = G / 255, b = B / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), C = mx - mn;
+            var Y = .2126 * r + .7152 * g + .0722 * b, ln = curve(Y), N = hsl(222, .30 - .22 * ss(.4, .85, ln), ln);
+            var w = ss(.14, .30, C), out = N;
+            if (w > 0) {
+              var h = !C ? 0 : mx === r ? ((g - b) / C + 6) % 6 : mx === g ? (b - r) / C + 2 : (r - g) / C + 4, l = (mx + mn) / 2, s = C / (1 - Math.abs(2 * l - 1));
+              h *= 60;
+              var K = hsl(h > 60 && h < 160 ? h + 30 : h, Math.min(1, s * (.42 + .43 * ss(.35, .7, C))), Math.max(.13 + .40 * ss(.35, .75, C), curve(Y)));
+              out = [N[0] * (1 - w) + K[0] * w, N[1] * (1 - w) + K[1] * w, N[2] * (1 - w) + K[2] * w];
+            }
+            hit = NIGHT[key] = [Math.round(out[0] * 255), Math.round(out[1] * 255), Math.round(out[2] * 255)];
+            return hit;
+          };
+          var paintTile = function (cv) {
+            var img = cv._src, ctx = cv.getContext("2d");
+            if (!img) { return; }
+            ctx.drawImage(img, 0, 0, cv.width, cv.height);
+            if (!night()) { return; }
+            var data;
+            try { data = ctx.getImageData(0, 0, cv.width, cv.height); } catch (e) { return; }
+            var d = data.data;
+            for (var i = 0; i < d.length; i += 4) { var c = nightRGB(d[i], d[i + 1], d[i + 2]); d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; }
+            ctx.putImageData(data, 0, 0);
+          };
+          var Tiles = L.GridLayer.extend({
+            createTile: function (c, done) {
+              var cv = document.createElement("canvas"), img = new Image();
+              cv.width = cv.height = HD ? 512 : 256;
+              img.crossOrigin = "anonymous";
+              img.onload = function () { cv._src = img; paintTile(cv); done(null, cv); };
+              img.onerror = function () { done(new Error("tile"), cv); };
+              img.src = "https://tile" + ((c.x + c.y) & 3) + ".maps.2gis.com/tiles?x=" + c.x + "&y=" + c.y + "&z=" + c.z + "&v=1.1" + (HD ? "&ts=online_hd" : "");
+              return cv;
+            }
+          });
+          var tiles = new Tiles({ maxZoom: 18, keepBuffer: 2, updateWhenZooming: false }).addTo(map);
+          var shown = false;
+          tiles.on("tileload", function () { if (!shown) { shown = true; routeMap.classList.add("is-live"); } });
+          /* no tile within 12 s (offline, blocked): drop the live map and keep the backdrop */
+          setTimeout(function () {
+            if (shown) { return; }
+            dead = true; map.off(); map.remove(); live.remove(); ctl.remove();
+            mapPoint = function (p) { return p; };
+            items.forEach(function (it) { it.el.style.translate = ""; });
+            routeRepaint();
+          }, 12000);
+          new MutationObserver(function () {
+            Object.keys(tiles._tiles).forEach(function (k) { paintTile(tiles._tiles[k].el); });
+          }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+
+          /* ---- overlays: pins (anchored at the tip), trucks and the depot (anchored at the centre) ---- */
+          var items = Array.prototype.map.call(routeMap.querySelectorAll(".pf-mpin, .pf-map__truck, .pf-map__depot"), function (el) {
+            var tip = el.classList.contains("pf-mpin");
+            return { el: el, p: [el.offsetLeft + el.offsetWidth / 2, el.offsetTop + (tip ? el.offsetHeight : el.offsetHeight / 2)] };
+          });
+          items.forEach(function (it) { it.g = geoOf(it.p); });
+          var toPx = function (g, zoom, center) {
+            if (zoom === undefined) { return map.latLngToContainerPoint(g); }
+            var s = map.getSize();
+            return map.project(g, zoom).subtract(map.project(center, zoom)).add(s.divideBy(2));
+          };
+          mapPoint = function (p) { var q = map.latLngToContainerPoint(geoOf(p)); return [q.x, q.y]; };
+          var place = function (zoom, center) {
+            items.forEach(function (it) {
+              var q = toPx(it.g, zoom, center);
+              it.el.style.translate = (q.x - it.p[0]).toFixed(1) + "px " + (q.y - it.p[1]).toFixed(1) + "px";
+            });
+          };
+          var sync = function () { place(); routeRepaint(); };
+          map.on("move zoom viewreset resize", sync);
+          /* zoom animation: Leaflet scales the tiles over 250 ms; overlays glide to their end positions with it, and the
+             route scales as a picture (its strokes keep their width) until it is redrawn at the end */
+          map.on("zoomanim", function (e) {
+            routeMap.classList.add("is-zooming");
+            place(e.zoom, e.center);
+            if (routeSvg) {
+              var k = map.getZoomScale(e.zoom), s = map.getSize();
+              var o = map.project(map.getCenter(), e.zoom).subtract(map.project(e.center, e.zoom)).add(s.divideBy(2));
+              var c0 = s.divideBy(2), t = o.subtract(c0.multiplyBy(k));
+              routeSvg.style.transform = "translate(" + t.x.toFixed(1) + "px," + t.y.toFixed(1) + "px) scale(" + k + ")";
+            }
+          });
+          map.on("zoomend", function () {
+            routeMap.classList.remove("is-zooming");
+            if (routeSvg) { routeSvg.style.transform = ""; }
+            sync();
+          });
+          map.on("dragstart zoomstart", function () { moved = true; routeMap.classList.toggle("is-moved", true); });
+
+          /* ---- zoom buttons (wheel zoom stays off so the page scrolls over the map) ---- */
+          var ctl = document.createElement("div");
+          ctl.className = "pf-map__zoom";
+          ctl.innerHTML = '<button type="button" class="pf-map__zbtn" data-z="in" aria-label="Приблизить карту"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg></button>' +
+            '<button type="button" class="pf-map__zbtn" data-z="out" aria-label="Отдалить карту"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12"/></svg></button>' +
+            '<button type="button" class="pf-map__zbtn pf-map__zhome" data-z="home" aria-label="Вернуть исходный вид карты"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="5.5"/><path d="M10 1.5v3M10 15.5v3M1.5 10h3M15.5 10h3"/></svg></button>';
+          routeMap.appendChild(ctl);
+          ctl.addEventListener("click", function (e) {
+            var b = e.target.closest("[data-z]");
+            if (!b) { return; }
+            var z = b.getAttribute("data-z");
+            if (z === "in") { map.zoomIn(1); } else if (z === "out") { map.zoomOut(1); } else { goHome(); }
+          });
+          var goHome = function () { moved = false; routeMap.classList.remove("is-moved"); home(); };
+
+          /* the map keeps its home while untouched, even when its box changes size (the card column closes) */
+          if ("ResizeObserver" in window) {
+            new ResizeObserver(function () { if (dead) { return; } map.invalidateSize({ pan: false }); if (!moved) { home(); } sync(); }).observe(routeMap);
+          }
+          /* the tour aims at pins by where they sit, so it starts from home */
+          pfView.addEventListener("pf:tour", function (e) { if (e.detail && !dead) { goHome(); } });
+          sync();
+        })();
       }
 
       /* Photo proof modal (Figma 19635:35376): opened from the blue photo icon of a completed job in the site card.
@@ -2641,7 +2805,7 @@
 
       /* ---------- Auto tour: the default way the dashboard presents itself ----------
          A drawn cursor walks the real interface (the same clicks and hover cards a visitor gets) with a narration callout per step.
-         A camera zooms in (up to 2x) on each feature the first time it appears, and a spotlight dims everything else.
+         A camera zooms in (up to 1.3x) on each feature the first time it appears, and a spotlight dims everything else.
          Cursor, callout, spotlight and prompts live on the unzoomed stage, so they keep their size while the screen zooms.
          A click on the screen pauses and asks: explore yourself or resume. «Попробовать интерфейс самому», Tab into the screen
          or Escape hand over control at once. Starts once when the screen is 35% visible; pauses offscreen and in a hidden tab;
@@ -2776,8 +2940,8 @@
           if (T.anim) { if (T.paused) { T.anim.pause(); } else { T.anim.play(); } }
         };
 
-        /* camera: zoom the scaled screen onto a design-px region, up to 2x, keeping the screen edge-to-edge */
-        var cam = { z: 1, cx: 800, cy: 490 };
+        /* camera: zoom the scaled screen onto a design-px region, up to CAM_MAX, keeping the screen edge-to-edge */
+        var CAM_MAX = 1.3, cam = { z: 1, cx: 800, cy: 490 };
         var applyCam = function () {
           var s = parseFloat(getComputedStyle(pfView).getPropertyValue("--pf-s")) || 1, W = pfScr.offsetWidth, H = pfScr.offsetHeight, z = cam.z;
           var ox = Math.max(0, Math.min(W - W / z, cam.cx - W / (2 * z))), oy = Math.max(0, Math.min(H - H / z, cam.cy - H / (2 * z)));
@@ -2792,7 +2956,7 @@
           if (list.length) {
             /* measure at the current camera, then convert to unzoomed design px */
             var b = union(list.map(designBox)), pad = 56;
-            z = Math.max(1, Math.min(zmax || 2, W / (b.w + pad * 2), H / (b.h + pad * 2)));
+            z = Math.max(1, Math.min(zmax || CAM_MAX, CAM_MAX, W / (b.w + pad * 2), H / (b.h + pad * 2)));
             cx = b.x + b.w / 2; cy = b.y + b.h / 2;
             /* designBox is relative to the zoomed screen's own (unscaled) box, so it is already in design px */
           }
@@ -3131,6 +3295,7 @@
           tWrap.classList.toggle("is-touring", on);
           if (capEl) { capEl.classList.toggle("is-touring", on); }
           if (on) { pfScr.setAttribute("aria-hidden", "true"); } else { pfScr.removeAttribute("aria-hidden"); }
+          pfView.dispatchEvent(new CustomEvent("pf:tour", { detail: on }));
         };
         var finish = function () {
           chrome(false);

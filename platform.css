@@ -7,10 +7,10 @@
 /* Interface block: the screen on the same tint the hero photo fades into */
 .platform-screen { padding-top: clamp(48px, 6vw, 88px); }
 /* Up to 1600px the frame fills the wrap as before; on larger screens it grows to 80% of the viewport (the screen scales up past
-   its design size), capped by the window height so the whole 980 design px tall screen fits under the header. */
+   its design size), capped so the screen is at most 90% of the window height. */
 /* The screen and its caption row narrow to the scaled screen width when the window height limits the scale (script.js) */
 .pf-frame > .pf-viewport, .pf-frame > .pf-tourwrap, .pf-frame > .pf-caption { max-width: var(--pf-fit, none); margin-inline: auto; }
-.pf-frame { width: min(100% - 2 * max(var(--gutter), var(--edge)), max(1600px, min(80vw, (100svh - var(--header-h) - 93px) * 1.633))); margin: 0 auto; }
+.pf-frame { width: min(100% - 2 * max(var(--gutter), var(--edge)), max(1600px, min(80vw, 90svh * 1.633))); margin: 0 auto; }
 .pf-viewport {
   --pf-s: .5; --pf-h: 980px; overflow: hidden; border-radius: 20px; background: var(--tint);
   box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px rgba(8, 10, 17, .06), 0 12px 32px -8px rgba(8, 10, 17, .16);
@@ -50,7 +50,27 @@
 .pf-map__tools { display: flex; gap: 8px; }
 .pf-map__tools .rc-filterbtn { box-shadow: var(--shadow-sm); }
 .pf-map__tools .rc-ibtn { background: var(--surface-primary); box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
-.pf-map__attr { position: absolute; right: 6px; bottom: 4px; padding: 1px 4px; border-radius: 3px; background: color-mix(in srgb, var(--surface) 80%, transparent); font: 500 10px/12px var(--font-sans); color: var(--text-secondary); }
+/* Live map (script.js): Leaflet + 2GIS tiles under the overlays; the backdrop image shows until the first tile arrives */
+.pf-map__live { position: absolute; inset: 0; z-index: 0; }
+.pf-map__live.leaflet-container { background: transparent; font: inherit; }
+/* fractional zoom leaves hairline gaps between tiles; a half-pixel overlap closes them */
+.pf-map__live .leaflet-tile { width: 256.5px !important; height: 256.5px !important; }
+.pf-map.is-live .pf-map__bg { visibility: hidden; }
+.pf-map.is-live .pf-map__live { background: var(--map-ground); }
+.pf-map.is-live .pf-map__live.leaflet-grab { cursor: grab; }
+.pf-map.is-live .pf-map__live.leaflet-dragging .leaflet-grab { cursor: grabbing; }
+.pf-map.is-zooming .pf-mpin, .pf-map.is-zooming .pf-map__truck, .pf-map.is-zooming .pf-map__depot { transition: translate .25s cubic-bezier(0, 0, .25, 1), transform .15s ease-out, filter .15s ease-out; }
+.pf-map.is-zooming .pf-route { transform-origin: 0 0; transition: transform .25s cubic-bezier(0, 0, .25, 1), opacity 200ms ease-out; }
+.pf-route path { vector-effect: non-scaling-stroke; }
+.pf-map__zoom { position: absolute; right: 8px; bottom: 24px; z-index: 3; display: none; flex-direction: column; gap: 4px; }
+.pf-map.is-live .pf-map__zoom { display: flex; }
+.pf-map__zbtn { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--radius-md); background: var(--surface-primary); box-shadow: var(--shadow-sm); color: var(--icons-default); cursor: pointer; }
+.pf-map__zbtn:hover { background: var(--surface-secondary); }
+.pf-map__zbtn:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; }
+.pf-map__zbtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.pf-map__zhome { display: none; margin-top: 4px; }
+.pf-map.is-moved .pf-map__zhome { display: grid; }
+.pf-map__attr { z-index: 3; position: absolute; right: 6px; bottom: 4px; padding: 1px 4px; border-radius: 3px; background: color-mix(in srgb, var(--surface) 80%, transparent); font: 500 10px/12px var(--font-sans); color: var(--text-secondary); }
 
 /* Truck selected on map */
 .pf-truck { display: flex; flex-direction: column; min-width: 0; background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }

@@ -57,7 +57,7 @@ Every image has a `-dark` twin next to it, shown when the page is in dark mode (
 
 **Truck illustration** (`platform/garbage-truck-green-dark.webp`) — the same truck re-cut by GPT Image 2.5 onto a transparent background (the light file sits on opaque white), job `225c45ca-e802-4beb-92f3-4bb8b246f9cc`, 192px WebP with alpha.
 
-**Maps** (`dispatch-map-{1020,2040}-dark.webp`, `platform/map-almaty-dark.webp`) — not generated: a generative redraw garbles the 2GIS street labels (see the Topaz note above). They are a deterministic per-pixel recolor of the light maps (sharp): neutral ground, roads and labels invert onto a slate-navy ramp, arterials and metro marks keep their amber/red, parks and hills become a muted teal-green. Labels stay pixel-exact. Map data © 2GIS.
+**Maps** (`dispatch-map-{1020,2040}-dark.webp`, `platform/map-almaty-dark.webp`) — not generated: a generative redraw garbles the 2GIS street labels (see the Topaz note above). They are a deterministic per-pixel recolor of the light maps (sharp): neutral ground, roads and labels invert onto a slate-navy ramp, arterials and metro marks keep their amber/red, parks and hills become a muted teal-green. Labels stay pixel-exact. Map data © 2GIS. `platform/map-almaty-dark.webp` was rebuilt on 2026-11-08 by `tools/platform-block/dark-map.html` (a luminance curve onto navy with streets lighter than the ground, and chroma-keyed highways, metro marks and parks), replacing a softer earlier recolor; WebP q88.
 
 Not varied: the top-down truck markers (`platform/trucks/*.png`, transparent) and `message-state.svg` read on both themes.
 

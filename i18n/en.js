@@ -1220,4 +1220,7 @@
 "Всего выполненных заявок за период":"Completed requests in the period",
 "11 заявок":"11 requests",
 "Общий вывезенный объём за период":"Total volume collected in the period",
-"Сумма к оплате за период":"Amount due for the period"};
+"Сумма к оплате за период":"Amount due for the period",
+"Приблизить карту":"Zoom in",
+"Отдалить карту":"Zoom out",
+"Вернуть исходный вид карты":"Reset map view"};
