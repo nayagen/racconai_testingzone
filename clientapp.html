@@ -362,14 +362,23 @@
          PDF opens beside the phone and zooms to its columns and totals. March data is coherent: 13 requests, 11 completed,
          124.3 m³ at 3200 тг/m³ (contract №423) plus one 2000 тг idle trip = 399 760 тг. -->
     <section class="section drv-stop" id="report" aria-labelledby="report-title">
-      <div class="wrap drv-more">
-        <div class="drv-more-copy">
+      <!-- #screens mirrored: the stage on the left, the copy and a step list on the right. The four steps are a tablist over the
+           one story clock (script.js): each row is a stretch of the loop, the selected one fills its hairline, a click seeks. -->
+      <div class="wrap split split-reverse driver-split cr-split">
+        <div class="split-copy">
           <h2 id="report-title">Отчёт о&nbsp;вывозах за&nbsp;любой период, не&nbsp;дожидаясь АВР</h2>
-          <p>Клиент выбирает период в&nbsp;истории заявок и&nbsp;скачивает PDF: каждая заявка с&nbsp;датой, статусом и&nbsp;фактическим объёмом, итог вывозов и&nbsp;сумма к&nbsp;оплате. Отчёт сразу можно передать руководству или в&nbsp;бухгалтерию, не&nbsp;дожидаясь акта выполненных работ.</p>
+          <p>Клиент выбирает период в&nbsp;истории заявок и&nbsp;скачивает PDF с&nbsp;итогом вывозов и&nbsp;суммой к&nbsp;оплате. Отчёт сразу можно передать руководству или в&nbsp;бухгалтерию, не&nbsp;дожидаясь акта выполненных работ.</p>
+          <!-- Tab icons: Lucide (history, calendar-range, download, file-text), ISC License, lucide.dev -->
+          <div class="drv-tabs cr-tabs" role="tablist" aria-label="Шаги отчёта за период" aria-orientation="vertical">
+            <button type="button" role="tab" id="cr-t1" aria-controls="cr-p" aria-selected="true"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></span><strong>История заявок</strong><span>Все вывозы в&nbsp;одном списке: дата, статус, фактический объём и&nbsp;стоимость каждого.</span></button>
+            <button type="button" role="tab" id="cr-t2" aria-controls="cr-p" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M17 14h-6"/><path d="M13 18H7"/><path d="M7 14h.01"/><path d="M17 18h.01"/></svg></span><strong>Период в&nbsp;календаре</strong><span>Клиент выбирает даты, и&nbsp;итоги пересчитываются: выполненные вывозы, объём и&nbsp;сумма к&nbsp;оплате.</span></button>
+            <button type="button" role="tab" id="cr-t3" aria-controls="cr-p" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg></span><strong>Скачивание PDF</strong><span>Одна кнопка рядом с&nbsp;периодом, и&nbsp;отчёт за&nbsp;выбранные даты скачан.</span></button>
+            <button type="button" role="tab" id="cr-t4" aria-controls="cr-p" aria-selected="false" tabindex="-1"><span class="src-ic drv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><strong>Отчёт для&nbsp;бухгалтерии</strong><span>Каждая заявка с&nbsp;датой, статусом и&nbsp;фактическим объёмом, в&nbsp;конце итог и&nbsp;сумма к&nbsp;оплате.</span></button>
+          </div>
         </div>
 
         <figure class="drv-stage cr-stage">
-          <div class="ca-proto cr-proto" id="cr-p" data-scr="list" data-list="seen" data-per="apr" data-sel="apr">
+          <div class="ca-proto cr-proto" id="cr-p" role="tabpanel" aria-labelledby="cr-t1" data-scr="list" data-list="seen" data-per="apr" data-sel="apr">
             <div class="dphone" role="img" aria-label="Прототип Client App: клиент открывает историю заявок, выбирает период с 1 по 31 марта и скачивает PDF-отчёт о выполненных вывозах">
               <div class="dphone-screen">
                 <div class="ds rds" aria-hidden="true">
@@ -530,7 +539,7 @@
               </div>
             </div>
           </div>
-          <figcaption class="stage-note">Отчёт за&nbsp;март формируется в&nbsp;Client App и&nbsp;скачивается в&nbsp;PDF</figcaption>
+          <figcaption class="stage-note">Отчёт за&nbsp;март собирается сам, шаги можно выбрать в&nbsp;списке</figcaption>
           <button type="button" class="seq-toggle" id="cr-toggle" aria-pressed="false" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path class="seq-ic-pause" d="M7 5v10M13 5v10"/><path class="seq-ic-play" d="M7 4.5v11l8.5-5.5z"/></svg><span>Остановить анимацию</span></button>
         </figure>
       </div>

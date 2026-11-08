@@ -20,8 +20,22 @@
       return (oy === "auto" || oy === "scroll") && node.scrollHeight > node.clientHeight + 1;
     };
     lenis = new window.Lenis({ lerp: 0.085, wheelMultiplier: 1.4, prevent: nestedScroll });
-    var lenisRaf = function (t) { lenis.raf(t); requestAnimationFrame(lenisRaf); };
-    requestAnimationFrame(lenisRaf);
+    /* The loop runs only while there is scrolling to animate: input (or a scripted scrollTo) wakes it, and it sleeps
+       300 ms after Lenis settles, so an idle page does no per-frame work. */
+    var lenisOn = false, lenisLast = 0;
+    var lenisRaf = function (t) {
+      lenis.raf(t);
+      if (lenis.isScrolling) { lenisLast = t; }
+      if (t - lenisLast < 300) { requestAnimationFrame(lenisRaf); } else { lenisOn = false; }
+    };
+    var lenisWake = function () {
+      lenisLast = performance.now();
+      if (!lenisOn) { lenisOn = true; requestAnimationFrame(lenisRaf); }
+    };
+    ["wheel", "keydown", "pointerdown", "touchstart"].forEach(function (ev) { window.addEventListener(ev, lenisWake, { passive: true, capture: true }); });
+    var lenisScrollTo = lenis.scrollTo.bind(lenis);
+    lenis.scrollTo = function (target, opts) { lenisWake(); return lenisScrollTo(target, opts); };
+    lenisWake();
     document.addEventListener("click", function (e) {
       if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { return; }
       var a = e.target.closest && e.target.closest('a[href^="#"]');
@@ -91,6 +105,71 @@
     if (s !== "light" && s !== "dark") { root.setAttribute("data-theme", e.matches ? "dark" : "light"); applyTheme(); }
   };
   if (osDark.addEventListener) { osDark.addEventListener("change", onOs); } else if (osDark.addListener) { osDark.addListener(onOs); }
+
+  /* ---------- 2GIS map tiles (shared) ----------
+     The Leaflet tile layer behind the Platform screen's live map and the AI-dispatcher stage: 2GIS raster tiles, drawn into
+     canvases so that at night each tile is recoloured with the curve of the dark backdrop. Returns the layer class and a
+     repaint for theme switches. */
+  var gisShared = null;
+  function twoGisTiles() {
+    if (gisShared) { return gisShared; }
+    /* ---- tiles: 2GIS raster, by default the 512px HD set drawn into 256px slots (option hd: false for the 256px set). The map sits between tile levels (fractional
+       zoom, up to ~1.4x stretch) inside a screen that is itself scaled to fit the window and zoomed by the tour camera;
+       the standard 256px tiles lose their small labels to that double resampling, the 2x tiles keep them crisp. ---- */
+    var night = function () { return root.getAttribute("data-theme") === "dark"; };
+    var ss = function (a, b, x) { x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
+    var CURVE = [[0, .88], [.35, .70], [.65, .42], [.86, .17], [.90, .135], [.94, .115], [.975, .17], [1, .24]];
+    var curve = function (y) { for (var i = 1; i < CURVE.length; i++) { if (y <= CURVE[i][0]) { var a = CURVE[i - 1], b = CURVE[i]; return a[1] + (b[1] - a[1]) * (y - a[0]) / (b[0] - a[0]); } } return .24; };
+    var hsl = function (h, s, l) { var a = s * Math.min(l, 1 - l), f = function (n) { var k = (n + h / 30) % 12; return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); }; return [f(0), f(8), f(4)]; };
+    var NIGHT = {}; // tiles use small palettes, so each colour is worked out once
+    var nightRGB = function (R, G, B) {
+      var key = (R << 16) | (G << 8) | B, hit = NIGHT[key];
+      if (hit) { return hit; }
+      var r = R / 255, g = G / 255, b = B / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), C = mx - mn;
+      var Y = .2126 * r + .7152 * g + .0722 * b, ln = curve(Y), N = hsl(222, .30 - .22 * ss(.4, .85, ln), ln);
+      var w = ss(.14, .30, C), out = N;
+      if (w > 0) {
+        var h = !C ? 0 : mx === r ? ((g - b) / C + 6) % 6 : mx === g ? (b - r) / C + 2 : (r - g) / C + 4, l = (mx + mn) / 2, s = C / (1 - Math.abs(2 * l - 1));
+        h *= 60;
+        var K = hsl(h > 60 && h < 160 ? h + 30 : h, Math.min(1, s * (.42 + .43 * ss(.35, .7, C))), Math.max(.13 + .40 * ss(.35, .75, C), curve(Y)));
+        out = [N[0] * (1 - w) + K[0] * w, N[1] * (1 - w) + K[1] * w, N[2] * (1 - w) + K[2] * w];
+      }
+      hit = NIGHT[key] = [Math.round(out[0] * 255), Math.round(out[1] * 255), Math.round(out[2] * 255)];
+      return hit;
+    };
+    var paintTile = function (cv) {
+      var img = cv._src, ctx = cv.getContext("2d");
+      if (!img) { return; }
+      ctx.drawImage(img, 0, 0, cv.width, cv.height);
+      if (!night()) { return; }
+      var data;
+      try { data = ctx.getImageData(0, 0, cv.width, cv.height); } catch (e) { return; }
+      var d = data.data;
+      for (var i = 0; i < d.length; i += 4) { var c = nightRGB(d[i], d[i + 1], d[i + 2]); d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; }
+      ctx.putImageData(data, 0, 0);
+    };
+    var Tiles = L.GridLayer.extend({
+      createTile: function (c, done) {
+        var cv = document.createElement("canvas"), img = new Image();
+        var hd = this.options.hd !== false;
+        cv.width = cv.height = hd ? 512 : 256;
+        img.crossOrigin = "anonymous";
+        img.onload = function () { cv._src = img; paintTile(cv); done(null, cv); };
+        img.onerror = function () { done(new Error("tile"), cv); };
+        img.src = "https://tile" + ((c.x + c.y) & 3) + ".maps.2gis.com/tiles?x=" + c.x + "&y=" + c.y + "&z=" + c.z + "&v=1.1" + (hd ? "&ts=online_hd" : "");
+        return cv;
+      }
+    });
+    gisShared = {
+      Tiles: Tiles,
+      watchTheme: function (layer) {
+        new MutationObserver(function () {
+          Object.keys(layer._tiles).forEach(function (k) { paintTile(layer._tiles[k].el); });
+        }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+      }
+    };
+    return gisShared;
+  }
 
   /* ---------- Header border once the page scrolls ---------- */
   var header = document.querySelector(".site-header");
@@ -214,6 +293,89 @@
     tUpdate();
   }
 
+  /* ---------- AI-dispatcher stage: the live 2GIS map under the route ----------
+     The stage overlay is drawn in a 1020 x 500 crop (x 550, y 280) of the Platform backdrop images/platform/map-almaty.webp,
+     whose pixels GEO ties to Web Mercator (the same fit as the Platform's live map). A hidden Leaflet map is set so that crop
+     lands where the overlay's preserveAspectRatio "xMinYMid slice" puts it, its 2GIS tiles (the Platform's layer, night
+     recolour included) load, and the whole view is then flattened into one canvas and the map discarded: the stage map never
+     pans, so it costs one bitmap instead of a Leaflet map with a layer per tile. It is rebuilt only when the stage's size or
+     the theme changes. It starts when the stage comes near; if the tiles fail, the static crop simply stays. */
+  var stageMap = document.querySelector(".stage-map");
+  if (stageMap && window.L && L.GridLayer) {
+    (function () {
+      var GEO = { a: 3497284.9656436485, bx: -2495094.399519851, by: -1281326.2418159847 };
+      var Z0 = Math.log(GEO.a / 256) / Math.LN2;
+      var CROP = { x: 550, y: 280, w: 1020, h: 500 };
+      var flat = document.createElement("canvas");
+      flat.className = "stage-map-flat";
+      flat.setAttribute("aria-hidden", "true");
+      stageMap.insertBefore(flat, stageMap.querySelector(".map-credit"));
+      var building = null, built = "";
+
+      var build = function () {
+        var w = stageMap.clientWidth, h = stageMap.clientHeight;
+        var key = w + "x" + h + (isDark() ? "d" : "l");
+        if (!w || !h || key === built) { return; }
+        if (building) { building.cancel(); }
+        var live = document.createElement("div");
+        live.className = "stage-map-live";
+        stageMap.insertBefore(live, flat);
+        var map = L.map(live, {
+          zoomSnap: 0, attributionControl: false, zoomControl: false, dragging: false, touchZoom: false, doubleClickZoom: false,
+          scrollWheelZoom: false, boxZoom: false, keyboard: false, inertia: false, zoomAnimation: false, fadeAnimation: false
+        });
+        var k = Math.max(w / CROP.w, h / CROP.h);
+        var c = map.unproject(L.point(CROP.x + w / 2 / k - GEO.bx, CROP.y + CROP.h / 2 - GEO.by), Z0);
+        map.setView(c, Z0 + Math.log(k) / Math.LN2, { animate: false });
+        var dpr = Math.min(2, window.devicePixelRatio || 1);
+        var tiles = new (twoGisTiles().Tiles)({ maxZoom: 18, keepBuffer: 0, hd: dpr > 1 }).addTo(map);
+        var job = {
+          cancel: function () {
+            if (job.done) { return; }
+            job.done = true; clearTimeout(job.timer); map.remove(); live.remove();
+            if (building === job) { building = null; }
+          }
+        };
+        building = job;
+        job.timer = setTimeout(job.cancel, 15000); // offline or blocked: keep what is shown (the static crop, or the last view)
+        tiles.on("load", function () {
+          var box = live.getBoundingClientRect(), ok = 0;
+          var cv = document.createElement("canvas");
+          cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+          var ctx = cv.getContext("2d");
+          ctx.scale(dpr, dpr);
+          Object.keys(tiles._tiles).forEach(function (t) {
+            var el = tiles._tiles[t].el;
+            if (!el._src) { return; }
+            var r = el.getBoundingClientRect();
+            ctx.drawImage(el, r.left - box.left, r.top - box.top, r.width, r.height);
+            ok++;
+          });
+          setTimeout(job.cancel, 0); // Leaflet still touches the map after its "load" handlers return
+          if (!ok) { return; }
+          flat.width = cv.width; flat.height = cv.height;
+          flat.getContext("2d").drawImage(cv, 0, 0);
+          built = key;
+          stageMap.classList.add("is-live");
+        });
+      };
+
+      var start = function () {
+        build();
+        var rt = null;
+        var later = function () { clearTimeout(rt); rt = setTimeout(build, 250); };
+        if ("ResizeObserver" in window) { new ResizeObserver(later).observe(stageMap); } else { window.addEventListener("resize", later); }
+        new MutationObserver(build).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+      };
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          if (entries[0].isIntersecting) { io.disconnect(); start(); }
+        }, { rootMargin: "600px 0px" });
+        io.observe(stageMap);
+      } else { start(); }
+    })();
+  }
+
   /* ---------- Signature sequence (loops, about 11 s): the truck drives to its next stop while a request lands,
      the AI checks each truck and assigns it; then the truck drives on to the new stop. ---------- */
   var stage = document.getElementById("stage");
@@ -257,13 +419,26 @@
 
     // The truck follows a route leg: position and heading come from the path itself.
     var drive = null;
+    /* Each leg is sampled once (1 point per px of length) and cached; SVG geometry queries inside the frame loop would
+       force a layout on every frame. */
+    var legPts = new WeakMap();
+    function legSamples(path) {
+      var pts = legPts.get(path);
+      if (!pts) {
+        var len = path.getTotalLength(), n = Math.max(2, Math.ceil(len));
+        pts = [];
+        for (var i = 0; i <= n; i++) { var q = path.getPointAtLength(len * i / n); pts.push([q.x, q.y]); }
+        legPts.set(path, pts);
+      }
+      return pts;
+    }
     function placeTruck(path, t) {
-      var len = path.getTotalLength();
-      var p = path.getPointAtLength(len * t);
-      var q = path.getPointAtLength(Math.min(len, len * t + 2));
-      var r = t >= 1 ? path.getPointAtLength(len - 2) : p;
-      var a = Math.atan2(q.y - r.y, q.x - r.x) * 180 / Math.PI;
-      truck.setAttribute("transform", "translate(" + p.x.toFixed(1) + " " + p.y.toFixed(1) + ") rotate(" + a.toFixed(1) + ")");
+      var pts = legSamples(path), n = pts.length - 1;
+      var f = t * n, i = Math.min(n - 1, Math.floor(f)), u = f - i;
+      var x = pts[i][0] + (pts[i + 1][0] - pts[i][0]) * u, y = pts[i][1] + (pts[i + 1][1] - pts[i][1]) * u;
+      var a0 = pts[Math.min(i, n - 2)], a1 = pts[Math.min(i + 2, n)]; // heading over ~2px, as before
+      var a = Math.atan2(a1[1] - a0[1], a1[0] - a0[0]) * 180 / Math.PI;
+      truck.setAttribute("transform", "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ") rotate(" + a.toFixed(1) + ")");
     }
     function driveAlong(path, ms, done) {
       var start = null;
@@ -1169,8 +1344,9 @@
     var crNums = Array.prototype.slice.call(crProto.querySelectorAll(".cr-n"));
     var rS = function (k, v) { if (v == null) { crProto.removeAttribute("data-" + k); } else { crProto.setAttribute("data-" + k, v); } };
 
-    /* Fit: two columns share the stage (80% of the viewport tall); the phone scale and the page width come from its room.
-       Phone: 412 x 947 design px + 9px bezel; the page bar is 38px over a 1361 x 1926 page. */
+    /* Fit: the stage is 80% of the viewport tall (CSS); phone and page share its one cell. The phone takes the height the
+       caption row leaves and at most ~62% of the width; the page, its 38px bar and 10px gap fit the same height and 80% of
+       the width. Phone: 412 x 947 design px + 9px bezel; page 1361 x 1926. */
     var crWide = window.matchMedia("(min-width: 861px)");
     var crFit = function () {
       if (crWide.matches && crStage) {
@@ -1180,15 +1356,13 @@
           var m = getComputedStyle(c);
           row = Math.max(row, c.offsetHeight + (parseFloat(m.marginTop) || 0) + (parseFloat(m.marginBottom) || 0));
         });
-        // the copy's 5/7 columns: the phone fits the left one, the page the right one, both the stage height
-        var h = crStage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - row - 18;
-        var w = crProto.clientWidth, gap = parseFloat(getComputedStyle(crProto).columnGap) || 48;
-        var c1 = (w - gap) * 5 / 12, c2 = (w - gap) * 7 / 12, r = 1361 / 1926;
-        var s = Math.max(.2, Math.min((h - 18) / 947, (c1 - 18) / 412, (c2 / r + 20) / 947));
-        var dw = Math.max(160, (947 * s + 18 - 38) * r), pw = 412 * s + 18;
+        var h = crStage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - row;
+        var w = crProto.clientWidth, r = 1361 / 1926;
+        var s = Math.max(.2, Math.min((h - 18) / 947, (w * .62 - 18) / 412));
+        var dw = Math.max(160, Math.min(w * .8, (h - 66) * r)), pw = 412 * s + 18;
         crProto.style.setProperty("--s", s.toFixed(4));
         crProto.style.setProperty("--cr-dw", dw.toFixed(1) + "px");
-        crProto.style.setProperty("--cr-shift", (w / 2 - c1 + pw / 2).toFixed(1) + "px"); // centred on the stage before the PDF
+        crProto.style.setProperty("--cr-shift", ((w - pw) / 2).toFixed(1) + "px"); // centred on the stage before the PDF
       } else {
         crProto.style.removeProperty("--s"); crProto.style.removeProperty("--cr-dw"); crProto.style.removeProperty("--cr-shift");
       }
@@ -1281,46 +1455,103 @@
     ];
     var CR_END = 32200, CR_STILL = 16000;
 
-    var cr = { t: 0, raf: 0, last: 0, visible: false, paused: false, running: false, fresh: true };
+    /* The step list: each row is a stretch of the clock (history, period, download, the PDF); the selected row fills its
+       hairline over that stretch, a click seeks to its start. Reduced motion: a click shows that step's still frame. */
+    var crTabs = Array.prototype.slice.call(document.querySelectorAll('.cr-tabs [role="tab"]'));
+    var crTabList = document.querySelector(".cr-tabs");
+    var CR_SEG = [0, 6000, 12500, 15300], CR_STILLS = [5000, 11800, 14900, 22000];
+    var crSegAt = function (t) { var k = 0; CR_SEG.forEach(function (a, i) { if (t >= a) { k = i; } }); return k; };
+    var crShowSeg = function (k) {
+      crTabs.forEach(function (t, n) { t.setAttribute("aria-selected", String(n === k)); t.tabIndex = n === k ? 0 : -1; });
+      if (crTabs[k]) { crProto.setAttribute("aria-labelledby", crTabs[k].id); }
+    };
+
+    var cr = { t: 0, seg: -1, raf: 0, last: 0, visible: false, paused: false, focus: false, running: false, fresh: true };
+    var crBar = function (running) {
+      var k = cr.seg, a = CR_SEG[k], b = k + 1 < CR_SEG.length ? CR_SEG[k + 1] : CR_END;
+      crTabs.forEach(function (t, n) {
+        t.classList.toggle("is-auto", n === k && !cr.paused);
+        t.classList.remove("is-running");
+        if (n !== k) { return; }
+        t.style.setProperty("--auto-from", String((cr.t - a) / (b - a)));
+        t.style.setProperty("--auto-left", Math.max(0, b - cr.t) + "ms");
+        void t.offsetWidth;
+        if (running) { t.classList.add("is-running"); }
+      });
+    };
     var crSeek = function (t) {
       crProto.classList.add("is-reset");
       CR_STORY.forEach(function (e) { if (e[0] <= t && !e[2]) { e[1](); } });
       crTap.classList.remove("is-pressing");
       cr.t = t; crCount(t);
+      cr.seg = crSegAt(t); crShowSeg(cr.seg);
       void crProto.offsetWidth;
       crProto.classList.remove("is-reset");
     };
     var crTick = function (now) {
       var dt = Math.min(100, now - cr.last), t0 = cr.t, t1 = t0 + dt;
       cr.last = now;
-      if (t1 >= CR_END) { crSeek(0); cr.raf = requestAnimationFrame(crTick); return; }
+      if (t1 >= CR_END) { crSeek(0); crBar(true); cr.raf = requestAnimationFrame(crTick); return; }
       CR_STORY.forEach(function (e) { if (e[0] > t0 && e[0] <= t1) { e[1](); } });
       cr.t = t1;
+      var k = crSegAt(t1);
+      if (k !== cr.seg) { cr.seg = k; crShowSeg(k); crBar(true); }
       if (t1 >= CR_CALC[0] - 50 && t0 <= CR_CALC[1] + 50) { crCount(t1); }
       cr.raf = requestAnimationFrame(crTick);
     };
     var crSync = function () {
-      var go = cr.visible && !cr.paused && !document.hidden;
+      var go = cr.visible && !cr.paused && !cr.focus && !document.hidden;
       if (go === cr.running) { return; }
       cr.running = go;
       crProto.classList.toggle("is-held", !go);
       if (go) {
         if (cr.fresh) { cr.fresh = false; crSeek(0); }
+        crBar(true);
         cr.last = performance.now();
         cr.raf = requestAnimationFrame(crTick);
       } else {
         cancelAnimationFrame(cr.raf);
+        crBar(false);
       }
     };
-    if (!reduceMotion && "IntersectionObserver" in window) {
+    var crSetPaused = function (p) {
+      cr.paused = p;
+      crToggle.setAttribute("aria-pressed", String(p));
+      crToggle.querySelector("span").textContent = p ? "Запустить анимацию" : "Остановить анимацию";
+      crToggle.classList.toggle("is-paused", p);
+    };
+    var crMotion = !reduceMotion && "IntersectionObserver" in window;
+    var crPick = function (k) {
+      if (!crMotion) { crSeek(CR_STILLS[k]); return; }
+      cancelAnimationFrame(cr.raf);
+      cr.running = false; cr.fresh = false;
+      crSeek(CR_SEG[k]);
+      crSetPaused(false);
+      crBar(false);
+      crSync();
+    };
+    crTabs.forEach(function (tab, i) {
+      tab.addEventListener("click", function () { crPick(i); });
+      tab.addEventListener("keydown", function (e) {
+        var d = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+        var n = e.key === "Home" ? 0 : e.key === "End" ? crTabs.length - 1 : d ? (i + d + crTabs.length) % crTabs.length : -1;
+        if (n < 0) { return; }
+        e.preventDefault();
+        crPick(n);
+        crTabs[n].focus();
+      });
+    });
+    if (crMotion) {
       crToggle.hidden = false;
       crToggle.addEventListener("click", function () {
-        cr.paused = !cr.paused;
-        crToggle.setAttribute("aria-pressed", String(cr.paused));
-        crToggle.querySelector("span").textContent = cr.paused ? "Запустить анимацию" : "Остановить анимацию";
-        crToggle.classList.toggle("is-paused", cr.paused);
-        crSync();
+        crSetPaused(!cr.paused);
+        crBar(false); crSync();
       });
+      // Only keyboard focus in the list pauses; a resting mouse cursor must not freeze the autoplay.
+      if (crTabList) {
+        crTabList.addEventListener("focusin", function (e) { if (e.target.matches(":focus-visible")) { cr.focus = true; crSync(); } });
+        crTabList.addEventListener("focusout", function (e) { if (!crTabList.contains(e.relatedTarget)) { cr.focus = false; crSync(); } });
+      }
       new IntersectionObserver(function (entries) {
         cr.visible = entries[0].isIntersecting;
         if (!cr.visible && !cr.paused) { cr.fresh = true; }
@@ -2259,54 +2490,7 @@
           var moved = false, dead = false, booted = false;
           setTimeout(function () { booted = true; }, 0);
 
-          /* ---- tiles: 2GIS raster, always the 512px HD set drawn into 256px slots. The map sits between tile levels (fractional
-             zoom, up to ~1.4x stretch) inside a screen that is itself scaled to fit the window and zoomed by the tour camera;
-             the standard 256px tiles lose their small labels to that double resampling, the 2x tiles keep them crisp. ---- */
-          var HD = true;
-          var root = document.documentElement;
-          var night = function () { return root.getAttribute("data-theme") === "dark"; };
-          var ss = function (a, b, x) { x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
-          var CURVE = [[0, .88], [.35, .70], [.65, .42], [.86, .17], [.90, .135], [.94, .115], [.975, .17], [1, .24]];
-          var curve = function (y) { for (var i = 1; i < CURVE.length; i++) { if (y <= CURVE[i][0]) { var a = CURVE[i - 1], b = CURVE[i]; return a[1] + (b[1] - a[1]) * (y - a[0]) / (b[0] - a[0]); } } return .24; };
-          var hsl = function (h, s, l) { var a = s * Math.min(l, 1 - l), f = function (n) { var k = (n + h / 30) % 12; return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); }; return [f(0), f(8), f(4)]; };
-          var NIGHT = {}; // tiles use small palettes, so each colour is worked out once
-          var nightRGB = function (R, G, B) {
-            var key = (R << 16) | (G << 8) | B, hit = NIGHT[key];
-            if (hit) { return hit; }
-            var r = R / 255, g = G / 255, b = B / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), C = mx - mn;
-            var Y = .2126 * r + .7152 * g + .0722 * b, ln = curve(Y), N = hsl(222, .30 - .22 * ss(.4, .85, ln), ln);
-            var w = ss(.14, .30, C), out = N;
-            if (w > 0) {
-              var h = !C ? 0 : mx === r ? ((g - b) / C + 6) % 6 : mx === g ? (b - r) / C + 2 : (r - g) / C + 4, l = (mx + mn) / 2, s = C / (1 - Math.abs(2 * l - 1));
-              h *= 60;
-              var K = hsl(h > 60 && h < 160 ? h + 30 : h, Math.min(1, s * (.42 + .43 * ss(.35, .7, C))), Math.max(.13 + .40 * ss(.35, .75, C), curve(Y)));
-              out = [N[0] * (1 - w) + K[0] * w, N[1] * (1 - w) + K[1] * w, N[2] * (1 - w) + K[2] * w];
-            }
-            hit = NIGHT[key] = [Math.round(out[0] * 255), Math.round(out[1] * 255), Math.round(out[2] * 255)];
-            return hit;
-          };
-          var paintTile = function (cv) {
-            var img = cv._src, ctx = cv.getContext("2d");
-            if (!img) { return; }
-            ctx.drawImage(img, 0, 0, cv.width, cv.height);
-            if (!night()) { return; }
-            var data;
-            try { data = ctx.getImageData(0, 0, cv.width, cv.height); } catch (e) { return; }
-            var d = data.data;
-            for (var i = 0; i < d.length; i += 4) { var c = nightRGB(d[i], d[i + 1], d[i + 2]); d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; }
-            ctx.putImageData(data, 0, 0);
-          };
-          var Tiles = L.GridLayer.extend({
-            createTile: function (c, done) {
-              var cv = document.createElement("canvas"), img = new Image();
-              cv.width = cv.height = HD ? 512 : 256;
-              img.crossOrigin = "anonymous";
-              img.onload = function () { cv._src = img; paintTile(cv); done(null, cv); };
-              img.onerror = function () { done(new Error("tile"), cv); };
-              img.src = "https://tile" + ((c.x + c.y) & 3) + ".maps.2gis.com/tiles?x=" + c.x + "&y=" + c.y + "&z=" + c.z + "&v=1.1" + (HD ? "&ts=online_hd" : "");
-              return cv;
-            }
-          });
+          var gis = twoGisTiles(), Tiles = gis.Tiles;
           var tiles = new Tiles({ maxZoom: 18, keepBuffer: 2, updateWhenZooming: false }).addTo(map);
           var shown = false;
           tiles.on("tileload", function () { if (!shown) { shown = true; routeMap.classList.add("is-live"); mapCluster(); } });
@@ -2318,9 +2502,7 @@
             items.forEach(function (it) { it.el.style.translate = ""; });
             routeRepaint();
           }, 12000);
-          new MutationObserver(function () {
-            Object.keys(tiles._tiles).forEach(function (k) { paintTile(tiles._tiles[k].el); });
-          }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+          gis.watchTheme(tiles);
 
           /* ---- overlays: pins (anchored at the tip), trucks and the depot (anchored at the centre) ---- */
           var items = Array.prototype.map.call(routeMap.querySelectorAll(".pf-mpin, .pf-map__truck, .pf-map__depot"), function (el) {
@@ -3513,6 +3695,22 @@
           '<button type="button" class="btn btn-quiet btn-sm" data-tour-resume>Продолжить обзор</button></div>', tourStage);
         tAsk.setAttribute("role", "dialog");
         tAsk.setAttribute("aria-labelledby", "pf-tour-ask-t");
+        /* intro gate: before anything moves, the visitor picks — watch the mini-tour or take the wheel.
+           The tour is drawn as a route: one stop per step, the same line the dispatcher sees on the map. */
+        var GATE_N = 12;
+        var gStops = "";
+        for (var gi = 0; gi < GATE_N; gi++) { gStops += '<span class="pf-gate__stop" style="--i:' + gi + '"></span>'; }
+        var tGate = mk("pf-gate", '<div class="pf-gate__card">' +
+          '<p class="pf-gate__title" id="pf-gate-t">Покажем Платформу за 12 шагов</p>' +
+          '<p class="pf-gate__text">Мы подготовили мини-обзор: курсор сам пройдёт по карте, машинам и рейсам и расскажет, что где. А можно сразу кликать самому — интерфейс живой.</p>' +
+          '<div class="pf-gate__route" aria-hidden="true"><i class="pf-gate__line"></i>' + gStops + '</div>' +
+          '<p class="pf-gate__ends" aria-hidden="true"><span>Карта заданий</span><span>AI-диспетчер</span></p>' +
+          '<div class="pf-gate__acts">' +
+          '<button type="button" class="pf-gate__btn pf-gate__btn--go" data-gate-watch><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><span>Смотреть обзор</span></button>' +
+          '<button type="button" class="pf-gate__btn pf-gate__btn--own" data-tour-take><svg width="18" height="18" viewBox="0 0 30 30" aria-hidden="true"><path d="M6 3.5v20.2l5.1-4.9 3.6 8.2 3.6-1.6-3.6-8.1 7.1-.4z"/></svg><span>Изучу сам</span></button></div>' +
+          '<p class="pf-gate__note">Остановить обзор можно в любой момент — кликом по экрану или клавишей <kbd>Esc</kbd></p></div>', tourStage);
+        tGate.setAttribute("role", "dialog");
+        tGate.setAttribute("aria-labelledby", "pf-gate-t");
         var tBar = document.createElement("div");
         tBar.className = "pf-tour-bar";
         tBar.hidden = true;
@@ -3994,9 +4192,21 @@
           tPrevBtn.disabled = k <= 0;
           tNext.disabled = false;
         };
+        var gateOff = function () {
+          if (tGate.hidden) { return; }
+          tGate.classList.remove("is-on"); tVeil.classList.remove("is-gate");
+          tGate.hidden = true;
+        };
+        var gateOn = function () {
+          tVeil.hidden = false; tVeil.classList.add("is-gate");
+          tGate.hidden = false;
+          requestAnimationFrame(function () { requestAnimationFrame(function () { tGate.classList.add("is-on"); }); });
+          var w = tGate.querySelector("[data-gate-watch]"); if (w) { w.focus({ preventScroll: true }); }
+        };
         var start = function (from) {
           var k0 = Math.max(0, Math.min(STEPS.length - 1, from || 0)), jump = !!from;
           var tk = ++T.token;
+          gateOff();
           if (T.anim) { try { T.anim.cancel(); } catch (e) { /* done */ } T.anim = null; }
           T.seen = true; T.held = false; tAsk.hidden = true; tVeil.hidden = true; tCall.classList.remove("is-dim");
           act(function () { clearHovers(); });
@@ -4012,6 +4222,7 @@
         };
         var stop = function () {
           T.token++;
+          gateOff();
           if (T.anim) { try { T.anim.cancel(); } catch (e) { /* done */ } T.anim = null; }
           T.held = false; tAsk.hidden = true; tVeil.hidden = true;
           act(function () { clearHovers(); closeModals(); });
@@ -4042,6 +4253,7 @@
 
         tourFrame.addEventListener("click", function (e) {
           if (e.target.closest("[data-tour-take]")) { takeControl(); return; }
+          if (e.target.closest("[data-gate-watch]")) { start(); return; }
           if (e.target.closest("[data-tour-resume]")) { resume(); return; }
           if (e.target.closest("[data-tour-replay]")) { hush(); start(); }
         });
@@ -4067,6 +4279,7 @@
         pfScr.addEventListener("focusin", function (e) { if (T.on && !T.acting) { stop(); } });
         document.addEventListener("keydown", function (e) {
           if (e.key !== "Escape") { return; }
+          if (!tGate.hidden) { takeControl(); return; }
           if (T.held) { resume(); return; }
           if (T.on) { takeControl(); }
         });
@@ -4074,7 +4287,6 @@
         /* pause offscreen and in a hidden tab; start once on first view */
         var onScreen = false;
         document.addEventListener("visibilitychange", syncPause);
-        var autoOK = function () { return !reduceTour && !pfView.classList.contains("is-pan"); };
         if ("IntersectionObserver" in window) {
           new IntersectionObserver(function (es) {
             var e0 = es[0];
@@ -4082,9 +4294,10 @@
             /* "on the interface": most of the screen visible, or it fills most of the window */
             var onIt = e0.isIntersecting && (e0.intersectionRatio >= 0.8 || e0.intersectionRect.height >= window.innerHeight * 0.7);
             syncPause();
-            if (onIt && !T.seen && autoOK()) {
+            /* first arrival: ask first, never autoplay; the gate is a choice, so reduced motion gets it too */
+            if (onIt && !T.seen && !pfView.classList.contains("is-pan")) {
               T.seen = true;
-              setTimeout(function () { if (onScreen && !T.on) { start(); } }, 500);
+              setTimeout(function () { if (onScreen && !T.on) { gateOn(); } }, 400);
             }
           }, { threshold: [0, 0.35, 0.5, 0.6, 0.7, 0.8, 0.9, 1] }).observe(pfView);
         } else { onScreen = true; }
