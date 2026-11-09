@@ -73,7 +73,10 @@ function mapTruck(t) {
 }
 function mapFrame() {
   return div('pf-map',
-    h('img', { className: 'pf-map__bg', src: 'images/platform/map-almaty.webp', width: 1600, height: 900, alt: '' }),
+    /* themed <picture>: dark-OS visitors fetch only the night backdrop (js/core.js re-aims the source for a stored theme) */
+    h('picture', { className: 'themed' },
+      h('source', { 'data-theme-dark': '', media: '(prefers-color-scheme: dark)', srcSet: 'images/platform/map-almaty-dark.webp' }),
+      h('img', { className: 'pf-map__bg', src: 'images/platform/map-almaty.webp', width: 1600, height: 900, alt: '' })),
     h('div', { className: 'pf-map__pins', role: 'group', 'aria-label': 'Площадки на карте', 'data-pf-roving': '', dangerouslySetInnerHTML: { __html: pins.map((pn, i) =>
       `<button type="button" class="pf-mpin" data-pf-site="${i}" tabindex="${i ? -1 : 0}" aria-label="${SITES[i].name}, ${SITES[i].addr}, ${JOB_WORD[SITES[i].pin]}" style="left:${pn.x - 14}px;top:${pn.y - 28}px">${pinMarkup(pn.s, 28, '')}</button>`).join('') } }),
     h('span', { className: 'pf-map__depot', 'data-pf-depot': '', 'aria-hidden': 'true' }, h(Icon, { name: 'garage-filled', size: 22, color: 'var(--icons-success)' })),
@@ -106,6 +109,8 @@ const TRUCK_EXTRA = {
   '402BCK02': { km: '38 км', odo: '211480 км', fuel: '71 л', left: 'Осталось 96 л', gps: '2 мин назад (13:31)' },
   '417AHT02': { km: '41 км', odo: '187305 км', fuel: '77 л', left: 'Осталось 108 л', gps: '1 мин назад (13:32)' },
 };
+/* Truck card photo per model, as TRUCK_PHOTO in js/platform.js (the page sets the same file, so nothing is fetched twice) */
+const TRUCK_PHOTO = { 'Iveco EuroCargo SB-800': 'iveco-eurocargo-sb-800', 'КамАЗ 53605 МК-4546': 'kamaz-53605-mk-4546', 'МАЗ 5340 КО-427': 'maz-5340-ko-427' };
 const pad = v => (v.length === 4 ? '0' + v : v);
 function truckPanel(plate) {
   const tripKeys = Object.keys(ROUTES).filter(k => ROUTES[k].plate === plate && ROUTES[k].k !== 'ai'), trips = tripKeys.map(k => ROUTES[k]);
@@ -115,7 +120,7 @@ function truckPanel(plate) {
     : h(StatusBadge, { entity: 'route', status: 'assigned', progress: String(r.total) });
   return div('pf-truck',
     div('pf-truck__head',
-      h('img', { className: 'pf-truck__img', src: 'images/platform/garbage-truck-green.webp', width: 96, height: 96, alt: '' }),
+      h('img', { className: 'pf-truck__img', src: 'images/platform/trucks/photo/' + TRUCK_PHOTO[r0.model] + '.webp', width: 96, height: 80, alt: '', loading: 'lazy' }),
       div('pf-truck__info',
         h(PlateNumber, { size: 'large' }, plate),
         div('pf-truck__model', div('', p('body-m-medium', r0.model), p('caption-m-regular pf-muted', r0.vtype)),

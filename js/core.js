@@ -182,15 +182,28 @@
       hit = NIGHT[key] = [Math.round(out[0] * 255), Math.round(out[1] * 255), Math.round(out[2] * 255)];
       return hit;
     };
+    var LITTLE = new Uint8Array(new Uint32Array([1]).buffer)[0] === 1; // byte order of the packed pixel loop
     var paintTile = function (cv) {
-      var img = cv._src, ctx = cv.getContext("2d");
+      // night tiles are read back and rewritten, so they live on the CPU (no GPU readback); the first call fixes the mode
+      var img = cv._src, ctx = cv.getContext("2d", { willReadFrequently: true });
       if (!img) { return; }
       ctx.drawImage(img, 0, 0, cv.width, cv.height);
       if (!night()) { return; }
       var data;
       try { data = ctx.getImageData(0, 0, cv.width, cv.height); } catch (e) { return; }
-      var d = data.data;
-      for (var i = 0; i < d.length; i += 4) { var c = nightRGB(d[i], d[i + 1], d[i + 2]); d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; }
+      var d = data.data, i, c;
+      if (LITTLE) {
+        /* Packed pixels (ABGR in memory order): map tiles are long runs of one colour, so the previous pixel's answer is
+           reused and the colour lookup only runs where the colour changes. Same colours out as the per-channel loop below. */
+        var px = new Uint32Array(d.buffer, d.byteOffset, d.length >> 2), n = px.length, last = -1, out = 0, v, rgb;
+        for (i = 0; i < n; i++) {
+          v = px[i]; rgb = v & 0xffffff;
+          if (rgb !== last) { last = rgb; c = nightRGB(rgb & 255, (rgb >> 8) & 255, rgb >> 16); out = c[0] | (c[1] << 8) | (c[2] << 16); }
+          px[i] = (v & 0xff000000) | out;
+        }
+      } else {
+        for (i = 0; i < d.length; i += 4) { c = nightRGB(d[i], d[i + 1], d[i + 2]); d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; }
+      }
       ctx.putImageData(data, 0, 0);
     };
     var Tiles = L.GridLayer.extend({

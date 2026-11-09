@@ -102,10 +102,21 @@
         "КамАЗ 6520 самосвал": "kamaz-6520-samosval", "Shacman X3000 самосвал": "shacman-x3000-samosval",
         "ГАЗон Next ассенизатор": "gazon-next-assenizator", "КамАЗ 43253 КО-505": "kamaz-43253-ko-505"
       };
+      /* Cards are mostly hidden, so the photos load lazily (the open card's at once) and the rest are fetched once the page
+         has loaded, ready before a card is opened. */
       var truckPhoto = function (card, model) {
         var img = card.querySelector(".pf-truck__img"), f = TRUCK_PHOTO[model];
-        if (img && f) { img.src = "images/platform/trucks/photo/" + f + ".webp"; img.width = 96; img.height = 80; }
+        if (img && f) {
+          var src = "images/platform/trucks/photo/" + f + ".webp";
+          if (img.getAttribute("src") !== src) { img.loading = "lazy"; img.src = src; }
+          img.width = 96; img.height = 80;
+        }
       };
+      var warmTruckPhotos = function () {
+        Array.prototype.forEach.call(pfView.querySelectorAll(".pf-truck__img[loading='lazy']"), function (img) { img.loading = "eager"; });
+      };
+      if (document.readyState === "complete") { setTimeout(warmTruckPhotos, 0); }
+      else { window.addEventListener("load", function () { setTimeout(warmTruckPhotos, 300); }, { once: true }); }
       Array.prototype.forEach.call(pfSide.querySelectorAll('[data-pf-card^="truck-"]'), function (c) {
         var m = c.querySelector(".pf-truck__model .body-m-medium");
         if (m) { truckPhoto(c, m.textContent.trim()); }
@@ -336,10 +347,28 @@
          property. At night each tile is recoloured on a canvas with the curve of the dark backdrop. The backdrop stays as the
          placeholder until tiles arrive, and as the fallback when Leaflet or the tiles fail. */
       if (routeMap && window.L && L.GridLayer) {
-        (function () {
+        /* The live map starts once the page has loaded and the screen is within a window's height of view (at once if it is
+           already on screen), so its ~2 MB of tiles never compete with the first paint; the backdrop covers until then. */
+        var tourNow = false;
+        pfView.addEventListener("pf:tour", function (e) { tourNow = !!e.detail; });
+        var liveStart = function (fn) {
+          if (!("IntersectionObserver" in window)) { fn(); return; }
+          var loaded = document.readyState === "complete", near = false, done = false;
+          var go = function () { if (!done && near && loaded) { done = true; io.disconnect(); fn(); } };
+          var io = new IntersectionObserver(function (es) {
+            var e0 = es[0];
+            near = e0.isIntersecting;
+            if (near && !loaded && e0.boundingClientRect.top < window.innerHeight && e0.boundingClientRect.bottom > 0) { loaded = true; }
+            go();
+          }, { rootMargin: "100% 0px" });
+          io.observe(routeMap);
+          if (!loaded) { window.addEventListener("load", function () { loaded = true; go(); }, { once: true }); }
+        };
+        liveStart(function () {
           var GEO = { a: 3497284.9656436485, bx: -2495094.399519851, by: -1281326.2418159847 };
           var Z0 = Math.log(GEO.a / 256) / Math.LN2;
           var backdrop = routeMap.querySelector(".pf-map__bg");
+          if (backdrop && backdrop.parentNode !== routeMap) { backdrop = backdrop.closest("picture"); } // themed <picture> around it
           var live = document.createElement("div");
           live.className = "pf-map__live";
           live.setAttribute("aria-hidden", "true");
@@ -515,7 +544,7 @@
             var st = PF.sites[+it.el.getAttribute("data-pf-site")].pin, u = it.el.querySelector("[fill]:not([fill='none']):not([fill='white'])");
             if (!CL_COLOR[st] && u) { CL_COLOR[st] = u.getAttribute("fill"); }
           });
-          var clusters = [], clZoom = null, clOn = true;
+          var clusters = [], clZoom = null, clOn = !tourNow; // a map that starts mid-tour starts unclustered
           var placeClusters = function (zoom, center) {
             clusters.forEach(function (c) {
               var q = toPx(c.g, zoom, center);
@@ -612,7 +641,7 @@
           routeMap.addEventListener("click", function (e) { if (e.target.closest(".pf-mpin, .pf-ms")) { setTimeout(mapCluster, 0); } });
           pfView.addEventListener("pf:tour", function (e) { clOn = !e.detail; mapCluster(); });
           sync();
-        })();
+        });
       }
 
       /* Photo proof modal (Figma 19635:35376): opened from the blue photo icon of a completed job in the site card.
