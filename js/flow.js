@@ -101,7 +101,12 @@
       if (on && flowCur < 0) { flowStop(); flowShow(flowSteps.length); flowMark(0); }
     };
     if (flowNarrow.addEventListener) { flowNarrow.addEventListener("change", flowMode); } else if (flowNarrow.addListener) { flowNarrow.addListener(flowMode); }
+    /* The first switch happens at load: snap it. Fading the other steps out there is never seen, but Chrome counts those
+       steps as moving (a layout shift of ~0.15 on phones); later switches, e.g. on rotation, keep their fade. */
+    flowSteps.forEach(function (li) { li.style.transition = "none"; });
     flowMode();
+    void flow.offsetWidth;
+    flowSteps.forEach(function (li) { li.style.transition = ""; });
 
     if (flowAnim) {
       var flowLoop = function () {
