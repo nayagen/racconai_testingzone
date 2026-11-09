@@ -1880,6 +1880,36 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
   .flow-step .flow-net { margin-inline: 0; }
   .flow-title { text-align: center; }
 }
+/* Phone stepper (script.js adds .is-stepper and the tab row): every step sits in the same grid cell, so the frame keeps the
+   height of the tallest and nothing below moves; only the current one is shown. The tab underline is the signal line. */
+.flow-tabs { display: none; }
+.flow.is-stepper .flow-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: -8px -4px 22px; }
+.flow-tab { position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 52px; margin: 0 4px; padding: 0 0 8px;
+  border: 0; background: none; color: var(--muted); font: 600 13px/1 var(--font); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color .3s var(--ease); }
+.flow-tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--line-strong) 0 7px, transparent 7px 12px); }
+.flow-tab.is-net::after { background: var(--line-strong); }
+.flow-tab.is-current { color: var(--ink); }
+.flow-tab.is-current::after { background: repeating-linear-gradient(90deg, var(--ink) 0 7px, transparent 7px 12px); }
+.flow-tab.is-net.is-current::after { background: var(--ink); }
+.flow-tab-ix { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px currentColor;
+  font-variant-numeric: tabular-nums; transition: background-color .3s var(--ease), color .3s var(--ease), box-shadow .3s var(--ease); }
+.flow-tab.is-current .flow-tab-ix { background: var(--ink); color: var(--on-ink); box-shadow: 0 0 0 4px var(--line-strong); }
+.flow-tab svg { flex: none; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.flow-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 8px; }
+.flow.is-stepper .flow-steps { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+.flow.is-stepper .flow-step { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; padding: 0;
+  visibility: hidden; opacity: 0; transition: opacity .3s var(--ease), visibility 0s .3s; }
+.flow.is-stepper .flow-step.is-current { visibility: visible; opacity: 1; transition: opacity .4s var(--ease), visibility 0s; }
+.flow.is-stepper .flow-step .flow-title { align-self: stretch; margin-top: 0; justify-content: flex-start; text-align: left; font-size: 17px; }
+.flow.is-stepper .flow-step .flow-ix { display: none; }
+.flow.is-stepper .flow-net { align-self: stretch; margin: 8px 0 20px; padding: 0; justify-content: flex-start; text-align: left; }
+.flow.is-stepper .flow-net::before, .flow.is-stepper .flow-arrow { display: none; }
+.flow.is-stepper .fphone-da { width: min(232px, 100%); }
+.flow.is-stepper :is(.navcard, .synccard) { margin-block: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .flow.is-stepper .flow-step, .flow.is-stepper .flow-step.is-current { transition: none; }
+}
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1080px) {
@@ -1898,12 +1928,11 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
   .split-reverse .split-copy { order: 0; }
   .proof-list { grid-template-columns: 1fr; }
   .proof-list li, .proof-list li + li { padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); }
-  .photo-stage-img { width: 100%; aspect-ratio: 4 / 3; }
-  .photo-stage > .fleet { width: auto; margin: -72px 12px 0; }
+  /* single column: the copy carries these two blocks; the fleet-switch panel and the «Утвердить все» route sheet are
+     desk-sized demos and stay on wide screens */
+  #ai-control .photo-stage, #schedule .rgroup { display: none; }
 }
 @media (max-width: 600px) {
-  .photo-stage-img { aspect-ratio: 1 / 1; }
-  .photo-stage > .fleet { margin: -56px 0 0; }
   .pause-crew img { object-position: 24% 50%; }
   .pause img { height: 220px; }
   .pause-cab img { object-position: 42% 60%; }
@@ -2020,11 +2049,20 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 }
 .pf-hero-copy .btn-quiet { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
 .pf-hero-copy .btn-quiet:hover { background: var(--surface-2); }
+/* Narrow screens: a portrait crop of the same dawn (hero-m-*) becomes the ground under the copy. It covers the whole
+   opener, pinned to its bottom edge, so the headline reads over open sky, the actions over the mountains, and the four
+   trucks drive out from under the proof strip. The bottom padding is the room the trucks need (they sit in the lower
+   37% of the photo); the daylight wash runs top-down here instead of from the left. */
 @media (max-width: 860px) {
-  .pf-hero { flex-direction: column; min-height: 0; }
-  .pf-hero-img { order: 2; position: relative; inset: auto; display: block; height: auto; aspect-ratio: 4 / 3; object-position: 68% 50%; }
-  .pf-hero::before { display: none; }
-  .pf-hero-copy { padding-top: clamp(40px, 9svh, 72px); padding-bottom: 32px; }
+  .pf-hero:not(.dh) { align-items: flex-start; }
+  .pf-hero:not(.dh) .pf-hero-img {
+    object-position: 30% 100%;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%); mask-image: linear-gradient(to bottom, transparent 0%, #000 16%);
+  }
+  .pf-hero:not(.dh)::before {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--tint) 88%, transparent) 0%, color-mix(in srgb, var(--tint) 62%, transparent) 40%, color-mix(in srgb, var(--tint) 30%, transparent) 56%, color-mix(in srgb, var(--tint) 0%, transparent) 66%);
+  }
+  .pf-hero:not(.dh) .pf-hero-copy { padding-top: clamp(32px, 6svh, 56px); padding-bottom: clamp(380px, 40vw + 240px, 560px); }
 }
 
 /* ---------- DriverApp page (driverapp.html) ----------
@@ -2196,7 +2234,6 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
    Same build as driverapp.html: opener on the shared container-site photo, #screens tablist split, #status four-step flow, form.
    The animations are not built yet: .anim-ph marks each place one will play, at the size its device will take. */
 .ch .pf-hero-img { object-position: 62% 50%; }
-@media (max-width: 860px) { .ch .pf-hero-img { object-position: 72% 50%; } }
 
 .anim-ph {
   position: relative; display: grid; place-content: center; justify-items: center; gap: 10px; text-align: center;
@@ -2231,9 +2268,30 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 @media (max-width: 1080px) {
   .dh .pf-hero-img { object-position: 38% 50%; }
 }
+/* Narrow screens, DriverApp and Client App openers: like the main page, a portrait crop becomes the ground under the copy
+   (driver-m-*, site-m-*; see images/PROVENANCE.md). DriverApp: the crop's sky was extended upward, so the copy sits on
+   plain sky and the driver stands below the store badges; it covers the opener, pinned to the bottom, and the padding
+   is the room his head-to-tablet needs (the lower 35% of the photo, which is 0.42 wide to 1 tall). Client App: a square crop on the container shelter,
+   pinned to the bottom at its own shape; its trees fade up under the actions and the shelter stays clear of the copy. */
 @media (max-width: 860px) {
-  /* like the main opener, the photo leaves the copy; framed on the driver */
-  .dh .pf-hero-img { object-position: 69% 50%; }
+  .dh.pf-hero { align-items: flex-start; }
+  .dh .pf-hero-img {
+    inset: auto 0 0 0; height: 100%; object-position: 50% 100%;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%); mask-image: linear-gradient(to bottom, transparent 0%, #000 14%);
+  }
+  .dh.pf-hero::before {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--tint) 70%, transparent) 0%, color-mix(in srgb, var(--tint) 45%, transparent) 50%, color-mix(in srgb, var(--tint) 0%, transparent) 64%);
+  }
+  .dh .pf-hero-copy { padding-top: clamp(32px, 6svh, 56px); padding-bottom: clamp(360px, 86vw, 720px); }
+
+  .ch .pf-hero-img {
+    height: auto; aspect-ratio: 1; max-height: 100%;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 46%); mask-image: linear-gradient(to bottom, transparent 0%, #000 46%);
+  }
+  .ch.pf-hero::before {
+    background: linear-gradient(to bottom, var(--tint) 0%, var(--tint) calc(100% - 100vw), color-mix(in srgb, var(--tint) 62%, transparent) calc(100% - 64vw), color-mix(in srgb, var(--tint) 0%, transparent) calc(100% - 48vw));
+  }
+  .ch .pf-hero-copy { padding-bottom: calc(54vw + 16px); }
 }
 @media (max-width: 600px) {
   .dh-copy .h1-line { white-space: normal; }

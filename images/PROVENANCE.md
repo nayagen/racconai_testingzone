@@ -74,3 +74,10 @@ Not varied: the top-down truck markers (`platform/trucks/*.png`, transparent) an
 - `icons/*.svg`: icon exports from the same frames; `truck-container-blue.svg` and `truck-garbage-green.svg` are the «Truck on map» components with the export's background and clip rectangles removed.
 - `icons/history-head-blue.svg`, `tab-history-on.svg`, `tab-orders.svg`, `download-white.svg`, `go-circle-dark.svg`: icon exports from the «История заявок» frames (12995:22254, 20151:17820) for the #report phone.
 - The map is not a new file: the Client App frames use the same «Route Trace» 2GIS raster as DriverApp, so the phone shows `driverapp/map-near.webp` (and its dark recolor).
+
+**Mobile hero crops** (2026-11-09) — `hero-m-{640,960,1240}.webp` and `hero-m-{640,960,1240}-dark.webp`: portrait 1240×1648 crops of `hero-3840.webp` / `hero-3840-dark.webp` (x 1990–3230, full height; all four trucks under open sky), no regeneration. Encoded to WebP at quality 0.80 through Chrome canvas. Served under 860 px by the opener <picture> on index.html.
+
+**DriverApp and Client App mobile hero crops** (2026-11-09), served under 860 px by each opener <picture>; WebP quality 0.80 through Chrome canvas, light and dark from the matching 3840 masters, no regeneration.
+- `driver-m-{640,960,1240}{,-dark}.webp`: crop of `driver-3840` at x 1424–3166, full height, with the sky extended upward by 2500 px: the top 150 rows of the crop stretched and blurred (36 px), blended into the original sky over those 150 rows. Nothing in the scene is added; the extension is plain sky so the headline sits above the driver.
+- `site-m-{640,960,1240}{,-dark}.webp`: square crop of `site-3840` at x 640–2288, full height, centred on the container shelter.
+

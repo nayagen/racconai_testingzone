@@ -17,10 +17,7 @@
 }
 .pf-stage { position: relative; width: calc(1600px * var(--pf-s)); height: calc(var(--pf-h) * var(--pf-s)); }
 .pf-stage .pf-screen { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
-.pf-viewport.is-pan { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; }
 .pf-caption { max-width: none; display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; padding: 0; font: 500 13px/1.4 var(--font); color: var(--muted); }
-.pf-hint { display: none; }
-.pf-viewport.is-pan + .pf-caption .pf-hint { display: inline; }
 
 .pf-screen {
   width: 1600px; height: var(--pf-h, 980px); box-sizing: border-box; padding: 16px;
@@ -789,6 +786,30 @@
   .pf-hint-dot { transition: opacity 200ms linear; transform: none; }
   .pf-hint-dot__ring::after { animation: none; display: none; }
 }
+/* ---------- Compact frame (narrow screens; script.js fitPlatform) ----------
+   A portrait window the tour camera moves through; the narration sits in a slot under it with a reserved height so the
+   controls below do not jump between steps. Only the tour gets in: every «explore yourself» control is swapped for
+   «close the tour», and at rest the caption keeps its plain label and the replay button. */
+.pf-tour-narr { display: none; }
+.pf-frame.is-compact .pf-tour-narr { display: block; margin-top: 12px; }
+.pf-frame.is-compact .pf-tourwrap.is-touring .pf-tour-narr { min-height: 188px; }
+.pf-frame.is-compact .pf-tour-narr .pf-tour-call { position: relative; z-index: auto; width: auto; padding: 16px 18px 18px; }
+.pf-frame.is-compact .pf-tour-narr .pf-tour-call.is-final { padding: 20px 20px 22px; }
+.pf-viewport.is-compact .pf-stage { width: 100%; height: auto; aspect-ratio: 4 / 5; max-height: 72svh; }
+.pf-frame.is-compact .pf-no-compact { display: none; }
+.pf-frame:not(.is-compact) .pf-only-compact { display: none; }
+.pf-frame.is-compact .pf-explore { display: none; }
+.pf-frame.is-compact .pf-caption.has-explore { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.pf-frame.is-compact .pf-caption.has-explore:not(.is-touring) > span:first-child { display: inline; }
+.pf-frame.is-compact .pf-caption.has-explore .pf-tour-replay { margin-left: 0; min-height: 44px; font-size: 15px; }
+.pf-frame.is-compact .pf-caption.is-touring .pf-tour-bar { width: 100%; justify-content: space-between; flex-wrap: nowrap; gap: 12px; }
+.pf-frame.is-compact .pf-tour-step[data-tour-step="-1"] { width: 44px; padding: 0; justify-content: center; }
+.pf-frame.is-compact .pf-tour-ask { width: calc(100% - 24px); padding: 20px 20px 22px; }
+.pf-frame.is-compact .pf-gate { padding: 12px; }
+.pf-frame.is-compact .pf-gate__card { padding: 24px 20px 20px; }
+.pf-frame.is-compact .pf-gate .pf-gate__title { font-size: 26px; }
+.pf-frame.is-compact .pf-gate__acts { margin-top: 24px; }
+
 .pf-caption.is-touring > span { display: none; }
 .pf-caption.is-touring .pf-tour-bar { margin-left: 0; gap: 12px 24px; flex-wrap: wrap; }
 .pf-caption.is-touring .pf-tour-bar .btn { min-height: 44px; }

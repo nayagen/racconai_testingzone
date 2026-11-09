@@ -1271,4 +1271,8 @@
 "Частный дом":"Private house",
 "Частный сектор":"Private housing",
 "Колледж":"College",
-"Реконструкция школы":"School renovation"};
+"Реконструкция школы":"School renovation",
+"Закрыть":"Close",
+"Закрыть обзор":"Close the tour",
+"Остальные разделы покажем на демо. Изучить интерфейс самому можно с компьютера.":"We'll show the other sections in a demo. To explore the interface yourself, open this page on a computer.",
+"Шаги на точке":"Steps at the site"};

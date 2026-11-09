@@ -70,7 +70,7 @@
   }
   function applyTheme() {
     var dark = isDark();
-    Array.prototype.forEach.call(document.querySelectorAll("source[data-theme-dark]"), function (s) { s.media = dark ? "all" : "not all"; });
+    Array.prototype.forEach.call(document.querySelectorAll("source[data-theme-dark]"), function (s) { s.media = dark ? (s.getAttribute("data-theme-dark") || "all") : "not all"; });
     themeImages(document);
     themeToggles.forEach(function (b) { b.setAttribute("aria-pressed", dark ? "true" : "false"); });
   }
@@ -1603,45 +1603,94 @@
     fpAt(ph, 2750, function () { fpShot(ph); });
     fpAt(ph, 3150, function () { fpCam(ph, null); ph.dataset.task = "done"; });
   };
-  if (flow && !reduceMotion && "IntersectionObserver" in window) {
+  if (flow) {
     var flowSteps = Array.prototype.slice.call(flow.querySelectorAll(".flow-step"));
     var FLOW_STEP = 2200, FLOW_DWELL = 3200;
     // a step whose phone plays a longer scene holds the highlight until the scene is over
     var flowExtra = function (i) { return flowSteps[i].querySelector('.fphone-da[data-play="photos"]') ? 1600 : 0; };
-    var flowTimers = [], flowPlayed = false, flowCur = 0;
+    var flowTimers = [], flowPlayed = false, flowCur = -1;
+    var flowAnim = !reduceMotion && "IntersectionObserver" in window;
     var flowAt = function (ms, fn) { flowTimers.push(window.setTimeout(fn, ms)); };
     var flowStop = function () { flowTimers.forEach(window.clearTimeout); flowTimers = []; };
     var flowShow = function (n) { flowSteps.forEach(function (li, i) { li.classList.toggle("is-shown", i < n); }); };
+
+    /* Phones (one column): a stepper. One step at a time in a fixed frame, under a row of tabs whose underline repeats each
+       step's signal: solid where there is connection (1, 4), dashed where there is none (2, 3), so the drop and the return
+       read at a glance. It plays through once on arrival and stops on the last step; a tab press takes over. */
+    var flowNarrow = window.matchMedia("(max-width: 680px)");
+    var flowTabs = document.createElement("div");
+    flowTabs.className = "flow-tabs";
+    flowTabs.setAttribute("role", "group");
+    flowTabs.setAttribute("aria-label", "Шаги на точке");
+    var flowTabBtns = flowSteps.map(function (li, i) {
+      var net = li.querySelector(".flow-net"), ttl = li.querySelector(".flow-title"), svg = net && net.querySelector("svg");
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "flow-tab" + (net && net.classList.contains("is-on") ? " is-net" : "");
+      b.innerHTML = '<span class="flow-tab-ix">' + (i + 1) + "</span>" + (svg ? svg.outerHTML : "");
+      b.setAttribute("aria-label", (i + 1) + ". " + (ttl ? ttl.textContent.replace(/^\s*\d+/, "").trim() : ""));
+      b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", function () { flowGo(i); });
+      flowTabs.appendChild(b);
+      return b;
+    });
+    flow.insertBefore(flowTabs, flow.querySelector(".flow-steps"));
+
     var flowMark = function (c) {
       flowCur = c;
       flowSteps.forEach(function (li, i) { li.classList.toggle("is-current", i === c); });
+      flowTabBtns.forEach(function (b, i) { b.classList.toggle("is-current", i === c); b.setAttribute("aria-pressed", i === c ? "true" : "false"); });
       var ph = c >= 0 && flowSteps[c].querySelector(".fphone-da");
-      if (ph) { fpPlay(ph); }
+      if (ph && flowAnim) { fpPlay(ph); }
     };
-    var flowLoop = function () {
+    var flowGo = function (i) {
       flowStop();
-      flow.classList.add("is-looping");
-      (function next() {
-        flowAt(FLOW_DWELL + flowExtra(flowCur), function () {
-          if (flowCur >= flowSteps.length - 1) { flow.classList.remove("is-looping"); flowMark(-1); return; }
-          flowMark(flowCur + 1); next();
-        });
-      })();
+      flowPlayed = true;
+      flow.classList.remove("is-looping");
+      flowShow(flowSteps.length);
+      flowMark(i);
     };
-    var flowIntro = function () {
-      flowStop();
-      flowShow(0);
-      flowMark(-1);
-      var at = 300;
-      flowSteps.forEach(function (_, i) { flowAt(at, function () { flowShow(i + 1); flowMark(i); }); if (i < flowSteps.length - 1) { at += FLOW_STEP + flowExtra(i); } });
-      flowAt(at, function () { flowPlayed = true; flowMark(0); flowLoop(); });
+    var flowMode = function () {
+      var on = flowNarrow.matches;
+      flow.classList.toggle("is-stepper", on);
+      flowTabs.hidden = !on;
+      if (on && flowCur < 0) { flowStop(); flowShow(flowSteps.length); flowMark(0); }
     };
-    flow.classList.add("is-anim");
-    flowShow(flowSteps.length); // fully visible until it scrolls into view
-    new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) { if (!flowPlayed) { flowIntro(); } }
-      else { flowStop(); fpList.forEach(fpRest); flowShow(flowSteps.length); }
-    }, { threshold: 0.3 }).observe(flow);
+    if (flowNarrow.addEventListener) { flowNarrow.addEventListener("change", flowMode); } else if (flowNarrow.addListener) { flowNarrow.addListener(flowMode); }
+    flowMode();
+
+    if (flowAnim) {
+      var flowLoop = function () {
+        flowStop();
+        flow.classList.add("is-looping");
+        (function next() {
+          flowAt(FLOW_DWELL + flowExtra(flowCur), function () {
+            if (flowCur >= flowSteps.length - 1) {
+              flow.classList.remove("is-looping");
+              if (!flowNarrow.matches) { flowMark(-1); } // the stepper keeps its last step in view
+              return;
+            }
+            flowMark(flowCur + 1); next();
+          });
+        })();
+      };
+      var flowIntro = function () {
+        flowStop();
+        flowPlayed = true;
+        if (flowNarrow.matches) { flowShow(flowSteps.length); flowMark(0); flowLoop(); return; }
+        flowShow(0);
+        flowMark(-1);
+        var at = 300;
+        flowSteps.forEach(function (_, i) { flowAt(at, function () { flowShow(i + 1); flowMark(i); }); if (i < flowSteps.length - 1) { at += FLOW_STEP + flowExtra(i); } });
+        flowAt(at, function () { flowMark(0); flowLoop(); });
+      };
+      flow.classList.add("is-anim");
+      flowShow(flowSteps.length); // fully visible until it scrolls into view
+      new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) { if (!flowPlayed) { flowIntro(); } }
+        else { flowStop(); flow.classList.remove("is-looping"); fpList.forEach(fpRest); flowShow(flowSteps.length); }
+      }, { threshold: 0.3 }).observe(flow);
+    }
   }
 
   /* ---------- Customer registry: a BIN is typed, looked up, and the matching customer and contract appear ---------- */
@@ -2134,29 +2183,29 @@
     });
   }
 
-  /* ---------- Platform screen: scale the 1600px design to the frame; pan on narrow screens ---------- */
+  /* ---------- Platform screen: scale the 1600px design to the frame; a camera window on narrow screens ---------- */
   var pfView = document.getElementById("pf-viewport");
   if (pfView) {
     /* The screen is always laid out at its full 1600 x 980 design size and scaled as a whole, like browser zoom, so text,
        spacing and icons shrink together. The scale fits the frame width and caps the screen at 90% of the window height
-       (PF_VH; never below PF_MIN to fit the height). The frame narrows to the scaled width (--pf-fit) and stays centred. */
-    var PF_W = 1600, PF_MIN = 0.5, PF_PAN = 0.72, PF_H = 980, PF_VH = 0.9, pfPanned = false;
+       (PF_VH; never below PF_MIN to fit the height). The frame narrows to the scaled width (--pf-fit) and stays centred.
+       Below PF_MIN (phones, small tablets) the frame turns compact: a fixed portrait window (CSS) that only the auto tour's
+       camera moves through. The screen is not explorable by hand there; it fires "pf:fit" so the camera can re-aim. */
+    var PF_W = 1600, PF_MIN = 0.5, PF_H = 980, PF_VH = 0.9;
     var pfFrame = pfView.closest(".pf-frame");
     var fitPlatform = function () {
       var w = pfFrame.clientWidth;
       if (!w) { return; }
       var sW = w / PF_W;
       var sH = Math.max(PF_MIN, window.innerHeight * PF_VH / PF_H);
-      var s = Math.min(sW, sH);
-      var pan = s < PF_MIN;
-      if (pan) { s = PF_PAN; }
+      var compact = sW < PF_MIN;
+      var s = compact ? sW : Math.min(sW, sH);
       pfView.style.setProperty("--pf-s", String(s));
       pfView.style.setProperty("--pf-h", PF_H + "px");
-      pfFrame.style.setProperty("--pf-fit", pan ? "none" : Math.ceil(PF_W * s) + "px");
-      pfView.classList.toggle("is-pan", pan);
-      // first time it pans: start on the right, where the map meets the truck card
-      if (pan && !pfPanned) { pfPanned = true; requestAnimationFrame(function () { pfView.scrollLeft = pfView.scrollWidth; }); } // next frame: the tour wrapper re-parents the viewport, which resets its scroll
-      if (!pan) { pfPanned = false; }
+      pfFrame.style.setProperty("--pf-fit", compact ? "none" : Math.ceil(PF_W * s) + "px");
+      pfView.classList.toggle("is-compact", compact);
+      pfFrame.classList.toggle("is-compact", compact);
+      pfView.dispatchEvent(new CustomEvent("pf:fit", { detail: compact }));
     };
     fitPlatform();
     if ("ResizeObserver" in window) { new ResizeObserver(fitPlatform).observe(pfFrame); }
@@ -3667,7 +3716,10 @@
          Cursor, callout, spotlight and prompts live on the unzoomed stage, so they keep their size while the screen zooms.
          A click on the screen pauses and asks: explore yourself or resume. «Попробовать интерфейс самому», Tab into the screen
          or Escape hand over control at once. Starts once when the screen is 35% visible; pauses offscreen and in a hidden tab;
-         ends on an invite, not a loop. Reduced motion or a panning (narrow) frame: no autoplay; the replay link starts it. */
+         ends on an invite, not a loop. Reduced motion: no autoplay; the replay link starts it.
+         Compact frame (narrow screens, see fitPlatform): the tour is the only way in. The window is a portrait crop the camera
+         moves through, the narration sits in a slot under it, and every «explore yourself» exit becomes «close the tour»;
+         outside the tour the screen is inert, so a swipe over it scrolls the page. */
       var tourFrame = pfView.closest(".pf-frame"), tourStage = pfView.querySelector(".pf-stage");
       if (pfScr && tourFrame && tourStage && window.Promise && window.requestAnimationFrame) {
         var STOP = { stop: true };
@@ -3680,6 +3732,10 @@
         tWrap.className = "pf-tourwrap";
         pfView.parentNode.insertBefore(tWrap, pfView);
         tWrap.appendChild(pfView);
+        /* compact: the narration lives in a slot under the window (it would cover the crop), with a reserved height */
+        var tNarr = document.createElement("div");
+        tNarr.className = "pf-tour-narr";
+        tWrap.appendChild(tNarr);
         var mk = function (cls, html, parent) { var e = document.createElement("div"); e.className = cls; if (html) { e.innerHTML = html; } e.hidden = true; parent.appendChild(e); return e; };
         var tSpot = mk("pf-tour-spot", "", tourStage);
         tSpot.setAttribute("aria-hidden", "true");
@@ -3690,9 +3746,10 @@
         var tCall = mk("pf-tour-call", "", tourStage);
         tCall.setAttribute("role", "status");
         var tAsk = mk("pf-tour-call pf-tour-ask", '<p class="pf-tour-call__title" id="pf-tour-ask-t">Обзор на паузе</p>' +
-          '<p class="pf-tour-call__text">Хотите изучить интерфейс сами или досмотреть обзор?</p>' +
-          '<div class="pf-tour-call__acts"><button type="button" class="btn btn-primary btn-sm" data-tour-take>Изучить самому</button>' +
-          '<button type="button" class="btn btn-quiet btn-sm" data-tour-resume>Продолжить обзор</button></div>', tourStage);
+          '<p class="pf-tour-call__text pf-no-compact">Хотите изучить интерфейс сами или досмотреть обзор?</p>' +
+          '<div class="pf-tour-call__acts"><button type="button" class="btn btn-primary btn-sm pf-no-compact" data-tour-take>Изучить самому</button>' +
+          '<button type="button" class="btn btn-quiet btn-sm" data-tour-resume>Продолжить обзор</button>' +
+          '<button type="button" class="btn btn-quiet btn-sm pf-only-compact" data-tour-take>Закрыть обзор</button></div>', tourStage);
         tAsk.setAttribute("role", "dialog");
         tAsk.setAttribute("aria-labelledby", "pf-tour-ask-t");
         /* intro gate: before anything moves, the visitor picks — watch the mini-tour or take the wheel.
@@ -3702,23 +3759,24 @@
         for (var gi = 0; gi < GATE_N; gi++) { gStops += '<span class="pf-gate__stop" style="--i:' + gi + '"></span>'; }
         var tGate = mk("pf-gate", '<div class="pf-gate__card">' +
           '<p class="pf-gate__title" id="pf-gate-t">Покажем Платформу за 12 шагов</p>' +
-          '<p class="pf-gate__text">Мы подготовили мини-обзор: курсор сам пройдёт по карте, машинам и рейсам и расскажет, что где. А можно сразу кликать самому — интерфейс живой.</p>' +
+          '<p class="pf-gate__text pf-no-compact">Мы подготовили мини-обзор: курсор сам пройдёт по карте, машинам и рейсам и расскажет, что где. А можно сразу кликать самому — интерфейс живой.</p>' +
           '<div class="pf-gate__route" aria-hidden="true"><i class="pf-gate__line"></i>' + gStops + '</div>' +
           '<p class="pf-gate__ends" aria-hidden="true"><span>Карта заданий</span><span>AI-диспетчер</span></p>' +
           '<div class="pf-gate__acts">' +
           '<button type="button" class="pf-gate__btn pf-gate__btn--go" data-gate-watch><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><span>Смотреть обзор</span></button>' +
-          '<button type="button" class="pf-gate__btn pf-gate__btn--own" data-tour-take><svg width="18" height="18" viewBox="0 0 30 30" aria-hidden="true"><path d="M6 3.5v20.2l5.1-4.9 3.6 8.2 3.6-1.6-3.6-8.1 7.1-.4z"/></svg><span>Изучу сам</span></button></div>' +
-          '<p class="pf-gate__note">Остановить обзор можно в любой момент — кликом по экрану или клавишей <kbd>Esc</kbd></p></div>', tourStage);
+          '<button type="button" class="pf-gate__btn pf-gate__btn--own pf-no-compact" data-tour-take><svg width="18" height="18" viewBox="0 0 30 30" aria-hidden="true"><path d="M6 3.5v20.2l5.1-4.9 3.6 8.2 3.6-1.6-3.6-8.1 7.1-.4z"/></svg><span>Изучу сам</span></button></div>' +
+          '<p class="pf-gate__note pf-no-compact">Остановить обзор можно в любой момент — кликом по экрану или клавишей <kbd>Esc</kbd></p></div>', tourStage);
         tGate.setAttribute("role", "dialog");
         tGate.setAttribute("aria-labelledby", "pf-gate-t");
         var tBar = document.createElement("div");
         tBar.className = "pf-tour-bar";
         tBar.hidden = true;
         tBar.innerHTML = '<div class="pf-tour-bar__nav" role="group" aria-label="Шаги обзора">' +
-          '<button type="button" class="pf-tour-step" data-tour-step="-1" title="Предыдущий шаг обзора"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Назад</span></button>' +
+          '<button type="button" class="pf-tour-step" data-tour-step="-1" title="Предыдущий шаг обзора"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="pf-no-compact">Назад</span></button>' +
           '<p class="pf-tour-bar__state"><span>Обзор интерфейса</span><span class="pf-tour-bar__count" aria-live="polite"></span></p>' +
           '<button type="button" class="pf-tour-step" data-tour-step="1" title="Следующий шаг обзора"><span>Далее</span><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>' +
-          '<button type="button" class="btn btn-primary btn-sm" data-tour-take>Попробовать интерфейс самому</button>';
+          '<button type="button" class="btn btn-primary btn-sm pf-no-compact" data-tour-take>Попробовать интерфейс самому</button>' +
+          '<button type="button" class="btn btn-quiet btn-sm pf-only-compact" data-tour-take>Закрыть</button>';
         var tPrevBtn = tBar.querySelector('[data-tour-step="-1"]'), tNext = tBar.querySelector('[data-tour-step="1"]');
         var tCount = tBar.querySelector(".pf-tour-bar__count");
         var capEl = tourFrame.querySelector(".pf-caption");
@@ -3814,23 +3872,34 @@
           if (T.anim) { if (T.paused) { T.anim.pause(); } else { T.anim.play(); } }
         };
 
-        /* camera: zoom the scaled screen onto a design-px region, up to CAM_MAX, keeping the screen edge-to-edge */
-        var CAM_MAX = 1.3, cam = { z: 1, cx: 800, cy: 490 };
+        /* camera: zoom the scaled screen onto a design-px region, up to CAM_MAX, keeping the screen edge-to-edge.
+           The window is the stage: the whole screen on wide frames, a portrait crop on compact ones. There the zoom never
+           drops below covering the window (zMin) and tops out at CAM_EFF, the effective scale the old sideways pan used. */
+        var CAM_MAX = 1.3, CAM_EFF = 0.72, cam = { z: 1, cx: 800, cy: 490 };
+        var compact = function () { return pfView.classList.contains("is-compact"); };
+        var pfScale = function () { return parseFloat(getComputedStyle(pfView).getPropertyValue("--pf-s")) || 1; };
+        var view = function () { return { w: tourStage.offsetWidth, h: tourStage.offsetHeight }; };
+        var zMin = function () {
+          var v = view(), s = pfScale();
+          return Math.max(1, v.w / (pfScr.offsetWidth * s), v.h / (pfScr.offsetHeight * s));
+        };
         var applyCam = function () {
-          var s = parseFloat(getComputedStyle(pfView).getPropertyValue("--pf-s")) || 1, W = pfScr.offsetWidth, H = pfScr.offsetHeight, z = cam.z;
-          var ox = Math.max(0, Math.min(W - W / z, cam.cx - W / (2 * z))), oy = Math.max(0, Math.min(H - H / z, cam.cy - H / (2 * z)));
+          var s = pfScale(), W = pfScr.offsetWidth, H = pfScr.offsetHeight, z = cam.z, v = view();
+          var vw = v.w / (s * z), vh = v.h / (s * z);
+          var ox = Math.max(0, Math.min(W - vw, cam.cx - vw / 2)), oy = Math.max(0, Math.min(H - vh, cam.cy - vh / 2));
           pfScr.style.setProperty("--cam-z", String(z));
           pfScr.style.setProperty("--cam-tx", (-ox * s * z).toFixed(2) + "px");
           pfScr.style.setProperty("--cam-ty", (-oy * s * z).toFixed(2) + "px");
         };
         var camTo = function (targets, tk, zmax) {
           guard(tk);
-          var W = pfScr.offsetWidth, H = pfScr.offsetHeight, z = 1, cx = W / 2, cy = H / 2;
+          var W = pfScr.offsetWidth, H = pfScr.offsetHeight, z0 = zMin(), z = z0, cx = W / 2, cy = H / 2;
           var list = targets ? els(targets) : [];
           if (list.length) {
             /* measure at the current camera, then convert to unzoomed design px */
-            var b = union(list.map(designBox)), pad = 56;
-            z = Math.max(1, Math.min(zmax || CAM_MAX, CAM_MAX, W / (b.w + pad * 2), H / (b.h + pad * 2)));
+            var b = union(list.map(designBox)), v = view(), s = pfScale();
+            var pad = compact() ? 24 : 56, cap = compact() ? Math.max(z0, CAM_EFF / s) : Math.min(zmax || CAM_MAX, CAM_MAX);
+            z = Math.max(z0, Math.min(cap, v.w / (s * (b.w + pad * 2)), v.h / (s * (b.h + pad * 2))));
             cx = b.x + b.w / 2; cy = b.y + b.h / 2;
             /* designBox is relative to the zoomed screen's own (unscaled) box, so it is already in design px */
           }
@@ -3841,11 +3910,25 @@
           return sleep(moved && !reduceTour ? CAM_MS : 0, tk);
         };
         var camReset = function (instant) {
-          cam.z = 1; cam.cx = pfScr.offsetWidth / 2; cam.cy = pfScr.offsetHeight / 2;
+          cam.z = zMin(); cam.cx = pfScr.offsetWidth / 2; cam.cy = pfScr.offsetHeight / 2;
           if (instant) { pfScr.classList.remove("is-cam"); }
           applyCam();
         };
-        window.addEventListener("resize", function () { if (cam.z > 1) { applyCam(); } });
+        window.addEventListener("resize", function () { cam.z = Math.max(cam.z, zMin()); applyCam(); });
+        /* compact: pan (keeping the zoom) until an element is inside the window, so the cursor never walks off the crop */
+        var inView = function (el) {
+          var b = stageBox(el), v = view();
+          return b.x >= 6 && b.y >= 6 && b.x + b.w <= v.w - 6 && b.y + b.h <= v.h - 6;
+        };
+        var panTo = function (el, tk) {
+          guard(tk);
+          if (!compact() || !el || inView(el)) { return Promise.resolve(); }
+          var d = designBox(el);
+          cam.z = Math.max(cam.z, zMin()); cam.cx = d.x + d.w / 2; cam.cy = d.y + d.h / 2;
+          pfScr.classList.toggle("is-cam", !reduceTour);
+          applyCam();
+          return sleep(reduceTour ? 0 : CAM_MS, tk);
+        };
 
         /* spotlight: a rounded window over the stage, everything else dimmed */
         var spotOn = function (targets) {
@@ -3875,6 +3958,7 @@
         var setCur = function (x, y) { pos.x = x; pos.y = y; tCur.style.transform = "translate(" + x + "px," + y + "px)"; };
         var moveTo = function (el, tk, ax, ay) {
           guard(tk);
+          if (compact() && !inView(el)) { return panTo(el, tk).then(function () { return moveTo(el, tk, ax, ay); }); }
           var b = stageBox(el), x = b.x + b.w * (ax === undefined ? 0.5 : ax), y = b.y + b.h * (ay === undefined ? 0.5 : ay);
           var d = Math.hypot(x - pos.x, y - pos.y);
           if (reduceTour || d < 2 || !tCur.animate) { setCur(x, y); return sleep(reduceTour ? 200 : 0, tk); }
@@ -3926,10 +4010,18 @@
           tCall.className = "pf-tour-call" + (anchor === null ? " is-final" : "");
           tCall.innerHTML = (n ? '<p class="pf-tour-call__step">' + n + " из " + STEPS.length + "</p>" : "") +
             '<p class="pf-tour-call__title">' + title + '</p><p class="pf-tour-call__text">' + text + "</p>" +
-            (anchor === null ? '<div class="pf-tour-call__acts"><button type="button" class="btn btn-primary btn-sm" data-tour-take>Попробовать интерфейс самому</button>' +
+            (anchor === null ? '<div class="pf-tour-call__acts">' + (compact() ? '<a class="btn btn-primary btn-sm" href="#demo">Запросить демо</a>'
+              : '<button type="button" class="btn btn-primary btn-sm" data-tour-take>Попробовать интерфейс самому</button>') +
               '<button type="button" class="btn btn-quiet btn-sm" data-tour-replay>Посмотреть ещё раз</button></div>' : "");
           tCall.hidden = false;
           tCall.classList.remove("is-on");
+          if (compact()) {
+            tCall.style.left = ""; tCall.style.top = "";
+            void tCall.offsetWidth;
+            tCall.classList.add("is-on");
+            if (n) { tCount.textContent = n + " / " + STEPS.length; }
+            return;
+          }
           var box = anchor ? (anchor.nodeType ? stageBox(anchor) : anchor) : null;
           var at = place(box, tCall.offsetWidth, tCall.offsetHeight, side);
           tCall.style.left = Math.round(at.x) + "px"; tCall.style.top = Math.round(at.y) + "px";
@@ -3937,10 +4029,18 @@
           tCall.classList.add("is-on");
           if (n) { tCount.textContent = n + " / " + STEPS.length; }
         };
-        var hush = function () { tCall.classList.remove("is-on"); tCall.hidden = true; };
+        /* compact keeps the last narration in its slot between steps (an empty slot reads as a glitch); force clears it */
+        var hush = function (force) { if (!force && T.on && compact()) { return; } tCall.classList.remove("is-on"); tCall.hidden = true; };
         var readFor = function (text) { return Math.max(2400, Math.min(4800, 1100 + text.length * 26)); };
         /* spotlight + callout over the same set of elements */
         var show = function (s, targets, side, tk, extra) {
+          if (compact()) {
+            return camTo(targets, tk).then(function () {
+              spotOn(targets);
+              say(s.n, s.t, s.d, undefined, side);
+              return sleep(readFor(s.d) + (extra || 0), tk);
+            });
+          }
           spotOn(targets);
           say(s.n, s.t, s.d, union(els(targets).map(stageBox)), side);
           return sleep(readFor(s.d) + (extra || 0), tk);
@@ -3991,6 +4091,14 @@
                 steps.push(function () { if (prev) { unhover(prev); } prev = it; return hover(it, tk); });
                 steps.push(function () {
                   var card = vis("#pf-navcard");
+                  if (compact()) {
+                    return camTo([it, card], tk).then(function () {
+                      spotOn([it, card]);
+                      if (!i) { say(s.n, s.t, s.d); return sleep(readFor(s.d), tk); }
+                      var txt = PF.nav[it.getAttribute("data-pf-nav")] || "";
+                      return sleep(Math.max(1300, Math.min(2100, 600 + txt.length * 13)), tk);
+                    });
+                  }
                   spotOn([it, card]);
                   if (!i) { say(s.n, s.t, s.d, union(els([it, card]).map(stageBox)), "right"); return sleep(readFor(s.d), tk); }
                   if (i === 1) { hush(); }
@@ -4169,13 +4277,18 @@
           tWrap.classList.toggle("is-touring", on);
           if (capEl) { capEl.classList.toggle("is-touring", on); }
           if (on) { pfScr.setAttribute("aria-hidden", "true"); } else { pfScr.removeAttribute("aria-hidden"); }
+          pfScr.inert = !on && compact();
           pfView.dispatchEvent(new CustomEvent("pf:tour", { detail: on }));
         };
         var finish = function () {
           chrome(false);
           camReset(false);
           tVeil.hidden = false;
-          say(0, "Это лишь часть Платформы", "Теперь попробуйте сами: кликайте по карте, машинам, рейсам и значкам — каждое действие сопровождается подсказкой.", null);
+          if (compact()) {
+            say(0, "Это лишь часть Платформы", "Остальные разделы покажем на демо. Изучить интерфейс самому можно с компьютера.", null);
+          } else {
+            say(0, "Это лишь часть Платформы", "Теперь попробуйте сами: кликайте по карте, машинам, рейсам и значкам — каждое действие сопровождается подсказкой.", null);
+          }
           var take = tCall.querySelector("[data-tour-take]");
           if (take) { take.focus({ preventScroll: true }); }
         };
@@ -4210,7 +4323,7 @@
           if (T.anim) { try { T.anim.cancel(); } catch (e) { /* done */ } T.anim = null; }
           T.seen = true; T.held = false; tAsk.hidden = true; tVeil.hidden = true; tCall.classList.remove("is-dim");
           act(function () { clearHovers(); });
-          hush(); spotOff(); camReset(!jump); resetUI(); prep(k0); chrome(true); syncPause();
+          hush(true); spotOff(); camReset(!jump); resetUI(); prep(k0); chrome(true); syncPause();
           if (!jump) { setCur(Math.round(tourStage.offsetWidth * 0.55), Math.round(tourStage.offsetHeight * 0.55)); }
           tourMark(k0);
           var chain = sleep(jump ? 250 : 400, tk);
@@ -4226,10 +4339,11 @@
           if (T.anim) { try { T.anim.cancel(); } catch (e) { /* done */ } T.anim = null; }
           T.held = false; tAsk.hidden = true; tVeil.hidden = true;
           act(function () { clearHovers(); closeModals(); });
-          hush(); spotOff(); camReset(false); chrome(false); syncPause();
+          hush(true); spotOff(); camReset(false); chrome(false); syncPause();
         };
         var takeControl = function () {
           stop();
+          if (compact()) { return; }
           setTimeout(showHints, 760);
           var first = pfView.querySelector('[data-pf-tab][aria-selected="true"]');
           if (first) { first.focus({ preventScroll: true }); }
@@ -4255,7 +4369,7 @@
           if (e.target.closest("[data-tour-take]")) { takeControl(); return; }
           if (e.target.closest("[data-gate-watch]")) { start(); return; }
           if (e.target.closest("[data-tour-resume]")) { resume(); return; }
-          if (e.target.closest("[data-tour-replay]")) { hush(); start(); }
+          if (e.target.closest("[data-tour-replay]")) { hush(true); start(); }
         });
         tReplay.addEventListener("click", function () { start(); });
         /* step back / forward: restart the script at the neighbouring step; past the last one comes the invite */
@@ -4272,9 +4386,11 @@
           if (T.anim) { try { T.anim.cancel(); } catch (e) { /* done */ } T.anim = null; }
           T.held = false; tAsk.hidden = true;
           act(function () { clearHovers(); closeModals(); });
-          hush(); spotOff(); finish();
+          hush(true); spotOff(); finish();
         };
-        tShield.addEventListener("pointerdown", function (e) { e.preventDefault(); hold(); });
+        /* a press pauses on wide frames; compact waits for a tap (click), so a swipe over the window just scrolls the page */
+        tShield.addEventListener("pointerdown", function (e) { if (compact()) { return; } e.preventDefault(); hold(); });
+        tShield.addEventListener("click", function () { if (compact()) { hold(); } });
         tVeil.addEventListener("click", function () { if (T.held) { resume(); } else { takeControl(); } });
         pfScr.addEventListener("focusin", function (e) { if (T.on && !T.acting) { stop(); } });
         document.addEventListener("keydown", function (e) {
@@ -4283,6 +4399,19 @@
           if (T.held) { resume(); return; }
           if (T.on) { takeControl(); }
         });
+
+        /* frame mode: the narration moves between the stage (wide) and the slot under the window (compact); a switch mid-tour
+           ends the tour, and at rest the camera sits at its overview for the current window */
+        var syncCompact = function () {
+          var c = compact(), host = c ? tNarr : tourStage;
+          if (tCall.parentNode !== host) {
+            if (T.on || !tCall.hidden) { stop(); }
+            host.appendChild(tCall);
+          }
+          if (!T.on) { pfScr.inert = c; camReset(true); }
+        };
+        pfView.addEventListener("pf:fit", syncCompact);
+        syncCompact();
 
         /* pause offscreen and in a hidden tab; start once on first view */
         var onScreen = false;
@@ -4295,7 +4424,7 @@
             var onIt = e0.isIntersecting && (e0.intersectionRatio >= 0.8 || e0.intersectionRect.height >= window.innerHeight * 0.7);
             syncPause();
             /* first arrival: ask first, never autoplay; the gate is a choice, so reduced motion gets it too */
-            if (onIt && !T.seen && !pfView.classList.contains("is-pan")) {
+            if (onIt && !T.seen) {
               T.seen = true;
               setTimeout(function () { if (onScreen && !T.on) { gateOn(); } }, 400);
             }
