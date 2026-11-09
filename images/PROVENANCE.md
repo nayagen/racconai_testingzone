@@ -13,6 +13,7 @@ Generated 2026-11-04 with Higgsfield, model GPT Image 2.5 (`gpt_image_2_5`), qua
 | `cab-{960,1600,2400,3840}.webp` | Photo pause before #driverapp on the landing page; was also the DriverApp page opener until 2026-11-06 (generated 2026-11-06, quality xhigh, 4k) | `b2a14344-2084-4f9e-b6f8-bf1e074ea4b3` | 3840×1648, 21:9, 4k | Early morning in Almaty, inside the cab of a white garbage truck at a microdistrict container site: gloved hand on the wheel, a rugged tablet in a dashboard mount with its screen lost in glare, euro containers under a shelter, Alatau in haze. No logos, lettering, readable plates or faces. |
 | `driver-{960,1600,2400,3840}.webp` | DriverApp page opener (driverapp.html #top), full-bleed behind the headline and the app prototype (generated 2026-11-06, quality xhigh, 4k) | `919c2d60-e526-45ae-ba8c-d570e3f91295` | 3840×1648, 21:9, 4k | Sunrise at an Almaty microdistrict container site: a driver in a navy hi-vis jacket checks his route on a rugged tablet (screen turned toward him, no interface visible), an unbranded white rear-loader behind him on the right, four grey and green euro containers under a shelter on his left, panel blocks and the Alatau in haze. No logos, lettering, readable plates or signage. |
 | `site-{960,1600,2400,3840}.webp` | Photo pause before #clients (generated 2026-11-06, quality xhigh, 4k) | `0c00e7f4-4f84-4e4c-87de-428f141f1518` | 3840×1648, 21:9, 4k | A municipal container site in an Almaty microdistrict: five grey and green euro containers under a light shelter between a Soviet-era block and ground-floor shops with blank awnings. No logos, signage text, readable plates or recognizable faces. |
+| `ca-{960,1600,2400,3840}.webp` | Client App page opener (clientapp.html #top), full-bleed behind the headline (generated 2026-11-09 with GPT Image 2.6, `gpt_image_2_6`, quality xhigh, 4k; WebP through Chrome canvas, q78, q72 above 2000px) | `75b3d718-10e9-49d1-8492-9c94d67e7586` | 3840×1648, 21:9, 4k | Strict top-down wide shot: a client's hand and forearm in a grey wool coat sleeve hold a phone (about half the frame height) over the pale concrete of a container site, autumn leaves, a curb and two green euro containers along the right edge. A first, tighter take (job `409ed223-c7a6-4af5-8986-fa2b7524d6cc`, phone at about 95% of the frame height) was replaced the same day for its scale. The screen was given as a reference image: a capture of this page's own Client App prototype on «Машина в пути» (Royal Petrol #1), so the UI is the product's, not invented. Open paving on the left for the headline. No logos or other text. |
 
 ## Platform photo-proof modal (`images/platform/proof/`)
 
@@ -33,7 +34,7 @@ A 1020 × 500 crop (map x 550–1570, y 280–780) of `images/platform/map-almat
 
 ## Dark-theme variants (`*-dark.webp`, generated 2026-11-06)
 
-Every image has a `-dark` twin next to it, shown when the page is in dark mode (toggle in the dock and the header; script.js swaps them). Masters are not committed.
+Every image has a `-dark` twin next to it, shown when the page is in dark mode (toggle in the dock and the header; js/core.js swaps them). Masters are not committed.
 
 **Photos** — Higgsfield GPT Image 2.5 (`gpt_image_2_5`) image edits of the light masters: same camera, framing and objects, re-lit as a pre-dawn Almaty night (street and work lights on, lit windows). Encoded to the same widths and qualities as the light files. The hero keeps a clean navy sky at upper left for the headline.
 
@@ -43,6 +44,7 @@ Every image has a `-dark` twin next to it, shown when the page is in dark mode (
 | `depot-{640,960,1280,1792}-dark.webp` | `2b4ba756-69ad-43cb-a084-350ead2341e7` (xhigh, 2k) |
 | `cab-{960,1600,2400,3840}-dark.webp` | `b495eac9-cf06-4208-8593-b54faa95e606` (xhigh, 4k) |
 | `site-{960,1600,2400,3840}-dark.webp` | `7d0eed17-917d-456b-abbb-2c58a93e111b` (xhigh, 4k) |
+| `ca-{960,1600,2400,3840}-dark.webp` | `e0080c9e-c49f-439d-97b8-7c590d191830` (GPT Image 2.6 edit of the light master, xhigh, 4k; the phone shows the prototype's dark-theme capture) |
 | `driver-{960,1600,2400,3840}-dark.webp` | `818ce214-a0e0-4c66-a08c-907b4d8d15eb` (xhigh, 4k) |
 | `crew-{960,1600,2400,3840}-dark.webp` | `3c82a595-6de0-4286-918f-3de4f6af2f0d` (xhigh, 4k) |
 
@@ -81,3 +83,4 @@ Not varied: the top-down truck markers (`platform/trucks/*.png`, transparent) an
 - `driver-m-{640,960,1240}{,-dark}.webp`: crop of `driver-3840` at x 1424–3166, full height, with the sky extended upward by 2500 px: the top 150 rows of the crop stretched and blurred (36 px), blended into the original sky over those 150 rows. Nothing in the scene is added; the extension is plain sky so the headline sits above the driver.
 - `site-m-{640,960,1240}{,-dark}.webp`: square crop of `site-3840` at x 640–2288, full height, centred on the container shelter.
 
+**Client App opener mobile crops** (2026-11-09) — `ca-m-{640,960,1240}{,-dark}.webp`: 1240 px square crop of `ca-3840` / `ca-3840-dark` at x 1920–3160, y 200–1440, around the phone so it reads at phone width; WebP quality 0.80 through Chrome canvas, no regeneration. Served under 860 px by the clientapp.html opener <picture>. They replace `site-m-*` there, which no page uses any more.

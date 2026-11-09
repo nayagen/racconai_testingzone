@@ -186,12 +186,14 @@
       it.dur = Math.min(DUR_MAX, 220 + it.len * 11);
       it.delay = it.top * WAVE;
       it.n.data = it.from;
+      it.shown = it.from;
     });
     var t0 = performance.now(), raf = 0, done = false;
     function finish() {
       if (done) { return; }
       done = true; cancelAnimationFrame(raf); running = null;
-      items.forEach(function (it) { if (it.n.data !== it.to) { it.n.data = it.to; } });
+      // a node a page script rewrote mid-switch (it.gone) keeps the script's text; the walk below translates it
+      items.forEach(function (it) { if (!it.gone && it.n.data !== it.to) { it.n.data = it.to; } });
       holds.forEach(function (b) { b.style.minHeight = b.__minH || ""; delete b.__minH; });
       // catch up with text the page scripts rewrote meanwhile, then listen again
       walk(document.body);
@@ -200,11 +202,15 @@
     function frame(now) {
       var t = now - t0, end = true;
       items.forEach(function (it) {
+        if (it.gone) { return; }
+        // a running animation (status, badge, counter) wrote this node meanwhile: stop typing over it
+        if (it.n.data !== it.shown) { it.gone = true; return; }
         var p = Math.min(1, Math.max(0, (t - it.delay) / it.dur));
         if (p < 1) { end = false; }
         var k = Math.round(it.len * p);
         var s = it.to.slice(0, k) + it.from.slice(k);
         if (it.n.data !== s) { it.n.data = s; }
+        it.shown = s;
       });
       if (end) { finish(); return; }
       raf = requestAnimationFrame(frame);

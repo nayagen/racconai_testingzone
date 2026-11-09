@@ -100,14 +100,15 @@
   <main id="main">
     <!-- ============ CLIENT APP: PAGE OPENER ============
          Built like the DriverApp opener (full-bleed photo, two-line h1, lead, actions, proof strip).
-         Photo: the shared container site (site-*, illustrative, see images/PROVENANCE.md), standing in until a Client App photo exists. -->
+         Photo: top-down, a client's hand holding the phone on the «Машина в пути» status screen over their container site
+         (ca-*, illustrative, see images/PROVENANCE.md). -->
     <section class="section section-tint platform-hero drv-hero" id="top" aria-labelledby="ca-hero-title">
       <div class="pf-hero dh ch">
         <picture class="themed">
-          <source data-theme-dark="(max-width: 860px)" media="(prefers-color-scheme: dark) and (max-width: 860px)" srcset="images/site-m-640-dark.webp 640w, images/site-m-960-dark.webp 960w, images/site-m-1240-dark.webp 1240w" sizes="100vw">
-          <source data-theme-dark media="(prefers-color-scheme: dark)" srcset="images/site-960-dark.webp 960w, images/site-1600-dark.webp 1600w, images/site-2400-dark.webp 2400w, images/site-3840-dark.webp 3840w" sizes="100vw">
-          <source media="(max-width: 860px)" srcset="images/site-m-640.webp 640w, images/site-m-960.webp 960w, images/site-m-1240.webp 1240w" sizes="100vw">
-          <img class="pf-hero-img" src="images/site-1600.webp" srcset="images/site-960.webp 960w, images/site-1600.webp 1600w, images/site-2400.webp 2400w, images/site-3840.webp 3840w" sizes="100vw" width="3840" height="1648" alt="" fetchpriority="high" decoding="async">
+          <source data-theme-dark="(max-width: 860px)" media="(prefers-color-scheme: dark) and (max-width: 860px)" srcset="images/ca-m-640-dark.webp 640w, images/ca-m-960-dark.webp 960w, images/ca-m-1240-dark.webp 1240w" sizes="100vw">
+          <source data-theme-dark media="(prefers-color-scheme: dark)" srcset="images/ca-960-dark.webp 960w, images/ca-1600-dark.webp 1600w, images/ca-2400-dark.webp 2400w, images/ca-3840-dark.webp 3840w" sizes="100vw">
+          <source media="(max-width: 860px)" srcset="images/ca-m-640.webp 640w, images/ca-m-960.webp 960w, images/ca-m-1240.webp 1240w" sizes="100vw">
+          <img class="pf-hero-img" src="images/ca-1600.webp" srcset="images/ca-960.webp 960w, images/ca-1600.webp 1600w, images/ca-2400.webp 2400w, images/ca-3840.webp 3840w" sizes="100vw" width="3840" height="1648" alt="" fetchpriority="high" decoding="async">
         </picture>
         <div class="wrap dh-grid">
           <div class="pf-hero-copy dh-copy">
@@ -127,7 +128,7 @@
 
     <!-- ============ SCREENS ============
          Same split as driverapp.html #screens: a vertical tablist beside a device stage. The stage holds an animation placeholder per
-         tab (.anim-ph); script.js switches them like a plain tablist until the Client App prototype replaces them. -->
+         tab (.anim-ph); js/clientapp-proto.js switches them like a plain tablist until the Client App prototype replaces them. -->
     <section class="section section-tint driver client" id="screens" aria-labelledby="ca-screens-title">
       <div class="wrap split driver-split">
         <div class="split-copy">
@@ -358,14 +359,14 @@
 
     <!-- ============ PERIOD REPORT ============
          The Client App «История» tab: the client picks a period and downloads the PDF report of completed pickups for it, to hand
-         to management or accounting without waiting for the АВР (акт выполненных работ). One story clock (script.js) sets data-*
+         to management or accounting without waiting for the АВР (акт выполненных работ). One story clock (js/clientapp-report.js) sets data-*
          states on .cr-proto, as in #screens: «История» from the request list, the history scrolls under its fixed summary, the
          calendar sheet takes 1–31 March, the numbers recount and the cards filter, the green button downloads the PDF, and the
          PDF opens beside the phone and zooms to its columns and totals. March data is coherent: 13 requests, 11 completed,
          124.3 m³ at 3200 тг/m³ (contract №423) plus one 2000 тг idle trip = 399 760 тг. -->
     <section class="section drv-stop" id="report" aria-labelledby="report-title">
       <!-- #screens mirrored: the stage on the left, the copy and a step list on the right. The four steps are a tablist over the
-           one story clock (script.js): each row is a stretch of the loop, the selected one fills its hairline, a click seeks. -->
+           one story clock (js/clientapp-report.js): each row is a stretch of the loop, the selected one fills its hairline, a click seeks. -->
       <div class="wrap split split-reverse driver-split cr-split">
         <div class="split-copy">
           <h2 id="report-title">Отчёт о&nbsp;вывозах за&nbsp;любой период, не&nbsp;дожидаясь АВР</h2>
@@ -559,7 +560,7 @@
             <li><strong>Покажем демо на&nbsp;ваших маршрутах</strong><span>Платформа, AI&#8209;диспетчер и&nbsp;DriverApp на&nbsp;примере ваших площадок и&nbsp;машин.</span></li>
             <li><strong>Обсудим пилот</strong><span>Какие районы и&nbsp;машины подключить первыми и&nbsp;что для&nbsp;этого понадобится от&nbsp;вас.</span></li>
           </ol>
-          <!-- Filled from CONTACT in script.js; each row stays hidden until its value is real. -->
+          <!-- Filled from CONTACT in js/demo-form.js; each row stays hidden until its value is real. -->
           <dl class="contacts" hidden>
             <div data-contact="phone" hidden><dt>Телефон</dt><dd><a href="#"></a></dd></div>
             <div data-contact="email" hidden><dt>Почта</dt><dd><a href="#"></a></dd></div>
@@ -628,6 +629,11 @@
   </footer>
 
   <script src="vendor/lenis.min.js"></script>
-  <script src="script.js"></script>
+  <!-- page scripts: js/core.js first (shared helpers), then one file per feature, so one failing cannot stop the rest -->
+  <script src="js/core.js"></script>
+  <script src="js/dock.js"></script>
+  <script src="js/clientapp-proto.js"></script>
+  <script src="js/clientapp-report.js"></script>
+  <script src="js/demo-form.js"></script>
 </body>
 </html>

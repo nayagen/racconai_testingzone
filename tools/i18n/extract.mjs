@@ -1,8 +1,8 @@
 // Collect every Russian string the page can show.
 // full: whole text nodes / attribute values from the rendered marketing DOM (outside the Platform replica), with section context.
-// runs: Cyrillic runs from the Platform replica markup, its JSON data and script.js (covers JS-generated text).
+// runs: Cyrillic runs from the Platform replica markup, its JSON data and the page scripts js/*.js (covers JS-generated text).
 import { spawn } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 const ROOT = 'C:/Users/Ayan Zhan/Documents/GitHub/racconai_testingzone/racconai_testingzone-1';
 const OUT = process.argv[2];
 const url = 'file:///C:/Users/Ayan%20Zhan/Documents/GitHub/racconai_testingzone/racconai_testingzone-1/index.html';
@@ -17,7 +17,7 @@ const decode = s => s.replace(/&nbsp;/g, '\u00A0').replace(/&mdash;/g, '—').re
 const runsOf = text => { const out = []; for (const m of decode(text).matchAll(RUN)) { const core = norm(m[0].replace(TAIL, '')); if (core) out.push(core); } return out; };
 
 const html = readFileSync(`${ROOT}/index.html`, 'utf8');
-const js = readFileSync(`${ROOT}/script.js`, 'utf8');
+const js = readdirSync(`${ROOT}/js`).filter(f => f.endsWith('.js')).sort().map(f => readFileSync(`${ROOT}/js/${f}`, 'utf8')).join('\n');
 const lines = html.split('\n');
 const blob = lines.filter(l => l.length > 3000).join('\n');
 const runs = new Map();

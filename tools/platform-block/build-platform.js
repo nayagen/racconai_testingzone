@@ -484,7 +484,7 @@ html = html.replace(/<svg[\s\S]*?<\/svg>/g, svg => {
   return svg.replace(/id="([^"]+)"/g, (m, id) => `id="${n}${id}"`).replace(/url\(#([^)]+)\)/g, (m, id) => `url(#${n}${id})`)
     .replace(/(xlink:href|href)="#([^"]+)"/g, (m, a, id) => `${a}="#${n}${id}"`);
 });
-/* Side nav: page items become buttons (hover/focus shows what the page does, script.js); logo, quick actions and user block stay inert */
+/* Side nav: page items become buttons (hover/focus shows what the page does, js/platform.js); logo, quick actions and user block stay inert */
 html = html.replace(/ href="#"/g, '').replace(/<a class="rc-sidenav__item([^"]*)"([^>]*)>([\s\S]*?)<span class="rc-sidenav__label">([^<]+)<\/span>/g,
   (m, cls, attrs, pre, label) => '<button type="button" class="rc-sidenav__item' + cls + '"' + attrs + ' data-pf-nav="' + label + '">' + pre + '<span class="rc-sidenav__label">' + label + '</span>')
   .replace(/<\/a>/g, '</button>')

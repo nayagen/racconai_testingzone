@@ -482,11 +482,15 @@
             <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z"/></svg></span><strong>Взвешивание на&nbsp;полигоне</strong><span>Машина проезжает весы на&nbsp;въезде и&nbsp;после разгрузки. Весовая записывает госномер, время, брутто, тару и&nbsp;нетто.</span></li>
             <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 13v8"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m8 17 4-4 4 4"/></svg></span><strong>Запись уходит в&nbsp;Платформу</strong><span>Интеграция передаёт каждый заезд автоматически, без&nbsp;выгрузок и&nbsp;ручного ввода.</span></li>
             <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><strong>Привязка по&nbsp;госномеру</strong><span>Платформа находит машину и&nbsp;её&nbsp;рейс, который закончился разгрузкой на&nbsp;этом полигоне. Вес нетто появляется в&nbsp;карточке рейса.</span></li>
-            <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span><strong>Тоннаж в&nbsp;отчётах</strong><span>Вес складывается в&nbsp;итоги по&nbsp;машине и&nbsp;дню и&nbsp;раскладывается по&nbsp;площадкам и&nbsp;заказчикам рейса.</span></li>
+            <li><span class="src-ic cycle-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span><strong>Тоннаж в&nbsp;отчётах</strong><span>Вес нетто делится между площадками рейса пропорционально объёму, фактически вывезенному с&nbsp;каждой из&nbsp;них, и&nbsp;складывается в&nbsp;итоги по&nbsp;машине и&nbsp;дню.</span></li>
           </ol>
         </div>
 
         <figure class="wb-stage" id="wb-stage" aria-label="Пример: заезд на весовую полигона привязывается к рейсу в Платформе">
+          <div class="wb-phase" aria-hidden="true" hidden>
+            <ol class="wb-steps"><li></li><li></li><li></li><li></li></ol>
+            <p class="wb-phase-label"><span class="wb-phase-n" data-w="pn">1</span><span data-w="pl"></span></p>
+          </div>
           <div class="wb-ticket">
             <div class="wb-t-head">
               <p class="wb-t-title"><span class="src-ic" aria-hidden="true"><svg class="lc" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z"/></svg></span>Весовая · Полигон Айтей</p>
@@ -503,7 +507,7 @@
             </dl>
           </div>
 
-          <div class="wb-link" aria-hidden="true"><span class="wb-sig"></span></div>
+          <div class="wb-link" aria-hidden="true"><span class="wb-packet"><span class="plate" data-w="pplate">123 ABC 02</span><b data-w="pnet">6&nbsp;840 кг</b></span></div>
 
           <div class="wb-trip">
             <p class="inbox-port wb-port"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#mark"/></svg>Платформа · по&nbsp;госномеру</p>
@@ -512,11 +516,11 @@
               <p class="wb-trip-sub" data-w="crew">Сериков Данияр · ТБО · 17 площадок</p>
             </div>
             <div class="wb-pts" role="table" aria-label="Площадки рейса и их доля веса">
-              <div class="wb-th" role="row"><span role="columnheader">Площадка</span><span role="columnheader">Конт.</span><span role="columnheader">Вес</span></div>
-              <div class="wb-tr" role="row"><span role="cell"><b data-w="s0">Кабанбай батыра, 45</b><small data-w="c0">ТОО «Алатау Сервис Групп»</small></span><span role="cell" data-w="k0">5</span><span role="cell" class="wb-kg" data-w="w0">0,72 т</span></div>
-              <div class="wb-tr" role="row"><span role="cell"><b data-w="s1">Жибек Жолы, 115</b><small data-w="c1">ТОО «Береке Трейд»</small></span><span role="cell" data-w="k1">4</span><span role="cell" class="wb-kg" data-w="w1">0,58 т</span></div>
-              <div class="wb-tr" role="row"><span role="cell"><b data-w="s2">Радостовца, 34</b><small data-w="c2">ИП Сапарова А.</small></span><span role="cell" data-w="k2">2</span><span role="cell" class="wb-kg" data-w="w2">0,29 т</span></div>
-              <div class="wb-tr wb-tr-more" role="row"><span role="cell" data-w="more">и&nbsp;ещё 14 площадок</span><span role="cell"></span><span role="cell" class="wb-kg" data-w="w3">5,25 т</span></div>
+              <div class="wb-th" role="row"><span role="columnheader">Площадка</span><span role="columnheader">Объём</span><span role="columnheader">Вес</span></div>
+              <div class="wb-tr" role="row"><span role="cell"><b data-w="s0">Кабанбай батыра, 45</b><small data-w="c0">ТОО «Алатау Сервис Групп»</small></span><span role="cell" data-w="k0">5,5&nbsp;м³</span><span role="cell" class="wb-kg" data-w="w0">0,72 т</span></div>
+              <div class="wb-tr" role="row"><span role="cell"><b data-w="s1">Жибек Жолы, 115</b><small data-w="c1">ТОО «Береке Трейд»</small></span><span role="cell" data-w="k1">4,4&nbsp;м³</span><span role="cell" class="wb-kg" data-w="w1">0,58 т</span></div>
+              <div class="wb-tr" role="row"><span role="cell"><b data-w="s2">Радостовца, 34</b><small data-w="c2">ИП Сапарова А.</small></span><span role="cell" data-w="k2">2,2&nbsp;м³</span><span role="cell" class="wb-kg" data-w="w2">0,29 т</span></div>
+              <div class="wb-tr wb-tr-more" role="row"><span role="cell" data-w="more">и&nbsp;ещё 14 площадок</span><span role="cell" data-w="k3">40,0&nbsp;м³</span><span role="cell" class="wb-kg" data-w="w3">5,25 т</span></div>
             </div>
             <div class="wb-unload">
               <div class="wb-u-main">
@@ -525,6 +529,10 @@
               </div>
               <p class="wb-u-net"><span>Нетто</span><b data-w="unet">6&nbsp;840 кг</b></p>
               <span class="status status-done" data-w="chip">Вес получен</span>
+            </div>
+            <div class="wb-ratio">
+              <p class="wb-ratio-t">Доля площадки — по&nbsp;фактически вывезенному объёму</p>
+              <p class="wb-ratio-f"><span>Вес 1&nbsp;м³ в&nbsp;рейсе:</span> <span class="wb-ratio-eq"><span data-w="fnet">6&nbsp;840 кг</span> ÷ <span data-w="fvol">52,1&nbsp;м³</span> = <b data-w="fden">131&nbsp;кг/м³</b></span></p>
             </div>
           </div>
           <figcaption class="intake-foot">
@@ -552,7 +560,7 @@
         </div>
         <div class="clients-col">
           <h3 class="sub-title">Тоннаж по&nbsp;заказчику и&nbsp;площадке</h3>
-          <p>Вес рейса раскладывается по&nbsp;площадкам, которые он&nbsp;обслужил, и&nbsp;по&nbsp;заказчикам этих площадок. Видно, сколько тонн вывезено для&nbsp;каждого заказчика и&nbsp;с&nbsp;каждой площадки.</p>
+          <p>Вес рейса делится между площадками, которые он&nbsp;обслужил, пропорционально объёму, фактически вывезенному с&nbsp;каждой, а&nbsp;затем&nbsp;— по&nbsp;заказчикам этих площадок. Видно, сколько тонн вывезено для&nbsp;каждого заказчика и&nbsp;с&nbsp;каждой площадки.</p>
           <figure class="wb-share" id="wb-share" aria-label="Пример: тоннаж по заказчикам и площадкам">
             <div class="wb-share-head">
               <p class="sl-title">Ноябрь, 1–6</p>
@@ -856,7 +864,7 @@
             <li><strong>Покажем демо на&nbsp;ваших маршрутах</strong><span>Платформа, AI&#8209;диспетчер и&nbsp;DriverApp на&nbsp;примере ваших площадок и&nbsp;машин.</span></li>
             <li><strong>Обсудим пилот</strong><span>Какие районы и&nbsp;машины подключить первыми и&nbsp;что для&nbsp;этого понадобится от&nbsp;вас.</span></li>
           </ol>
-          <!-- Filled from CONTACT in script.js; each row stays hidden until its value is real. -->
+          <!-- Filled from CONTACT in js/demo-form.js; each row stays hidden until its value is real. -->
           <dl class="contacts" hidden>
             <div data-contact="phone" hidden><dt>Телефон</dt><dd><a href="#"></a></dd></div>
             <div data-contact="email" hidden><dt>Почта</dt><dd><a href="#"></a></dd></div>
@@ -932,6 +940,18 @@
   <script src="vendor/lenis.min.js"></script>
   <script src="vendor/leaflet.min.js"></script>
   <script src="platform-fleet.js"></script>
-  <script src="script.js"></script>
+  <!-- page scripts: js/core.js first (shared helpers), then one file per feature, so one failing cannot stop the rest -->
+  <script src="js/core.js"></script>
+  <script src="js/dock.js"></script>
+  <script src="js/stage-map.js"></script>
+  <script src="js/stage-sequence.js"></script>
+  <script src="js/fleet-switch.js"></script>
+  <script src="js/route-group.js"></script>
+  <script src="js/registry.js"></script>
+  <script src="js/intake.js"></script>
+  <script src="js/weighbridge.js"></script>
+  <script src="js/pf-magnet.js"></script>
+  <script src="js/demo-form.js"></script>
+  <script src="js/platform.js"></script>
 </body>
 </html>

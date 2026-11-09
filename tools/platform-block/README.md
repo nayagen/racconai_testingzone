@@ -13,11 +13,11 @@ Truck routes on the map follow the streets of the backdrop: `trace-routes.js` (c
 
 ## Live map
 
-On the page the backdrop is only a placeholder: `script.js` lays a Leaflet map with 2GIS raster tiles (`vendor/leaflet.min.js`, 1.9.4) under the pins, trucks, depot and routes. Those keep the backdrop pixel positions the build gives them; `GEO` in script.js ties backdrop pixels to Web Mercator (scale and offset fitted to the 2GIS tiles, zoom ≈ 13.738), and each overlay follows the map through the CSS `translate` property. If you regenerate `map-almaty.webp` at a different view, refit `GEO`. Night tiles are recoloured on a canvas with the same curve as `dark-map.html`. The 2GIS tiles are used without an API key; a MapGL key would allow switching to vector maps with native light and dark styles.
+On the page the backdrop is only a placeholder: `js/platform.js` lays a Leaflet map with 2GIS raster tiles (`vendor/leaflet.min.js`, 1.9.4) under the pins, trucks, depot and routes. Those keep the backdrop pixel positions the build gives them; `GEO` in js/platform.js ties backdrop pixels to Web Mercator (scale and offset fitted to the 2GIS tiles, zoom ≈ 13.738), and each overlay follows the map through the CSS `translate` property. If you regenerate `map-almaty.webp` at a different view, refit `GEO`. Night tiles are recoloured on a canvas with the same curve as `dark-map.html`. The 2GIS tiles are used without an API key; a MapGL key would allow switching to vector maps with native light and dark styles.
 
 ## Fleet
 
-`node tools/platform-block/fleet.mjs` puts the whole depot on the map: the Gantt trucks the build left off plus new ones, 29 in all (10 refuse trucks, 6 skip loaders, 6 hook lifts, 5 dump trucks, 2 vacuum trucks; 21 on the line, 8 in the depot). Every stop of a truck's day becomes a job pin snapped to a real road (OSRM nearest) with its Russian street address (Nominatim reverse); every truck gets its street route (OSRM) as past / planned polylines. It writes `platform-fleet.js` (`window.PF_FLEET`, merged by script.js before the Platform starts: pins, trucks and truck cards are cloned from the build's markup) and rewrites the «Статус вывоза» numbers in `index.html` from the sites and trucks on the map. Network answers are cached in `fleet-cache.json`, so reruns are offline and identical. Run it again after a build (the build resets `index.html`); change the fleet in `NEW` and `TYPES`.
+`node tools/platform-block/fleet.mjs` puts the whole depot on the map: the Gantt trucks the build left off plus new ones, 29 in all (10 refuse trucks, 6 skip loaders, 6 hook lifts, 5 dump trucks, 2 vacuum trucks; 21 on the line, 8 in the depot). Every stop of a truck's day becomes a job pin snapped to a real road (OSRM nearest) with its Russian street address (Nominatim reverse); every truck gets its street route (OSRM) as past / planned polylines. It writes `platform-fleet.js` (`window.PF_FLEET`, merged by js/platform.js before the Platform starts: pins, trucks and truck cards are cloned from the build's markup) and rewrites the «Статус вывоза» numbers in `index.html` from the sites and trucks on the map. Network answers are cached in `fleet-cache.json`, so reruns are offline and identical. Run it again after a build (the build resets `index.html`); change the fleet in `NEW` and `TYPES`.
 
 ### Map truck icons
 
@@ -32,4 +32,4 @@ another marker or a pin takes it in too, so nothing overlaps); its ring is split
 statuses inside (colours read from the pins). Groups are rebuilt when a zoom lands (and every 0.35 of a level during a
 wheel glide) and when the map filter changes; from zoom 16.5 every pin stands alone. Clicking a cluster flies into it.
 The selected pin never hides in a cluster, and the tour turns clustering off. Tuning: `CL_R`, `CL_STEP`, `CL_OFF`,
-`CL_LIFT`, `CL_GAP` in `script.js`.
+`CL_LIFT`, `CL_GAP` in `js/platform.js`.

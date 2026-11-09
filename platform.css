@@ -1,14 +1,14 @@
 /* RaccoonAI Platform dashboard replica (Figma RaccoonAI Desktop, node 4296:5593).
    Atoms come from platform-ds.css (RaccoonAI Design System for Claude); this file lays out the organisms
-   in design pixels on a 1600 x 980 px screen that script.js scales as a whole to fit. */
+   in design pixels on a 1600 x 980 px screen that js/platform.js scales as a whole to fit. */
 
-/* Landing frame: the screen keeps its 1600 x 980 design size and scales by --pf-s (set in script.js) */
+/* Landing frame: the screen keeps its 1600 x 980 design size and scales by --pf-s (set in js/platform.js) */
 .platform .section-head { margin-bottom: clamp(32px, 4vw, 48px); }
 /* Interface block: the screen on the same tint the hero photo fades into */
 .platform-screen { padding-top: clamp(48px, 6vw, 88px); }
 /* Up to 1600px the frame fills the wrap as before; on larger screens it grows to 80% of the viewport (the screen scales up past
    its design size), capped so the screen is at most 90% of the window height. */
-/* The screen and its caption row narrow to the scaled screen width when the window height limits the scale (script.js) */
+/* The screen and its caption row narrow to the scaled screen width when the window height limits the scale (js/platform.js) */
 .pf-frame > .pf-viewport, .pf-frame > .pf-tourwrap, .pf-frame > .pf-caption { max-width: var(--pf-fit, none); margin-inline: auto; }
 .pf-frame { width: min(100% - 2 * max(var(--gutter), var(--edge)), max(1600px, min(80vw, 90svh * 1.633))); margin: 0 auto; }
 .pf-viewport {
@@ -34,7 +34,7 @@
 .pf-main > .pf-status { max-height: clamp(384px, calc(var(--pf-h, 980px) * .43), 420px);
   display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
 .pf-status > .pf-panel { grid-area: 2 / 1; }
-/* Schedule «Развернуть» (script.js): the block takes 80% of the main column's height, the map row keeps the rest */
+/* Schedule «Развернуть» (js/platform.js): the block takes 80% of the main column's height, the map row keeps the rest */
 .pf-main > .pf-status { min-height: 0; transition: min-height 320ms cubic-bezier(.22, 1, .36, 1), max-height 320ms cubic-bezier(.22, 1, .36, 1); }
 .pf-main.is-expanded > .pf-status { min-height: calc((var(--pf-h, 980px) - 32px) * .8); max-height: calc((var(--pf-h, 980px) - 32px) * .8); }
 @media (prefers-reduced-motion: reduce) { .pf-main > .pf-status { transition: none; } }
@@ -56,14 +56,14 @@
 .pf-map__truck:not(.is-active) .pf-map__truckart--on, .pf-map__truck.is-active .pf-map__truckart--off { display: none; }
 .pf-map__top { position: absolute; left: 8px; right: 8px; top: 8px; display: flex; justify-content: space-between; gap: 8px; }
 .pf-map__top .rc-search { box-shadow: var(--shadow-sm); }
-/* live search and filter (script.js); the bar itself lets drags through to the map */
+/* live search and filter (js/platform.js); the bar itself lets drags through to the map */
 .pf-map__top { z-index: 5; pointer-events: none; }
 .pf-map__top > * { pointer-events: auto; }
 .pf-map__top.is-on .rc-search { box-shadow: inset 0 0 0 1px var(--border-primary), var(--shadow-sm); }
 .pf-map__top.is-on .rc-search:focus-within { box-shadow: inset 0 0 0 1px var(--border-action), var(--shadow-sm); }
 .pf-map__tools { position: relative; }
 .pf-mpin.is-filtered { display: none; }
-/* pin clusters (script.js, live map): a round marker with the count, its ring split by the statuses inside */
+/* pin clusters (js/platform.js, live map): a round marker with the count, its ring split by the statuses inside */
 .pf-mpin.is-clustered { visibility: hidden; pointer-events: none; }
 .pf-map__clusters { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 1; }
 .pf-mcl { --s: 34px; position: absolute; left: 0; top: 0; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); padding: 4px; border: 0; border-radius: 50%; background: var(--ring); box-shadow: 0 1px 3px rgba(16, 24, 40, .3); cursor: pointer; animation: pf-mcl-in .2s ease-out; transition: transform .15s ease-out; }
@@ -127,7 +127,7 @@
 .pf-map__tools { display: flex; gap: 8px; }
 .pf-map__tools .rc-filterbtn { box-shadow: var(--shadow-sm); }
 .pf-map__tools .rc-ibtn { background: var(--surface-primary); box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
-/* Live map (script.js): Leaflet + 2GIS tiles under the overlays; the backdrop image shows until the first tile arrives */
+/* Live map (js/platform.js): Leaflet + 2GIS tiles under the overlays; the backdrop image shows until the first tile arrives */
 .pf-map__live { position: absolute; inset: 0; z-index: 0; }
 .pf-map__live.leaflet-container { background: transparent; font: inherit; }
 /* fractional zoom leaves hairline gaps between tiles; a half-pixel overlap closes them */
@@ -146,7 +146,7 @@
 .pf-map__zbtn:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; }
 .pf-map__zbtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 .pf-map__zhome { display: none; margin-top: 4px; }
-/* Full-screen map (script.js): the side nav slides out left, the Gantt block down and the upper-right card right, while the
+/* Full-screen map (js/platform.js): the side nav slides out left, the Gantt block down and the upper-right card right, while the
    map, lifted out of its grid cell (a .pf-map-slot keeps the cell), grows over the freed screen. Closing plays it backwards:
    the map shrinks into its slot as the panels slide home. .is-mapanim holds the transitions for the whole round trip. */
 .pf-screen.is-mapanim { overflow: hidden; }
@@ -249,7 +249,7 @@
   .pf-caption { flex-direction: column; gap: 4px; }
 }
 
-/* Tabs and panels (interactive: script.js switches them) */
+/* Tabs and panels (interactive: js/platform.js switches them) */
 .pf-contents { display: contents; }
 .pf-sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .pf-tools [hidden], .pf-panel[hidden] { display: none; }
@@ -278,7 +278,7 @@
 .pf-gtruck { display: flex; align-items: center; height: 32px; padding-right: 8px; gap: 8px; border-radius: 8px 4px 4px 8px; background: var(--surface-tertiary); }
 .pf-gtruck__ai { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-right: 1px solid var(--surface-primary); }
 .pf-gtruck__plate { flex: 1; color: var(--text-body); }
-/* plate as a "find on map" button (script.js) */
+/* plate as a "find on map" button (js/platform.js) */
 .pf-gtruck__find { appearance: none; margin: 0; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pf-gtruck__find:hover { color: var(--text-action); text-decoration: underline; text-underline-offset: 2px; }
 .pf-gtruck__find:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; border-radius: 2px; }
@@ -311,7 +311,7 @@
 .pf-gbar--assigned .pf-gbar__count { background: var(--surface-primary); color: var(--text-action); }
 .pf-gbar--ai { background: var(--surface-ai-subtle); color: var(--text-ai); border: 1.5px dashed var(--border-ai); }
 
-/* Selectable map and Gantt items (script.js swaps the right-hand card) */
+/* Selectable map and Gantt items (js/platform.js swaps the right-hand card) */
 .pf-mpin { position: absolute; display: block; padding: 0; margin: 0; border: 0; background: none; line-height: 0; cursor: pointer; transform-origin: 50% 100%; transition: transform .15s ease-out, filter .15s ease-out; }
 .pf-mpin:hover { transform: scale(1.15); z-index: 2; }
 .pf-mpin.is-active { transform: scale(1.35); z-index: 3; filter: drop-shadow(0 2px 3px rgba(16, 24, 40, .35)); }
@@ -402,7 +402,7 @@
 .pf-galert__btn:hover { background: var(--surface-error-subtle); }
 .pf-galert__btn:focus-visible { outline: 2px solid var(--border-action); outline-offset: 1px; }
 /* Fixed against the scaled .pf-screen (its transform makes it the containing block), so the Gantt scroll box cannot clip it.
-   script.js sets --x/--y from the icon: the card sits above it, or below (.is-below) when there is no room. */
+   js/platform.js sets --x/--y from the icon: the card sits above it, or below (.is-below) when there is no room. */
 .pf-gcard { position: fixed; left: var(--x, 0px); top: var(--y, 0px); z-index: 10; width: 320px; box-sizing: border-box; display: grid; gap: 4px; justify-items: start;
   padding: 12px 16px 16px; background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg); color: var(--text-body); white-space: normal; text-align: left;
@@ -618,7 +618,7 @@
 .pf-rm__acts { display: flex; gap: 8px; }
 @media (prefers-reduced-motion: reduce) { .pf-rm__jact, .pf-screen button.pf-trip { transition: none; } }
 
-/* ---------- Adaptive screen height (--pf-h, 720-980 design px, set in script.js to fit the window) ---------- */
+/* ---------- Adaptive screen height (--pf-h, 720-980 design px, set in js/platform.js to fit the window) ---------- */
 .pf-panel > div:not([hidden]) { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 /* side nav items give up height first: 40px at full height, down to 28px */
 .pf-screen .rc-sidenav__item { box-sizing: border-box; height: clamp(26px, calc((var(--pf-h, 980px) - 390px) / 14), 40px); padding-block: 0; }
@@ -627,7 +627,7 @@
 .pf-slot > .pf-truck { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--border-disabled) transparent; }
 .pf-pm__card { max-height: calc(var(--pf-h, 980px) - 32px); }
 
-/* ---------- Auto tour (script.js): camera, spotlight, drawn cursor, narration, control bar ----------
+/* ---------- Auto tour (js/platform.js): camera, spotlight, drawn cursor, narration, control bar ----------
    Overlay pieces sit on the unzoomed .pf-stage, in real px. Narration is RaccoonAI's voice: Onest on Dispatch Ink,
    apart from the product's own white cards. */
 .pf-tourwrap { position: relative; }
@@ -786,7 +786,7 @@
   .pf-hint-dot { transition: opacity 200ms linear; transform: none; }
   .pf-hint-dot__ring::after { animation: none; display: none; }
 }
-/* ---------- Compact frame (narrow screens; script.js fitPlatform) ----------
+/* ---------- Compact frame (narrow screens; js/platform.js fitPlatform) ----------
    A portrait window the tour camera moves through; the narration sits in a slot under it with a reserved height so the
    controls below do not jump between steps. Only the tour gets in: every «explore yourself» control is swapped for
    «close the tour», and at rest the caption keeps its plain label and the replay button. */

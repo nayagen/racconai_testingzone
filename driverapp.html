@@ -154,7 +154,7 @@
              The switch above plays it on a landscape cab tablet instead (data-device="tablet"): the tabs centred in the top bar,
              the bottom sheets in the bottom-left corner over a wider map, larger map buttons, pins and truck, two-column photo
              and profile screens, and a camera that needs no turning.
-             The markup is the first frame; script.js plays the rest and the list keeps pace with it. -->
+             The markup is the first frame; js/driverapp-proto.js plays the rest and the list keeps pace with it. -->
         <figure class="drv-stage">
           <!-- Device: the same shift on the driver's smartphone or on a cab tablet in landscape (Lucide smartphone, tablet; ISC) -->
           <div class="dh-device" role="group" aria-label="Устройство" hidden>
@@ -567,7 +567,7 @@
             <li class="flow-step">
               <p class="flow-title"><span class="flow-ix">3</span>Снимает фото до&nbsp;и&nbsp;после</p>
               <p class="flow-net is-off"><svg viewBox="0 0 16 16"><path d="M2 6.5a9 9 0 0 1 4-2.1M9.6 4.3A9 9 0 0 1 14 6.5M6.4 11.4a2.6 2.6 0 0 1 3.2 0M2.5 2.5l11 11"/></svg><span class="flow-net-text">Нет связи · фото ждут в&nbsp;очереди</span></p>
-              <!-- Figma «Android Compact - 147» (15527:24964): ДО and ПОСЛЕ taken, the job done. script.js replays the two shots, quickly -->
+              <!-- Figma «Android Compact - 147» (15527:24964): ДО and ПОСЛЕ taken, the job done. js/flow.js replays the two shots, quickly -->
               <div class="fphone-da dh-proto" data-play="photos" data-scr="map" data-sheet="task" data-task="done" data-zoom="near" aria-hidden="true">
                 <div class="dphone">
                   <div class="dphone-screen">
@@ -659,7 +659,7 @@
             <li><strong>Покажем демо на&nbsp;ваших маршрутах</strong><span>Платформа, AI&#8209;диспетчер и&nbsp;DriverApp на&nbsp;примере ваших площадок и&nbsp;машин.</span></li>
             <li><strong>Обсудим пилот</strong><span>Какие районы и&nbsp;машины подключить первыми и&nbsp;что для&nbsp;этого понадобится от&nbsp;вас.</span></li>
           </ol>
-          <!-- Filled from CONTACT in script.js; each row stays hidden until its value is real. -->
+          <!-- Filled from CONTACT in js/demo-form.js; each row stays hidden until its value is real. -->
           <dl class="contacts" hidden>
             <div data-contact="phone" hidden><dt>Телефон</dt><dd><a href="#"></a></dd></div>
             <div data-contact="email" hidden><dt>Почта</dt><dd><a href="#"></a></dd></div>
@@ -728,6 +728,11 @@
   </footer>
 
   <script src="vendor/lenis.min.js"></script>
-  <script src="script.js"></script>
+  <!-- page scripts: js/core.js first (shared helpers), then one file per feature, so one failing cannot stop the rest -->
+  <script src="js/core.js"></script>
+  <script src="js/dock.js"></script>
+  <script src="js/driverapp-proto.js"></script>
+  <script src="js/flow.js"></script>
+  <script src="js/demo-form.js"></script>
 </body>
 </html>

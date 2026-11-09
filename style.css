@@ -120,7 +120,7 @@
 :root[data-theme="dark"] .dphone { background: #1f2836; box-shadow: inset 0 0 0 1px #344157, var(--shadow); }
 :root[data-theme="dark"] .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 8l4 4 4-4' fill='none' stroke='%23c5cfdc' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 /* The theme switch, only while the toggle is used (never on load): a one-second cross-fade of the whole page (View
-   Transitions, script.js); without it, the colours ease over the same second (.theme-anim for 1s). */
+   Transitions, js/core.js); without it, the colours ease over the same second (.theme-anim for 1s). */
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 1s; animation-timing-function: cubic-bezier(.4, 0, .2, 1); }
   html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
@@ -131,7 +131,7 @@
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 88px; scrollbar-color: var(--line-strong) var(--page); }
-/* Smooth scroll (Lenis, script.js): it drives the scroll itself, so the native smooth behaviour steps aside while it runs */
+/* Smooth scroll (Lenis, js/core.js): it drives the scroll itself, so the native smooth behaviour steps aside while it runs */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
@@ -183,7 +183,7 @@ a { color: inherit; text-underline-offset: .2em; }
 /* ---------- Desktop dock (≥1280px) ----------
    Replaces the header on desktop: fixed at the left edge, centred vertically, bare on the page (no card, outline or CTA). It is laid out at
    its open width and clipped to a 48px strip at rest (mark, section rail, language code); clip-path also clips hit-testing, so
-   only the strip is live until hover or keyboard focus opens it. .is-wide (script.js) keeps it open unless the Platform screen is behind it.
+   only the strip is live until hover or keyboard focus opens it. .is-wide (js/dock.js) keeps it open unless the Platform screen is behind it.
    Every centre line sits at x = 24px: mark, rail, ticks, diamond and language code. Text starts at x = 52px. */
 .tree-nav { display: none; }
 @media (min-width: 1280px) {
@@ -334,7 +334,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .stage-map img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 50%; }
 .map-credit { position: absolute; left: 10px; bottom: 8px; font: 500 11px/1 var(--font-ui); color: var(--muted); background: color-mix(in srgb, var(--surface) 82%, transparent); border-radius: 6px; padding: 4px 6px; }
 .stage-map { box-shadow: inset 0 0 0 1px var(--line); }
-/* Live 2GIS map (the Platform screen's tile layer, script.js): a hidden Leaflet map loads the view, which is flattened into
+/* Live 2GIS map (the Platform screen's tile layer, js/stage-map.js): a hidden Leaflet map loads the view, which is flattened into
    one canvas over the static crop (placeholder and fallback). The Leaflet staging map is invisible and short-lived. */
 .stage-map-live { position: absolute; inset: 0; z-index: 0; isolation: isolate; pointer-events: none; visibility: hidden; }
 .stage-map-flat { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity .6s var(--ease); }
@@ -801,7 +801,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 
 /* ---------- Weighbridge ----------
    The landfill's weighing record (top) travels down one dashed wire to the Platform port and lands in the trip it belongs to
-   (matched by plate). Not AI, so no violet; the arrival uses the same Action Blue signal as #intake. script.js loops two records. */
+   (matched by plate). Not AI, so no violet; the arrival uses the same Action Blue signal as #intake. js/weighbridge.js loops two records. */
 .weigh-split { align-items: start; }
 .wb-stage { font-family: var(--font-ui); color: var(--body); padding-left: clamp(0px, 3vw, 40px); }
 .wb-ticket { position: relative; z-index: 2; width: min(100%, 400px); margin-inline: auto; padding: 14px 16px 16px; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
@@ -820,10 +820,21 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .wb-weights .is-net { box-shadow: inset 0 0 0 1.5px var(--ink); }
 
 /* The wire: a dashed hairline from the record to the port; a short Action Blue segment runs it on each arrival */
-.wb-link { position: relative; z-index: 1; height: 56px; width: 2px; margin-inline: auto; background: repeating-linear-gradient(to bottom, var(--line-strong) 0 4px, transparent 4px 9px); overflow: hidden; }
-.wb-sig { position: absolute; left: 0; top: -22px; width: 2px; height: 22px; border-radius: 1px; background: var(--action); opacity: 0; }
-.wb-stage.is-sending .wb-sig { animation: wb-run .9s cubic-bezier(.45, 0, .2, 1) forwards; }
-@keyframes wb-run { 0% { opacity: 1; transform: translateY(0); } 92% { opacity: 1; } 100% { opacity: 0; transform: translateY(78px); } }
+.wb-link { position: relative; z-index: 1; height: 84px; width: 2px; margin-inline: auto; background: repeating-linear-gradient(to bottom, var(--line-strong) 0 4px, transparent 4px 9px); }
+/* The record travels as a packet (plate + net): it slides out from under the ticket and sinks into the Platform port */
+.wb-packet {
+  position: absolute; left: 50%; top: 0; display: inline-flex; align-items: center; gap: 8px; padding: 5px 11px; border-radius: 999px;
+  background: var(--action); color: #fff; font: 600 12px/1.25 var(--font-ui); font-variant-numeric: tabular-nums; white-space: nowrap;
+  box-shadow: 0 6px 16px -4px rgba(21, 93, 252, .45); opacity: 0; transform: translate(-50%, -30px);
+}
+.wb-packet .plate { padding: 1px 6px; border-radius: 5px; background: rgba(255, 255, 255, .18); color: #fff; }
+.wb-stage.is-sending .wb-packet { animation: wb-packet 1.1s cubic-bezier(.45, 0, .2, 1) forwards; }
+@keyframes wb-packet {
+  0% { opacity: 0; transform: translate(-50%, -30px); }
+  15% { opacity: 1; }
+  78% { opacity: 1; transform: translate(-50%, 34px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, 44px) scale(.6); }
+}
 .wb-port.is-hit { animation: port-hit .7s var(--ease); }
 
 .wb-trip { position: relative; z-index: 2; padding: 26px 16px 16px; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
@@ -831,7 +842,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .wb-trip-title { font-size: 16px; font-weight: 600; color: var(--ink); }
 .wb-trip-sub { margin-top: 3px; font-size: 13px; color: var(--muted); }
 .wb-pts { display: grid; gap: 4px; margin-top: 12px; padding: 6px; border-radius: 14px; background: var(--tint); }
-.wb-th, .wb-tr { display: grid; grid-template-columns: minmax(0, 1fr) 48px 72px; gap: 12px; align-items: center; padding: 9px 12px; }
+.wb-th, .wb-tr { display: grid; grid-template-columns: minmax(0, 1fr) 64px 72px; gap: 12px; align-items: center; padding: 9px 12px; }
 .wb-th { padding-block: 6px 2px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 .wb-th > span:not(:first-child), .wb-tr > span:not(:first-child) { text-align: right; }
 .wb-tr { border-radius: 10px; background: var(--surface); font-size: 14px; font-variant-numeric: tabular-nums; }
@@ -839,9 +850,17 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .wb-tr b { font-weight: 600; color: var(--ink); }
 .wb-tr small { margin-top: 2px; font-size: 12px; color: var(--muted); }
 .wb-tr-more { color: var(--muted); }
+/* How the net is split: by the volume actually collected from each site (weight of 1 m³ on the trip × the site's volume) */
+.wb-ratio { margin-top: 8px; padding: 10px 14px; border-radius: 12px; background: var(--tint); font-size: 13px; line-height: 1.4; transition: background-color .4s var(--ease), box-shadow .4s var(--ease); }
+.wb-ratio-t { font-weight: 600; color: var(--ink); }
+.wb-ratio-f { display: flex; flex-wrap: wrap; gap: 2px 6px; margin-top: 2px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wb-ratio-eq { white-space: nowrap; }
+.wb-ratio-eq b { font-weight: 600; color: var(--ink); }
+.wb-ratio.is-hit { background: var(--sel-soft); box-shadow: inset 0 0 0 1px var(--action); }
 .wb-kg { font-weight: 600; color: var(--ink); transition: opacity .35s var(--ease); }
 .wb-unload { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px 16px; align-items: center; margin-top: 12px; padding: 12px 14px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .5s var(--ease), background-color .5s var(--ease); }
-.wb-u-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+.wb-u-main { min-width: 0; }
+.wb-u-title { font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wb-u-rec { margin-top: 2px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .wb-u-net { display: grid; justify-items: end; font-variant-numeric: tabular-nums; }
 .wb-u-net span { font-size: 12px; color: var(--muted); }
@@ -849,7 +868,41 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .wb-unload .status { font-size: 12px; padding: 5px 9px; }
 .wb-unload.is-landed { background: var(--sel-soft); box-shadow: inset 0 0 0 1px var(--action); }
 /* Pending: the record is still being weighed, the trip waits for it */
-.wb-stage .is-pending { opacity: .35; }
+/* Not received yet: an empty skeleton bar, not a faded real value */
+.wb-stage .is-pending { color: transparent !important; background: var(--tint); border-radius: 6px; width: fit-content; }
+.wb-stage .wb-kg.is-pending { margin-left: auto; }
+.wb-ratio .is-pending { display: inline-block; }
+.wb-weights .is-pending { background: var(--line); }
+.wb-stage .is-in { animation: wb-in .45s var(--ease); }
+@keyframes wb-in { from { opacity: 0; transform: translateY(4px); } }
+/* Live scale reading: the cell being weighed */
+.wb-weights > div { transition: box-shadow .3s var(--ease), background-color .3s var(--ease); }
+.wb-weights > div.is-reading { background: var(--sel-soft); box-shadow: inset 0 0 0 1.5px var(--action); }
+.wb-weights > div.is-reading dd { color: var(--action); }
+/* Matched by plate: both plates light up together */
+.wb-stage .plate { transition: box-shadow .3s var(--ease), border-color .3s var(--ease), background-color .3s var(--ease); }
+.wb-plate.is-match, .wb-trip-title .plate.is-match { border-color: var(--action); background: var(--sel-soft); box-shadow: 0 0 0 4px var(--st-progress-soft); }
+.wb-trip-title .plate { padding: 1px 6px; border-radius: 6px; border: 1.5px solid transparent; }
+.wb-tr { transition: background-color .4s var(--ease), box-shadow .4s var(--ease); }
+.wb-tr.is-hit { background: var(--sel-soft); box-shadow: inset 0 0 0 1px var(--action); }
+
+/* Phase bar: which of the four steps the demo is on (mirrors the list on the left) */
+.wb-phase { display: flex; align-items: center; gap: 12px; width: min(100%, 400px); margin: 0 auto 14px; font: 600 13px/1.3 var(--font-ui); color: var(--ink); }
+.wb-phase[hidden] { display: none; }
+.wb-steps { display: flex; gap: 4px; flex: none; list-style: none; margin: 0; padding: 0; }
+.wb-steps li { width: 18px; height: 4px; border-radius: 2px; background: var(--line-strong); transition: background-color .3s var(--ease); }
+.wb-steps li.is-done { background: var(--ink); }
+.wb-steps li.is-now { background: var(--action); }
+.wb-phase-label { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.wb-phase-label > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-phase-n { flex: none; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--action); color: #fff; font-size: 11px; font-variant-numeric: tabular-nums; }
+/* The list on the left follows the demo while it runs */
+.weigh .cycle li { transition: opacity .4s var(--ease); }
+.weigh .cycle.is-live li:not(.is-now) { opacity: .5; }
+.weigh .cycle .cycle-ic { transition: background-color .3s var(--ease); }
+.weigh .cycle .cycle-ic svg { transition: stroke .3s var(--ease); }
+.weigh .cycle li.is-now .cycle-ic { background: var(--action); }
+.weigh .cycle li.is-now .cycle-ic svg { stroke: #fff; }
 
 /* Outcomes: fleet tonnage by trip (segmented bars) and the customer / site split */
 .wb-fleet, .wb-share { background: var(--surface); border-radius: 20px; padding: clamp(20px, 2.4vw, 28px); box-shadow: var(--shadow); font-family: var(--font-ui); color: var(--body); }
@@ -953,7 +1006,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 @media (max-width: 600px) {
   .wb-weights > div { padding: 7px 8px; }
   .wb-weights dd { font-size: 14px; }
-  .wb-th, .wb-tr { grid-template-columns: minmax(0, 1fr) 36px 60px; gap: 8px; padding-inline: 10px; }
+  .wb-th, .wb-tr { grid-template-columns: minmax(0, 1fr) 58px 60px; gap: 8px; padding-inline: 10px; }
   .wb-unload { grid-template-columns: minmax(0, 1fr) auto; }
   .wb-unload .status { grid-column: 1 / -1; justify-self: start; }
   .wb-trucks li { grid-template-columns: minmax(0, 1fr) auto; gap: 10px 12px; }
@@ -1603,7 +1656,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 @keyframes da-day-in { from { opacity: 0; scale: .55; } }
 .dh-proto.is-press-day .da-day.is-sel { scale: .9; }
 
-/* the tooltip: one box, placed above the tapped day by script.js; data-tip picks its text */
+/* the tooltip: one box, placed above the tapped day by js/driverapp-proto.js; data-tip picks its text */
 .da-tip {
   position: absolute; z-index: 2; left: 0; top: 0; display: grid; gap: 4px; padding: 8px; border: 1px solid var(--border-primary); border-radius: var(--radius-md);
   background: var(--surface-primary); box-shadow: var(--shadow-lg); white-space: nowrap; transform-origin: 50% 100%;
@@ -1652,7 +1705,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .src-ic svg.ds-wa, .src svg.ds-wa { stroke: none; color: #00a63e; } /* Design system "whatsapp" icon in its icons-success colour */
 
 /* Stage: three channel cards side by side, dashed wires into the Platform queue below.
-   A signal runs down a wire, and each arrival adds a job to the top of the queue (script.js). */
+   A signal runs down a wire, and each arrival adds a job to the top of the queue (js/intake.js). */
 .intake-stage { position: relative; font-family: var(--font-ui); padding: 0 0 0 clamp(0px, 3vw, 40px); }
 .feeds { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 /* Every channel card has one anatomy: a header strip naming the source, then an equal-height body drawn as that channel's own screen */
@@ -1681,7 +1734,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .feed-call-acts .is-decline svg { transform: rotate(135deg); }
 .feed-call-acts .is-accept { background: var(--st-done-strong); }
 
-/* Wires: drawn in px by script.js on every resize, from each card's foot to the Platform port */
+/* Wires: drawn in px by js/intake.js on every resize, from each card's foot to the Platform port */
 .wires { display: block; position: relative; z-index: 1; width: 100%; height: 72px; overflow: visible; }
 .wires-base path { fill: none; stroke: var(--line-strong); stroke-width: 1.5; stroke-dasharray: 4 5; stroke-linecap: round; transition: stroke .3s var(--ease); }
 .wires-base path.is-live { stroke: #8fb4fd; }
@@ -1825,7 +1878,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 }
 
 /* Phone: the DriverApp screens of the animation above (Figma 15860:18793 and 15527:24964), at the column's width.
-   script.js sets --s from the width; the camera stays upright here, the phone is too narrow to turn in its column. */
+   js/flow.js sets --s from the width; the camera stays upright here, the phone is too narrow to turn in its column. */
 .fphone-da { --bz: 7px; --s: .5874; width: min(256px, 100%); }
 .fphone-da .dphone { border-radius: 36px; }
 .fphone-da .dphone-screen { border-radius: 29px; }
@@ -1880,7 +1933,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
   .flow-step .flow-net { margin-inline: 0; }
   .flow-title { text-align: center; }
 }
-/* Phone stepper (script.js adds .is-stepper and the tab row): every step sits in the same grid cell, so the frame keeps the
+/* Phone stepper (js/flow.js adds .is-stepper and the tab row): every step sits in the same grid cell, so the frame keeps the
    height of the tallest and nothing below moves; only the current one is shown. The tab underline is the signal line. */
 .flow-tabs { display: none; }
 .flow.is-stepper .flow-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: -8px -4px 22px; }
@@ -2091,7 +2144,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
   .dh-proto[data-cam] .dphone { scale: .5; }
 }
 .drv-stage .dh-proto ~ .seq-toggle { margin-top: 20px; }
-/* Two columns: the stage is 80% of the viewport tall; script.js sizes the device (--s) to the room the switch and caption rows leave */
+/* Two columns: the stage is 80% of the viewport tall; js/driverapp-proto.js sizes the device (--s) to the room the switch and caption rows leave */
 @media (min-width: 861px) {
   .drv-stage:has(.dh-proto) { height: 80svh; min-height: 560px; padding: 20px 24px 16px; grid-template-rows: auto minmax(0, 1fr) auto; }
 }
@@ -2231,9 +2284,11 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 
 
 /* ---------- Client App page (clientapp.html) ----------
-   Same build as driverapp.html: opener on the shared container-site photo, #screens tablist split, #status four-step flow, form.
+   Same build as driverapp.html: opener on the top-down Client App photo (ca-*: a hand holding the phone on the status screen), #screens tablist split, #status four-step flow, form.
    The animations are not built yet: .anim-ph marks each place one will play, at the size its device will take. */
-.ch .pf-hero-img { object-position: 62% 50%; }
+.ch .pf-hero-img { object-position: 64% 50%; }
+/* the WhatsApp line wraps at the lead's width, so the phone in the photo keeps clear of the copy column */
+.ch .pf-hero-copy .hero-proof { max-width: 30em; }
 
 .anim-ph {
   position: relative; display: grid; place-content: center; justify-items: center; gap: 10px; text-align: center;
@@ -2267,12 +2322,13 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .section-tint .form { background: var(--surface); }
 @media (max-width: 1080px) {
   .dh .pf-hero-img { object-position: 38% 50%; }
+  .dh.ch .pf-hero-img { object-position: 44% 50%; }
 }
 /* Narrow screens, DriverApp and Client App openers: like the main page, a portrait crop becomes the ground under the copy
-   (driver-m-*, site-m-*; see images/PROVENANCE.md). DriverApp: the crop's sky was extended upward, so the copy sits on
+   (driver-m-*, ca-m-*; see images/PROVENANCE.md). DriverApp: the crop's sky was extended upward, so the copy sits on
    plain sky and the driver stands below the store badges; it covers the opener, pinned to the bottom, and the padding
-   is the room his head-to-tablet needs (the lower 35% of the photo, which is 0.42 wide to 1 tall). Client App: a square crop on the container shelter,
-   pinned to the bottom at its own shape; its trees fade up under the actions and the shelter stays clear of the copy. */
+   is the room his head-to-tablet needs (the lower 35% of the photo, which is 0.42 wide to 1 tall). Client App: a square crop on the phone,
+   pinned to the bottom at its own shape; the map fades up under the actions and the status card stays clear of the copy. */
 @media (max-width: 860px) {
   .dh.pf-hero { align-items: flex-start; }
   .dh .pf-hero-img {
@@ -2304,7 +2360,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 
 /* ---------- Client App prototype (clientapp.html #screens) ----------
    The Client App Figma frames (Raccoon AI Mobile Apps) at 412 x 917 plus the 30px status bar, in the same bezel, scale and
-   design-system tokens (.rds) as the DriverApp phone. One story clock in script.js sets data-* states on .ca-proto
+   design-system tokens (.rds) as the DriverApp phone. One story clock in js/clientapp-proto.js sets data-* states on .ca-proto
    (data-scr, data-sheet, data-pg, data-st, data-rep...) and CSS draws each of them; every change is a transition, so seeking
    with transitions off lands on a clean frame. Coordinates in comments are Figma frame px. */
 .ca-proto { --s: .6845; --dw: 412px; --dh: 947px; --bz: 9px; position: relative; display: grid; justify-items: center; grid-column: 1 / -1; }
@@ -2396,7 +2452,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .ca-proto:not([data-fill]) .ca-zone { opacity: 0; clip-path: inset(0 0 100% 0); }
 .ca-proto:not([data-fill]) .ca-pin { opacity: 0; translate: 0 -28px; transition-delay: 0s; }
 .ca-proto[data-sheet="extra"][data-scr="create"] .ca-pin b { opacity: 0; }
-/* the truck: placed on the street by script.js each frame (translate + heading); 0deg faces east */
+/* the truck: placed on the street by js/clientapp-proto.js each frame (translate + heading); 0deg faces east */
 .ca-truck { position: absolute; left: 0; top: 0; width: 48px; height: 48px; transform-origin: 24px 24px; opacity: 0; transition: opacity .5s var(--ease); }
 .ca-truck img { position: relative; width: 51px; height: 48px; max-width: none; }
 .ca-truck::before { content: ""; position: absolute; left: 4px; top: 4px; width: 40px; height: 40px; border-radius: 50%; background: var(--status-completed-idle); opacity: 0; }
@@ -2641,7 +2697,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 
 /* ---------- Client App period report (clientapp.html #report) ----------
    The «История» frames (12995:22254, 19225:2345, 20151:17820) in the #screens phone (.ca-proto tokens, buttons, tab bar,
-   calendar), and the PDF report (19242:4294) beside it as a 1361 x 1926 page scaled by --ps. The story clock in script.js sets
+   calendar), and the PDF report (19242:4294) beside it as a 1361 x 1926 page scaled by --ps. The story clock in js/clientapp-report.js sets
    data-scr, data-scroll, data-pg, data-sel, data-per, data-calc, data-dl and data-doc on .cr-proto; CSS draws each state. */
 
 .cr-proto .dphone { position: relative; transition: translate .9s cubic-bezier(.65, 0, .35, 1), opacity .5s var(--ease), scale .6s var(--ease), filter .5s var(--ease); }
@@ -2778,7 +2834,7 @@ html[lang="kk"] { --font: "Medeo Sans", system-ui, sans-serif; }
 .cr-tabs button[aria-selected="true"] .drv-ic { background: var(--surface); box-shadow: none; }
 .cr-dbar { padding: 8px 10px; border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
 /* Two columns: phone and PDF share one cell. The phone starts centred (--cr-shift), then steps back to the stage's left edge as
-   the page slides out of it and settles on the right, over the phone's edge (sizes from script.js). */
+   the page slides out of it and settles on the right, over the phone's edge (sizes from js/clientapp-report.js). */
 @media (min-width: 861px) {
   .cr-proto { grid-template-columns: minmax(0, 1fr); align-items: center; }
   .cr-proto > .dphone, .cr-proto > .cr-doc { grid-area: 1 / 1; }
