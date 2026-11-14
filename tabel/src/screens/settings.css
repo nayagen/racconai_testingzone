@@ -139,3 +139,12 @@ a.st-text:hover { color: var(--text-action-hover); }
 
 /* при переносе длинной подписи не сжимать сам контрол */
 .st-wrap .rc-radio__dot, .st-wrap .rc-check__box, .st-wrap .rc-switch__track { flex-shrink: 0; }
+
+/* Типы исключений: таблице нужно ~1060px, поэтому до 1600px правая панель уходит под таблицу */
+@media (max-width: 1600px) {
+  .st-wrap:has(.st-ex) { overflow-y: auto; }
+  .st-wrap:has(.st-ex) .st-cols { flex: none; flex-direction: column; }
+  .st-wrap:has(.st-ex) :is(.st-main, .st-aside) { flex: none; overflow: visible; min-height: auto; }
+  .st-wrap:has(.st-ex) .st-aside { width: auto; flex-direction: row; flex-wrap: wrap; }
+  .st-wrap:has(.st-ex) .st-aside > * { flex: 1 1 320px; }
+}
