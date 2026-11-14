@@ -141,9 +141,7 @@
 .ex-sug__lbl { font-weight: 500; }
 
 /* действия — видны при наведении/фокусе, на тач-экранах всегда */
-.ex-actions { flex: 0 0 200px; display: flex; flex-direction: column; gap: var(--space-2); opacity: 0; transition: opacity .15s; }
-.ex-card:hover .ex-actions, .ex-card:focus-within .ex-actions { opacity: 1; }
-@media (hover: none) { .ex-actions { opacity: 1; } }
+.ex-actions { flex: 0 0 200px; display: flex; flex-direction: column; gap: var(--space-2); }
 .ex-open { text-decoration: none; }
 
 /* решение по исключению */

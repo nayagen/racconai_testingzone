@@ -178,7 +178,7 @@ function ExceptionCard({ it, href, checked, editing, reason, onToggleCheck, onAc
   return (
     <article className={'ex-card' + (checked ? ' is-checked' : '')} onClick={onClick}>
       <div className="ex-card__row">
-        <div className="ex-card__check"><DS.Checkbox key={checked ? 'on' : 'off'} checked={checked} /></div>
+        <div className="ex-card__check" data-cb-label={`Выбрать исключение: ${it.name}, ${it.date}`}><DS.Checkbox key={checked ? 'on' : 'off'} checked={checked} /></div>
         <div className="ex-card__main">
           <div className="ex-card__body">
             <div className="ex-card__head">

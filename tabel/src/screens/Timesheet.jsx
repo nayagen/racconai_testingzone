@@ -1,6 +1,6 @@
 /* Экран 1 «Табель за месяц» — handoff/screens/Main.dc.html. Регистрируется как window.TabelScreens.Timesheet. */
 (() => {
-const { useState, useMemo, useEffect } = React;
+const { useState, useMemo, useEffect, useRef, useLayoutEffect } = React;
 const DS = window.RaccoonDS;
 const D = window.TabelData;
 const { fmt1, dash, CheckToggle, SelectControl, useResizable, SectionTabs } = window.TabelUI;
@@ -141,78 +141,160 @@ function groupSums(rows) {
   };
 }
 
-// Подсветка столбца дня / итога при наведении: правила генерируются под число дней периода.
-function crosshairCss(nDays) {
-  const sel = [];
-  for (let i = 0; i < nDays; i++) {
-    sel.push(`.tt:has(.h-d${i}:hover) :is(.h-d${i}, .c-d${i})`, `.tt:has(.c-d${i}:hover) .h-d${i}`);
-  }
-  SUM_COLS.forEach((_, i) => sel.push(`.tt:has(.hs${i}:hover) :is(.hs${i}, .rs${i})`, `.tt:has(.rs${i}:hover) .hs${i}`));
-  return sel.join(',\n') + ' { background: var(--surface-secondary); }';
+// ---------- клавиатура и подсветка ----------
+// Сетка — один шаг Tab (roving tabindex): фокус стоит на одной ячейке, стрелки двигают его по дням и сотрудникам,
+// Home/End — к первому/последнему дню, Ctrl+Home/End — к первому/последнему сотруднику, Enter открывает день.
+// Подсветка столбца: одно правило в <style>, которое переписывается при наведении или фокусе (вместо правил на каждый день).
+const NAV_SEL = '[data-r][data-c]';
+const colRule = (col) => col ? `.tt [data-col="${col}"] { background: var(--surface-secondary); }` : '';
+
+function useGridNav(gridRef, colStyleRef, deps) {
+  const active = useRef({ r: 0, c: 0 });
+  const setCol = (col) => { if (colStyleRef.current && colStyleRef.current.dataset.col !== (col || '')) { colStyleRef.current.dataset.col = col || ''; colStyleRef.current.textContent = colRule(col); } };
+
+  // После каждой отрисовки ровно одна ячейка получает tabIndex=0.
+  useLayoutEffect(() => {
+    const g = gridRef.current; if (!g) return;
+    const { r, c } = active.current;
+    const el = g.querySelector(`[data-r="${r}"][data-c="${c}"]`) || g.querySelector(NAV_SEL);
+    if (el) { el.tabIndex = 0; active.current = { r: +el.dataset.r, c: +el.dataset.c }; }
+  });
+
+  const onFocus = (e) => {
+    const t = e.target.closest(NAV_SEL);
+    if (t) {
+      const g = gridRef.current;
+      g.querySelectorAll(NAV_SEL + '[tabindex="0"]').forEach((x) => { if (x !== t) x.tabIndex = -1; });
+      t.tabIndex = 0; active.current = { r: +t.dataset.r, c: +t.dataset.c };
+    }
+    const colEl = e.target.closest('[data-col]');
+    setCol(colEl && colEl.dataset.col);
+  };
+  const onKeyDown = (e) => {
+    const t = e.target.closest(NAV_SEL); if (!t) return;
+    let r = +t.dataset.r, c = +t.dataset.c;
+    const g = gridRef.current;
+    const rows = g.querySelectorAll('[data-r][data-c="0"]').length;
+    const cols = g.querySelectorAll('[data-r="' + r + '"][data-c]').length;
+    switch (e.key) {
+      case 'ArrowRight': c = Math.min(cols - 1, c + 1); break;
+      case 'ArrowLeft': c = Math.max(0, c - 1); break;
+      case 'ArrowDown': r = Math.min(rows - 1, r + 1); break;
+      case 'ArrowUp': r = Math.max(0, r - 1); break;
+      case 'Home': if (e.ctrlKey) r = 0; c = 0; break;
+      case 'End': if (e.ctrlKey) r = rows - 1; c = cols - 1; break;
+      case 'PageDown': r = Math.min(rows - 1, r + 10); break;
+      case 'PageUp': r = Math.max(0, r - 10); break;
+      default: return;
+    }
+    e.preventDefault();
+    const next = g.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+    if (next) { next.focus({ preventScroll: true }); next.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
+  };
+  const onPointerOver = (e) => { const colEl = e.target.closest('[data-col]'); setCol(colEl && colEl.dataset.col); };
+  const onPointerLeave = () => { if (!gridRef.current.contains(document.activeElement)) setCol(null); };
+  return { onFocus, onKeyDown, onPointerOver, onPointerLeave };
 }
 
-function DayCell({ c, row, day, metric }) {
+function DayCell({ c, row, day, metric, r, ci }) {
   const v = cellView(c, row, metric);
-  const cls = 'dc c-' + day.key + (day.monthStart ? ' is-month-start' : '');
+  const cls = 'dc' + (day.monthStart ? ' is-month-start' : '');
   const href = `#/day/${row.id}/${day.date}`;
+  const nav = { 'data-r': r, 'data-c': ci, tabIndex: -1 };
+  const date = `${day.n} ${day.w}`;
   if (v.kind === 'off') {
-    return <div className={cls}><div className="day-off"><span className={'pill ' + (v.none ? 'pill--none' : 'pill--' + v.text)}>{v.text}</span></div></div>;
+    const label = { 'В': 'выходной', 'Б': 'больничный', 'ОТ': 'отпуск', 'НН': 'неявка' }[v.text] || 'нет данных';
+    return (
+      <div className={cls} role="gridcell" data-col={day.key}>
+        <div className="day-off" {...nav} aria-label={`${row.name}, ${date}: ${label}`}>
+          <span className={'pill ' + (v.none ? 'pill--none' : 'pill--' + v.text)} aria-hidden="true">{v.text}</span>
+        </div>
+      </div>
+    );
   }
   if (v.kind === 'flag') {
     return (
-      <div className={cls}>
-        <a href={href} className="day-flag" aria-label={`${row.name}, ${day.n}: требует проверки`} title="Требует проверки — открыть день">
-          {v.text}<span className="bang" aria-hidden="true">!</span>{v.two && <span className="day-cell__mark">2см</span>}
+      <div className={cls} role="gridcell" data-col={day.key}>
+        <a href={href} {...nav} className="day-flag" aria-label={`${row.name}, ${date}: ${v.text}, требует проверки`} title="Требует проверки — открыть день">
+          {v.text}<span className="bang" aria-hidden="true">!</span>{v.two && <span className="day-cell__mark" aria-hidden="true">2см</span>}
         </a>
       </div>
     );
   }
   return (
-    <div className={cls}>
-      <a href={href} className={'day-cell' + (v.hot ? ' is-hot' : '') + (v.quiet ? ' is-quiet' : '') + (v.over ? ' is-over' : '')}
-        aria-label={`${row.name}, ${day.n}: ${v.text}`} title="Открыть карточку дня">
-        {v.text}{v.two && <span className="day-cell__mark">2см</span>}
+    <div className={cls} role="gridcell" data-col={day.key}>
+      <a href={href} {...nav} className={'day-cell' + (v.hot ? ' is-hot' : '') + (v.quiet ? ' is-quiet' : '') + (v.over ? ' is-over' : '')}
+        aria-label={`${row.name}, ${date}: ${v.text}${v.two ? ', две смены' : ''}`} title="Открыть карточку дня">
+        {v.text}{v.two && <span className="day-cell__mark" aria-hidden="true">2см</span>}
       </a>
     </div>
   );
 }
 
-function TimesheetGrid({ days, groups, metric, collapsed, onToggleGroup }) {
-  const [leftW, startLeft, resetLeft] = useResizable(LEFT_W, 200, 560, 1);
-  const [sumW, startSum, resetSum] = useResizable(SUM_W, 360, 1000, -1);
-  const css = useMemo(() => crosshairCss(days.length), [days.length]);
-
-  const sumCells = (vals, rowCls) => SUM_COLS.map((col, i) => (
-    <div key={col.key} className={(rowCls ? `rs${i} ` : '') + 's-' + col.key + (col.key === 'over' && rowCls ? (vals.over === dash ? ' is-calm' : ' is-hot') : '')}>{vals[col.key]}</div>
+function SumCells({ vals, isRow }) {
+  return SUM_COLS.map((col, i) => (
+    <div key={col.key} role="gridcell" data-col={'s' + i}
+      className={'s-' + col.key + (col.key === 'over' && isRow ? (vals.over === dash ? ' is-calm' : ' is-hot') : '')}>{vals[col.key]}</div>
   ));
+}
+
+// Строка сотрудника не перерисовывается при перетаскивании ширины колонок: ширины заданы CSS-переменными на контейнере.
+const PersonRow = React.memo(function PersonRow({ r, days, metric, flat, rIndex, ariaIndex }) {
+  return (
+    <div className="tt-r tt-row" role="row" aria-rowindex={ariaIndex}>
+      <div className="tt-left" role="rowheader">
+        <div className="tt-person" style={flat ? { paddingLeft: 'var(--space-3)' } : null}>
+          <span className="tt-person__name">{r.name}</span>
+          <span className="tt-person__id">таб. № {r.id}</span>
+        </div>
+        <div className="tt-person__role">{r.role}</div>
+      </div>
+      <div className="tt-days">
+        {r.cells.map((c, i) => <DayCell key={i} c={c} row={r} day={days[i]} metric={metric} r={rIndex} ci={i} />)}
+      </div>
+      <div className="tt-sum"><SumCells vals={rowSums(r)} isRow /></div>
+    </div>
+  );
+});
+
+function TimesheetGrid({ days, groups, metric, collapsed, onToggleGroup }) {
+  const [leftW, startLeft, resetLeft, keyLeft] = useResizable(LEFT_W, 200, 560, 1);
+  const [sumW, startSum, resetSum, keySum] = useResizable(SUM_W, 360, 1000, -1);
+  const gridRef = useRef(null), colStyleRef = useRef(null);
+  const nav = useGridNav(gridRef, colStyleRef);
+
+  let rIndex = 0, ariaIndex = 1;
+  const total = groups.reduce((a, g) => a + (g.label ? 1 : 0) + ((!collapsed[g.id] || !g.label) ? g.rows.length : 0), 1);
 
   return (
-    <div className="tt-scroll">
-      <style>{css}</style>
-      <div className="tt" role="table" aria-label="Табель: сотрудники по дням">
-        <div className="tt-r tt-head" role="row">
-          <div className="tt-left" style={{ width: leftW }}>
+    <div className="tt-scroll" style={{ '--tt-left-w': leftW + 'px', '--tt-sum-w': sumW + 'px' }}>
+      <style ref={colStyleRef} />
+      <div className="tt" role="grid" aria-label="Табель: сотрудники по дням" aria-rowcount={total} aria-colcount={days.length + SUM_COLS.length + 1}
+        ref={gridRef} onFocus={nav.onFocus} onKeyDown={nav.onKeyDown} onPointerOver={nav.onPointerOver} onPointerLeave={nav.onPointerLeave}>
+        <div className="tt-r tt-head" role="row" aria-rowindex={ariaIndex++}>
+          <div className="tt-left" role="columnheader">
             <div className="tt-head__name">Сотрудник</div>
-            <div className="tt-head__role">Роль</div>
-            <button type="button" className="resizer resizer--right" aria-label="Изменить ширину колонки сотрудников"
-              title="Потяните, чтобы изменить ширину. Двойной клик — по умолчанию" onPointerDown={startLeft} onDoubleClick={resetLeft}><span /></button>
+            <div className="tt-head__role" aria-hidden="true">Роль</div>
+            <button type="button" className="resizer resizer--right" aria-label="Ширина колонки сотрудников: стрелки влево и вправо, Home — по умолчанию"
+              title="Потяните или используйте стрелки. Двойной клик — по умолчанию" onPointerDown={startLeft} onDoubleClick={resetLeft} onKeyDown={keyLeft}><span /></button>
           </div>
           <div className="tt-days">
             {days.map((d) => (
-              <div key={d.key} className={`day-h h-${d.key}` + (d.weekend ? ' is-weekend' : '') + (d.monthStart ? ' is-month-start' : '')}>
-                <span className="day-h__n">{d.n}</span><span className="day-h__w">{d.w}</span>
+              <div key={d.key} role="columnheader" data-col={d.key} aria-label={`${d.n}, ${d.weekday}${d.weekend ? ', выходной' : ''}`}
+                className={'day-h' + (d.weekend ? ' is-weekend' : '') + (d.monthStart ? ' is-month-start' : '')}>
+                <span className="day-h__n" aria-hidden="true">{d.n}</span><span className="day-h__w" aria-hidden="true">{d.w}</span>
               </div>
             ))}
           </div>
-          <div className="tt-sum" style={{ width: sumW }}>
-            <button type="button" className="resizer resizer--left" aria-label="Изменить ширину блока итогов"
-              title="Потяните, чтобы изменить ширину. Двойной клик — по умолчанию" onPointerDown={startSum} onDoubleClick={resetSum}><span /></button>
-            {SUM_COLS.map((c, i) => <div key={c.key} className={'hs' + i}>{c.title}</div>)}
+          <div className="tt-sum">
+            <button type="button" className="resizer resizer--left" aria-label="Ширина блока итогов: стрелки влево и вправо, Home — по умолчанию"
+              title="Потяните или используйте стрелки. Двойной клик — по умолчанию" onPointerDown={startSum} onDoubleClick={resetSum} onKeyDown={keySum}><span /></button>
+            {SUM_COLS.map((c, i) => <div key={c.key} role="columnheader" data-col={'s' + i}>{c.title}</div>)}
           </div>
         </div>
 
         {groups.length === 0 && (
-          <div className="empty-row"><DS.EmptyState icon="search" title="Никого не нашли" text="Измените фильтры или строку поиска." /></div>
+          <div className="empty-row" role="row"><div role="gridcell"><DS.EmptyState icon="search" title="Никого не нашли" text="Измените фильтры или строку поиска." /></div></div>
         )}
 
         {groups.map((g) => {
@@ -220,32 +302,20 @@ function TimesheetGrid({ days, groups, metric, collapsed, onToggleGroup }) {
           return (
             <React.Fragment key={g.id}>
               {g.label && (
-                <div className="tt-r tt-group" role="row">
-                  <div className="tt-left" style={{ width: leftW }}>
+                <div className="tt-r tt-group" role="row" aria-rowindex={ariaIndex++}>
+                  <div className="tt-left" role="rowheader">
                     <button type="button" className="tt-group__btn" aria-expanded={open} onClick={() => onToggleGroup(g.id)}>
                       <DS.Icon name={open ? 'chevron-down' : 'chevron-right'} size={20} color="var(--icons-default)" />
                       <span className="tt-group__name">{g.label}</span>
                       <span className="tt-group__count"><DS.CounterBadge count={g.countLabel} tone="neutral" /></span>
                     </button>
                   </div>
-                  <div className="tt-days">{days.map((d) => <div key={d.key} />)}</div>
-                  <div className="tt-sum" style={{ width: sumW }}>{sumCells(groupSums(g.rows), false)}</div>
+                  <div className="tt-days" aria-hidden="true">{days.map((d) => <div key={d.key} />)}</div>
+                  <div className="tt-sum"><SumCells vals={groupSums(g.rows)} /></div>
                 </div>
               )}
               {(open || !g.label) && g.rows.map((r) => (
-                <div key={r.id} className="tt-r tt-row" role="row">
-                  <div className="tt-left" style={{ width: leftW }}>
-                    <div className="tt-person" style={g.label ? null : { paddingLeft: 'var(--space-3)' }}>
-                      <span className="tt-person__name">{r.name}</span>
-                      <span className="tt-person__id">таб. № {r.id}</span>
-                    </div>
-                    <div className="tt-person__role">{r.role}</div>
-                  </div>
-                  <div className="tt-days">
-                    {r.cells.map((c, i) => <DayCell key={i} c={c} row={r} day={days[i]} metric={metric} />)}
-                  </div>
-                  <div className="tt-sum" style={{ width: sumW }}>{sumCells(rowSums(r), true)}</div>
-                </div>
+                <PersonRow key={r.id} r={r} days={days} metric={metric} flat={!g.label} rIndex={rIndex++} ariaIndex={ariaIndex++} />
               ))}
             </React.Fragment>
           );

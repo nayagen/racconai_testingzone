@@ -88,7 +88,7 @@
   display: inline-flex; gap: var(--space-1); height: 28px; align-items: center; padding: 0 var(--space-2);
   border-radius: var(--radius-sm); background: var(--surface-tertiary); font: var(--text-caption-m-regular); white-space: nowrap;
 }
-.dd-chip__k { color: var(--text-secondary); }
+.dd-chip__k { color: var(--text-body); } /* на surface-tertiary text-secondary даёт 3,9:1 */
 .dd-chip__v { font-weight: 600; }
 .dd-chip--ok { background: var(--surface-success-subtle); color: var(--text-success); }
 .dd-chip--late { background: var(--surface-warning-subtle); color: var(--text-warning); font: var(--text-caption-m-bold); }

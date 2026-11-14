@@ -10,7 +10,16 @@
 python3 -m http.server 8000
 ```
 
-Открыть http://localhost:8000/tabel/. Сборки нет: правишь файл → обновляешь страницу.
+Открыть http://localhost:8000/tabel/. Для разработки сборки нет: правишь файл → обновляешь страницу.
+
+Для показа (без Babel в браузере, React в продакшен-сборке, только используемые иконки DS):
+
+```bash
+npm i --no-save --no-package-lock esbuild@0.24.2
+node tabel/tools/build.mjs
+```
+
+Результат — `tabel/dist/` (в git не попадает), открывать http://localhost:8000/tabel/dist/.
 
 ## Что где
 
@@ -20,6 +29,7 @@ python3 -m http.server 8000
 | `src/shared.jsx` | Общие компоненты и утилиты (`window.TabelUI`): шапка разделов `SectionTabs`, `CheckToggle`, `SelectControl`, `useResizable` |
 | `src/screens/*.jsx` | Экраны, каждый регистрируется в `window.TabelScreens`: `Timesheet`, `Exceptions`, `Feed`, `Settings` (правила + типы исключений), `DayDetail` (день с исключением + штатный день) |
 | `src/screens/*.css` | Стили экранов; у каждого свой префикс классов (`ex-`, `fd-`, `st-`, `dd-`) |
+| `tools/build.mjs` | Сборка для показа в `dist/` |
 | `src/main.jsx` | Каркас (SideNav) и роутинг по `#/…` — список маршрутов в шапке файла |
 | `src/data.js` | Моковые данные табеля и логика периода (`window.TabelData`). Заменяется на API |
 | `src/tabel.css` | Общие стили поверх DS, только на токенах |
@@ -27,6 +37,10 @@ python3 -m http.server 8000
 | `handoff/` | Пакет от дизайна: `SPEC.md` (продуктовая спецификация), `screens/*.dc.html` (макеты 7 экранов), `README.md` (как читать макеты) |
 
 ## Правила
+
+- Доступность общая для всех экранов, держится в `shared.jsx`: любое окно с `role="dialog"` само получает фокус при открытии, удерживает Tab и возвращает фокус при закрытии; скрытые input внутри кнопок не получают фокус; чекбоксу DS без подписи имя даёт `data-cb-label` на обёртке. Новые окна просто размечайте `role="dialog"` + `aria-modal="true"`.
+- Сетка табеля — `role="grid"` с одним шагом Tab: стрелки, Home/End, Ctrl+Home/End, PageUp/PageDown, Enter открывает день. Навигационные ячейки помечены `data-r`/`data-c`, подсветка столбца — `data-col`.
+- Смысловые цвета текста (warning, attention, error, success, information) в `tabel.css` переопределены на более тёмную ступень палитры DS: исходные не проходят контраст 4,5:1 на своих подложках. Это стоит перенести в саму дизайн-систему.
 
 - Компоненты — из `window.RaccoonDS` (`DS.Button`, `DS.SegmentedTabs`, `DS.SideNav`, `DS.Icon` …). Перед использованием сверяй пропсы с `ds/components/index.d.ts`. Своих аналогов не делать.
 - Цвета, отступы, радиусы, шрифты — только токены: `var(--surface-*)`, `var(--text-*)`, `var(--border-*)`, `var(--icons-*)`, `var(--space-*)`, `var(--radius-*)`, `font: var(--text-body-m-regular)` и т. п. Хардкод hex/px-отступов не допускается (исключение — геометрия сетки: ширина дня, высота строки, заданные переменными в начале `tabel.css`).

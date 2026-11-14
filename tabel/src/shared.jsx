@@ -81,31 +81,49 @@ function SelectControl({ label, value, onChange, options, className }) {
 // Перетаскивание ширины колонки. dir = +1 тянем вправо (левая колонка), −1 тянем влево (итоги).
 function useResizable(initial, min, max, dir) {
   const [w, setW] = useState(initial);
+  const clamp = (v) => Math.max(min, Math.min(max, v));
+  // Перетаскивание мышью или пальцем; жест снимается и при отмене указателя, и при потере окна фокуса.
   const start = useCallback((e) => {
     e.preventDefault();
     const x0 = e.clientX, w0 = w;
-    const move = (ev) => setW(Math.max(min, Math.min(max, w0 + dir * (ev.clientX - x0))));
-    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+    const move = (ev) => setW(clamp(w0 + dir * (ev.clientX - x0)));
+    const stop = () => {
+      window.removeEventListener('pointermove', move);
+      ['pointerup', 'pointercancel', 'blur'].forEach((t) => window.removeEventListener(t, stop));
+    };
     window.addEventListener('pointermove', move);
-    window.addEventListener('pointerup', up);
+    ['pointerup', 'pointercancel', 'blur'].forEach((t) => window.addEventListener(t, stop));
   }, [w, min, max, dir]);
-  return [w, start, () => setW(initial)];
+  // С клавиатуры: стрелки меняют ширину на 16 px, Shift — на 64, Home — по умолчанию.
+  const onKeyDown = useCallback((e) => {
+    const step = e.shiftKey ? 64 : 16;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      const sign = (e.key === 'ArrowRight' ? 1 : -1) * dir;
+      setW((v) => clamp(v + sign * step));
+    } else if (e.key === 'Home') { e.preventDefault(); setW(initial); }
+  }, [min, max, dir, initial]);
+  return [w, start, () => setW(initial), onKeyDown];
 }
 
 // Шапка раздела: вкладки «Табель / Исключения / Лента отметок / Настройки» + действия справа.
 // active — route раздела ('' | 'exceptions' | 'feed' | 'settings'); null — ни одна вкладка не выбрана.
-function SectionTabs({ active, flagCount, children }) {
+const SECTION_TITLES = { '': 'Табель за месяц', exceptions: 'Очередь исключений', feed: 'Лента отметок', settings: 'Настройки табеля' };
+
+function SectionTabs({ active, flagCount, title, children }) {
+  const h1 = title || SECTION_TITLES[active];
   return (
     <div className="topbar">
-      <div role="tablist" aria-label="Разделы табеля" className="rc-tabs rc-tabs--medium" style={{ flexWrap: 'wrap' }}>
+      {h1 && <h1 className="sr-only">{h1}</h1>}
+      <nav aria-label="Разделы табеля" className="rc-tabs rc-tabs--medium">
         {SECTIONS.map((s) => (
-          <a key={s.route} href={'#/' + s.route} role="tab" aria-selected={active === s.route} className={'rc-tab' + (active === s.route ? ' is-selected' : '')}>
+          <a key={s.route} href={'#/' + s.route} aria-current={active === s.route ? 'page' : undefined} className={'rc-tab' + (active === s.route ? ' is-selected' : '')}>
             {s.icon && <DS.Icon name={s.icon} size={16} color="currentColor" />}
             {s.label}
             {s.count && flagCount != null && <span className="rc-navcount">{flagCount}</span>}
           </a>
         ))}
-      </div>
+      </nav>
       {children && <div className="topbar__actions">{children}</div>}
     </div>
   );
@@ -122,6 +140,52 @@ function StubScreen({ title, screen }) {
       </div>
     </div>
   );
+}
+
+// ---------- доступность: окна и вложенные чекбоксы ----------
+// Ставится один раз и работает для всех экранов, без правок в каждом окне:
+// 1) скрытый input чекбокса/радио дизайн-системы внутри кнопки не получает фокус (иначе две остановки Tab, вторая невидима);
+// 2) любое [role=dialog]: при открытии фокус уходит внутрь, Tab не выходит за окно, при закрытии фокус возвращается туда, откуда открыли.
+const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]):not([tabindex="-1"]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+const visible = (el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+const dialogs = []; // стек открытых окон: { el, returnTo }
+
+function syncDialogs() {
+  document.querySelectorAll('button input, [role="button"] input').forEach((i) => { if (i.tabIndex !== -1) i.tabIndex = -1; });
+  // Чекбокс DS без подписи: имя берём из data-cb-label обёртки.
+  document.querySelectorAll('[data-cb-label] input').forEach((i) => { const l = i.closest('[data-cb-label]').dataset.cbLabel; if (i.getAttribute('aria-label') !== l) i.setAttribute('aria-label', l); });
+  for (let k = dialogs.length - 1; k >= 0; k--) {
+    if (!document.contains(dialogs[k].el)) {
+      const { returnTo } = dialogs.splice(k, 1)[0];
+      if (returnTo && document.contains(returnTo) && (!document.activeElement || document.activeElement === document.body || !document.contains(document.activeElement))) returnTo.focus();
+    }
+  }
+  document.querySelectorAll('[role="dialog"]').forEach((el) => {
+    if (dialogs.some((d) => d.el === el)) return;
+    dialogs.push({ el, returnTo: document.activeElement });
+    if (!el.contains(document.activeElement)) {
+      const first = [...el.querySelectorAll(FOCUSABLE)].find(visible);
+      (first || el).focus();
+      if (!first) el.tabIndex = -1;
+    }
+  });
+}
+
+function trapTab(e) {
+  if (e.key !== 'Tab' || !dialogs.length) return;
+  const el = dialogs[dialogs.length - 1].el;
+  const items = [...el.querySelectorAll(FOCUSABLE)].filter(visible);
+  if (!items.length) { e.preventDefault(); return; }
+  const first = items[0], last = items[items.length - 1];
+  if (!el.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+  else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+
+if (!window.__tabelA11y) {
+  window.__tabelA11y = true;
+  new MutationObserver(syncDialogs).observe(document.documentElement, { childList: true, subtree: true });
+  document.addEventListener('keydown', trapTab, true);
 }
 
 const go = (route) => { window.location.hash = '#/' + route; };

@@ -3,6 +3,16 @@
    Своих цветов, отступов и размеров шрифта здесь нет; числа — только геометрия сетки (ширина дня, высоты строк). */
 
 :root {
+  /* Контраст смысловых цветов (аудит, WCAG 1.4.3). В DS text-warning, text-attention, text-error и text-success на своих
+     тонированных подложках дают от 2,7:1 до 3,9:1. Берём следующую ступень той же палитры DS — она проходит 4,5:1
+     и на подложке, и на белом. Правку стоит перенести в сам токен дизайн-системы. */
+  --text-warning: var(--surface-warning-strong);    /* #ca3500: 4,6:1 на warning-subtle, 5,2:1 на белом */
+  --text-attention: var(--surface-attention-strong); /* #a65f00: 4,6:1 на attention-subtle, 4,9:1 на белом */
+  --icons-attention: var(--surface-attention-strong);
+  --text-error: var(--surface-error-strong);         /* #c10007: 5,3:1 на error-subtle (было 3,9:1) */
+  --text-information: var(--surface-information-strong); /* #1447e6: 5,6:1 на information-subtle (было 4,3:1) */
+  --text-selected: var(--surface-information-strong);    /* выбранный пункт меню и вкладка на surface-selected */
+  --text-success: var(--surface-success-hover);      /* #016630: 6,5:1 на success-subtle (было 3,1:1) */
   --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --tt-day-w: 50px;       /* ширина колонки дня */
   --tt-row-h: 48px;       /* минимальная высота строки сотрудника */
@@ -19,6 +29,8 @@ body {
   font-feature-settings: "tnum" 1, "cv11" 1;
 }
 h1, h2, h3 { margin: 0; color: var(--text-headings); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+::selection { background: var(--surface-action-2); color: var(--text-headings); }
 a { color: var(--text-action); }
 a:hover { color: var(--text-action-hover); }
 button { font: inherit; }
@@ -119,13 +131,17 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
 .period-status {
   display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); align-items: center;
   padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg);
-  background: var(--surface-attention-subtle); color: var(--text-attention); font: var(--text-body-m-regular);
+  background: var(--surface-attention-subtle); color: var(--text-attention); font: var(--text-paragraph-m-regular);
 }
 .period-status__title { font: var(--text-body-m-semibold); }
 .period-status.is-closed { background: var(--surface-secondary); color: var(--text-body); }
 .link-strong { font: var(--text-body-m-semibold); text-decoration: none; color: var(--text-action); }
 
 .toolbar { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+/* переключатель метрик: на узком экране прокручивается внутри своей строки, страница вбок не уезжает */
+.toolbar .rc-seg { max-width: 100%; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.toolbar .rc-seg::-webkit-scrollbar { display: none; }
+.toolbar .rc-seg__item { flex: none; }
 .toolbar__right { display: flex; gap: var(--space-2); margin-left: auto; }
 
 /* ---------- сетка табеля ---------- */
@@ -140,11 +156,13 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
   font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary); background: var(--surface-primary);
 }
 .tt-left {
+  width: var(--tt-left-w, 294px);
   position: sticky; left: 0; z-index: 2; flex-shrink: 0; align-self: stretch;
   display: flex; align-items: center; border-right: 1px solid var(--border-primary); background: var(--surface-primary);
 }
 .tt-days { flex: 1 0 auto; display: flex; align-items: stretch; }
 .tt-sum {
+  width: var(--tt-sum-w, 560px);
   position: sticky; right: 0; z-index: 2; flex-shrink: 0; align-self: stretch;
   display: flex; align-items: stretch; border-left: 2px solid var(--border-primary); background: var(--surface-primary);
 }
@@ -224,6 +242,7 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
 }
 .day-flag .bang { position: absolute; top: -7px; right: -5px; }
 
+.tt [data-r]:focus-visible { outline: 2px solid var(--border-action); outline-offset: -2px; border-radius: var(--radius-md); }
 .day-off { height: var(--tt-cell-h); display: flex; align-items: center; justify-content: center; }
 .pill {
   min-width: 28px; height: 24px; padding: 0 var(--space-1); display: inline-flex; align-items: center; justify-content: center;
@@ -239,6 +258,7 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
 .tt-row:has(.tt-left:hover) :is(.tt-left, .dc, .tt-sum),
 .tt-row:has(.tt-days:hover) .tt-left,
 .tt-row:has(.tt-sum:hover) .tt-left,
+.tt-row:has([data-r]:focus-visible) .tt-left,
 .tt-row .tt-sum > div:hover { background: var(--surface-secondary); }
 
 .empty-row { padding: var(--space-8) var(--space-6); }
