@@ -15,7 +15,7 @@ if (!src || !out) { console.error("usage: build.mjs <src> <out>"); process.exit(
 const esbuild = createRequire(path.join(process.cwd(), "/"))("esbuild");
 
 // What the site serves: the pages and the folders they load from. Everything else (tools, docs, agent folders) stays out.
-const PAGES = ["index.html", "driverapp.html", "clientapp.html", "favicon.svg"];
+const PAGES = ["index.html", "driverapp.html", "clientapp.html", "tabel.html", "favicon.svg"];
 const ROOT_ASSETS = /\.(css|js)$/; // style.css, platform.css, platform-ds.css, platform-fleet.js
 const DIRS = ["js", "i18n", "images", "fonts", "vendor"];
 

@@ -1,7 +1,7 @@
 # Site build
 
 GitHub Pages publishes the site through `.github/workflows/pages.yml` on every push to `main`. The workflow runs
-`build.mjs`, which copies what the pages load (the three `.html` pages, `favicon.svg`, the root `.css` and `.js` files and
+`build.mjs`, which copies what the pages load (the `.html` pages, `favicon.svg`, the root `.css` and `.js` files and
 `js/`, `i18n/`, `images/`, `fonts/`, `vendor/`) into `_site/` and minifies it there. Tools, docs and agent folders are not published.
 
 - **JS:** full esbuild minification. No bundling, and top-level names are kept, so the shared globals still work.
