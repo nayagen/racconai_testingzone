@@ -4,7 +4,7 @@
 
 ## Запуск
 
-Страница грузит `src/app.jsx` через Babel в браузере, поэтому с `file://` не откроется — нужен любой локальный сервер из корня репозитория:
+Страница грузит `src/*.jsx` через Babel в браузере, поэтому с `file://` не откроется — нужен любой локальный сервер из корня репозитория:
 
 ```bash
 python3 -m http.server 8000
@@ -17,9 +17,12 @@ python3 -m http.server 8000
 | Путь | Что это |
 |---|---|
 | `index.html` | Точка входа: шрифт Inter, токены, бандл DS, React 18.3.1 и Babel с cdnjs |
-| `src/app.jsx` | Экран «Табель за месяц» и каркас (SideNav, вкладки разделов, роутинг по `#/…`) |
-| `src/data.js` | Моковые данные и логика периода (`window.TabelData`). Заменяется на API |
-| `src/tabel.css` | Стили экрана поверх DS, только на токенах |
+| `src/shared.jsx` | Общие компоненты и утилиты (`window.TabelUI`): шапка разделов `SectionTabs`, `CheckToggle`, `SelectControl`, `useResizable` |
+| `src/screens/*.jsx` | Экраны, каждый регистрируется в `window.TabelScreens`: `Timesheet`, `Exceptions`, `Feed`, `Settings` (правила + типы исключений), `DayDetail` (день с исключением + штатный день) |
+| `src/screens/*.css` | Стили экранов; у каждого свой префикс классов (`ex-`, `fd-`, `st-`, `dd-`) |
+| `src/main.jsx` | Каркас (SideNav) и роутинг по `#/…` — список маршрутов в шапке файла |
+| `src/data.js` | Моковые данные табеля и логика периода (`window.TabelData`). Заменяется на API |
+| `src/tabel.css` | Общие стили поверх DS, только на токенах |
 | `ds/` | RaccoonAI Design System for Claude, версия `1793218213-9641`: `tokens.css`, `components/bundle.{js,css}`, пропсы в `components/index.d.ts` |
 | `handoff/` | Пакет от дизайна: `SPEC.md` (продуктовая спецификация), `screens/*.dc.html` (макеты 7 экранов), `README.md` (как читать макеты) |
 
@@ -27,20 +30,24 @@ python3 -m http.server 8000
 
 - Компоненты — из `window.RaccoonDS` (`DS.Button`, `DS.SegmentedTabs`, `DS.SideNav`, `DS.Icon` …). Перед использованием сверяй пропсы с `ds/components/index.d.ts`. Своих аналогов не делать.
 - Цвета, отступы, радиусы, шрифты — только токены: `var(--surface-*)`, `var(--text-*)`, `var(--border-*)`, `var(--icons-*)`, `var(--space-*)`, `var(--radius-*)`, `font: var(--text-body-m-regular)` и т. п. Хардкод hex/px-отступов не допускается (исключение — геометрия сетки: ширина дня, высота строки, заданные переменными в начале `tabel.css`).
-- `DS.Checkbox`, `DS.Radio`, `DS.Switch` в бандле неуправляемые (`defaultChecked`). Для управляемого чекбокса — `CheckToggle` из `app.jsx`; для радио — `onChange` на обёртке-`fieldset` (см. `ExportModal`).
-- `DS.Modal` не принимает `onClose`, поэтому модалки собираются из классов `rc-modal__*` вручную (см. `ExportModal`).
+- `DS.Checkbox`, `DS.Radio`, `DS.Switch` в бандле неуправляемые (`defaultChecked`). Для управляемого чекбокса — `CheckToggle` из `shared.jsx`; для радио — `onChange` на обёртке-`fieldset` (см. `ExportModal` в `screens/Timesheet.jsx`).
+- `DS.Modal` не принимает `onClose`, поэтому модалки собираются из классов `rc-modal__*` вручную (см. `ExportModal` в `screens/Timesheet.jsx`).
 - Тексты интерфейса — на русском, как в макетах. Значения в табеле — с запятой (`12,0`).
 - Макет экрана — источник правды: структура в `<x-dc>`, данные и логика — в `<script data-dc-script>` внизу `.dc.html`. `{{x}}` — значение из `renderVals()`, `<sc-for>` — цикл, `<sc-if>` — условие, `<x-import component-from-global-scope="RaccoonDS.X">` — компонент DS.
 
-## Готово / дальше
+## Как устроен экран
 
-Сделано: экран 1 «Табель за месяц» (`handoff/screens/Main.dc.html`) — период с шаблонами, фильтры, поиск, группировка, метрики, сетка с закреплёнными колонками и подсветкой строки/столбца, ресайз колонок, сворачивание групп, модалка выгрузки.
+Каждый `src/screens/X.jsx` обёрнут в `(() => { … })();` (Babel исполняет скрипты в общем глобальном пространстве), берёт помощники из `window.TabelUI` и регистрирует компонент: `window.TabelScreens.X = XScreen`. Экран получает пропсы `{ data, period, setPeriod, flagCount, route, day }` и сам рисует шапку раздела `<SectionTabs active="…">`. Новый файл экрана — подключить в `index.html` между `shared.jsx` и `main.jsx`, маршрут — в `resolve()` в `main.jsx`.
 
-Дальше по порядку из `handoff/README.md` (сейчас на их месте заглушка `StubScreen`):
+## Экраны
 
-1. Карточка дня — `#/day/<таб.№>/<дата>` → `DayDetail.dc.html` (с исключением) и `DayDetailNormal.dc.html` (штатный день).
-2. Очередь исключений — `#/exceptions` → `Exceptions.dc.html`.
-3. Лента отметок — `#/feed` → `Feed.dc.html`.
-4. Настройки — `#/settings` → `SettingsRules.dc.html`, `SettingsExceptions.dc.html`.
+| Маршрут | Экран | Макет |
+|---|---|---|
+| `#/` | Табель за месяц | `Main.dc.html` |
+| `#/exceptions` | Очередь исключений | `Exceptions.dc.html` |
+| `#/feed` | Лента отметок | `Feed.dc.html` |
+| `#/settings` | Настройки: правила и пороги | `SettingsRules.dc.html` |
+| `#/settings/exceptions` | Настройки: типы исключений | `SettingsExceptions.dc.html` |
+| `#/day/<таб.№>/<дата>` | Карточка дня (с исключением / штатная) | `DayDetail.dc.html`, `DayDetailNormal.dc.html` |
 
-Когда экранов станет больше, вынести каждый в `src/screens/<Name>.jsx` и подключить отдельным `<script type="text/babel">` в `index.html` (порядок важен: общие компоненты раньше экранов, `App` последним).
+Все данные — моки из макетов. Дальше: подключение к API по разделу «Эндпоинты» в `handoff/SPEC.md`.
