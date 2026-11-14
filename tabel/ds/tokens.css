@@ -1,0 +1,477 @@
+/* RaccoonAI — generated from tokens.json */
+:root, [data-theme="light"] {
+  --text-headings: #080a11; /* Заголовки экранов, модалок, карточек. */
+  --text-body: #242a35; /* Основной текст интерфейса на Surface/Primary и Surface/Page когда размер текста не больше 40px */
+  --text-secondary: #667489; /* Вторичный текст: подписи атрибутов, метаданные, даты, плейсхолдеры, заголовки колонок. */
+  --text-action: #155dfc; /* Ссылки и кликабельный текст (Link button, связанные сущности). */
+  --text-action-hover: #1447e6; /* Ховер ссылки. */
+  --text-action-2: #155dfc; /* Текст Secondary-кнопки. */
+  --text-action-2-hover: #1447e6; /* Ховер текста Secondary-кнопки. */
+  --text-disabled: #94a3b8; /* Неактивный текст, прошедшие даты в календаре. Текст неактивных кнопок */
+  --text-information-subtle: #2b7fff; /* Вторичный смысловой текст «информация» — только на нейтральном фоне, не на тонированном. */
+  --text-information: #155dfc; /* Смысловой текст «информация» — на карточках, странице и surface-information-subtle. */
+  --text-warning-subtle: #ff6900; /* Вторичный смысловой текст «предупреждение» — только на нейтральном фоне, не на тонированном. */
+  --text-warning: #f54900; /* Смысловой текст «предупреждение» — на карточках, странице и surface-warning-subtle. */
+  --text-attention-subtle: #f0b100; /* Вторичный смысловой текст «требует внимания» — только на нейтральном фоне, не на тонированном. */
+  --text-attention: #d08700; /* Смысловой текст «требует внимания» — на карточках, странице и surface-attention-subtle. */
+  --text-success-subtle: #00c950; /* Вторичный смысловой текст «успех» — только на нейтральном фоне, не на тонированном. */
+  --text-success: #00a63e; /* Смысловой текст «успех» — на карточках, странице и surface-success-subtle. */
+  --text-error-subtle: #fb2c36; /* Вторичный смысловой текст «ошибка» — только на нейтральном фоне, не на тонированном. */
+  --text-error: #e7000b; /* Смысловой текст «ошибка» — на карточках, странице и surface-error-subtle. */
+  --text-ai-subtle: #8e51ff; /* Вторичный смысловой текст «AI» — только на нейтральном фоне, не на тонированном. */
+  --text-ai: #7f22fe; /* Смысловой текст «AI» — на карточках, странице и surface-ai-subtle. */
+  --text-on-action: #ffffff; /* Текст на surface-action и других насыщенных заливках (кнопки, статус-бейджи). */
+  --text-invert: #ffffff; /* Текст на surface-invert (тёмные бейджи, тултипы). */
+  --text-selected: #155dfc; /* Текст выбранного элемента на surface-selected (вкладка, пункт меню). */
+  --icons-default: #151a24; /* Иконки по умолчанию. */
+  --icons-secondary: #667489; /* Второстепенные иконки. */
+  --icons-action: #155dfc; /* Кликабельные иконки; иконка выбранного сегмента. */
+  --icons-action-hover: #1447e6; /* Ховер кликабельной иконки. */
+  --icons-action-2: #155dfc; /* Иконка в Secondary-кнопке. */
+  --icons-action-2-hover: #1447e6; /* Ховер иконки в Secondary-кнопке. */
+  --icons-disabled: #94a3b8; /* Неактивные иконки. */
+  --icons-information: #155dfc; /* Смысловая иконка «информация» — на карточках, странице и surface-information-subtle. */
+  --icons-warning: #f54900; /* Смысловая иконка «предупреждение» — на карточках, странице и surface-warning-subtle. */
+  --icons-attention: #d08700; /* Смысловая иконка «требует внимания» — на карточках, странице и surface-attention-subtle. */
+  --icons-success: #00a63e; /* Смысловая иконка «успех» — на карточках, странице и surface-success-subtle. */
+  --icons-error: #e7000b; /* Смысловая иконка «ошибка» — на карточках, странице и surface-error-subtle. */
+  --icons-ai: #7f22fe; /* Смысловая иконка «AI» — на карточках, странице и surface-ai-subtle. */
+  --icons-on-action: #ffffff; /* Иконки на surface-action и насыщенных заливках. */
+  --icons-invert: #ffffff; /* Иконка на сплошной цветной заливке; пара к text-invert. */
+  --surface-page: #f1f5f9; /* Фон страницы/экрана. На нём лежат контейнеры surface-primary. */
+  --surface-primary: #ffffff; /* Контейнеры: панели, таблицы, карточки, модалки, таб-бар. */
+  --surface-secondary: #f1f5f9; /* Вложенные блоки внутри контейнера, ховер строк, KPI-плашки, заголовки групп. */
+  --surface-tertiary: #e2e8f0; /* Чипы, плашки вложений, фон сегментированного переключателя. */
+  --surface-action: #155dfc; /* Primary-кнопка, выбранный сегмент, номер точки маршрута, таймер. */
+  --surface-action-hover: #1447e6; /* Ховер Primary-кнопки. */
+  --surface-action-2: #dbeafe; /* Фон Secondary-кнопки. */
+  --surface-action-2-hover: #bedbff; /* Ховер Secondary-кнопки. */
+  --surface-disabled: #e2e8f0; /* Только неактивные контролы и read-only поля. */
+  --surface-information-subtle: #dbeafe; /* Тонированный фон «информация»: бейджи, баннеры, плашки. Пара: text-information, icons-information, border-information-subtle. */
+  --surface-information: #2b7fff; /* Индикатор «информация» без текста: точки, прогресс, переключатель; заливка Accent/Destructive-кнопки в покое. */
+  --surface-information-strong: #1447e6; /* Сплошной фон «информация» под белый текст (text-on-action); ховер Accent- и Destructive-кнопок. */
+  --surface-information-hover: #193cb8; /* Ховер surface-information-strong. */
+  --surface-warning-subtle: #ffedd4; /* Тонированный фон «предупреждение»: бейджи, баннеры, плашки. Пара: text-warning, icons-warning, border-warning-subtle. */
+  --surface-warning: #ff6900; /* Индикатор «предупреждение» без текста: точки, прогресс, переключатель; заливка Accent/Destructive-кнопки в покое. */
+  --surface-warning-strong: #ca3500; /* Сплошной фон «предупреждение» под белый текст (text-on-action); ховер Accent- и Destructive-кнопок. */
+  --surface-warning-hover: #9f2d00; /* Ховер surface-warning-strong. */
+  --surface-attention-subtle: #fef9c2; /* Тонированный фон «требует внимания»: бейджи, баннеры, плашки. Пара: text-attention, icons-attention, border-attention-subtle. */
+  --surface-attention: #f0b100; /* Индикатор «требует внимания» без текста: точки, прогресс, переключатель; заливка Accent/Destructive-кнопки в покое. */
+  --surface-attention-strong: #a65f00; /* Сплошной фон «требует внимания» под белый текст (text-on-action); ховер Accent- и Destructive-кнопок. */
+  --surface-attention-hover: #894b00; /* Ховер surface-attention-strong. */
+  --surface-success-subtle: #dcfce7; /* Тонированный фон «успех»: бейджи, баннеры, плашки. Пара: text-success, icons-success, border-success-subtle. */
+  --surface-success: #00c950; /* Индикатор «успех» без текста: точки, прогресс, переключатель; заливка Accent/Destructive-кнопки в покое. */
+  --surface-success-strong: #008236; /* Сплошной фон «успех» под белый текст (text-on-action); ховер Accent- и Destructive-кнопок. */
+  --surface-success-hover: #016630; /* Ховер surface-success-strong. */
+  --surface-error-subtle: #ffe2e2; /* Тонированный фон «ошибка»: бейджи, баннеры, плашки. Пара: text-error, icons-error, border-error-subtle. */
+  --surface-error: #fb2c36; /* Индикатор «ошибка» без текста: точки, прогресс, переключатель; заливка Accent/Destructive-кнопки в покое. */
+  --surface-error-strong: #c10007; /* Сплошной фон «ошибка» под белый текст (text-on-action); ховер Accent- и Destructive-кнопок. */
+  --surface-error-hover: #9f0712; /* Ховер surface-error-strong. */
+  --surface-ai-subtle: #ede9fe; /* Тонированный фон «AI»: бейджи, баннеры, плашки. Пара: text-ai, icons-ai, border-ai-subtle. */
+  --surface-ai: #8e51ff; /* Индикатор «AI» без текста: точки, прогресс, переключатель; заливка Accent/Destructive-кнопки в покое. */
+  --surface-ai-strong: #7008e7; /* Сплошной фон «AI» под белый текст (text-on-action); ховер Accent- и Destructive-кнопок. */
+  --surface-ai-hover: #5d0ec0; /* Ховер surface-ai-strong. */
+  --surface-invert: #242a35; /* Тёмные бейджи («ВСЕ», метки ДО/ПОСЛЕ на фото), тултипы. */
+  --surface-selected: #dbeafe; /* Выбранный элемент: вкладка, пункт меню, включённый фильтр, выбранная строка. */
+  --border-primary: #e2e8f0; /* Обводки карточек и полей, разделители (Separator). */
+  --border-information: #155dfc; /* Смысловая обводка «информация» на нейтральном фоне: поля, контурные бейджи. */
+  --border-error: #e7000b; /* Смысловая обводка «ошибка» на нейтральном фоне: поля, контурные бейджи. */
+  --border-attention: #d08700; /* Смысловая обводка «требует внимания» на нейтральном фоне: поля, контурные бейджи. */
+  --border-success: #00a63e; /* Смысловая обводка «успех» на нейтральном фоне: поля, контурные бейджи. */
+  --border-warning: #f54900; /* Смысловая обводка «предупреждение» на нейтральном фоне: поля, контурные бейджи. */
+  --border-ai: #7f22fe; /* Смысловая обводка «AI» на нейтральном фоне: поля, контурные бейджи. */
+  --border-action: #2b7fff; /* Фокус поля, выделенная карточка текущего задания, зона загрузки фото (пунктир). */
+  --border-action-hover: #155dfc; /* Ховер обводки action. */
+  --border-disabled: #cbd5e1; /* Обводка неактивных полей. */
+  --border-invert: #364252; /* Тёмная обводка: рамка Plate Number. */
+  --border-action-subtle: #bedbff; /* Обводка выбранного элемента на surface-action-2 (выбранный сегмент Icon button group). */
+  --border-success-subtle: #7bf1a8; /* Обводка контейнеров на surface-success-subtle (бейджи, баннеры). */
+  --border-warning-subtle: #ffb86a; /* Обводка контейнеров на surface-warning-subtle (бейджи, баннеры). */
+  --border-information-subtle: #8ec5ff; /* Обводка контейнеров на surface-information-subtle (бейджи, баннеры). */
+  --border-attention-subtle: #ffdf20; /* Обводка контейнеров на surface-attention-subtle (бейджи, баннеры). */
+  --border-error-subtle: #ffa2a2; /* Обводка контейнеров на surface-error-subtle (бейджи, баннеры). */
+  --border-ai-subtle: #c4b4ff; /* Обводка контейнеров на surface-ai-subtle (бейджи, баннеры). */
+  --status-created-idle: #f0b100; /* Статус сущности «Создано / Неназначено» — по умолчанию. Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-created-selected: #d08700; /* Статус сущности «Создано / Неназначено» — выбранный элемент (строка, пин). Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-assigned-idle: #dbeafe; /* Статус сущности «Назначено» — по умолчанию. Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-assigned-selected: #8ec5ff; /* Статус сущности «Назначено» — выбранный элемент (строка, пин). Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-in-progress-idle: #2b7fff; /* Статус сущности «В пути / В процессе» — по умолчанию. Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-in-progress-selected: #1447e6; /* Статус сущности «В пути / В процессе» — выбранный элемент (строка, пин). Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-on-service-idle: #2b7fff; /* Статус сущности «Исполняется (намеренно = In_progress: «в работе»)» — по умолчанию. Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-on-service-selected: #1447e6; /* Статус сущности «Исполняется (намеренно = In_progress: «в работе»)» — выбранный элемент (строка, пин). Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-completed-idle: #00c950; /* Статус сущности «Выполнено / Вывезено / На линии» — по умолчанию. Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-completed-selected: #008236; /* Статус сущности «Выполнено / Вывезено / На линии» — выбранный элемент (строка, пин). Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-failed-idle: #fb2c36; /* Статус сущности «Невывоз / Не выполнено» — по умолчанию. Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-failed-selected: #c10007; /* Статус сущности «Невывоз / Не выполнено» — выбранный элемент (строка, пин). Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-cancelled-idle: #667489; /* Статус сущности «Отменено» — по умолчанию. Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --status-cancelled-selected: #364252; /* Статус сущности «Отменено» — выбранный элемент (строка, пин). Задания, маршруты, смены, пины на карте, сегменты статусных диаграмм. */
+  --chart-categorical-1: #2b7fff; /* Различение серий на графиках. Порядок 1→8 фиксирован, 8 = «Прочее». Не для статусов — для них status-*. */
+  --chart-categorical-2: #fe9a00; /* Различение серий на графиках. Порядок 1→8 фиксирован, 8 = «Прочее». Не для статусов — для них status-*. */
+  --chart-categorical-3: #00bba7; /* Различение серий на графиках. Порядок 1→8 фиксирован, 8 = «Прочее». Не для статусов — для них status-*. */
+  --chart-categorical-4: #e12afb; /* Различение серий на графиках. Порядок 1→8 фиксирован, 8 = «Прочее». Не для статусов — для них status-*. */
+  --chart-categorical-5: #5ea500; /* Различение серий на графиках. Порядок 1→8 фиксирован, 8 = «Прочее». Не для статусов — для них status-*. */
+  --chart-categorical-6: #615fff; /* Различение серий на графиках. Порядок 1→8 фиксирован, 8 = «Прочее». Не для статусов — для них status-*. */
+  --chart-categorical-7: #f6339a; /* Различение серий на графиках. Порядок 1→8 фиксирован, 8 = «Прочее». Не для статусов — для них status-*. */
+  --chart-categorical-8: #94a3b8; /* Различение серий на графиках. Порядок 1→8 фиксирован, 8 = «Прочее». Не для статусов — для них status-*. */
+  --chart-sequential-1: #dbeafe; /* Величина одним оттенком: 1 — минимум, 5 — максимум. */
+  --chart-sequential-2: #8ec5ff; /* Величина одним оттенком: 1 — минимум, 5 — максимум. */
+  --chart-sequential-3: #2b7fff; /* Величина одним оттенком: 1 — минимум, 5 — максимум. */
+  --chart-sequential-4: #1447e6; /* Величина одним оттенком: 1 — минимум, 5 — максимум. */
+  --chart-sequential-5: #1c398e; /* Величина одним оттенком: 1 — минимум, 5 — максимум. */
+  --chart-diverging-neg-2: #f54900; /* Отклонение от плана: neg — хуже, pos — лучше, neutral — норма. */
+  --chart-diverging-neg-1: #ffb86a; /* Отклонение от плана: neg — хуже, pos — лучше, neutral — норма. */
+  --chart-diverging-neutral: #e2e8f0; /* Отклонение от плана: neg — хуже, pos — лучше, neutral — норма. */
+  --chart-diverging-pos-1: #8ec5ff; /* Отклонение от плана: neg — хуже, pos — лучше, neutral — норма. */
+  --chart-diverging-pos-2: #155dfc; /* Отклонение от плана: neg — хуже, pos — лучше, neutral — норма. */
+  --shadow-sm: 0px 1px 3px 0px #1018281a, 0px 1px 2px 0px #1018280f; /* Карточки, поле в фокусе. */
+  --shadow-md: 0px 4px 8px -2px #1018281a, 0px 2px 4px -2px #1018280f; /* Выпадающие меню, поповеры. */
+  --shadow-lg: 0px 20px 24px -4px #10182814, 0px 8px 8px -4px #10182808; /* Модальные окна, боковые панели. */
+}
+:root {
+  --space-0: 0px; /* Без отступа. */
+  --space-px: 1px; /* Толщина линий. */
+  --space-0\.5: 2px; /* Микро-зазор: иконка и бейдж. */
+  --space-1: 4px; /* Gap внутри групп кнопок и чипов; паддинг сегмента. */
+  --space-1\.5: 6px; /* Микро-отступы внутри бейджей. */
+  --space-2: 8px; /* Gap элементов тулбара; паддинг контента мобильного экрана и gap между мобильными карточками. */
+  --space-2\.5: 10px; /* Внутренние отступы мелких контролов. */
+  --space-3: 12px; /* Паддинг вложенных блоков, кнопки по горизонтали. */
+  --space-3\.5: 14px; /* Редко: внутренние отступы полей. */
+  --space-4: 16px; /* Основной шаг: внешний отступ десктопного экрана, gap колонок, паддинг контейнеров, карточек и модалок. */
+  --space-5: 20px; /* Отступы секций. */
+  --space-6: 24px; /* Паддинг контента формы в модалке. */
+  --space-7: 28px; /* Редко. */
+  --space-8: 32px; /* Крупные отступы, gap между колонками формы. */
+  --space-9: 36px; /* Редко. */
+  --space-10: 40px; /* Высота строки вкладок раздела. */
+  --space-11: 44px; /* Редко. */
+  --space-12: 48px; /* Высота строки таблицы и мобильной основной кнопки. */
+  --space-14: 56px; /* Шапка мобильного экрана (56). */
+  --space-16: 64px; /* Подвал модалки, шапка мобильного экрана (64). */
+  --space-20: 80px; /* Таб-бар / нижняя панель действий (80). */
+  --radius-none: 0px; /* Без скругления. */
+  --radius-xs: 2px; /* Мелкие элементы. */
+  --radius-sm: 4px; /* Рамка Plate Number, мелкие чипы. */
+  --radius-md: 8px; /* Кнопки, поля, вложенные блоки, таблицы внутри контейнера. */
+  --radius-lg: 12px; /* Контейнеры страницы: панели, таблицы, карта, карточки (десктоп и мобайл). */
+  --radius-xl: 16px; /* Модальные окна; ботомшит сверху. */
+  --radius-2xl: 32px; /* Крупные круглые элементы. */
+  --radius-full: 9999px; /* Пилюли: чипы, счётчики, переключатели, круглые кнопки на карте. */
+  --border-width-none: 0px; /* Без обводки. */
+  --border-width-sm: 1px; /* Обводки полей, карточек, разделители. */
+  --border-width-md: 2px; /* Фокус, выделенная карточка. */
+  --border-width-lg: 4px; /* Акцентные полосы. */
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --text-display-2xl-bold: 700 60px/60px var(--font-sans); /* Mobile: 48/48. Только крупные числа в KPI-карточках и аналитике. На мобильном (Responsive=Mobile) шаг меньше. */
+  --text-display-2xl-semibold: 600 60px/60px var(--font-sans); /* Mobile: 48/48. Только крупные числа в KPI-карточках и аналитике. На мобильном (Responsive=Mobile) шаг меньше. */
+  --text-display-xl-bold: 700 48px/48px var(--font-sans); /* Mobile: 36/36. Только крупные числа в KPI-карточках и аналитике. На мобильном (Responsive=Mobile) шаг меньше. */
+  --text-display-xl-semibold: 600 48px/48px var(--font-sans); /* Mobile: 36/36. Только крупные числа в KPI-карточках и аналитике. На мобильном (Responsive=Mobile) шаг меньше. */
+  --text-display-l-bold: 700 36px/40px var(--font-sans); /* Mobile: 30/36. Только крупные числа в KPI-карточках и аналитике. На мобильном (Responsive=Mobile) шаг меньше. */
+  --text-display-l-semibold: 600 36px/40px var(--font-sans); /* Mobile: 30/36. Только крупные числа в KPI-карточках и аналитике. На мобильном (Responsive=Mobile) шаг меньше. */
+  --text-display-m-bold: 700 30px/36px var(--font-sans); /* Mobile: 24/32. Только крупные числа в KPI-карточках и аналитике. На мобильном (Responsive=Mobile) шаг меньше. */
+  --text-display-m-semibold: 600 30px/36px var(--font-sans); /* Mobile: 24/32. Только крупные числа в KPI-карточках и аналитике. На мобильном (Responsive=Mobile) шаг меньше. */
+  --text-heading-h1-bold: 700 24px/28px var(--font-sans); /* Mobile: 20/24. H1 — заголовок экрана, H2 — модалки/крупной секции, H3/H4 — карточки, группы. */
+  --text-heading-h1-semibold: 600 24px/28px var(--font-sans); /* Mobile: 20/24. H1 — заголовок экрана, H2 — модалки/крупной секции, H3/H4 — карточки, группы. */
+  --text-heading-h2-bold: 700 20px/24px var(--font-sans); /* Mobile: 18/20. H1 — заголовок экрана, H2 — модалки/крупной секции, H3/H4 — карточки, группы. */
+  --text-heading-h2-semibold: 600 20px/24px var(--font-sans); /* Mobile: 18/20. H1 — заголовок экрана, H2 — модалки/крупной секции, H3/H4 — карточки, группы. */
+  --text-heading-h3-bold: 700 18px/20px var(--font-sans); /* Mobile: 16/20. H1 — заголовок экрана, H2 — модалки/крупной секции, H3/H4 — карточки, группы. */
+  --text-heading-h3-semibold: 600 18px/20px var(--font-sans); /* Mobile: 16/20. H1 — заголовок экрана, H2 — модалки/крупной секции, H3/H4 — карточки, группы. */
+  --text-heading-h4-bold: 700 16px/16px var(--font-sans); /* H1 — заголовок экрана, H2 — модалки/крупной секции, H3/H4 — карточки, группы. */
+  --text-heading-h4-semibold: 600 16px/16px var(--font-sans); /* H1 — заголовок экрана, H2 — модалки/крупной секции, H3/H4 — карточки, группы. */
+  --text-heading-h4-medium: 500 16px/16px var(--font-sans); /* H1 — заголовок экрана, H2 — модалки/крупной секции, H3/H4 — карточки, группы. */
+  --text-body-l-regular: 400 16px/20px var(--font-sans); /* Однострочный текст интерфейса: ячейки, подписи полей, кнопки, пункты списков. */
+  --text-body-l-medium: 500 16px/20px var(--font-sans); /* Однострочный текст интерфейса: ячейки, подписи полей, кнопки, пункты списков. */
+  --text-body-l-semibold: 600 16px/20px var(--font-sans); /* Однострочный текст интерфейса: ячейки, подписи полей, кнопки, пункты списков. */
+  --text-body-l-bold: 700 16px/20px var(--font-sans); /* Однострочный текст интерфейса: ячейки, подписи полей, кнопки, пункты списков. */
+  --text-body-m-regular: 400 14px/16px var(--font-sans); /* Однострочный текст интерфейса: ячейки, подписи полей, кнопки, пункты списков. */
+  --text-body-m-medium: 500 14px/16px var(--font-sans); /* Однострочный текст интерфейса: ячейки, подписи полей, кнопки, пункты списков. */
+  --text-body-m-semibold: 600 14px/16px var(--font-sans); /* Однострочный текст интерфейса: ячейки, подписи полей, кнопки, пункты списков. */
+  --text-body-m-bold: 700 14px/16px var(--font-sans); /* Однострочный текст интерфейса: ячейки, подписи полей, кнопки, пункты списков. */
+  --text-paragraph-l-regular: 400 16px/24px var(--font-sans); /* Многострочный текст: описания, комментарии, сообщения. */
+  --text-paragraph-l-medium: 500 16px/24px var(--font-sans); /* Многострочный текст: описания, комментарии, сообщения. */
+  --text-paragraph-l-bold: 700 16px/24px var(--font-sans); /* Многострочный текст: описания, комментарии, сообщения. */
+  --text-paragraph-m-regular: 400 14px/20px var(--font-sans); /* Многострочный текст: описания, комментарии, сообщения. */
+  --text-paragraph-m-medium: 500 14px/20px var(--font-sans); /* Многострочный текст: описания, комментарии, сообщения. */
+  --text-paragraph-m-bold: 700 14px/20px var(--font-sans); /* Многострочный текст: описания, комментарии, сообщения. */
+  --text-caption-m-regular: 400 12px/16px var(--font-sans); /* Метаданные, даты, вторичные подписи; Caps — заголовки колонок и секций (UPPERCASE). */
+  --text-caption-m-medium: 500 12px/16px var(--font-sans); /* Метаданные, даты, вторичные подписи; Caps — заголовки колонок и секций (UPPERCASE). */
+  --text-caption-m-semibold: 600 12px/16px var(--font-sans); /* Метаданные, даты, вторичные подписи; Caps — заголовки колонок и секций (UPPERCASE). */
+  --text-caption-m-bold: 700 12px/16px var(--font-sans); /* Метаданные, даты, вторичные подписи; Caps — заголовки колонок и секций (UPPERCASE). */
+  --text-caption-caps-bold: 700 12px/16px var(--font-sans); /* Метаданные, даты, вторичные подписи; Caps — заголовки колонок и секций (UPPERCASE). */
+  --text-tiny-xs-medium: 500 10px/10px var(--font-sans); /* Mobile: 12/12. Только счётчики в бейджах и подписи на карте/диаграммах. */
+  --text-tiny-xs-semibold: 600 10px/10px var(--font-sans); /* Mobile: 12/12. Только счётчики в бейджах и подписи на карте/диаграммах. */
+  --text-tiny-xs-bold: 700 10px/10px var(--font-sans); /* Mobile: 12/12. Только счётчики в бейджах и подписи на карте/диаграммах. */
+}
+.display-2xl-bold {
+  font-family: var(--font-sans);
+  font-size: 60px;
+  line-height: 60px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.display-2xl-semibold {
+  font-family: var(--font-sans);
+  font-size: 60px;
+  line-height: 60px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.display-xl-bold {
+  font-family: var(--font-sans);
+  font-size: 48px;
+  line-height: 48px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.display-xl-semibold {
+  font-family: var(--font-sans);
+  font-size: 48px;
+  line-height: 48px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.display-l-bold {
+  font-family: var(--font-sans);
+  font-size: 36px;
+  line-height: 40px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.display-l-semibold {
+  font-family: var(--font-sans);
+  font-size: 36px;
+  line-height: 40px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.display-m-bold {
+  font-family: var(--font-sans);
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.display-m-semibold {
+  font-family: var(--font-sans);
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.heading-h1-bold {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.heading-h1-semibold {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.heading-h2-bold {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.heading-h2-semibold {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.heading-h3-bold {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.heading-h3-semibold {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.heading-h4-bold {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.heading-h4-semibold {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.heading-h4-medium {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.body-l-regular {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.body-l-medium {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.body-l-semibold {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.body-l-bold {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.body-m-regular {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.body-m-medium {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.body-m-semibold {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.body-m-bold {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.paragraph-l-regular {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.paragraph-l-medium {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.paragraph-l-bold {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.paragraph-m-regular {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.paragraph-m-medium {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.paragraph-m-bold {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.caption-m-regular {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.caption-m-medium {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.caption-m-semibold {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.caption-m-bold {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.caption-caps-bold {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.tiny-xs-medium {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  line-height: 10px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.tiny-xs-semibold {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  line-height: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.tiny-xs-bold {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  line-height: 10px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
