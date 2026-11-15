@@ -9,6 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
+import { execFileSync } from "node:child_process";
 
 const [src, out] = process.argv.slice(2).map((p) => path.resolve(p));
 if (!src || !out) { console.error("usage: build.mjs <src> <out>"); process.exit(2); }
@@ -59,3 +60,7 @@ for (const rel of copied) {
   before += Buffer.byteLength(code); after += Buffer.byteLength(res.code);
 }
 console.log(`${copied.length} files; CSS/JS minified ${Math.round(before / 1024)} KB -> ${Math.round(after / 1024)} KB`);
+
+// The HR timesheet (tabel/) has its own build: JSX compiled ahead of time, production React, only the DS icons it uses.
+// Published at /tabel/. favicon.svg is copied above, so its relative link resolves the same way in _site.
+execFileSync(process.execPath, [path.join(src, "tabel/tools/build.mjs"), path.join(out, "tabel")], { stdio: "inherit" });

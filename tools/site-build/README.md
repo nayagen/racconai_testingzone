@@ -4,6 +4,10 @@ GitHub Pages publishes the site through `.github/workflows/pages.yml` on every p
 `build.mjs`, which copies what the pages load (the three `.html` pages, `favicon.svg`, the root `.css` and `.js` files and
 `js/`, `i18n/`, `images/`, `fonts/`, `vendor/`) into `_site/` and minifies it there. Tools, docs and agent folders are not published.
 
+The HR timesheet is published at `/tabel/`: `build.mjs` runs `tabel/tools/build.mjs _site/tabel`, which compiles its JSX
+ahead of time and loads production React (see `tabel/CLAUDE.md`). Only the built `index.html`, `app.js` and `app.css` go out;
+the sources, `handoff/` and `ds/` stay in the repository.
+
 - **JS:** full esbuild minification. No bundling, and top-level names are kept, so the shared globals still work.
 - **CSS:** whitespace and comments only. esbuild's syntax pass rewrites some values inexactly, and that moved a few antialiased
   pixels. Whitespace-only output renders pixel-identical.
