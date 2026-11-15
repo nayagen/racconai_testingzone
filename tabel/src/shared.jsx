@@ -81,6 +81,8 @@ function SelectControl({ label, value, onChange, options, className }) {
 // Перетаскивание ширины колонки. dir = +1 тянем вправо (левая колонка), −1 тянем влево (итоги).
 function useResizable(initial, min, max, dir) {
   const [w, setW] = useState(initial);
+  // Новая ширина по умолчанию (например, другой набор колонок) сбрасывает ручную подстройку.
+  useEffect(() => { setW(initial); }, [initial]);
   const clamp = (v) => Math.max(min, Math.min(max, v));
   // Перетаскивание мышью или пальцем; жест снимается и при отмене указателя, и при потере окна фокуса.
   const start = useCallback((e) => {

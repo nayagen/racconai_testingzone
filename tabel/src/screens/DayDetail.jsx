@@ -80,21 +80,6 @@ function DayHeader({ p, pill }) {
   );
 }
 
-// Плитки «Пришёл / Ушёл / Отработано / Смены». tone: '' | 'attention'; noteTone: '' | 'ok' | 'strong'.
-function StatCards({ items }) {
-  return (
-    <div className="dd-stats">
-      {items.map((s) => (
-        <div key={s.label} className={'dd-stat' + (s.tone ? ' dd-stat--' + s.tone : '')}>
-          <span className="dd-stat__label">{s.label}</span>
-          <span className="dd-stat__value">{s.value}</span>
-          <span className={'dd-stat__note' + (s.noteTone ? ' dd-stat__note--' + s.noteTone : '')}>{s.note}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 // ---------- смены ----------
 function CopyId({ id }) {
   const [done, setDone] = useState(false);
@@ -106,13 +91,14 @@ function CopyId({ id }) {
   return <DS.Button variant="secondary" size="small" onClick={copy}>{done ? 'Скопировано' : 'Копировать'}</DS.Button>;
 }
 
-function ShiftsSection({ shifts, monoId }) {
+function ShiftsSection({ shifts, monoId, summary }) {
   return (
-    <section id="shifts" aria-label="Смены дня" className="dd-panel dd-panel--shifts">
-      <div className="dd-panel__head">
-        <h2 className="dd-h2">Смены дня</h2>
-        <span className="dd-muted">план и факт выхода считаются по каждой смене отдельно</span>
-      </div>
+    <details id="shifts" className="dd-panel dd-panel--shifts dd-fold">
+      <summary className="dd-fold__sum">
+        <DS.Icon name="chevron-right" size={20} color="var(--icons-default)" />
+        <h2 className="dd-h2">Смены в RaccoonAI</h2>
+        <span className="dd-muted">{summary}</span>
+      </summary>
       {shifts.map((s, i) => s.gap ? (
         <div key={i} className="dd-gap"><span className="dd-gap__title">{s.title}</span><span>{s.text}</span></div>
       ) : (
@@ -128,11 +114,11 @@ function ShiftsSection({ shifts, monoId }) {
             <span className="dd-chip"><span className="dd-chip__k">Выход факт</span><span className="dd-chip__v">{s.fact}</span></span>
             {s.late
               ? <span className="dd-chip dd-chip--late">{s.delta}</span>
-              : <span className="dd-chip dd-chip--ok"><span aria-hidden="true">✓</span><span className="dd-chip__v">{s.delta}</span></span>}
+              : <span className="dd-chip dd-chip--ok"><DS.Icon name="check" size={16} color="currentColor" /><span className="dd-chip__v">{s.delta}</span></span>}
           </div>
         </div>
       ))}
-    </section>
+    </details>
   );
 }
 
@@ -153,8 +139,7 @@ function Timeline({ events }) {
               {e.shift && <span className="dd-ev__shift">Смена {e.shift}</span>}
               <span className="dd-ev__name">{e.title}</span>
             </span>
-            <span className="dd-ev__meta">{e.meta}</span>
-            <span className="dd-ev__src">Источник: {e.src}</span>
+            <span className="dd-ev__meta">{e.meta} <span className="dd-ev__src">· {e.src}</span></span>
           </div>
         </div>
       ))}
@@ -165,10 +150,14 @@ function Timeline({ events }) {
 // ---------- журнал ----------
 function Journal({ entries }) {
   return (
-    <section aria-label="Журнал изменений" className="dd-panel dd-panel--log">
-      <h2 className="dd-h2 dd-h2--log">Журнал изменений</h2>
+    <details className="dd-panel dd-panel--log dd-fold">
+      <summary className="dd-fold__sum">
+        <DS.Icon name="chevron-right" size={20} color="var(--icons-default)" />
+        <h2 className="dd-h2">Журнал изменений</h2>
+        <span className="dd-muted">{entries.length}</span>
+      </summary>
       {entries.map((t) => <div key={t} className="dd-log">{t}</div>)}
-    </section>
+    </details>
   );
 }
 
@@ -410,6 +399,7 @@ function MapModal({ title, sub, ariaLabel, svgLabel, m, card, stats, onClose }) 
 const DRAFT = '16:38';
 const ARRIVE = '06:48';
 const REASONS = ['Сотрудник забыл отметиться', 'Подтвердил начальник колонны', 'Подтверждено GPS машины', 'Сбой связи или телефона', 'Ошибка в графике или маршруте', 'Отметил водитель за бригаду', 'Другое'];
+const REASON_OPTIONS = [{ value: '', label: 'Выберите причину' }].concat(REASONS.map((r) => ({ value: r, label: r })));
 const DAY_CODES = [{ value: 'Я — явка', label: 'Я — явка' }, { value: 'НН — неявка', label: 'НН — неявка' }, { value: 'Б — больничный', label: 'Б — больничный' }, { value: 'ОТ — отпуск', label: 'ОТ — отпуск' }];
 
 const EX_SHIFTS = [
@@ -559,20 +549,11 @@ function DayDetail({ day, data }) {
   return (
     <div className="dd">
       <DayHeader p={p} pill={pill} />
-      <StatCards items={[
-        { label: 'Пришёл', value: ARRIVE, note: 'Подтверждено' },
-        saved
-          ? { label: 'Ушёл', value: saved.time, note: 'Подтверждено HR', noteTone: 'strong-ok' }
-          : { label: 'Ушёл', value: '16:38 ?', note: 'Черновик системы — требует проверки', tone: 'attention', noteTone: 'strong' },
-        { label: 'Отработано', value: hm(w), note: workedHours + ' ч в табель' },
-        { label: 'Смены в RaccoonAI', value: '2 смены', note: '07:05 – 16:38 · в сменах 8 ч 21 мин' }
-      ]} />
-      <ShiftsSection shifts={EX_SHIFTS} />
 
       <div className="dd-cols">
-        <Timeline events={EX_EVENTS} />
-        <div className="dd-side">
+        <div className="dd-main">
           <section aria-label="Фото и карта отметок" className="dd-panel dd-panel--media">
+            <h2 className="dd-h2">Отметки сотрудника</h2>
             <MarkBlock title="«Пришёл» 06:48" tag="в геозоне" tagTone="ok"
               photo={<PhotoThumb kind="in" alt={altIn} onOpen={() => set({ photoOpen: true })} />}
               map={<MapThumbButton m={MAP_IN_THUMB} onOpen={() => set({ mapOpen: true })} label="Открыть карту: где сделана фотография отметки «Пришёл»" />}
@@ -584,21 +565,27 @@ function DayDetail({ day, data }) {
               caption="Отметки нет. Черновик 16:38 — по закрытию последней задачи на точке 3 маршрута №15" />
             <Legend />
           </section>
+          <Timeline events={EX_EVENTS} />
+          <ShiftsSection shifts={EX_SHIFTS} summary="2 смены · 07:05 – 16:38 · выход 2-й смены +22 мин" />
+          <Journal entries={log} />
+        </div>
 
+        <div className="dd-side">
           <section aria-label="Решение HR" className="dd-panel dd-panel--form">
             <h2 className="dd-h2">Решение HR</h2>
             {saved ? (
               <div role="status" className="dd-done">
                 <span className="dd-done__title"><DS.Icon name="check" size={20} color="currentColor" />День закрыт, исключение снято</span>
                 <span className="dd-done__line">Пришёл 06:48 · Ушёл {saved.time} · {saved.code} · {workedHours} ч в табель</span>
-                <span className="dd-done__text">{saved.mode === 'draft' ? 'Принят черновик системы.' : 'Время ухода исправлено: 16:38 → ' + saved.time + '.'} Причина: «{saved.reason}». Сотрудник получил уведомление в боте.</span>
+                <span className="dd-done__text">Причина: «{saved.reason}». Сотрудник получил уведомление в боте.</span>
                 <span className="dd-done__actions">
-                  <DS.Button variant="tertiary" size="small" onClick={() => set({ saved: null })}>Отменить решение</DS.Button>
-                  <a href="#/exceptions" className="link-strong">Следующее исключение →</a>
+                  <DS.Button variant="primary" iconRight="chevron-right" onClick={() => { window.location.hash = '#/exceptions'; }}>Следующее исключение</DS.Button>
+                  <DS.Button variant="tertiary" onClick={() => set({ saved: null })}>Отменить решение</DS.Button>
                 </span>
               </div>
             ) : (
               <>
+                <p className="dd-lead">Отметки «Ушёл» нет. Система предлагает <strong>16:38</strong> — время, когда закрыта последняя задача маршрута.</p>
                 <div className="dd-times">
                   <div className="dd-times__f"><DS.Field layout="vertical" label="Пришёл" value="06:48" iconLeft="time" /></div>
                   <label className="rc-field rc-field--vertical dd-times__f">
@@ -611,39 +598,33 @@ function DayDetail({ day, data }) {
                       <span id="dd-leave-hint" className="rc-field__hint">{leaveHint}</span>
                     </span>
                   </label>
-                  <div className="dd-times__f"><DS.Field layout="vertical" label="Перерыв" value="0" suffix="мин" /></div>
                 </div>
-                <SelectControl label="Код дня" value={code} onChange={(v) => set({ code: v })} options={DAY_CODES} className="dd-code" />
-                <div role="radiogroup" aria-label="Причина" className="dd-reasons">
-                  <span className="dd-label__t">Причина <span className="dd-req">*</span></span>
-                  <div className="dd-choices">
-                    {REASONS.map((r) => (
-                      <button key={r} type="button" role="radio" aria-checked={sel === r} className={'dd-choice' + (sel === r ? ' is-on' : '')} onClick={() => set({ reason: sel === r ? '' : r })}>{r}</button>
-                    ))}
-                  </div>
+                <span className="dd-total">В табель: <strong>{workedHours} ч</strong> · {hm(w)}</span>
+                <div className="dd-reasons">
+                  <SelectControl label={<span className="dd-label__t">Причина <span className="dd-req">*</span></span>} value={sel} onChange={(v) => set({ reason: v })} options={REASON_OPTIONS} className={'dd-code' + (st.reasonErr && !sel ? ' is-error' : '')} />
                   {sel === 'Другое' && <textarea rows={2} aria-label="Своя причина" placeholder="Опишите причину" className="dd-textarea" value={st.otherText || ''} onChange={(e) => set({ otherText: e.target.value })} />}
                   {st.reasonErr && !sel && <span role="alert" className="dd-err">Выберите причину: без неё решение не сохранится</span>}
-                  <span className="dd-muted">Попадёт в журнал дня, сотрудник получит уведомление в боте</span>
                 </div>
+                <details className="dd-more">
+                  <summary>Код дня и перерыв <span className="dd-muted">{code.split(' — ')[0]} · перерыв 0 мин</span></summary>
+                  <div className="dd-more__body">
+                    <SelectControl label="Код дня" value={code} onChange={(v) => set({ code: v })} options={DAY_CODES} className="dd-code" />
+                    <div className="dd-times__f"><DS.Field layout="vertical" label="Перерыв" value="0" suffix="мин" /></div>
+                  </div>
+                </details>
                 <div className="dd-actions">
-                  {changed ? (
-                    <>
-                      <DS.Button variant="primary" onClick={() => trySave('fixed', leave)}>Сохранить с исправлением · {leave}</DS.Button>
-                      <DS.Button variant="tertiary" onClick={() => set({ leaveEdit: undefined })}>Вернуть 16:38</DS.Button>
-                    </>
-                  ) : (
-                    <>
-                      <DS.Button variant="primary" onClick={() => trySave('draft', DRAFT)}>Принять черновик 16:38</DS.Button>
-                      <DS.Button variant="secondary" disabled>Сохранить с исправлением</DS.Button>
-                    </>
-                  )}
-                  <DS.Button variant="link" icon="whatsapp" onClick={() => set({ msgOpen: true })}>Написать сотруднику</DS.Button>
+                  <DS.Button variant="primary" fullWidth onClick={() => (changed ? trySave('fixed', leave) : trySave('draft', DRAFT))}>
+                    {changed ? 'Сохранить «Ушёл» ' + leave : 'Принять 16:38 и закрыть день'}
+                  </DS.Button>
+                  {changed && <DS.Button variant="tertiary" onClick={() => set({ leaveEdit: undefined })}>Вернуть 16:38</DS.Button>}
+                </div>
+                <div className="dd-foot">
+                  <span className="dd-muted">Решение попадёт в журнал, сотрудник получит уведомление в боте.</span>
+                  <DS.Button variant="link" icon="whatsapp" onClick={() => set({ msgOpen: true })}>Уточнить у сотрудника</DS.Button>
                 </div>
               </>
             )}
           </section>
-
-          <Journal entries={log} />
         </div>
       </div>
 
@@ -688,23 +669,15 @@ function DayDetailNormal({ day, data }) {
   const over = Math.round((h - p.norm) * 10) / 10;
   const altIn = 'Фото отметки «Пришёл»: ' + p.name + ' у разгрузки магазина';
   const altOut = 'Фото отметки «Ушёл»: ' + p.name + ' у магазина в конце дня';
-  const ok = 'Подтверждено · фото, в геозоне';
-
+  
   return (
     <div className="dd">
       <DayHeader p={p} pill={{ tone: 'ok', icon: 'check', text: 'Штатный день · без исключений' }} />
-      <StatCards items={[
-        { label: 'Пришёл', value: '06:52', note: ok, noteTone: 'ok' },
-        { label: 'Ушёл', value: '16:12', note: ok, noteTone: 'ok' },
-        { label: 'Отработано', value: hm(w), note: fmt1(h) + ' ч в табель' },
-        { label: 'Смены в RaccoonAI', value: '1 смена', note: '06:58 – 16:05 · выход вовремя' }
-      ]} />
-      <ShiftsSection shifts={NR_SHIFTS} monoId />
 
       <div className="dd-cols">
-        <Timeline events={NR_EVENTS} />
-        <div className="dd-side">
+        <div className="dd-main">
           <section aria-label="Фото и карта отметок" className="dd-panel dd-panel--media">
+            <h2 className="dd-h2">Отметки сотрудника</h2>
             <MarkBlock title="«Пришёл» 06:52" tag="в геозоне" tagTone="ok"
               photo={<PhotoThumb kind="in" alt={altIn} onOpen={() => setOpen('photoIn')} />}
               map={<MapThumbButton m={NR_IN_THUMB} onOpen={() => setOpen('mapIn')} label="Открыть карту: где сделана фотография отметки «Пришёл»" />}
@@ -716,30 +689,32 @@ function DayDetailNormal({ day, data }) {
               caption="Снято камерой · 60 м от последней точки маршрута №12 (точка 3) · радиус 400 м" />
             <Legend />
           </section>
-
-          <section aria-label="Итог дня" className="dd-panel dd-panel--form">
-            <h2 className="dd-h2">Итог дня</h2>
-            <div role="status" className="dd-auto">
-              <DS.Icon name="check" size={20} color="currentColor" />
-              <span className="dd-auto__text"><strong>Закрыт автоматически</strong><span>Обе отметки сделаны сотрудником с фото внутри геозоны и совпали с событиями машины в пределах допуска 30 мин. Действий HR не требуется.</span></span>
-            </div>
-            <dl className="dd-dl">
-              <dt>Код дня</dt><dd className="is-strong">Я — явка</dd>
-              <dt>В табель</dt><dd className="is-strong">{fmt1(h)} ч</dd>
-              <dt>Норма {p.roleGen}</dt><dd>{p.norm} ч · {over > 0 ? 'переработка ' + fmt1(over) + ' ч' : 'переработки нет'}</dd>
-              <dt>Выход на линию</dt><dd>06:58 при плане 07:00 · вовремя</dd>
-              <dt>Источник отметок</dt><dd>WhatsApp-бот, сам · фото с камеры</dd>
-            </dl>
-            <div className="dd-actions">
-              <DS.Button variant="tertiary" icon="edit">Исправить вручную</DS.Button>
-            </div>
-          </section>
-
+          <Timeline events={NR_EVENTS} />
+          <ShiftsSection shifts={NR_SHIFTS} monoId summary="1 смена · 06:58 – 16:05 · выход вовремя" />
           <Journal entries={[
             p.dShort + ' 23:59 · Система · день закрыт автоматически, исключений нет',
             p.dShort + ' 16:12 · ' + p.short + ' · отметка «Ушёл»',
             p.dShort + ' 06:52 · ' + p.short + ' · отметка «Пришёл»'
           ]} />
+        </div>
+
+        <div className="dd-side">
+          <section aria-label="Итог дня" className="dd-panel dd-panel--form">
+            <h2 className="dd-h2">Итог дня</h2>
+            <div role="status" className="dd-auto">
+              <DS.Icon name="check" size={20} color="currentColor" />
+              <span className="dd-auto__text"><strong>Закрыт автоматически, действий не нужно</strong><span>Обе отметки с фото в геозоне и совпали с событиями машины.</span></span>
+            </div>
+            <dl className="dd-dl">
+              <dt>Пришёл · Ушёл</dt><dd className="is-strong">06:52 – 16:12</dd>
+              <dt>В табель</dt><dd className="is-strong">{fmt1(h)} ч · {hm(w)}</dd>
+              <dt>Код дня</dt><dd>Я — явка</dd>
+              <dt>Норма {p.roleGen}</dt><dd>{p.norm} ч · {over > 0 ? 'сверх нормы ' + fmt1(over) + ' ч' : 'без переработки'}</dd>
+            </dl>
+            <div className="dd-actions">
+              <DS.Button variant="tertiary" icon="edit">Исправить вручную</DS.Button>
+            </div>
+          </section>
         </div>
       </div>
 

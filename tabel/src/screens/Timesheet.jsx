@@ -12,18 +12,28 @@ const METRICS = [
   { value: 'late', label: 'Опоздание выхода, мин' }
 ];
 
-const SUM_COLS = [
-  { key: 'total', title: 'Часы по норме' },
-  { key: 'over', title: 'Переработка, ч' },
-  { key: 'km', title: 'Пробег, км' },
-  { key: 'fuel', title: 'ГСМ, л' },
-  { key: 'rate', title: 'л/100 км' },
-  { key: 'late', title: 'Опозд. выхода, дн' },
-  { key: 'days', title: 'Дни' },
-  { key: 'flags', title: <span className="bang" role="img" aria-label="Исключения" title="Исключения">!</span> }
-];
+const ALL_SUM_COLS = {
+  total: { key: 'total', title: 'Часы' },
+  over: { key: 'over', title: 'Сверх нормы, ч' },
+  km: { key: 'km', title: 'Пробег, км' },
+  fuel: { key: 'fuel', title: 'ГСМ, л' },
+  rate: { key: 'rate', title: 'л/100 км' },
+  late: { key: 'late', title: 'Дней с опозданием' },
+  days: { key: 'days', title: 'Дни' },
+  flags: { key: 'flags', title: <span className="bang" role="img" aria-label="Исключения" title="Исключения">!</span> }
+};
+// Итоги показываем только для выбранной метрики: остальные цифры видны, если переключить метрику.
+const SUM_BY_METRIC = {
+  h: ['total', 'over', 'days', 'flags'],
+  km: ['km', 'days', 'flags'],
+  fuel: ['fuel', 'rate', 'flags'],
+  late: ['late', 'flags']
+};
+const sumCols = (metric) => SUM_BY_METRIC[metric].map((k) => ALL_SUM_COLS[k]);
+const SUM_COL_W = 88, SUM_FLAG_W = 48;
+const sumWidth = (cols) => cols.reduce((a, c) => a + (c.key === 'flags' ? SUM_FLAG_W : SUM_COL_W), 0);
 
-const LEFT_W = 294, SUM_W = 560;
+const LEFT_W = 294;
 
 // ---------- выбор периода ----------
 function PeriodPicker({ period, onApply }) {
@@ -50,7 +60,7 @@ function PeriodPicker({ period, onApply }) {
   const setDate = (key) => (e) => setDraft({ ...draft, preset: 'custom', [key]: e.target.value });
 
   return (
-    <div className="ctl period"><span id="period-lbl">Период</span>
+    <div className="ctl period"><span id="period-lbl" className="sr-only">Период</span>
       <div className="rc-dategroup">
         <DS.IconButton icon="chevron-left" label="Предыдущий период" size="medium" onClick={() => onApply(D.shiftPeriod(period, -1))} />
         <button type="button" className="rc-datebtn period-btn" aria-haspopup="dialog" aria-expanded={open} aria-labelledby="period-lbl period-val"
@@ -231,8 +241,8 @@ function DayCell({ c, row, day, metric, r, ci }) {
   );
 }
 
-function SumCells({ vals, isRow }) {
-  return SUM_COLS.map((col, i) => (
+function SumCells({ vals, isRow, cols }) {
+  return cols.map((col, i) => (
     <div key={col.key} role="gridcell" data-col={'s' + i}
       className={'s-' + col.key + (col.key === 'over' && isRow ? (vals.over === dash ? ' is-calm' : ' is-hot') : '')}>{vals[col.key]}</div>
   ));
@@ -240,6 +250,7 @@ function SumCells({ vals, isRow }) {
 
 // Строка сотрудника не перерисовывается при перетаскивании ширины колонок: ширины заданы CSS-переменными на контейнере.
 const PersonRow = React.memo(function PersonRow({ r, days, metric, flat, rIndex, ariaIndex }) {
+  const cols = sumCols(metric);
   return (
     <div className="tt-r tt-row" role="row" aria-rowindex={ariaIndex}>
       <div className="tt-left" role="rowheader">
@@ -252,14 +263,15 @@ const PersonRow = React.memo(function PersonRow({ r, days, metric, flat, rIndex,
       <div className="tt-days">
         {r.cells.map((c, i) => <DayCell key={i} c={c} row={r} day={days[i]} metric={metric} r={rIndex} ci={i} />)}
       </div>
-      <div className="tt-sum"><SumCells vals={rowSums(r)} isRow /></div>
+      <div className="tt-sum"><SumCells vals={rowSums(r)} cols={cols} isRow /></div>
     </div>
   );
 });
 
 function TimesheetGrid({ days, groups, metric, collapsed, onToggleGroup }) {
   const [leftW, startLeft, resetLeft, keyLeft] = useResizable(LEFT_W, 200, 560, 1);
-  const [sumW, startSum, resetSum, keySum] = useResizable(SUM_W, 360, 1000, -1);
+  const cols = sumCols(metric);
+  const [sumW, startSum, resetSum, keySum] = useResizable(sumWidth(cols), 96, 1000, -1);
   const gridRef = useRef(null), colStyleRef = useRef(null);
   const nav = useGridNav(gridRef, colStyleRef);
 
@@ -269,7 +281,7 @@ function TimesheetGrid({ days, groups, metric, collapsed, onToggleGroup }) {
   return (
     <div className="tt-scroll" style={{ '--tt-left-w': leftW + 'px', '--tt-sum-w': sumW + 'px' }}>
       <style ref={colStyleRef} />
-      <div className="tt" role="grid" aria-label="Табель: сотрудники по дням" aria-rowcount={total} aria-colcount={days.length + SUM_COLS.length + 1}
+      <div className="tt" role="grid" aria-label="Табель: сотрудники по дням" aria-rowcount={total} aria-colcount={days.length + cols.length + 1}
         ref={gridRef} onFocus={nav.onFocus} onKeyDown={nav.onKeyDown} onPointerOver={nav.onPointerOver} onPointerLeave={nav.onPointerLeave}>
         <div className="tt-r tt-head" role="row" aria-rowindex={ariaIndex++}>
           <div className="tt-left" role="columnheader">
@@ -289,7 +301,7 @@ function TimesheetGrid({ days, groups, metric, collapsed, onToggleGroup }) {
           <div className="tt-sum">
             <button type="button" className="resizer resizer--left" aria-label="Ширина блока итогов: стрелки влево и вправо, Home — по умолчанию"
               title="Потяните или используйте стрелки. Двойной клик — по умолчанию" onPointerDown={startSum} onDoubleClick={resetSum} onKeyDown={keySum}><span /></button>
-            {SUM_COLS.map((c, i) => <div key={c.key} role="columnheader" data-col={'s' + i}>{c.title}</div>)}
+            {cols.map((c, i) => <div key={c.key} role="columnheader" data-col={'s' + i} className={'s-' + c.key}>{c.title}</div>)}
           </div>
         </div>
 
@@ -311,7 +323,7 @@ function TimesheetGrid({ days, groups, metric, collapsed, onToggleGroup }) {
                     </button>
                   </div>
                   <div className="tt-days" aria-hidden="true">{days.map((d) => <div key={d.key} />)}</div>
-                  <div className="tt-sum"><SumCells vals={groupSums(g.rows)} /></div>
+                  <div className="tt-sum"><SumCells vals={groupSums(g.rows)} cols={cols} /></div>
                 </div>
               )}
               {(open || !g.label) && g.rows.map((r) => (
@@ -325,22 +337,19 @@ function TimesheetGrid({ days, groups, metric, collapsed, onToggleGroup }) {
   );
 }
 
-function Legend() {
+function Legend({ metric }) {
+  const note = metric === 'late' ? '«2см» — в дне две смены, показано худшее отклонение за день.'
+    : (metric === 'km' || metric === 'fuel') ? 'Пробег — по Wialon, ГСМ — из мониторинга ГСМ. У грузчиков не считается.' : null;
   return (
     <div className="legend">
-      <span className="legend__item"><span className="legend__swatch">12,0</span> часы · <b style={{ fontWeight: 600 }}>12,9</b> сверх нормы</span>
-      <span className="legend__item"><span className="legend__swatch legend__swatch--flag" /> требует проверки — клик открывает день</span>
+      <span className="legend__item"><span className="legend__swatch legend__swatch--flag" /> требует проверки</span>
       <span className="legend__item">
         <span className="pill pill--В">В</span> выходной
         <span className="pill pill--Б">Б</span> больничный
         <span className="pill pill--ОТ">ОТ</span> отпуск
         <span className="pill pill--НН">НН</span> неявка
       </span>
-      <div className="legend__notes">
-        <span>Дни прокручиваются горизонтально; сотрудник и итоги закреплены.</span>
-        <span>«2см» — в дне две смены; в режиме опоздания показано худшее отклонение за день.</span>
-        <span>Пробег — по Wialon за смены дня, ГСМ — из мониторинга ГСМ; у грузчиков не считается.</span>
-      </div>
+      {note && <span className="legend__note">{note}</span>}
     </div>
   );
 }
@@ -427,6 +436,35 @@ function ExportModal({ periodLabel, teams, rows, flagCount, periodOpen, onClose 
   );
 }
 
+// ---------- фильтры: редкие настройки вида спрятаны за одной кнопкой ----------
+function MoreFilters({ depot, setDepot, role, setRole, grouping, setGrouping }) {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+  const changed = (role !== 'all') + (grouping !== 'team');
+  return (
+    <div className="more-filters">
+      <DS.FilterButton active={open || changed > 0} count={changed || null} onClick={() => setOpen(!open)}>Вид и фильтры</DS.FilterButton>
+      {open && <>
+        <button type="button" className="popover-scrim" tabIndex={-1} aria-label="Закрыть фильтры" onClick={() => setOpen(false)} />
+        <div className="popover popover--right" role="dialog" aria-label="Вид и фильтры">
+          <SelectControl label="Депо" value={depot} onChange={setDepot} options={DEPOT_OPTIONS} />
+          <SelectControl label="Роль" value={role} onChange={setRole} options={ROLE_OPTIONS} />
+          <SelectControl label="Группировка" value={grouping} onChange={setGrouping} options={GROUP_OPTIONS} />
+          <div className="popover__foot">
+            <DS.Button variant="tertiary" disabled={!changed} onClick={() => { setRole('all'); setGrouping('team'); }}>Сбросить</DS.Button>
+            <DS.Button variant="primary" onClick={() => setOpen(false)}>Готово</DS.Button>
+          </div>
+        </div>
+      </>}
+    </div>
+  );
+}
+
 // ---------- экран «Табель» ----------
 const GROUP_OPTIONS = [{ value: 'team', label: 'По командам' }, { value: 'role', label: 'По ролям' }, { value: 'none', label: 'Без группировки' }];
 const ROLE_OPTIONS = [{ value: 'all', label: 'Все' }, { value: 'Водитель', label: 'Водители' }, { value: 'Грузчик', label: 'Грузчики' }];
@@ -463,44 +501,36 @@ function TimesheetScreen({ data, period, setPeriod, flagCount: totalFlags }) {
   return (
     <>
     <SectionTabs active="" flagCount={totalFlags}>
-      <DS.Button variant="secondary" onClick={() => setExportOpen(true)}>Выгрузить в 1С / Excel</DS.Button>
-      <DS.Button variant="primary" disabled={flagCount > 0}>Закрыть период</DS.Button>
+      {/* Одно главное действие по шагу закрытия месяца: сначала разобрать исключения, потом закрыть период. */}
+      <DS.Button variant="tertiary" icon="download" onClick={() => setExportOpen(true)}>Выгрузить</DS.Button>
+      {periodOpen && (flagCount > 0
+        ? <DS.Button variant="primary" iconRight="chevron-right" onClick={() => { window.location.hash = '#/exceptions'; }}>Разобрать исключения · {flagCount}</DS.Button>
+        : <DS.Button variant="primary">Закрыть период</DS.Button>)}
     </SectionTabs>
     <div className="card">
       <div className="filters">
         <PeriodPicker period={period} onApply={setPeriod} />
-        <SelectControl className="ctl--depot" label="Депо" value={depot} onChange={setDepot} options={DEPOT_OPTIONS} />
-        <SelectControl className="ctl--role" label="Роль" value={role} onChange={setRole} options={ROLE_OPTIONS} />
-        <SelectControl className="ctl--group" label="Группировка" value={grouping} onChange={setGrouping} options={GROUP_OPTIONS} />
-        <label className="ctl ctl--search">Поиск
+        <label className="ctl ctl--search"><span className="sr-only">Поиск</span>
           <span className="ctl__wrap">
             <span className="ctl__icon ctl__icon--left" aria-hidden="true"><DS.Icon name="search" size={20} color="var(--icons-secondary)" /></span>
             <input type="search" className="ctl__input ctl__input--search" placeholder="ФИО или табельный №" value={query} onChange={(e) => setQuery(e.target.value)} />
           </span>
         </label>
         <CheckToggle className="cb--filter" checked={onlyFlags} onChange={setOnlyFlags} label="Только с исключениями" />
-      </div>
-
-      <div className={'period-status' + (periodOpen ? '' : ' is-closed')}>
-        <span className="period-status__title">{periodOpen ? 'Период открыт' : 'Период закрыт · только просмотр'}</span>
-        <span>{data.rows.length} сотрудников · исключений к разбору до закрытия периода: {flagCount}</span>
-        {flagCount > 0 && <a href="#/exceptions" className="link-strong">Перейти к исключениям →</a>}
+        <MoreFilters depot={depot} setDepot={setDepot} role={role} setRole={setRole} grouping={grouping} setGrouping={setGrouping} />
       </div>
 
       <div className="toolbar">
         <DS.SegmentedTabs items={METRICS} value={metric} onChange={setMetric} />
-        {grouping !== 'none' && (
-          <div className="toolbar__right">
-            <DS.Button variant="secondary" size="small" onClick={() => setCollapsed({})}>Развернуть все</DS.Button>
-            <DS.Button variant="secondary" size="small" onClick={() => setCollapsed(Object.fromEntries(groups.map((g) => [g.id, true])))}>Свернуть все</DS.Button>
-          </div>
-        )}
+        <span className="toolbar__status">
+          {periodOpen ? 'Период открыт' : 'Период закрыт, только просмотр'} · {data.rows.length} сотрудников
+        </span>
       </div>
 
       <TimesheetGrid days={data.days} groups={groups} metric={metric} collapsed={collapsed}
         onToggleGroup={(id) => setCollapsed({ ...collapsed, [id]: !collapsed[id] })} />
 
-      <Legend />
+      <Legend metric={metric} />
     </div>
     {exportOpen && (
       <ExportModal periodLabel={D.periodLabel(period)} teams={data.teams} rows={data.rows} flagCount={flagCount}

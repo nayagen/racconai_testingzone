@@ -70,7 +70,7 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
 .ctl--depot { flex: 1 1 180px; }
 .ctl--role { flex: 1 1 160px; }
 .ctl--group { flex: 1 1 180px; }
-.ctl--search { flex: 1 1 220px; }
+.ctl--search { flex: 0 1 320px; }
 .ctl__wrap { position: relative; display: block; }
 .ctl__input, .ctl__select {
   display: block; width: 100%; min-width: 0; height: 32px; margin: 0;
@@ -92,7 +92,9 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
   border: 0; background: transparent; color: inherit; cursor: pointer; text-align: left; border-radius: var(--radius-sm);
 }
 .cb > * { pointer-events: none; }
-.cb--filter { padding: 0 var(--space-2); }
+.cb--filter { padding: 0 var(--space-2); align-self: center; }
+.more-filters { position: relative; margin-left: auto; align-self: center; }
+.popover.popover--right { left: auto; right: 0; width: 300px; }
 .cb:hover .rc-check__box { box-shadow: inset 0 0 0 1px var(--border-action); }
 .cb:hover input:checked + .rc-check__box { background: var(--surface-action-hover); }
 
@@ -127,14 +129,6 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
 .dates .ctl { flex: 1 1 0; }
 .dates__dash { height: 32px; display: flex; align-items: center; color: var(--text-secondary); }
 
-/* ---------- плашка статуса периода ---------- */
-.period-status {
-  display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); align-items: center;
-  padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg);
-  background: var(--surface-attention-subtle); color: var(--text-attention); font: var(--text-paragraph-m-regular);
-}
-.period-status__title { font: var(--text-body-m-semibold); }
-.period-status.is-closed { background: var(--surface-secondary); color: var(--text-body); }
 .link-strong { font: var(--text-body-m-semibold); text-decoration: none; color: var(--text-action); }
 
 .toolbar { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
@@ -142,7 +136,7 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
 .toolbar .rc-seg { max-width: 100%; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
 .toolbar .rc-seg::-webkit-scrollbar { display: none; }
 .toolbar .rc-seg__item { flex: none; }
-.toolbar__right { display: flex; gap: var(--space-2); margin-left: auto; }
+.toolbar__status { margin-left: auto; font: var(--text-caption-m-regular); color: var(--text-secondary); }
 
 /* ---------- сетка табеля ---------- */
 .tt-scroll {
@@ -171,6 +165,7 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
   font-variant-numeric: tabular-nums;
 }
 .tt-head .tt-sum > div { padding: var(--space-2); overflow-wrap: anywhere; }
+.tt-sum > .s-flags { flex: 0 0 48px; justify-content: center; }
 .tt-head__name { flex: 1 1 auto; min-width: 0; padding: var(--space-2) var(--space-3); }
 .tt-head__role { flex: 0 1 84px; min-width: 0; overflow: hidden; padding: var(--space-2) var(--space-1); }
 
@@ -268,7 +263,7 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
 .legend__item { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
 .legend__swatch { width: 34px; height: 24px; display: flex; align-items: center; justify-content: center; font: var(--text-caption-m-regular); }
 .legend__swatch--flag { border: 1px solid var(--border-warning-subtle); border-radius: var(--radius-sm); background: var(--surface-warning-subtle); }
-.legend__notes { display: flex; flex-direction: column; gap: var(--space-1); width: 100%; font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.legend__note { margin-left: auto; font: var(--text-caption-m-regular); color: var(--text-secondary); }
 
 /* ---------- модалка выгрузки ---------- */
 .scrim {
@@ -311,6 +306,6 @@ a.rc-sidenav__item.is-selected:hover { color: var(--text-selected); }
   .tt-left { width: 168px !important; }
   .tt-person { padding-left: var(--space-3); }
   .tt-person__role, .tt-head__role, .resizer { display: none; }
-  .tt-sum { position: static; width: 520px !important; }
-  .legend__notes { display: none; }
+  .tt-sum { position: static; }
+  .legend__note { margin-left: 0; }
 }

@@ -1,9 +1,11 @@
 /* Экран 2 «Очередь исключений» — handoff/screens/Exceptions.dc.html. Регистрируется как window.TabelScreens.Exceptions.
-   Моковые данные и логика — из <script data-dc-script> макета (renderVals). */
+   Моковые данные — из <script data-dc-script> макета (renderVals).
+   Упрощено относительно макета: у каждой строки одно действие («Принять» предложение системы или «Разобрать» в карточке дня),
+   ручное решение (время, код, причина) принимается только в карточке дня, фильтры по роли и типу — в двух списках вместо боковой панели. */
 (() => {
 const { useState, useMemo } = React;
 const DS = window.RaccoonDS;
-const { CheckToggle, SelectControl, SectionTabs } = window.TabelUI;
+const { SelectControl, SectionTabs } = window.TabelUI;
 
 // ---------- моковые данные из макета ----------
 // тип: [название, кол-во, пометка?, описание, кто разбирает, выключено?]
@@ -64,13 +66,7 @@ const CATEGORIES = [
   }
 ];
 
-const REASONS = ['Сотрудник забыл отметиться', 'Подтвердил начальник колонны', 'Подтверждено GPS машины', 'Сбой связи или телефона', 'Ошибка в графике или маршруте', 'Отметил водитель за бригаду', 'Другое'];
-const DAY_CODES_TIME = [
-  { value: 'Я', label: 'Я — явка' }, { value: 'НН', label: 'НН — неявка' },
-  { value: 'Б', label: 'Б — больничный' }, { value: 'ОТ', label: 'ОТ — отпуск' }
-];
-const DAY_CODES_RADIO = ['НН — неявка', 'Б — больничный', 'ОТ — отпуск', 'ОД — с разрешения', 'Я — был, ввести время'];
-const ROLES = [['all', 'Все'], ['Водитель', 'Водители'], ['Грузчик', 'Грузчики']];
+const ROLES = [['all', 'Все роли'], ['Водитель', 'Водители'], ['Грузчик', 'Грузчики']];
 const SORTS = [{ value: 'block', label: 'Блокирующие, сначала старые' }, { value: 'person', label: 'По сотруднику' }];
 const MON = { 'Янв': 1, 'Фев': 2, 'Мар': 3, 'Апр': 4, 'Май': 5, 'Июн': 6, 'Июл': 7, 'Авг': 8, 'Сен': 9, 'Окт': 10, 'Ноя': 11, 'Дек': 12 };
 
@@ -97,140 +93,47 @@ function plural(n, one, few, many) {
 const nExc = (n) => n + ' ' + plural(n, 'исключение', 'исключения', 'исключений');
 const nSug = (n) => n + ' ' + plural(n, 'предложение', 'предложения', 'предложений');
 
-// ---------- мелкие части ----------
-function Chip({ on, onClick, children }) {
-  return (
-    <button type="button" role="radio" aria-checked={on} className={'ex-chip' + (on ? ' is-on' : '')} onClick={onClick}>{children}</button>
-  );
-}
+const TYPE_DESC = Object.fromEntries(TYPES.flat().map((t) => [t.label, t.desc]));
 
-function TypeFilter({ types, counts, total, value, onChange }) {
+// ---------- строка очереди ----------
+function ExceptionRow({ it, href, onAccept }) {
+  const action = it.hasSug ? 'accept' : (it.isDispute ? 'reply' : 'open');
   return (
-    <aside aria-label="Типы исключений" className="ex-types">
-      <button type="button" className={'ex-type-all' + (value === 'all' ? ' is-on' : '')} aria-pressed={value === 'all'} onClick={() => onChange('all')}>
-        Все<span>{total}</span>
-      </button>
-      <div className="ex-types__grid">
-        {CATEGORIES.map((c, gi) => (
-          <div key={gi} className="ex-types__group">
-            <div className="ex-types__title">{c.title}</div>
-            {TYPES[gi].map((t) => {
-              const n = counts[t.label] || 0;
-              const on = value === t.label;
-              return (
-                <div key={t.id} className="ex-tt">
-                  <button type="button" className={'ex-type' + (n === 0 ? ' is-zero' : '') + (on ? ' is-on' : '')} aria-describedby={t.id} aria-pressed={on}
-                    onClick={() => onChange(on ? 'all' : t.label)}>
-                    <span className="ex-type__label">{t.label}{t.sub && <span className="ex-type__sub">{t.sub}</span>}</span>
-                    <span>{n}</span>
-                  </button>
-                  <span role="tooltip" id={t.id} className="ex-tt__pop">
-                    <span className="ex-tt__title">{t.label}</span><span>{t.desc}</span><span className="ex-tt__meta">{t.meta}</span>
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
-    </aside>
-  );
-}
-
-function EditPanel({ it, reason, setReason, onSave, onCancel }) {
-  return (
-    <div className="ex-edit">
-      {it.isCode ? (
-        <fieldset className="ex-codes">
-          <legend>Код дня</legend>
-          {DAY_CODES_RADIO.map((l, i) => (
-            <div key={l} className="ex-codes__opt"><DS.Radio name={'code-' + it.key} checked={i === 0} label={l} /></div>
-          ))}
-        </fieldset>
-      ) : (
-        <div className="ex-edit__time">
-          <DS.Field className="ex-edit__field" layout="vertical" label="Пришёл" placeholder="--:--" iconLeft="time" />
-          <DS.Field className="ex-edit__field" layout="vertical" label="Ушёл" placeholder="--:--" iconLeft="time" />
-          <SelectControl className="ex-edit__code" label="Код дня" value="Я" options={DAY_CODES_TIME} />
+    <li className="ex-row">
+      <div className="ex-row__main">
+        <div className="ex-row__who">
+          <a href={href} className="ex-row__name">{it.name}</a>
+          <span className="ex-caption">{it.role} · {it.date}</span>
         </div>
-      )}
-      <div role="radiogroup" aria-label="Причина" className="ex-reasons">
-        <span className="ex-caption">Причина <span className="ex-req">*</span></span>
-        <div className="ex-chips">
-          {REASONS.map((l) => <Chip key={l} on={reason === l} onClick={() => setReason(reason === l ? '' : l)}>{l}</Chip>)}
+        <div className="ex-row__what">
+          <span className="ex-tag" title={TYPE_DESC[it.type]}>{it.type}</span>
+          {it.soft && <span className="ex-caption">не блокирует закрытие</span>}
         </div>
-        {reason === 'Другое' && <textarea rows="2" aria-label="Своя причина" placeholder="Опишите причину" className="ex-textarea" />}
+        {it.isDispute && <p className="ex-row__quote">«{it.quote}»</p>}
+        {it.hasSug && <p className="ex-row__sug"><span className="ex-row__sug-lbl">Система предлагает:</span> {it.sug}</p>}
       </div>
-      <div className="ex-edit__foot">
-        <DS.Button variant="primary" disabled={!reason} onClick={onSave}>Сохранить и закрыть исключение</DS.Button>
-        <DS.Button variant="tertiary" onClick={onCancel}>Отмена</DS.Button>
-        <span className="ex-caption">Сотрудник получит уведомление в боте</span>
+      <div className="ex-row__actions">
+        {action === 'accept' && <>
+          <a href={href} className="rc-btn rc-btn--tertiary rc-btn--default ex-link">Открыть день</a>
+          <DS.Button variant="secondary" icon="check" onClick={onAccept}>Принять</DS.Button>
+        </>}
+        {action === 'reply' && <a href={href} className="rc-btn rc-btn--secondary rc-btn--default ex-link">Ответить</a>}
+        {action === 'open' && <a href={href} className="rc-btn rc-btn--secondary rc-btn--default ex-link">Разобрать</a>}
       </div>
-    </div>
-  );
-}
-
-function ExceptionCard({ it, href, checked, editing, reason, onToggleCheck, onAccept, onToggleEdit, setReason, onSave }) {
-  const onClick = (e) => {
-    if (e.target.closest && e.target.closest('button, a, input, select, textarea, label, .ex-actions, .ex-edit')) return;
-    onToggleCheck();
-  };
-  return (
-    <article className={'ex-card' + (checked ? ' is-checked' : '')} onClick={onClick}>
-      <div className="ex-card__row">
-        <div className="ex-card__check" data-cb-label={`Выбрать исключение: ${it.name}, ${it.date}`}><DS.Checkbox key={checked ? 'on' : 'off'} checked={checked} /></div>
-        <div className="ex-card__main">
-          <div className="ex-card__body">
-            <div className="ex-card__head">
-              <div className="ex-card__who">
-                <span className="ex-card__name">{it.name}</span>
-                <span className="ex-caption">{it.role} · {it.date}</span>
-              </div>
-              <div className="ex-card__tags">
-                <span className="ex-tag">{it.type}</span>
-                {it.block && <span className="ex-tag ex-tag--block">Блокирует закрытие</span>}
-                {it.soft && <span className="ex-tag ex-tag--soft">Пометка</span>}
-              </div>
-            </div>
-            {it.isDispute && (
-              <div className="ex-quote">
-                <span className="ex-caption">Сообщение сотрудника в боте · 15 Окт 2026 19:12</span>
-                <span>«{it.quote}»</span>
-              </div>
-            )}
-            {it.hasSug && (
-              <div className="ex-sug">
-                <DS.Icon name="info" size={20} color="var(--icons-information)" />
-                <span className="ex-sug__text"><span className="ex-sug__lbl">Предложение системы:</span> {it.sug}</span>
-              </div>
-            )}
-          </div>
-          <div className="ex-actions">
-            {it.hasSug && <DS.Button variant="primary" fullWidth onClick={onAccept}>Применить предложение</DS.Button>}
-            {it.isDispute && <DS.Button variant="primary" fullWidth onClick={() => { window.location.hash = href; }}>Ответить сотруднику</DS.Button>}
-            <DS.Button variant="secondary" fullWidth onClick={onToggleEdit}>{it.isCode ? 'Поставить код' : 'Исправить'}</DS.Button>
-            <a href={href} className="rc-btn rc-btn--tertiary rc-btn--default rc-btn--full ex-open">Открыть день</a>
-          </div>
-        </div>
-      </div>
-      {editing && <EditPanel it={it} reason={reason} setReason={setReason} onSave={onSave} onCancel={onToggleEdit} />}
-    </article>
+    </li>
   );
 }
 
 // ---------- экран ----------
 function ExceptionsScreen({ data, flagCount }) {
-  const [editKey, setEditKey] = useState('');
-  const [reasonSel, setReasonSel] = useState({});
   const [collapsed, setCollapsed] = useState({});
-  const [checkedMap, setCheckedMap] = useState({});
   const [sort, setSort] = useState('block');
   const [accepted, setAccepted] = useState({});
   const [last, setLast] = useState(null); // { keys, text }
   const [role, setRole] = useState('all');
   const [type, setType] = useState('all');
 
-  // Ссылка «Открыть день»: карточка дня сотрудника, если он есть в табеле.
+  // Ссылка на карточку дня сотрудника, если он есть в табеле.
   const ids = useMemo(() => Object.fromEntries(data.rows.map((r) => [r.name, r.id])), [data.rows]);
   const dayHref = (it) => (ids[it.name] && it.iso.slice(0, 7) === '2026-10') ? '#/day/' + ids[it.name] + '/' + it.iso : '#/day';
 
@@ -244,28 +147,26 @@ function ExceptionsScreen({ data, flagCount }) {
   byRole.forEach((it) => { typeCount[it.type] = (typeCount[it.type] || 0) + 1; });
 
   const nBlock = open.filter((it) => it.block).length;
-  const nSoft = open.length - nBlock;
-  const nSugAll = open.filter((it) => it.hasSug).length;
+  const sugKeys = visible.filter((it) => it.hasSug).map((it) => it.key);
 
-  const allKeys = visible.map((it) => it.key);
-  const checkedCount = allKeys.filter((k) => checkedMap[k]).length;
-  const selSug = visible.filter((it) => it.hasSug && checkedMap[it.key]).map((it) => it.key);
-  const allChecked = allKeys.length > 0 && checkedCount === allKeys.length;
+  const roleOptions = ROLES.map(([v, l]) => ({ value: v, label: l + ' · ' + (roleCount[v] || 0) }));
+  const typeOptions = [{ value: 'all', label: 'Все типы · ' + byRole.length }].concat(
+    TYPES.flat().filter((t) => typeCount[t.label] || type === t.label).map((t) => ({ value: t.label, label: t.label + ' · ' + (typeCount[t.label] || 0) })));
 
   const close = (keys, text) => {
     if (!keys.length) return;
-    const a = { ...accepted }, m = { ...checkedMap };
-    keys.forEach((k) => { a[k] = true; delete m[k]; });
-    setAccepted(a); setCheckedMap(m); setLast({ keys, text });
-    if (keys.includes(editKey)) setEditKey('');
+    const a = { ...accepted };
+    keys.forEach((k) => { a[k] = true; });
+    setAccepted(a); setLast({ keys, text });
   };
-  const acceptKeys = (keys) => close(keys, 'Принято ' + nSug(keys.length) + ' системы, исключения закрыты');
+  const acceptKeys = (keys) => close(keys, keys.length === 1
+    ? 'Предложение системы принято, исключение закрыто'
+    : 'Принято ' + nSug(keys.length) + ' системы, исключения закрыты');
   const undoLast = () => {
     const a = { ...accepted };
     last.keys.forEach((k) => { delete a[k]; });
     setAccepted(a); setLast(null);
   };
-  const toggleAll = () => setCheckedMap(allChecked ? {} : Object.fromEntries(allKeys.map((k) => [k, true])));
 
   let listGroups;
   if (sort === 'person') {
@@ -273,8 +174,7 @@ function ExceptionsScreen({ data, flagCount }) {
     visible.forEach((it) => { (byName[it.name] = byName[it.name] || []).push(it); });
     listGroups = Object.keys(byName).sort((a, b) => a.localeCompare(b, 'ru')).map((n) => {
       const its = byName[n].slice().sort((a, b) => a.day - b.day);
-      const nb = its.filter((it) => it.block).length;
-      return { key: 'p:' + n, title: n, hint: its[0].role + ' · ' + nExc(its.length) + (nb ? ', блокирующих ' + nb : ''), items: its };
+      return { key: 'p:' + n, title: n, hint: its[0].role, items: its };
     });
   } else {
     listGroups = CATEGORIES.map((c, gi) => ({
@@ -290,71 +190,61 @@ function ExceptionsScreen({ data, flagCount }) {
       </SectionTabs>
 
       <div className="ex">
-        <div className="ex-banner">
-          <span className="ex-banner__title">{nBlock} {plural(nBlock, 'блокирует', 'блокируют', 'блокируют')} закрытие месяца</span>
-          <span>· {nSoft} {plural(nSoft, 'пометка', 'пометки', 'пометок')}, не {plural(nSoft, 'блокирует', 'блокируют', 'блокируют')} · {nSugAll} можно принять по предложению системы</span>
+        <div className={'ex-summary' + (nBlock === 0 ? ' is-ready' : '')}>
+          <div className="ex-summary__text">
+            {nBlock > 0 ? <>
+              <span className="ex-summary__title">Чтобы закрыть месяц, осталось разобрать {nBlock}</span>
+              <span className="ex-caption">Пометки ({open.length - nBlock}) закрытию не мешают. Начните с предложений системы: их можно принять одним нажатием.</span>
+            </> : <>
+              <span className="ex-summary__title">Блокирующих исключений нет, месяц можно закрыть</span>
+              <a href="#/" className="ex-summary__link">Вернуться к табелю</a>
+            </>}
+          </div>
+          {sugKeys.length > 0 && (
+            <DS.Button variant="primary" icon="check" onClick={() => acceptKeys(sugKeys)}>Принять все предложения · {sugKeys.length}</DS.Button>
+          )}
         </div>
 
-        <div className="ex-layout">
-          <TypeFilter counts={typeCount} total={byRole.length} value={type} onChange={(v) => { setType(v); }} />
-
-          <section aria-label="Список исключений" className="ex-list">
-            <div className="ex-toolbar">
-              <div className="ex-toolbar__group">
-                <CheckToggle className="ex-all" checked={allChecked} onChange={toggleAll}
-                  label={<>Выбрать все{checkedCount > 0 && <span className="ex-all__count">Выбрано {checkedCount} из {allKeys.length}</span>}</>} />
-                <DS.Button variant="primary" disabled={selSug.length === 0} onClick={() => acceptKeys(selSug)}>Принять предложения ({selSug.length})</DS.Button>
-              </div>
-              <div className="ex-toolbar__group ex-toolbar__group--right">
-                <div role="radiogroup" aria-labelledby="ex-role-lbl" className="ex-roles">
-                  <span id="ex-role-lbl" className="ex-muted">Роль</span>
-                  {ROLES.map(([v, l]) => (
-                    <Chip key={v} on={role === v} onClick={() => setRole(v)}>
-                      {l} {role === v ? (roleCount[v] || 0) : <span className="ex-muted">{roleCount[v] || 0}</span>}
-                    </Chip>
-                  ))}
-                </div>
-                <SelectControl className="ex-sort" label="Сортировка" value={sort} onChange={setSort} options={SORTS} />
-              </div>
-            </div>
-
-            {last && (
-              <div role="status" className="ex-done">
-                <DS.Icon name="check" size={20} color="currentColor" />
-                <span className="ex-done__text">{last.text}</span>
-                <DS.Button variant="tertiary" size="small" onClick={undoLast}>Отменить</DS.Button>
-              </div>
-            )}
-
-            {listGroups.length === 0 && (
-              <div className="ex-empty">
-                <DS.EmptyState icon="check" title="Исключений нет" text={type === 'all' && role === 'all' ? 'Все исключения разобраны.' : 'По выбранным фильтрам исключений нет.'} action={null} />
-              </div>
-            )}
-
-            {listGroups.map((g) => {
-              const isOpen = !collapsed[g.key];
-              return (
-                <div key={g.key} className="ex-group">
-                  <button type="button" className="ex-group__btn" aria-expanded={isOpen} onClick={() => setCollapsed({ ...collapsed, [g.key]: !collapsed[g.key] })}>
-                    <DS.Icon name={isOpen ? 'chevron-down' : 'chevron-right'} size={20} color="var(--icons-default)" />
-                    <h2 className="ex-group__title">{g.title}</h2>
-                    <span className="ex-caption">{g.hint}</span>
-                  </button>
-                  {isOpen && g.items.map((it) => (
-                    <ExceptionCard key={it.key} it={it} href={dayHref(it)}
-                      checked={!!checkedMap[it.key]} editing={editKey === it.key} reason={reasonSel[it.key] || ''}
-                      onToggleCheck={() => setCheckedMap({ ...checkedMap, [it.key]: !checkedMap[it.key] })}
-                      onAccept={() => acceptKeys([it.key])}
-                      onToggleEdit={() => setEditKey(editKey === it.key ? '' : it.key)}
-                      setReason={(r) => setReasonSel({ ...reasonSel, [it.key]: r })}
-                      onSave={() => close([it.key], 'Исключение закрыто: ' + it.name + ', ' + it.date.split(',')[0] + '. Сотрудник получит уведомление в боте')} />
-                  ))}
-                </div>
-              );
-            })}
-          </section>
+        <div className="ex-toolbar">
+          <SelectControl className="ex-select" label={<span className="sr-only">Роль</span>} value={role} onChange={setRole} options={roleOptions} />
+          <SelectControl className="ex-select ex-select--wide" label={<span className="sr-only">Тип исключения</span>} value={type} onChange={setType} options={typeOptions} />
+          <SelectControl className="ex-select ex-select--wide ex-sort" label={<span className="sr-only">Сортировка</span>} value={sort} onChange={setSort} options={SORTS} />
         </div>
+
+        {last && (
+          <div role="status" className="ex-done">
+            <DS.Icon name="check" size={20} color="currentColor" />
+            <span className="ex-done__text">{last.text}</span>
+            <DS.Button variant="tertiary" size="small" onClick={undoLast}>Отменить</DS.Button>
+          </div>
+        )}
+
+        {listGroups.length === 0 && (
+          <div className="ex-empty">
+            <DS.EmptyState icon="check" title="Исключений нет" text={type === 'all' && role === 'all' ? 'Все исключения разобраны.' : 'По выбранным фильтрам исключений нет.'} action={null} />
+          </div>
+        )}
+
+        {listGroups.map((g) => {
+          const isOpen = !collapsed[g.key];
+          return (
+            <section key={g.key} className="ex-group" aria-label={g.title}>
+              <button type="button" className="ex-group__btn" aria-expanded={isOpen} onClick={() => setCollapsed({ ...collapsed, [g.key]: !collapsed[g.key] })}>
+                <DS.Icon name={isOpen ? 'chevron-down' : 'chevron-right'} size={20} color="var(--icons-default)" />
+                <h2 className="ex-group__title">{g.title}</h2>
+                <span className="ex-group__count">{g.items.length}</span>
+                <span className="ex-caption">{g.hint}</span>
+              </button>
+              {isOpen && (
+                <ul className="ex-rows">
+                  {g.items.map((it) => (
+                    <ExceptionRow key={it.key} it={it} href={dayHref(it)} onAccept={() => acceptKeys([it.key])} />
+                  ))}
+                </ul>
+              )}
+            </section>
+          );
+        })}
       </div>
     </>
   );

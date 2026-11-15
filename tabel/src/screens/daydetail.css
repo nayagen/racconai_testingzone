@@ -32,35 +32,43 @@
 .dd-pill--warn { background: var(--surface-warning-subtle); color: var(--text-warning); }
 .dd-pill--ok { background: var(--surface-success-subtle); color: var(--text-success); }
 
-/* ---------- плитки ---------- */
-.dd-stats { display: flex; flex-wrap: wrap; gap: var(--space-4); }
-.dd-stat {
-  flex: 1 1 160px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-4);
-  background: var(--surface-primary); border-radius: var(--radius-lg);
-}
-.dd-stat__label { font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary); }
-.dd-stat__value { font: var(--text-heading-h1-bold); color: var(--text-headings); }
-.dd-stat__note { font: var(--text-caption-m-regular); }
-.dd-stat__note--ok { color: var(--text-success); }
-.dd-stat__note--strong, .dd-stat__note--strong-ok { font: var(--text-caption-m-semibold); }
-.dd-stat__note--strong-ok { color: var(--text-success); }
-.dd-stat--attention { background: var(--surface-attention-subtle); color: var(--text-attention); }
-.dd-stat--attention .dd-stat__label { color: var(--text-attention); }
-
 /* ---------- панели ---------- */
 .dd-panel {
   min-width: 0; display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-6);
   background: var(--surface-primary); border-radius: var(--radius-lg);
 }
 .dd-panel--shifts { gap: var(--space-4); }
-.dd-panel--timeline { flex: 3 1 460px; gap: 0; }
+.dd-panel--timeline { gap: 0; }
 .dd-panel--log { gap: var(--space-3); }
 .dd-panel__head { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: baseline; }
 .dd-h2 { font: var(--text-heading-h3-semibold); color: var(--text-headings); }
 .dd-h2--timeline { margin-bottom: var(--space-5); }
-.dd-h2--log { margin-bottom: var(--space-2); }
 .dd-cols { display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: flex-start; }
-.dd-side { flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-6); }
+/* слева — что произошло, справа — решение: оно остаётся на экране, пока HR листает доказательства */
+.dd-main { flex: 3 1 480px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-6); }
+.dd-side { flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-6); position: sticky; top: var(--space-4); }
+
+/* сворачиваемые блоки: смены и журнал нужны редко */
+.dd-fold { gap: 0; }
+.dd-fold[open] { gap: var(--space-4); }
+.dd-fold__sum { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; cursor: pointer; list-style: none; }
+.dd-fold__sum::-webkit-details-marker { display: none; }
+.dd-fold__sum .rc-icon, .dd-fold__sum > svg { transition: transform .15s ease-out; }
+.dd-fold[open] > .dd-fold__sum .rc-icon, .dd-fold[open] > .dd-fold__sum > svg { transform: rotate(90deg); }
+.dd-fold__sum:focus-visible { outline: 2px solid var(--border-action); outline-offset: 4px; border-radius: var(--radius-sm); }
+
+/* форма решения */
+.dd-lead { margin: 0; font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.dd-lead strong { color: var(--text-headings); }
+.dd-total { font: var(--text-paragraph-m-regular); color: var(--text-secondary); }
+.dd-total strong { color: var(--text-headings); }
+.dd-more { font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.dd-more > summary { cursor: pointer; display: flex; gap: var(--space-2); align-items: baseline; color: var(--text-action); font: var(--text-body-m-semibold); }
+.dd-more > summary:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; border-radius: var(--radius-sm); }
+.dd-more__body { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3); }
+.dd-more__body > * { flex: 1 1 140px; }
+.dd-code.is-error .ctl__select { border-color: var(--border-error, var(--text-error)); }
+.dd-foot { display: flex; flex-direction: column; gap: var(--space-1); align-items: flex-start; padding-top: var(--space-4); border-top: 1px solid var(--border-primary); }
 
 /* ---------- смены ---------- */
 .dd-gap {
@@ -353,8 +361,8 @@
 @media (max-width: 600px) {
   .dd { gap: var(--space-4); }
   .dd-panel { padding: var(--space-4); }
-  .dd-panel--timeline { flex-basis: 100%; }
-  .dd-side { flex-basis: 100%; }
+  .dd-main, .dd-side { flex-basis: 100%; }
+  .dd-side { position: static; }
   .dd-shift { padding: var(--space-4); }
   .dd-overlay { padding: var(--space-3); }
   .dd-chat, .dd-compose, .dd-bigmap__foot { padding-left: var(--space-4); padding-right: var(--space-4); }
