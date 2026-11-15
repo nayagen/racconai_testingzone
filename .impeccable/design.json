@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-03T06:57:33.094Z",
+  "generatedAt": "2026-11-15T11:26:10.000Z",
   "title": "Design System: RaccoonAI",
   "extensions": {
     "colorMeta": {
@@ -504,62 +504,62 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Hero headline only."
+        "purpose": "the Platform h1 only, balanced wrapping. It is the page's single display headline; every other block, #dispatcher included, opens on Headline."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Section headings."
+        "purpose": "section headings. **Headline Small** (600, clamp 26-36px, 1.15, -0.025em) for sub-section heads; the proof heading uses clamp 28-40px."
       },
       "headline-sm": {
         "displayName": "Headline Small",
-        "purpose": "Sub-section and proof headings."
+        "purpose": "Sub-section heads; the proof heading uses clamp 28-40px."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Product names; view headings at 22px."
+        "purpose": "product names; the four-view headings use 22px / -0.015em."
       },
       "lead": {
         "displayName": "Lead",
-        "purpose": "Hero supporting line and section intros."
+        "purpose": "the hero supporting line; section intros use clamp 18-20px at max 62ch."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Running text; 17px under 600px."
+        "purpose": "running text. Check-list items 17px / 1.55 at max 56ch. **Body Small** (15px): nav, \"where\" lines, feature descriptions, footer."
       },
       "body-sm": {
         "displayName": "Body Small",
-        "purpose": "Nav, where-lines, feature descriptions, footer."
+        "purpose": "Nav, \"where\" lines, feature descriptions, footer."
       },
       "button": {
         "displayName": "Button",
-        "purpose": "All buttons; 15px on small."
+        "purpose": "600, 17px, line-height 1; 15px on small buttons."
       },
       "ui": {
         "displayName": "UI",
-        "purpose": "Text inside product replicas (Inter)."
+        "purpose": "text inside product replicas. **UI Label** (Medeo Sans 600, 13px; 12px in table rows): status chips. **UI Micro** (Medeo Sans 600, 11-12px, 0.04-0.05em, uppercase): column headers and group labels inside product replicas only."
       },
       "ui-label": {
         "displayName": "UI Label",
-        "purpose": "Status chips."
+        "purpose": "Status chips (Medeo Sans 600, 13px; 12px in table rows)."
       },
       "ui-micro": {
         "displayName": "UI Micro",
-        "purpose": "Uppercase column and group headers inside product UI only."
+        "purpose": "Uppercase column headers and group labels inside product replicas only."
       },
       "plate": {
         "displayName": "Plate",
-        "purpose": "Vehicle plates, tabular figures."
+        "purpose": "vehicle plates such as \"123 ABC 02\", wherever they appear."
       },
       "note": {
         "displayName": "Note",
-        "purpose": "Demo-data captions under replicas."
+        "purpose": "short interaction hints under a replica when it has controls («Кнопка работает»)."
       }
     },
     "shadows": [
       {
         "name": "floating-ui",
         "value": "0 1px 2px rgba(8, 10, 17, .06), 0 12px 32px -8px rgba(8, 10, 17, .16)",
-        "purpose": "Stage cards, DriverApp phone, fleet and Sentinel panels. The only elevation."
+        "purpose": "Cards and panels that sit above the stage or a section ground: stage cards, the AI pick panel, the fleet panel. The only elevation."
       },
       {
         "name": "hairline-inset",
@@ -617,9 +617,47 @@
         "name": "reduced-motion",
         "value": "animation: none; transition: none; scroll-behavior: auto",
         "purpose": "Global prefers-reduced-motion override."
+      },
+      {
+        "name": "dock-spring",
+        "value": "critically damped spring ≈0.25s",
+        "purpose": "Desktop dock marker, rail fill and label pill moving between sections; no overshoot."
+      },
+      {
+        "name": "dock-strip-clip",
+        "value": ".36s",
+        "purpose": "Dock opening from its 48px strip over the Platform screen (clip-path), text fading in over .18s."
+      },
+      {
+        "name": "anchor-glide",
+        "value": "1.1s quartic ease-out",
+        "purpose": "In-page link scroll through Lenis to the page scroll-padding."
+      },
+      {
+        "name": "smooth-scroll",
+        "value": "Lenis lerp .085, wheel ×1.4",
+        "purpose": "Wheel and trackpad easing on all pages; off under reduced motion and on touch."
+      },
+      {
+        "name": "signature-loop",
+        "value": "11.4s",
+        "purpose": "AI dispatcher stage sequence loop while at least 35% visible."
+      },
+      {
+        "name": "theme-switch",
+        "value": "1s",
+        "purpose": "Colour transitions while switching light and dark theme."
       }
     ],
     "breakpoints": [
+      {
+        "name": "dock-wide",
+        "value": "1688px"
+      },
+      {
+        "name": "desktop-dock",
+        "value": "1280px"
+      },
       {
         "name": "tablet-wide",
         "value": "1080px"
@@ -662,7 +700,7 @@
       "refersTo": "status-progress",
       "description": "Product job states plus the AI chip and its dashed proposed state.",
       "html": "<div class=\"ds-row\"><span class=\"ds-status ds-created\">Неназначено</span><span class=\"ds-status ds-progress\">Машина в пути</span><span class=\"ds-status ds-done\">Выполнено</span><span class=\"ds-status ds-ai\">Назначено AI</span><span class=\"ds-status ds-ai ds-proposed\">AI предлагает</span></div>",
-      "css": ".ds-row { display: flex; flex-wrap: wrap; gap: 8px; } .ds-status { display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 Inter, system-ui, sans-serif; padding: 6px 10px; border-radius: 999px; white-space: nowrap; } .ds-status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; } .ds-created { background: #fef6d8; color: #6b4a00; } .ds-progress { background: #dbeafe; color: #0f3fae; } .ds-done { background: #dcfce7; color: #0b4d26; } .ds-done::before { background: #008236; } .ds-ai { background: #ede9fe; color: #6a0fe0; } .ds-proposed { background: #fff; outline: 1.5px dashed #7008e7; outline-offset: -1.5px; }"
+      "css": ".ds-row { display: flex; flex-wrap: wrap; gap: 8px; } .ds-status { display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 \"Medeo Sans\", system-ui, sans-serif; padding: 6px 10px; border-radius: 999px; white-space: nowrap; } .ds-status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; } .ds-created { background: #fef6d8; color: #6b4a00; } .ds-progress { background: #dbeafe; color: #0f3fae; } .ds-done { background: #dcfce7; color: #0b4d26; } .ds-done::before { background: #008236; } .ds-ai { background: #ede9fe; color: #6a0fe0; } .ds-proposed { background: #fff; outline: 1.5px dashed #7008e7; outline-offset: -1.5px; }"
     },
     {
       "name": "Floating UI Card",
@@ -670,7 +708,7 @@
       "refersTo": "ui-card",
       "description": "Assignment card that floats over the product stage; the only shadowed surface type.",
       "html": "<div class=\"ds-card\"><div class=\"ds-card-row\"><span class=\"ds-chip-ai\">Назначено AI</span><span class=\"ds-meta\">ETA 14:05</span></div><p class=\"ds-card-title\"><span class=\"ds-plate\">123 ABC 02</span> Мусоровоз ТБО</p><p class=\"ds-card-sub\">Добавлено в маршрут · точка 11 из 11</p><button class=\"ds-mini\">Переназначить</button></div>",
-      "css": ".ds-card { width: 300px; background: #fff; border: 1px solid #c4b4ff; border-radius: 14px; padding: 14px 16px 16px; box-shadow: 0 1px 2px rgba(8,10,17,.06), 0 12px 32px -8px rgba(8,10,17,.16); font-family: Inter, system-ui, sans-serif; } .ds-card-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; } .ds-chip-ai { display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 Inter, sans-serif; padding: 6px 10px; border-radius: 999px; background: #ede9fe; color: #6a0fe0; } .ds-chip-ai::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; } .ds-meta { font-size: 13px; color: #586579; font-variant-numeric: tabular-nums; } .ds-card-title { margin: 10px 0 0; font-size: 16px; font-weight: 600; color: #080a11; } .ds-plate { font-weight: 600; letter-spacing: .02em; font-variant-numeric: tabular-nums; } .ds-card-sub { margin: 4px 0 0; font-size: 14px; line-height: 1.4; color: #586579; } .ds-mini { margin-top: 12px; font: 500 13px/1 Inter, sans-serif; color: #080a11; background: #f1f5f9; border: 0; border-radius: 8px; padding: 8px 12px; cursor: pointer; } .ds-mini:hover { background: #e4eaf1; } .ds-mini:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; }"
+      "css": ".ds-card { width: 300px; background: #fff; border: 1px solid #c4b4ff; border-radius: 14px; padding: 14px 16px 16px; box-shadow: 0 1px 2px rgba(8,10,17,.06), 0 12px 32px -8px rgba(8,10,17,.16); font-family: \"Medeo Sans\", system-ui, sans-serif; } .ds-card-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; } .ds-chip-ai { display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 \"Medeo Sans\", sans-serif; padding: 6px 10px; border-radius: 999px; background: #ede9fe; color: #6a0fe0; } .ds-chip-ai::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; } .ds-meta { font-size: 13px; color: #586579; font-variant-numeric: tabular-nums; } .ds-card-title { margin: 10px 0 0; font-size: 16px; font-weight: 600; color: #080a11; } .ds-plate { font-weight: 600; letter-spacing: .02em; font-variant-numeric: tabular-nums; } .ds-card-sub { margin: 4px 0 0; font-size: 14px; line-height: 1.4; color: #586579; } .ds-mini { margin-top: 12px; font: 500 13px/1 \"Medeo Sans\", sans-serif; color: #080a11; background: #f1f5f9; border: 0; border-radius: 8px; padding: 8px 12px; cursor: pointer; } .ds-mini:hover { background: #e4eaf1; } .ds-mini:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; }"
     },
     {
       "name": "Fleet Switch Row",
@@ -678,7 +716,7 @@
       "refersTo": "switch-on",
       "description": "Per-vehicle AI toggle: violet when the AI controls the vehicle, grey when manual.",
       "html": "<ul class=\"ds-fleet\"><li><span class=\"ds-plate\">123 ABC 02</span><span class=\"ds-mode\">Назначено AI · 10 точек</span><button class=\"ds-switch\" role=\"switch\" aria-checked=\"true\" aria-label=\"AI\"></button></li><li class=\"ds-manual\"><span class=\"ds-plate\">915 AAR 02</span><span class=\"ds-mode\">Вручную · диспетчер</span><button class=\"ds-switch\" role=\"switch\" aria-checked=\"false\" aria-label=\"AI\"></button></li></ul>",
-      "css": ".ds-fleet { list-style: none; margin: 0; padding: 0; width: 380px; font-family: Inter, system-ui, sans-serif; } .ds-fleet li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid #e2e8f0; font-size: 15px; } .ds-plate { font-weight: 600; letter-spacing: .02em; font-variant-numeric: tabular-nums; color: #080a11; } .ds-mode { color: #6a0fe0; font-weight: 500; } .ds-manual .ds-mode { color: #586579; } .ds-switch { position: relative; width: 44px; height: 26px; border-radius: 999px; border: 0; background: #cbd5e1; cursor: pointer; transition: background-color .25s cubic-bezier(.16,1,.3,1); } .ds-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .25s cubic-bezier(.16,1,.3,1); } .ds-switch[aria-checked='true'] { background: #7008e7; } .ds-switch[aria-checked='true']::after { transform: translateX(18px); } .ds-switch:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; }"
+      "css": ".ds-fleet { list-style: none; margin: 0; padding: 0; width: 380px; font-family: \"Medeo Sans\", system-ui, sans-serif; } .ds-fleet li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid #e2e8f0; font-size: 15px; } .ds-plate { font-weight: 600; letter-spacing: .02em; font-variant-numeric: tabular-nums; color: #080a11; } .ds-mode { color: #6a0fe0; font-weight: 500; } .ds-manual .ds-mode { color: #586579; } .ds-switch { position: relative; width: 44px; height: 26px; border-radius: 999px; border: 0; background: #cbd5e1; cursor: pointer; transition: background-color .25s cubic-bezier(.16,1,.3,1); } .ds-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .25s cubic-bezier(.16,1,.3,1); } .ds-switch[aria-checked='true'] { background: #7008e7; } .ds-switch[aria-checked='true']::after { transform: translateX(18px); } .ds-switch:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; }"
     },
     {
       "name": "Form Field",
@@ -689,12 +727,12 @@
       "css": ".ds-field { display: grid; gap: 8px; width: 320px; font-family: Onest, system-ui, sans-serif; } .ds-field label { font-size: 15px; font-weight: 600; color: #080a11; } .ds-input { height: 52px; border: 1px solid #cbd5e1; border-radius: 10px; background: #fff; padding: 0 14px; font: 400 17px Onest, system-ui, sans-serif; color: #080a11; transition: border-color .2s, box-shadow .2s; } .ds-input::placeholder { color: #6b7789; } .ds-input:hover { border-color: #94a3b8; } .ds-input:focus { outline: none; border-color: #155dfc; box-shadow: 0 0 0 3px #bedbff; } .ds-input[aria-invalid='true'] { border-color: #c10007; }"
     },
     {
-      "name": "Site Navigation",
+      "name": "Header (under 1280px)",
       "kind": "nav",
       "refersTo": "button-sm",
-      "description": "Sticky 72px header: mark, wordmark, links, small ink CTA.",
-      "html": "<header class=\"ds-nav\"><span class=\"ds-brand\">RaccoonAI</span><nav class=\"ds-links\"><a href=\"#\">Продукты</a><a href=\"#\">AI-диспетчер</a><a href=\"#\">Для акиматов</a></nav><a class=\"ds-cta\" href=\"#\">Запросить демо</a></header>",
-      "css": ".ds-nav { height: 72px; display: flex; align-items: center; gap: 40px; padding: 0 24px; background: rgba(255,255,255,.94); border-bottom: 1px solid #e2e8f0; font-family: Onest, system-ui, sans-serif; } .ds-brand { font-weight: 700; font-size: 20px; letter-spacing: -.01em; color: #080a11; } .ds-links { display: flex; gap: 28px; margin-right: auto; } .ds-links a { color: #242a35; text-decoration: none; font-size: 15px; font-weight: 500; text-underline-offset: .2em; } .ds-links a:hover { color: #080a11; text-decoration: underline; } .ds-links a:focus-visible, .ds-cta:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; border-radius: 6px; } .ds-cta { display: inline-flex; align-items: center; min-height: 42px; padding: 0 18px; border-radius: 10px; background: #080a11; color: #fff; font: 600 15px/1 Onest, sans-serif; text-decoration: none; } .ds-cta:hover { background: #232838; }"
+      "description": "Sticky 72px header used below 1280px: brand, language switcher, small ink «Запросить демо» and the sections menu. On desktop the Section Dock replaces it.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-brand\" href=\"#\"><span class=\"ds-mark\"></span>RaccoonAI</a><div class=\"ds-right\"><button class=\"ds-lang\" type=\"button\">RU<svg viewBox=\"0 0 12 12\" width=\"12\" height=\"12\" aria-hidden=\"true\"><path d=\"M3 4.5l3 3 3-3\"/></svg></button><a class=\"ds-cta\" href=\"#\">Запросить демо</a><button class=\"ds-burger\" type=\"button\" aria-label=\"Разделы страницы\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" aria-hidden=\"true\"><path d=\"M4 7h16M4 12h16M4 17h16\"/></svg></button></div></header>",
+      "css": ".ds-header { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 24px; background: rgba(255,255,255,.96); border-bottom: 1px solid #e2e8f0; font-family: Onest, system-ui, sans-serif; } .ds-brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; color: #080a11; text-decoration: none; } .ds-mark { width: 32px; height: 32px; border-radius: 6px; background: #080a11; box-shadow: inset 0 0 0 1px #e2e8f0; } .ds-right { display: flex; align-items: center; gap: 12px; } .ds-lang { height: 42px; padding: 0 12px; display: flex; align-items: center; gap: 6px; border: 0; border-radius: 10px; background: transparent; font: 600 14px Onest, system-ui, sans-serif; color: #080a11; cursor: pointer; } .ds-lang svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; } .ds-lang:hover, .ds-burger:hover { background: #f1f5f9; } .ds-cta { height: 42px; padding: 0 18px; display: inline-flex; align-items: center; border-radius: 10px; background: #080a11; color: #fff; font-size: 15px; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background-color .2s cubic-bezier(.16, 1, .3, 1); } .ds-cta:hover { background: #232838; } .ds-burger { width: 42px; height: 42px; display: grid; place-items: center; border: 0; border-radius: 10px; background: transparent; color: #080a11; cursor: pointer; } .ds-burger svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; } .ds-header :focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; border-radius: 6px; }"
     },
     {
       "name": "Module Chip",
@@ -703,16 +741,24 @@
       "description": "Flat tint pill listing Platform modules.",
       "html": "<ul class=\"ds-modules\"><li>Заявки и маршруты</li><li>GPS-карта (Wialon)</li><li>Мониторинг ГСМ</li></ul>",
       "css": ".ds-modules { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; font-family: Onest, system-ui, sans-serif; } .ds-modules li { font-size: 14px; color: #242a35; background: #f1f5f9; border-radius: 999px; padding: 6px 12px; }"
+    },
+    {
+      "name": "Section Dock",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Desktop (≥1280px) left-edge section tree: bare on the page, 1px rail with ticks, 7px ink diamond on the current section, muted Onest 500 14px labels turning ink, a 5% ink pill behind the marked row.",
+      "html": "<nav class=\"ds-dock\" aria-label=\"Разделы страницы\"><ul><li><a href=\"#\">Платформа</a></li><li class=\"is-on\"><a href=\"#\" aria-current=\"true\">Заявки</a></li><li><a href=\"#\">AI-диспетчер</a></li><li><a href=\"#\">Плановый вывоз</a></li></ul></nav>",
+      "css": ".ds-dock { width: 208px; font-family: Onest, system-ui, sans-serif; } .ds-dock ul { list-style: none; margin: 0; padding: 0; position: relative; display: flex; flex-direction: column; gap: 2px; } .ds-dock ul::before { content: \"\"; position: absolute; left: 23.5px; top: 16px; bottom: 16px; width: 1px; background: #cbd5e1; } .ds-dock li { position: relative; height: 32px; display: flex; align-items: center; } .ds-dock li::before { content: \"\"; position: absolute; left: 22.5px; width: 3px; height: 1px; background: #cbd5e1; } .ds-dock li.is-on::before { left: 20.5px; width: 7px; height: 7px; background: #080a11; border-radius: 1px; transform: rotate(45deg); } .ds-dock a { margin-left: 40px; padding: 0 12px; height: 32px; display: flex; align-items: center; flex: 1; border-radius: 8px; font-size: 14px; font-weight: 500; color: #586579; text-decoration: none; transition: color .2s cubic-bezier(.16, 1, .3, 1), background-color .2s cubic-bezier(.16, 1, .3, 1); } .ds-dock a:hover, .ds-dock li.is-on a { color: #080a11; } .ds-dock li.is-on a { background: rgba(8, 10, 17, .05); } .ds-dock a:focus-visible { outline: 3px solid #155dfc; outline-offset: 3px; border-radius: 6px; }"
     }
   ],
   "narrative": {
     "northStar": "Live Operations, Light",
-    "overview": "The marketing site is a dispatch room with the lights on. A white ground carries near-black ink, and the product itself does the persuading: map, route, assignment card, DriverApp phone, fleet switches and plan-vs-fact bars are rebuilt in HTML and CSS at real density, not shown as screenshots. Marketing copy is set in Onest with tight display tracking; everything that is product is set in Inter, so the reader always knows which voice is speaking.\n\nColor is semantic before it is decorative. Violet belongs to the AI and nothing else. Job states use the client product's status colors, the same ones dispatchers see in the Platform. The primary call to action is ink, not a brand color, so the page's one strong hue stays reserved for \"the AI did or proposes this\". Depth is minimal: flat tinted bands and hairlines for structure, one soft lifted shadow only on UI that floats over the product stage.\n\nAs built, the world departs from the direction contract in three values: ink is #080a11 (contract #0b1220), the cool product grey is #f1f5f9 (contract #f2f4f7), and violet is the product design system's AI ramp (#7008e7 / #6a0fe0 / #ede9fe / #c4b4ff) rather than the contract's #3a2fd6. The build is normative.",
+    "overview": "The marketing site is a dispatch room with the lights on. A white ground carries near-black ink, and the product itself does the persuading: map, route, the AI pick panel, fleet switches and plan-vs-fact bars are rebuilt in HTML and CSS at real density, not shown as screenshots. Marketing copy is set in Onest with tight display tracking; everything that is product is set in Medeo Sans, so the reader always knows which voice is speaking.\n\nColor is semantic before it is decorative. Violet belongs to the AI and nothing else. Job states use the client product's status colors, the same ones dispatchers see in the Platform. The primary call to action is ink, not a brand color, so the page's one strong hue stays reserved for \"the AI did or proposes this\". Depth is minimal: flat tinted bands and hairlines for structure, one soft lifted shadow only on UI that floats over the product stage.\n\nAs built, the world departs from the direction contract in three values: ink is #080a11 (contract #0b1220), the cool product grey is #f1f5f9 (contract #f2f4f7), and violet is the product design system's AI ramp (#7008e7 / #6a0fe0 / #ede9fe / #c4b4ff) rather than the contract's #3a2fd6. The build is normative.",
     "keyCharacteristics": [
       "White page, ink headings, slate body text; cool tint bands alternate with white sections.",
-      "Product UI replicas at real density are the imagery; no illustrations, stock, or screenshots.",
+      "Product UI replicas at real density are the primary imagery; no illustrations, stock, or screenshots. Documentary field photography supports them in three places only (see Photography).",
       "Violet only for AI meaning; status colors only for job states; ink for the primary action.",
-      "Two families: Onest for marketing voice, Inter for anything that is product UI.",
+      "Two families: Onest for marketing voice, Medeo Sans for anything that is product UI.",
       "One soft shadow, used only on floating product UI.",
       "A single on-load signature sequence whose resting state is the end state."
     ],
@@ -734,7 +780,7 @@
       },
       {
         "name": "The Two Voices Rule",
-        "body": "Onest speaks for RaccoonAI; Inter speaks for the product. If it is a piece of the product, it is set in Inter.",
+        "body": "Onest speaks for RaccoonAI; Medeo Sans speaks for the product. If it is a piece of the product, it is set in Medeo Sans.",
         "section": "typography"
       },
       {
@@ -749,7 +795,7 @@
       }
     ],
     "dos": [
-      "Do rebuild product UI in HTML/CSS at real density, set in Inter, and caption it \"Демонстрационные данные\".",
+      "Do rebuild product UI in HTML/CSS at real density, set in Medeo Sans, without a \"demo data\" caption.",
       "Do keep AI Violet for AI-made or AI-proposed things, and pair AI Violet Text with AI Soft for labels.",
       "Do use the product status ramps (soft fill + ink text + currentColor dot) for any job state, with the product's wording.",
       "Do set vehicle plates in the Plate style everywhere.",
@@ -762,7 +808,7 @@
       "Don't replace a product replica with a static screenshot or a row of equal feature cards.",
       "Don't add gradients, glass, blur, or a second shadow level.",
       "Don't put uppercase tracked labels above marketing headings; caps live only inside product UI headers.",
-      "Don't set product UI in Onest or marketing headings in Inter."
+      "Don't set product UI in Onest or marketing headings in Medeo Sans."
     ]
   }
 }

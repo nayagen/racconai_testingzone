@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Настройки табеля — типы исключений</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/raccoonds/tokens.css">
+<link rel="stylesheet" href="ds/raccoonds/components/bundle.css">
+<script src="ds/raccoonds/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--text-body);background:var(--surface-page);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}h1,h2,h3{margin:0;color:var(--text-headings)}
+a{color:var(--text-action)}a:hover{color:var(--text-action-hover)}a.rc-seg__item,a.rc-seg__item:hover{color:var(--text-body)}a.rc-seg__item.is-selected,a.rc-seg__item.is-selected:hover{color:var(--text-on-action);background:var(--surface-action)}.rc-seg__item:focus-visible{outline:2px solid var(--border-action);outline-offset:2px}a.rc-tab,a.rc-tab:hover{color:var(--text-body)}a.rc-tab.is-selected,a.rc-tab.is-selected:hover{color:var(--text-selected)}.rc-btn--tertiary{box-shadow:none}.rc-check__box .rc-icon{color:transparent!important}.rc-check input:checked+.rc-check__box .rc-icon{color:var(--icons-on-action)!important}input,select,textarea{transition:border-color .12s}input:focus,select:focus,textarea:focus,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--border-action)!important}
+.cb{display:inline-flex;align-items:center;padding:0;margin:0;border:0;background:transparent;font:inherit;color:inherit;cursor:pointer;text-align:left;border-radius:var(--radius-sm)}.cb-in{display:inline-flex;pointer-events:none}.cb:hover .rc-check__box{box-shadow:inset 0 0 0 1px var(--border-action)}.cb:hover input:checked+.rc-check__box{background:var(--surface-action-hover)}.cb:focus-visible{outline:2px solid var(--border-action);outline-offset:2px}
+a.rc-tab,a.rc-tab:hover{color:var(--text-body)}a.rc-tab.is-selected,a.rc-tab.is-selected:hover{color:var(--text-selected)}a.rc-sidenav__item:hover{color:var(--text-body)}a.rc-sidenav__item.is-selected:hover{color:var(--text-selected)}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; box-sizing: border-box; min-height: 100vh; background: var(--surface-page)">
+  <x-import component-from-global-scope="RaccoonDS.SideNav" value="timesheet" groups="{{navGroups}}" user="{{navUser}}" quick-actions="{{false}}" style="flex: 0 0 232px; align-self: flex-start; position: sticky; top: var(--space-4); height: calc(100vh - 2 * var(--space-4))"></x-import>
+
+  <main style="flex: 999 1 560px; min-width: 0; height: calc(100vh - 2 * var(--space-4)); box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; min-height: 40px">
+      <div role="tablist" aria-label="Табель" class="rc-tabs rc-tabs--medium" style="flex-wrap: wrap">
+        <a href="Main.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none"><span class="rc-tab__label">Табель</span></a>
+        <a href="Exceptions.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none"><span class="rc-tab__label">Исключения</span><span class="rc-navcount">8</span></a>
+        <a href="Feed.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none"><span class="rc-tab__label">Лента отметок</span></a>
+        <a href="SettingsRules.dc.html" role="tab" aria-selected="true" aria-current="page" class="rc-tab is-selected" style="text-decoration: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="settings" size="{{16}}" color="currentColor"></x-import><span class="rc-tab__label">Настройки</span></a>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <x-import component-from-global-scope="RaccoonDS.Button" variant="tertiary">Отменить</x-import>
+        <x-import component-from-global-scope="RaccoonDS.Button" variant="primary">Сохранить</x-import>
+      </div>
+    </div>
+
+    <div style="flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
+      <nav aria-label="Разделы настроек" style="flex: 0 0 auto; align-self: flex-start">
+        <div role="tablist" class="rc-seg">
+          <a href="SettingsRules.dc.html" role="tab" aria-selected="false" class="rc-seg__item" style="text-decoration: none">Правила и пороги</a>
+          <a href="SettingsExceptions.dc.html" role="tab" aria-selected="true" aria-current="page" class="rc-seg__item is-selected" style="text-decoration: none">Типы исключений</a>
+        </div>
+      </nav>
+      <div style="flex: 1 1 0; min-height: 0; display: flex; gap: 16px; align-items: stretch">
+      <div style="flex: 1 1 0; min-width: 0; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); align-items: center; font: var(--text-paragraph-m-regular); color: var(--text-body)">
+      <label style="flex: 0 1 320px; min-width: 240px; display: flex; gap: 8px; align-items: center; font: var(--text-paragraph-m-regular); color: var(--text-body)">Уровень
+        <span style="position: relative; display: block; flex: 1 1 auto; min-width: 0"><select style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-paragraph-m-regular); color: var(--text-body); cursor: pointer"><option>Депо №1</option><option>Организация (для всех депо)</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span>
+      </label>
+          <span style="flex: 1 1 360px; min-width: 0; max-width: 860px">Для каждого типа задайте: проверять ли его вообще, мешает ли он закрыть месяц, кто разбирает и можно ли принимать предложение системы массово. Некоторые типы нельзя отключить — они защищают от потери оплаченных часов.</span>
+        </div>
+        <div style="flex: 0 0 auto; overflow-x: auto; background: var(--surface-primary); border-radius: var(--radius-lg); border: 1px solid var(--border-primary)">
+      <div style="min-width: 1060px; display: flex; flex-direction: column">
+        <div style="display: flex; align-items: center; border-bottom: 1px solid var(--border-primary); font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary)">
+          <div style="width: 260px; flex-shrink: 0; padding: 8px 16px">Тип исключения</div>
+          <div style="width: 100px; flex-shrink: 0; padding: 8px 8px">Проверять</div>
+          <div style="width: 210px; flex-shrink: 0; padding: 8px 8px">Поведение</div>
+          <div style="width: 210px; flex-shrink: 0; padding: 8px 8px">Кто разбирает</div>
+          <div style="width: 130px; flex-shrink: 0; padding: 8px 8px">Массово принимать</div>
+          <div style="width: 150px; flex-shrink: 0; padding: 8px 8px">Спросить сотрудника в боте</div>
+        </div>
+        <sc-for list="{{groups}}" as="g" hint-placeholder-count="4" style="background-color: var(--surface-primary, #ffffff)">
+          <div style="padding: 24px 16px 12px; font: var(--text-caption-caps-bold); color: var(--text-secondary); text-transform: uppercase; background: var(--surface-primary); border-bottom: 1px solid var(--border-primary)">{{g.title}}</div>
+          <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; border-bottom: 1px solid var(--border-primary); font: var(--text-paragraph-m-regular); min-height: 56px">
+              <div style="width: 260px; flex-shrink: 0; padding: 8px 16px; display: flex; flex-direction: column; gap: var(--space-1)">
+                <span style="font-weight: 600">{{r.label}}</span>
+                <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">{{r.hint}}</span>
+              </div>
+              <div style="width: 100px; flex-shrink: 0; padding: 0 8px">
+                <sc-if value="{{r.locked}}" hint-placeholder-val="{{false}}"><span style="font: var(--text-caption-m-regular); color: var(--text-body)">всегда</span></sc-if>
+                <sc-if value="{{r.free}}" hint-placeholder-val="{{true}}"><button type="button" class="cb" onClick="{{r.chk.toggle}}" aria-pressed="{{r.chk.pressed}}" aria-label="Проверять"><span class="cb-in"><sc-if value="{{r.chk.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}"></x-import></sc-if><sc-if value="{{r.chk.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox"></x-import></sc-if></span></button></sc-if>
+              </div>
+              <div style="width: 210px; flex-shrink: 0; padding: 0 8px">
+                <sc-if value="{{r.locked}}" hint-placeholder-val="{{false}}"><span style="font: var(--text-body-m-semibold)">Блокирует закрытие</span></sc-if>
+                <sc-if value="{{r.free}}" hint-placeholder-val="{{true}}">
+                  <span style="position: relative; display: block; width: 100%"><select aria-label="Поведение" style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-paragraph-m-regular); color: var(--text-body); cursor: pointer"><option>{{r.behavior}}</option><option>{{r.behaviorAlt}}</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span>
+                </sc-if>
+              </div>
+              <div style="width: 210px; flex-shrink: 0; padding: 0 8px">
+                <span style="position: relative; display: block; width: 100%"><select aria-label="Кто разбирает" style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-paragraph-m-regular); color: var(--text-body); cursor: pointer"><option>{{r.who}}</option><option>{{r.whoAlt}}</option><option>Диспетчер</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span>
+              </div>
+              <div style="width: 130px; flex-shrink: 0; padding: 0 8px">
+                <sc-if value="{{r.bulkNa}}" hint-placeholder-val="{{false}}"><span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">нет предложения</span></sc-if>
+                <sc-if value="{{r.bulkHas}}" hint-placeholder-val="{{true}}"><button type="button" class="cb" onClick="{{r.bulk.toggle}}" aria-pressed="{{r.bulk.pressed}}" aria-label="Массово принимать предложение"><span class="cb-in"><sc-if value="{{r.bulk.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}"></x-import></sc-if><sc-if value="{{r.bulk.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox"></x-import></sc-if></span></button></sc-if>
+              </div>
+              <div style="width: 150px; flex-shrink: 0; padding: 0 8px">
+                <sc-if value="{{r.askOn}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Switch" on="{{true}}"></x-import></sc-if>
+                <sc-if value="{{r.askOff}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Switch"></x-import></sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </sc-for>
+      </div>
+        </div>
+      </div>
+
+      <aside style="flex: 0 0 400px; width: 400px; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 16px">
+      <section aria-label="Закрытие месяца" style="flex: 0 0 auto; background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: 12px; font: var(--text-paragraph-m-regular)">
+        <h2 style="margin: 0 0 var(--space-1); font: var(--text-heading-h3-semibold); color: var(--text-headings)">Закрытие месяца</h2>
+        <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.x1.toggle}}" aria-pressed="{{cb.x1.pressed}}"><span class="cb-in"><sc-if value="{{cb.x1.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Разрешить закрытие с открытыми блокирующими исключениями — с причиной"></x-import></sc-if><sc-if value="{{cb.x1.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Разрешить закрытие с открытыми блокирующими исключениями — с причиной"></x-import></sc-if></span></button></div>
+        <label style="display: flex; flex-direction: column; gap: 4px; font: var(--text-paragraph-m-regular); color: var(--text-body); max-width: 320px">Кто может закрыть принудительно
+          <span style="position: relative; display: block"><select style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-paragraph-m-regular); color: var(--text-body); cursor: pointer"><option>Главный специалист HR</option><option>Любой HR</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span>
+        </label>
+        <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Такие дни остаются в табеле с пометкой и попадают в выгрузку с комментарием.</span>
+      </section>
+      <section aria-label="Как читать настройки" style="flex: 0 0 auto; background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); font: var(--text-paragraph-m-regular); color: var(--text-body)">
+        <h2 style="margin: 0 0 var(--space-1);font: var(--text-heading-h3-semibold); color: var(--text-headings)">Как это влияет на очередь</h2>
+        <span><strong>Блокирует закрытие</strong> — попадает в счётчик на вкладке, месяц не закрыть без решения.</span>
+        <span><strong>Пометка</strong> — день идёт в табель, исключение видно в очереди, но не мешает.</span>
+        <span><strong>Спросить сотрудника</strong> — бот сначала пишет работнику. Ответил вовремя — исключение закрывается без HR.</span>
+      </section>
+      </aside>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":940}}'>
+const NAV_GROUPS = [
+  [{icon:'dashboard-icon',label:'Дэшборд',value:'dashboard'},{icon:'task',label:'Задания',value:'jobs'},{icon:'journey',label:'Маршруты',value:'routes'},{icon:'garbage-truck',label:'Экипажи',value:'crews'},{icon:'navigation',label:'Контроль движения',value:'gps'}],
+  [{icon:'location',label:'Площадки',value:'locations'},{icon:'group-of-locations',label:'Маршрутные группы',value:'route-groups'},{icon:'admin-icon',label:'Реестр контейнеров',value:'containers'},{icon:'budget',label:'Заказчики',value:'clients'}],
+  [{icon:'garage',label:'Автопарк',value:'fleet'},{icon:'tear-off-calendar',label:'График смен',value:'shifts'}],
+  [{icon:'phone-calling',label:'Колл-центр',value:'call-center'},{icon:'analytics',label:'Аналитика',value:'analytics'},{icon:'users',label:'Сотрудники',value:'staff'},{icon:'time-card',label:'Табель',value:'timesheet',href:'Main.dc.html'},{icon:'weight-station',label:'Весовая',value:'weighing'}]
+];
+const NAV_USER = {initials:'ГС',name:'Гульнара С.',role:'HR-менеджер'};
+class Component extends DCLogic {
+  renderVals() { return Object.assign({}, this._renderVals(), { navGroups: NAV_GROUPS, navUser: NAV_USER }); }
+  _renderVals() {
+    // [название, подсказка, проверять: 'on'|'off'|'lock', поведение: 'block'|'soft'|'lock', кто, массово: 'on'|'off'|'na', спросить в боте]
+    var data = [
+      ['Нет данных', [
+        ['Нет «Пришёл»', 'есть события дня, нет отметки', 'on', 'block', 'HR', 'on', true],
+        ['Нет «Ушёл»', 'прошло время автозакрытия', 'on', 'block', 'HR', 'on', true],
+        ['Неявка?', 'в графике, нет ни одного события', 'lock', 'lock', 'Начальник колонны', 'na', true]
+      ]],
+      ['Сомнительные', [
+        ['Вне геозоны', 'дальше радиуса депо или точки', 'on', 'block', 'HR', 'on', false],
+        ['Нет подтверждения машиной', 'машина бригады не была на точке', 'on', 'block', 'Начальник колонны', 'na', false],
+        ['Расхождение с событиями', 'больше допуска', 'on', 'block', 'HR', 'on', false],
+        ['Резервный канал', 'сообщение без фото с камеры и гео', 'on', 'soft', 'HR', 'on', false],
+        ['Отметил водитель', 'грузчик отмечен за бригаду', 'on', 'soft', 'Начальник колонны', 'on', false],
+        ['Подмена', 'смену начал не назначенный водитель', 'on', 'block', 'Начальник колонны', 'na', false]
+      ]],
+      ['По правилам', [
+        ['Переработка', 'сверх нормы и порога', 'on', 'block', 'HR', 'off', false],
+        ['Ожидание машины', 'дольше порога', 'on', 'soft', 'HR', 'on', false],
+        ['Ранний уход', 'ушёл до конца работы бригады', 'off', 'block', 'Начальник колонны', 'na', true],
+        ['Опоздание выхода на линию', 'факт позже плана больше порога', 'on', 'soft', 'Начальник колонны', 'na', true]
+      ]],
+      ['Спор', [
+        ['Спор сотрудника', 'работник оспорил день в боте', 'lock', 'lock', 'HR', 'na', false]
+      ]]
+    ];
+    var self = this;
+    var cbState = (this.state && this.state.cb) || {};
+    function mkCb(k, def) {
+      var v = Object.prototype.hasOwnProperty.call(cbState, k) ? !!cbState[k] : !!def;
+      return { on: v, off: !v, pressed: v ? 'true' : 'false', toggle: function () { var m = Object.assign({}, cbState); m[k] = !v; self.setState({ cb: m }); } };
+    }
+    var cb = {};
+    cb.x1 = mkCb('x1', true);
+    var groups = data.map(function (g, gi) {
+      return {
+        title: g[0],
+        rows: g[1].map(function (r, ri) {
+          var locked = r[2] === 'lock';
+          return {
+            label: r[0], hint: r[1],
+            locked: locked, free: !locked,
+            onFree: r[2] === 'on', offFree: r[2] === 'off',
+            behavior: r[3] === 'soft' ? 'Пометка' : 'Блокирует закрытие',
+            behaviorAlt: r[3] === 'soft' ? 'Блокирует закрытие' : 'Пометка',
+            who: r[4], whoAlt: r[4] === 'HR' ? 'Начальник колонны' : 'HR',
+            chk: mkCb('chk-' + gi + '-' + ri, r[2] === 'on'),
+            bulkNa: r[5] === 'na', bulkHas: r[5] !== 'na', bulk: mkCb('bulk-' + gi + '-' + ri, r[5] === 'on'),
+            askOn: r[6], askOff: !r[6]
+          };
+        })
+      };
+    });
+    return { groups: groups, cb: cb };
+  }
+}
+</script>
+</body>
+</html>

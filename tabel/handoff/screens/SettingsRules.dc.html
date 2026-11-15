@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Настройки табеля — правила и пороги</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/raccoonds/tokens.css">
+<link rel="stylesheet" href="ds/raccoonds/components/bundle.css">
+<script src="ds/raccoonds/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--text-body);background:var(--surface-page);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}h1,h2,h3{margin:0;color:var(--text-headings)}
+a{color:var(--text-action)}a:hover{color:var(--text-action-hover)}a.rc-seg__item,a.rc-seg__item:hover{color:var(--text-body)}a.rc-seg__item.is-selected,a.rc-seg__item.is-selected:hover{color:var(--text-on-action);background:var(--surface-action)}.rc-seg__item:focus-visible{outline:2px solid var(--border-action);outline-offset:2px}a.rc-tab,a.rc-tab:hover{color:var(--text-body)}a.rc-tab.is-selected,a.rc-tab.is-selected:hover{color:var(--text-selected)}.rc-btn--tertiary{box-shadow:none}.rc-check__box .rc-icon{color:transparent!important}.rc-check input:checked+.rc-check__box .rc-icon{color:var(--icons-on-action)!important}input,select,textarea{transition:border-color .12s}input:focus,select:focus,textarea:focus,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--border-action)!important}
+.cb{display:inline-flex;align-items:center;padding:0;margin:0;border:0;background:transparent;font:inherit;color:inherit;cursor:pointer;text-align:left;border-radius:var(--radius-sm)}.cb-in{display:inline-flex;pointer-events:none}.cb:hover .rc-check__box{box-shadow:inset 0 0 0 1px var(--border-action)}.cb:hover input:checked+.rc-check__box{background:var(--surface-action-hover)}.cb:focus-visible{outline:2px solid var(--border-action);outline-offset:2px}
+a.rc-tab,a.rc-tab:hover{color:var(--text-body)}a.rc-tab.is-selected,a.rc-tab.is-selected:hover{color:var(--text-selected)}a.rc-sidenav__item:hover{color:var(--text-body)}a.rc-sidenav__item.is-selected:hover{color:var(--text-selected)}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; box-sizing: border-box; min-height: 100vh; background: var(--surface-page)">
+  <x-import component-from-global-scope="RaccoonDS.SideNav" value="timesheet" groups="{{navGroups}}" user="{{navUser}}" quick-actions="{{false}}" style="flex: 0 0 232px; align-self: flex-start; position: sticky; top: var(--space-4); height: calc(100vh - 2 * var(--space-4))"></x-import>
+
+  <main style="flex: 999 1 560px; min-width: 0; height: calc(100vh - 2 * var(--space-4)); box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; min-height: 40px">
+      <div role="tablist" aria-label="Табель" class="rc-tabs rc-tabs--medium" style="flex-wrap: wrap">
+        <a href="Main.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none"><span class="rc-tab__label">Табель</span></a>
+        <a href="Exceptions.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none"><span class="rc-tab__label">Исключения</span><span class="rc-navcount">8</span></a>
+        <a href="Feed.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none"><span class="rc-tab__label">Лента отметок</span></a>
+        <a href="SettingsRules.dc.html" role="tab" aria-selected="true" aria-current="page" class="rc-tab is-selected" style="text-decoration: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="settings" size="{{16}}" color="currentColor"></x-import><span class="rc-tab__label">Настройки</span></a>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <x-import component-from-global-scope="RaccoonDS.Button" variant="tertiary">Отменить</x-import>
+        <x-import component-from-global-scope="RaccoonDS.Button" variant="primary">Сохранить</x-import>
+      </div>
+    </div>
+
+
+    <div style="flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
+      <nav aria-label="Разделы настроек" style="flex: 0 0 auto; align-self: flex-start">
+        <div role="tablist" class="rc-seg">
+          <a href="SettingsRules.dc.html" role="tab" aria-selected="true" aria-current="page" class="rc-seg__item is-selected" style="text-decoration: none">Правила и пороги</a>
+          <a href="SettingsExceptions.dc.html" role="tab" aria-selected="false" class="rc-seg__item" style="text-decoration: none">Типы исключений</a>
+        </div>
+      </nav>
+      <div style="flex: 1 1 0; min-height: 0; display: flex; gap: 16px; align-items: stretch">
+      <div style="flex: 1 1 0; min-width: 0; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 16px">
+
+        <section aria-label="Геозоны" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); border-style: solid; border-width: 1px; border-color: var(--border-primary, #e2e8f0)">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <h2 style="margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-headings)">Геозоны</h2>
+            <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Где отметка считается «на месте»</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 16px 24px">
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Радиус депо" value="200" suffix="м" hint="наследуется от организации" style="flex: 1 1 200px; min-width: 0"></x-import>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Радиус точки маршрута" value="400" suffix="м" state="selected" hint="Переопределено для Депо №1" style="flex: 1 1 200px; min-width: 0"></x-import>
+          </div>
+          <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
+            <legend style="font: var(--text-body-m-semibold); color: var(--text-headings); padding: 0 0 8px">Где грузчик может отметить «Ушёл»</legend>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font: var(--text-paragraph-m-regular)">
+              <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r1.toggle}}" aria-pressed="{{cb.r1.pressed}}"><span class="cb-in"><sc-if value="{{cb.r1.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Последняя точка маршрута"></x-import></sc-if><sc-if value="{{cb.r1.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Последняя точка маршрута"></x-import></sc-if></span></button></div>
+              <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r2.toggle}}" aria-pressed="{{cb.r2.pressed}}"><span class="cb-in"><sc-if value="{{cb.r2.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Любая точка маршрута"></x-import></sc-if><sc-if value="{{cb.r2.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Любая точка маршрута"></x-import></sc-if></span></button></div>
+              <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r3.toggle}}" aria-pressed="{{cb.r3.pressed}}"><span class="cb-in"><sc-if value="{{cb.r3.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Депо"></x-import></sc-if><sc-if value="{{cb.r3.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Депо"></x-import></sc-if></span></button></div>
+              <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r4.toggle}}" aria-pressed="{{cb.r4.pressed}}"><span class="cb-in"><sc-if value="{{cb.r4.on}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Полигон"></x-import></sc-if><sc-if value="{{cb.r4.off}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Полигон"></x-import></sc-if></span></button></div>
+            </div>
+          </fieldset>
+          <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
+            <legend style="font: var(--text-body-m-semibold); color: var(--text-headings); padding: 0 0 8px">Отметка вне геозоны</legend>
+            <div style="display: flex; gap: 8px; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" checked="{{true}}" name="outside"></x-import><span style="font: var(--text-paragraph-m-regular)">Принимать и помечать исключением <span style="color: var(--text-secondary)">— рекомендуется: человек не уходит обратно в WhatsApp</span></span></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="Не давать отметиться"></x-import></div>
+          </fieldset>
+        </section>
+
+        <section aria-label="Сверка с событиями" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); border-style: solid; border-width: 1px; border-color: var(--border-primary, #e2e8f0)">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <h2 style="margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-headings)">Сверка с событиями</h2>
+            <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">С чем сравнивать отметки и на что опираться в предложениях системы</span>
+          </div>
+          <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Допуск расхождения" value="30" suffix="мин" hint="Меньше — больше исключений, точнее табель" style="max-width: 320px; min-width: 0"></x-import>
+          <div style="display: flex; flex-wrap: wrap; gap: 24px">
+            <fieldset style="flex: 1 1 240px; border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font: var(--text-paragraph-m-regular)">
+              <legend style="font: var(--text-body-m-semibold); color: var(--text-headings); padding: 0 0 8px">Опорные события для «Пришёл»</legend>
+              <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r5.toggle}}" aria-pressed="{{cb.r5.pressed}}"><span class="cb-in"><sc-if value="{{cb.r5.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Факт выхода на линию (shift_fact_start) — водители"></x-import></sc-if><sc-if value="{{cb.r5.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Факт выхода на линию (shift_fact_start) — водители"></x-import></sc-if></span></button></div>
+              <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r6.toggle}}" aria-pressed="{{cb.r6.pressed}}"><span class="cb-in"><sc-if value="{{cb.r6.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Прибытие машины на первую точку — грузчики"></x-import></sc-if><sc-if value="{{cb.r6.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Прибытие машины на первую точку — грузчики"></x-import></sc-if></span></button></div>
+              <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Норматив подготовки до выхода на линию" value="30" suffix="мин" hint="Если отметки нет, система предложит «Пришёл» = факт выхода минус норматив, с пометкой «оценка»" style="max-width: 320px; min-width: 0; margin-top: var(--space-2)"></x-import>
+            </fieldset>
+            <fieldset style="flex: 1 1 240px; border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font: var(--text-paragraph-m-regular)">
+              <legend style="font: var(--text-body-m-semibold); color: var(--text-headings); padding: 0 0 8px">Опорные события для «Ушёл»</legend>
+              <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r7.toggle}}" aria-pressed="{{cb.r7.pressed}}"><span class="cb-in"><sc-if value="{{cb.r7.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Закрытие последней задачи"></x-import></sc-if><sc-if value="{{cb.r7.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Закрытие последней задачи"></x-import></sc-if></span></button></div>
+              <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r8.toggle}}" aria-pressed="{{cb.r8.pressed}}"><span class="cb-in"><sc-if value="{{cb.r8.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Отъезд машины с последней точки"></x-import></sc-if><sc-if value="{{cb.r8.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Отъезд машины с последней точки"></x-import></sc-if></span></button></div>
+              <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r9.toggle}}" aria-pressed="{{cb.r9.pressed}}"><span class="cb-in"><sc-if value="{{cb.r9.on}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Въезд машины в депо"></x-import></sc-if><sc-if value="{{cb.r9.off}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Въезд машины в депо"></x-import></sc-if></span></button></div>
+            </fieldset>
+          </div>
+        </section>
+
+        <section aria-label="Выход на линию" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); border-style: solid; border-width: 1px; border-color: var(--border-primary, #e2e8f0)">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <h2 style="margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-headings)">Выход на линию</h2>
+            <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Опоздание = shift_fact_start − shift_plan_start, по каждой смене дня отдельно. В табель идёт худшее отклонение за день. Считается только для водителей</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 16px 24px">
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Допуск опоздания" value="10" suffix="мин" hint="В пределах допуска — выход вовремя" style="flex: 1 1 220px; min-width: 0"></x-import>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Создавать исключение при опоздании свыше" value="30" suffix="мин" hint="Меньшие опоздания только считаются в табеле" style="flex: 1 1 220px; min-width: 0"></x-import>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r10.toggle}}" aria-pressed="{{cb.r10.pressed}}" aria-label="Разделять причину по отметке «Пришёл»"><span class="cb-in"><sc-if value="{{cb.r10.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}"></x-import></sc-if><sc-if value="{{cb.r10.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox"></x-import></sc-if></span></button><span style="font: var(--text-paragraph-m-regular)">Разделять причину по отметке «Пришёл» <span style="color: var(--text-secondary)">— если водитель пришёл вовремя, задержка помечается как «в депо», а не как опоздание водителя</span></span></div>
+        </section>
+
+        <section aria-label="Рабочий день" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); border-style: solid; border-width: 1px; border-color: var(--border-primary, #e2e8f0)">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <h2 style="margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-headings)">Рабочий день</h2>
+            <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Как считаются часы в табеле</span>
+          </div>
+          <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font: var(--text-paragraph-m-regular)">
+            <legend style="font: var(--text-body-m-semibold); color: var(--text-headings); padding: 0 0 8px">Промежуток между сменами в одном дне</legend>
+            <div style="display: flex; gap: 8px; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" checked="{{true}}" name="gap"></x-import><span style="font: var(--text-paragraph-m-regular)">Засчитывать, если между сменами не было отметки «Ушёл» <span style="color: var(--text-secondary)">— рекомендуется</span></span></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="Засчитывать всегда"></x-import></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="Не засчитывать"></x-import></div>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Не засчитывать промежуток длиннее" value="120" suffix="мин" hint="Длиннее — создаётся пометка для HR" style="max-width: 320px; min-width: 0; margin-top: var(--space-2)"></x-import>
+          </fieldset>
+          <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font: var(--text-paragraph-m-regular)">
+            <legend style="font: var(--text-body-m-semibold); color: var(--text-headings); padding: 0 0 8px">Начало дня грузчика</legend>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="По отметке «Пришёл»"></x-import></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="По прибытию машины на первую точку"></x-import></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" checked="{{true}}" label="По плановому времени, если пришёл раньше"></x-import></div>
+          </fieldset>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); align-items: flex-end">
+            <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.r11.toggle}}" aria-pressed="{{cb.r11.pressed}}"><span class="cb-in"><sc-if value="{{cb.r11.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Засчитывать ожидание машины"></x-import></sc-if><sc-if value="{{cb.r11.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Засчитывать ожидание машины"></x-import></sc-if></span></button></div>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Помечать ожидание дольше" value="30" suffix="мин" style="flex: 1 1 200px; min-width: 0"></x-import>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 16px 24px">
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Норма, водитель" value="12" suffix="ч" style="flex: 1 1 150px; min-width: 0"></x-import>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Норма, грузчик" value="10" suffix="ч" style="flex: 1 1 150px; min-width: 0"></x-import>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Переработка сверх нормы" value="30" suffix="мин" style="flex: 1 1 150px; min-width: 0"></x-import>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Вычитать перерыв" value="0" suffix="мин" style="flex: 1 1 150px; min-width: 0"></x-import>
+          </div>
+        </section>
+
+        <section aria-label="Напоминания и автозакрытие" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); border-style: solid; border-width: 1px; border-color: var(--border-primary, #e2e8f0)">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <h2 style="margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-headings)">Напоминания и автозакрытие</h2>
+            <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Чем раньше бот напомнит, тем меньше исключений дойдёт до HR</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 16px 24px">
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Неявка: через сколько мин после начала смены" value="30" style="flex: 1 1 220px; min-width: 0"></x-import>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Напомнить про «Ушёл» после последнего события" value="15" suffix="мин" style="flex: 1 1 220px; min-width: 0"></x-import>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Автозакрытие дня (черновик «Ушёл»)" value="23:59" icon-left="time" style="flex: 1 1 220px; min-width: 0"></x-import>
+            <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Присылать грузчику маршрут накануне в" value="20:00" icon-left="time" style="flex: 1 1 220px; min-width: 0"></x-import>
+          </div>
+        </section>
+
+        <section aria-label="Отметка" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: 8px; font: var(--text-paragraph-m-regular); border-style: solid; border-width: 1px; border-color: var(--border-primary, #e2e8f0)">
+          <h2 style="margin: 0 0 var(--space-4); font: var(--text-heading-h3-semibold); color: var(--text-headings)">Отметка</h2>
+          <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Switch" on="{{true}}" label="Фото обязательно"></x-import></div>
+          <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Switch" on="{{true}}" label="Только с камеры, не из галереи"></x-import></div>
+          <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Switch" on="{{true}}" label="Разрешить резервный канал — обычное сообщение в WhatsApp, с пометкой"></x-import></div>
+          <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Switch" on="{{true}}" label="Водитель может отмечать свою бригаду"></x-import></div>
+        </section>
+
+        <div style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Изменения применяются к новым дням. Закрытые периоды не пересчитываются.</div>
+      </div>
+
+      <aside style="flex: 0 0 400px; width: 400px; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 16px">
+        <section aria-label="Область применения" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: 12px; border-style: solid; border-width: 1px; border-color: var(--border-primary, #e2e8f0)">
+          <h2 style="margin: 0 0 var(--space-1); font: var(--text-heading-h3-semibold); color: var(--text-headings)">Где действуют</h2>
+          <label style="display: flex; flex-direction: column; gap: 4px; font: var(--text-paragraph-m-regular); color: var(--text-body)">Уровень
+            <span style="position: relative; display: block"><select style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-paragraph-m-regular); color: var(--text-body); cursor: pointer"><option>Депо №1</option><option>Организация (для всех депо)</option><option>Депо №2</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span>
+          </label>
+          <span style="font: var(--text-paragraph-m-regular); color: var(--text-body)">Депо №1 наследует настройки организации. Переопределено: 1 параметр.</span>
+          <a href="#" style="font: var(--text-paragraph-m-regular)">Сбросить всё к настройкам организации</a>
+        </section>
+
+        <section aria-label="Предпросмотр" style="background: var(--surface-information-subtle); border: 0; border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: 8px; color: var(--text-information)">
+          <h2 style="margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-information)">Проверить на прошлом месяце</h2>
+          <span style="font: var(--text-paragraph-m-regular); color: var(--text-information)">Пересчитаем октябрь с новыми порогами и покажем, сколько было бы исключений</span>
+          <div style="display: flex; flex-direction: column; gap: 8px; font: var(--text-paragraph-m-regular); border-top: 1px solid var(--border-information-subtle); margin-top: var(--space-2); padding-top: var(--space-4)">
+            <div style="display: flex; justify-content: space-between"><span>Сейчас</span><strong>10</strong></div>
+            <div style="display: flex; justify-content: space-between"><span>С новыми настройками</span><strong>7</strong></div>
+            <div style="display: flex; justify-content: space-between; color: var(--text-information)"><span>из них блокирующих</span><span>3</span></div>
+          </div>
+          <x-import component-from-global-scope="RaccoonDS.Button" variant="secondary" style="margin-top: var(--space-2)">Пересчитать</x-import>
+        </section>
+
+        <section aria-label="История изменений" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); border-style: solid; border-width: 1px; border-color: var(--border-primary, #e2e8f0)">
+          <h2 style="margin: 0 0 var(--space-2); font: var(--text-heading-h3-semibold); color: var(--text-headings)">История изменений</h2>
+          <div style="font: var(--text-paragraph-m-regular); color: var(--text-body)">[ДАТА] · [HR] · радиус точки 300 → 400 м</div>
+          <div style="font: var(--text-paragraph-m-regular); color: var(--text-body)">[ДАТА] · [HR] · включено ожидание машины</div>
+        </section>
+      </aside>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":940}}'>
+const NAV_GROUPS = [
+  [{icon:'dashboard-icon',label:'Дэшборд',value:'dashboard'},{icon:'task',label:'Задания',value:'jobs'},{icon:'journey',label:'Маршруты',value:'routes'},{icon:'garbage-truck',label:'Экипажи',value:'crews'},{icon:'navigation',label:'Контроль движения',value:'gps'}],
+  [{icon:'location',label:'Площадки',value:'locations'},{icon:'group-of-locations',label:'Маршрутные группы',value:'route-groups'},{icon:'admin-icon',label:'Реестр контейнеров',value:'containers'},{icon:'budget',label:'Заказчики',value:'clients'}],
+  [{icon:'garage',label:'Автопарк',value:'fleet'},{icon:'tear-off-calendar',label:'График смен',value:'shifts'}],
+  [{icon:'phone-calling',label:'Колл-центр',value:'call-center'},{icon:'analytics',label:'Аналитика',value:'analytics'},{icon:'users',label:'Сотрудники',value:'staff'},{icon:'time-card',label:'Табель',value:'timesheet',href:'Main.dc.html'},{icon:'weight-station',label:'Весовая',value:'weighing'}]
+];
+const NAV_USER = {initials:'ГС',name:'Гульнара С.',role:'HR-менеджер'};
+class Component extends DCLogic {
+  renderVals() { return Object.assign({}, this._renderVals(), { navGroups: NAV_GROUPS, navUser: NAV_USER }); }
+  _renderVals() {
+    var self = this;
+    var cbState = (this.state && this.state.cb) || {};
+    function mkCb(k, def) {
+      var v = Object.prototype.hasOwnProperty.call(cbState, k) ? !!cbState[k] : !!def;
+      return { on: v, off: !v, pressed: v ? 'true' : 'false', toggle: function () { var m = Object.assign({}, cbState); m[k] = !v; self.setState({ cb: m }); } };
+    }
+    var cb = {};
+    cb.r1 = mkCb('r1', true);
+    cb.r2 = mkCb('r2', true);
+    cb.r3 = mkCb('r3', true);
+    cb.r4 = mkCb('r4', false);
+    cb.r5 = mkCb('r5', true);
+    cb.r6 = mkCb('r6', true);
+    cb.r7 = mkCb('r7', true);
+    cb.r8 = mkCb('r8', true);
+    cb.r9 = mkCb('r9', false);
+    cb.r10 = mkCb('r10', true);
+    cb.r11 = mkCb('r11', true);
+    return { cb: cb };
+  }
+}
+</script>
+</body>
+</html>

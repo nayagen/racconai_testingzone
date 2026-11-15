@@ -1,0 +1,73 @@
+/* Экран 2 «Очередь исключений» — handoff/screens/Exceptions.dc.html. Префикс классов: ex-. Только токены DS. */
+
+.ex-context { font: var(--text-body-m-regular); color: var(--text-secondary); }
+.ex-muted { color: var(--text-secondary); }
+.ex-caption { font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.ex-req { color: var(--text-error); }
+
+/* Контент не сжимается под высоту .shell__main: страница прокручивается целиком */
+.ex {
+  flex: 0 0 auto; display: flex; flex-direction: column; gap: var(--space-6);
+  margin-top: var(--space-2); padding-bottom: var(--space-4);
+}
+
+/* ---------- итог: сколько осталось и главное действие ---------- */
+.ex-summary {
+  display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); align-items: center; justify-content: space-between;
+  padding: var(--space-5) var(--space-6); border-radius: var(--radius-lg); background: var(--surface-primary);
+}
+.ex-summary__text { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; flex: 1 1 360px; }
+.ex-summary__title { font: var(--text-heading-h4-semibold); color: var(--text-headings); }
+.ex-summary.is-ready { background: var(--surface-success-subtle); }
+.ex-summary.is-ready .ex-summary__title { color: var(--text-success); }
+.ex-summary__link { font: var(--text-body-m-semibold); color: var(--text-action); }
+
+/* ---------- фильтры ---------- */
+.ex-toolbar { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+.ex-select { flex: 0 1 180px; }
+.ex-select--wide { flex-basis: 260px; }
+.ex-sort { margin-left: auto; }
+
+.ex-done {
+  display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center;
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+  background: var(--surface-success-subtle); color: var(--text-success); font: var(--text-paragraph-m-regular);
+}
+.ex-done__text { flex: 1 1 auto; min-width: 0; }
+
+.ex-empty { padding: var(--space-8) var(--space-6); background: var(--surface-primary); border-radius: var(--radius-lg); }
+
+/* ---------- группа: заголовок и список строк в одной панели ---------- */
+.ex-group { display: flex; flex-direction: column; gap: var(--space-3); }
+.ex-group__btn {
+  align-self: flex-start; display: flex; flex-wrap: wrap; column-gap: var(--space-2); row-gap: var(--space-1); align-items: center;
+  padding: 0; border: 0; background: transparent; cursor: pointer; text-align: left; color: var(--text-body);
+}
+.ex-group__title { font: var(--text-heading-h4-semibold); color: var(--text-headings); }
+.ex-group__count { font: var(--text-body-m-semibold); color: var(--text-secondary); margin-right: var(--space-2); }
+
+.ex-rows { list-style: none; margin: 0; padding: 0; background: var(--surface-primary); border-radius: var(--radius-lg); }
+.ex-row {
+  display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); align-items: center;
+  padding: var(--space-4) var(--space-6);
+}
+.ex-row + .ex-row { border-top: 1px solid var(--border-primary); }
+.ex-row__main { flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.ex-row__who { display: flex; flex-wrap: wrap; column-gap: var(--space-3); row-gap: var(--space-1); align-items: baseline; }
+.ex-row__name { font: var(--text-body-m-bold); color: var(--text-headings); text-decoration: none; }
+.ex-row__name:hover { color: var(--text-action); text-decoration: underline; text-underline-offset: 3px; }
+.ex-row__what { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.ex-tag {
+  font: var(--text-caption-m-semibold); border-radius: var(--radius-full); padding: var(--space-1) var(--space-2);
+  background: var(--surface-tertiary); color: var(--text-body); cursor: help;
+}
+.ex-row__sug { margin: 0; font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.ex-row__sug-lbl { color: var(--text-secondary); }
+.ex-row__actions { flex: 0 0 auto; display: flex; gap: var(--space-2); align-items: center; margin-left: auto; }
+.ex-link { text-decoration: none; }
+
+@media (max-width: 600px) {
+  .ex-row { padding: var(--space-4); }
+  .ex-row__actions { margin-left: 0; }
+  .ex-sort { margin-left: 0; }
+}

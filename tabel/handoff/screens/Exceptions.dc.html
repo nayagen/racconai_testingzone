@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Очередь исключений</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/raccoonds/tokens.css">
+<link rel="stylesheet" href="ds/raccoonds/components/bundle.css">
+<script src="ds/raccoonds/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--text-body);background:var(--surface-page);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}h1,h2,h3{margin:0;color:var(--text-headings)}
+a{color:var(--text-action)}a:hover{color:var(--text-action-hover)}.rc-btn--tertiary{box-shadow:none}.rc-check__box .rc-icon{color:transparent!important}.rc-check input:checked+.rc-check__box .rc-icon{color:var(--icons-on-action)!important}input,select,textarea{transition:border-color .12s}input:focus,select:focus,textarea:focus,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--border-action)!important}
+.exc-actions{opacity:0;transition:opacity .15s}.exc-card:hover .exc-actions,.exc-card:focus-within .exc-actions{opacity:1}.exc-card{cursor:pointer}.exc-card:hover .rc-check__box{box-shadow:inset 0 0 0 1px var(--border-action)}.exc-card:hover input:checked+.rc-check__box{background:var(--surface-action-hover)}@media (hover:none){.exc-actions{opacity:1}}
+.tt{position:relative}.tt-pop{position:absolute;left:12px;top:calc(100% + 4px);z-index:20;width:max-content;max-width:280px;box-sizing:border-box;padding:8px 12px;border-radius:var(--radius-md);background:var(--surface-invert);color:var(--text-invert);box-shadow:var(--shadow-md);font:var(--text-caption-m-regular);display:flex;flex-direction:column;gap:4px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s,visibility .12s}.tt:hover .tt-pop,.tt:focus-within .tt-pop{opacity:1;visibility:visible;transition-delay:.25s}.tt-btn:hover{background:var(--surface-secondary)!important}.tt-btn:focus-visible{outline:2px solid var(--border-action);outline-offset:-2px}
+.cb{display:inline-flex;align-items:center;padding:0;margin:0;border:0;background:transparent;font:inherit;color:inherit;cursor:pointer;text-align:left;border-radius:var(--radius-sm)}.cb-in{display:inline-flex;pointer-events:none}.cb:hover .rc-check__box{box-shadow:inset 0 0 0 1px var(--border-action)}.cb:hover input:checked+.rc-check__box{background:var(--surface-action-hover)}.cb:focus-visible{outline:2px solid var(--border-action);outline-offset:2px}
+a.rc-tab,a.rc-tab:hover{color:var(--text-body)}a.rc-tab.is-selected,a.rc-tab.is-selected:hover{color:var(--text-selected)}a.rc-sidenav__item:hover{color:var(--text-body)}a.rc-sidenav__item.is-selected:hover{color:var(--text-selected)}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-4); box-sizing: border-box; min-height: 100vh; background: var(--surface-page)">
+  <x-import component-from-global-scope="RaccoonDS.SideNav" value="timesheet" groups="{{navGroups}}" user="{{navUser}}" quick-actions="{{false}}" style="flex: 0 0 232px; align-self: flex-start; position: sticky; top: var(--space-4); height: calc(100vh - 2 * var(--space-4))"></x-import>
+
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: var(--space-6)">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 40px">
+      <div role="tablist" class="rc-tabs rc-tabs--medium" style="flex-wrap: wrap">
+        <a href="Main.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none">Табель</a>
+        <a href="Exceptions.dc.html" role="tab" aria-selected="true" class="rc-tab is-selected" style="text-decoration: none">Исключения <span class="rc-navcount">8</span></a>
+        <a href="Feed.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none">Лента отметок</a>
+        <a href="SettingsRules.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="settings" size="{{16}}" color="currentColor"></x-import>Настройки</a>
+      </div>
+      <span style="font: var(--text-body-m-regular); color: var(--text-secondary)">Окт 2026 · Депо №1</span>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; column-gap: var(--space-2); row-gap: var(--space-1); align-items: center; padding: var(--space-4) var(--space-6); background: var(--surface-error-subtle); color: var(--text-error); border: 0; border-radius: var(--radius-lg); font: var(--text-paragraph-m-regular)">
+      <span style="font-weight: 600">8 блокируют закрытие месяца</span>
+      <span style="color: var(--text-error)">· 3 пометки, не блокируют · 5 можно принять по предложению системы</span>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: flex-start">
+      <aside aria-label="Типы исключений" style="flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-4); background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-4); box-sizing: border-box">
+        <button type="button" style="height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 12px; border: 0; border-radius: var(--radius-md); background: var(--surface-selected); color: var(--text-selected); font: var(--text-body-m-semibold)">Все<span>{{totalAll}}</span></button>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(max(220px, calc((100% - var(--space-4)) / 2)), 1fr)); column-gap: var(--space-4); row-gap: var(--space-6); align-items: start">
+        <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: var(--space-1)">
+            <div style="font: var(--text-caption-caps-bold); color: var(--text-secondary); padding: 0 var(--space-3) var(--space-1); text-transform: uppercase">{{g.title}}</div>
+            <sc-for list="{{g.types}}" as="t" hint-placeholder-count="3">
+              <div class="tt">
+                <button type="button" class="tt-btn" aria-describedby="{{t.id}}" style="width: 100%; min-height: 40px; display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3); border: 1px solid transparent; border-radius: var(--radius-md); background: transparent; font: var(--text-paragraph-m-regular); color: {{t.color}}; text-align: left; cursor: pointer">
+                  <span style="display: flex; flex-direction: column; gap: var(--space-1)">{{t.label}}<sc-if value="{{t.hasSub}}" hint-placeholder-val="{{false}}"><span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">{{t.sub}}</span></sc-if></span>
+                  <span>{{t.n}}</span>
+                </button>
+                <span role="tooltip" id="{{t.id}}" class="tt-pop"><span style="font-weight: 600">{{t.label}}</span><span>{{t.desc}}</span><span style="opacity: 0.75">{{t.meta}}</span></span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+        </div>
+      </aside>
+
+      <section aria-label="Список исключений" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; justify-content: space-between; padding: var(--space-4); background: var(--surface-primary); border-radius: var(--radius-lg)">
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center">
+            <button type="button" class="cb" onClick="{{toggleAll}}" aria-pressed="{{allPressed}}" style="gap: var(--space-3)"><span class="cb-in"><sc-if value="{{allChecked}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Выбрать все"></x-import></sc-if><sc-if value="{{notAllChecked}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Выбрать все"></x-import></sc-if></span><sc-if value="{{hasChecked}}" hint-placeholder-val="{{false}}"><span style="font: var(--text-paragraph-m-regular); color: var(--text-secondary)">Выбрано {{checkedCount}} из {{totalCount}}</span></sc-if></button>
+            <x-import component-from-global-scope="RaccoonDS.Button" variant="primary" disabled="{{noSelSug}}" on-click="{{acceptSelected}}">Принять предложения ({{selSugCount}})</x-import>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-5); align-items: center">
+          <div role="radiogroup" aria-labelledby="role-lbl" style="display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center">
+            <span id="role-lbl" style="font: var(--text-paragraph-m-regular); color: var(--text-secondary)">Роль</span>
+            <sc-for list="{{roles}}" as="r" hint-placeholder-count="3">
+              <sc-if value="{{r.on}}" hint-placeholder-val="{{false}}"><button type="button" role="radio" aria-checked="true" onClick="{{r.pick}}" style="height: 32px; box-sizing: border-box; padding: 0 var(--space-3); border-radius: var(--radius-full); font: var(--text-body-m-semibold); cursor: pointer; border: 1px solid var(--border-action); background: var(--surface-selected); color: var(--text-selected)">{{r.label}} {{r.n}}</button></sc-if>
+              <sc-if value="{{r.off}}" hint-placeholder-val="{{true}}"><button type="button" role="radio" aria-checked="false" onClick="{{r.pick}}" style="height: 32px; box-sizing: border-box; padding: 0 var(--space-3); border-radius: var(--radius-full); font: var(--text-body-m-regular); cursor: pointer; border: 1px solid var(--border-primary); background: var(--surface-primary); color: var(--text-body)">{{r.label}} <span style="color: var(--text-secondary)">{{r.n}}</span></button></sc-if>
+            </sc-for>
+          </div>
+          <label style="display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; font: var(--text-paragraph-m-regular); color: var(--text-secondary)">Сортировка
+            <span style="position: relative; display: block"><select value="{{sort}}" onChange="{{onSort}}" style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-body-m-regular); color: var(--text-body); cursor: pointer"><option value="block">Блокирующие, сначала старые</option><option value="person">По сотруднику</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span>
+          </label>
+          </div>
+        </div>
+
+        <sc-if value="{{hasLast}}" hint-placeholder-val="{{false}}">
+          <div role="status" style="display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; padding: var(--space-3) var(--space-4); background: var(--surface-success-subtle); color: var(--text-success); border-radius: var(--radius-md); font: var(--text-paragraph-m-regular)">
+            <x-import component-from-global-scope="RaccoonDS.Icon" name="check" size="{{20}}" color="currentColor"></x-import>
+            <span style="flex: 1 1 auto">{{lastText}}</span>
+            <x-import component-from-global-scope="RaccoonDS.Button" variant="tertiary" size="small" on-click="{{undoLast}}">Отменить</x-import>
+          </div>
+        </sc-if>
+        <sc-for list="{{listGroups}}" as="g" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: var(--space-3); padding-top: var(--space-4)">
+            <button type="button" onClick="{{g.toggle}}" aria-expanded="{{g.expanded}}" style="align-self: flex-start; display: flex; flex-wrap: wrap; column-gap: var(--space-2); row-gap: var(--space-1); align-items: center; padding: 0; border: 0; background: transparent; cursor: pointer; text-align: left; font: inherit; color: var(--text-body)">
+              <x-import component-from-global-scope="RaccoonDS.Icon" name="{{g.chevIcon}}" size="{{20}}" color="var(--icons-default)"></x-import>
+              <h2 style="margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-headings)">{{g.title}}</h2>
+              <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">{{g.hint}}</span>
+            </button>
+            <sc-if value="{{g.open}}" hint-placeholder-val="{{true}}">
+            <sc-for list="{{g.items}}" as="it" hint-placeholder-count="2">
+              <article class="exc-card" onClick="{{it.toggleCheck}}" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6)">
+                <div style="display: flex; gap: var(--space-4); align-items: center">
+                  <div style="flex-shrink: 0; display: flex; pointer-events: none"><sc-if value="{{it.checked}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}"></x-import></sc-if><sc-if value="{{it.unchecked}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox"></x-import></sc-if></div>
+                  <div style="flex: 1 1 0; min-width: 0; display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); align-items: center">
+                    <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-4)">
+                      <div style="display: flex; flex-direction: column; gap: var(--space-2)">
+                        <div style="display: flex; flex-wrap: wrap; column-gap: var(--space-3); row-gap: var(--space-1); align-items: baseline">
+                          <span style="font: var(--text-body-m-bold); color: var(--text-headings)">{{it.name}}</span>
+                          <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">{{it.role}} · {{it.date}}</span>
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center">
+                          <span style="font: var(--text-caption-m-semibold); border-radius: var(--radius-full); padding: var(--space-1) var(--space-2); background: var(--surface-tertiary); color: var(--text-body)">{{it.type}}</span>
+                          <sc-if value="{{it.block}}" hint-placeholder-val="{{true}}"><span style="font: var(--text-caption-m-semibold); border-radius: var(--radius-full); padding: var(--space-1) var(--space-2); background: var(--surface-error-subtle); color: var(--text-error)">Блокирует закрытие</span></sc-if>
+                          <sc-if value="{{it.soft}}" hint-placeholder-val="{{false}}"><span style="font: var(--text-caption-m-semibold); border-radius: var(--radius-full); padding: var(--space-1) var(--space-2); background: var(--surface-attention-subtle); color: var(--text-attention)">Пометка</span></sc-if>
+                        </div>
+                      </div>
+                      <sc-if value="{{it.isDispute}}" hint-placeholder-val="{{false}}">
+                        <div style="background: var(--surface-secondary); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); display: flex; flex-direction: column; gap: var(--space-1)">
+                          <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Сообщение сотрудника в боте · 15 Окт 2026 19:12</span>
+                          <span style="font: var(--text-paragraph-m-regular); color: var(--text-body)">«{{it.quote}}»</span>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{it.hasSug}}" hint-placeholder-val="{{true}}">
+                        <div style="color: var(--text-information); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); display: flex; align-self: flex-start; max-width: 100%; box-sizing: border-box; gap: var(--space-2); align-items: flex-start; font: var(--text-paragraph-m-regular); background-color: var(--surface-information-subtle, #bedbff)">
+                          <x-import component-from-global-scope="RaccoonDS.Icon" name="info" size="{{20}}" color="var(--icons-information)"></x-import>
+                          <span style="min-width: 0"><span style="font-weight: 500">Предложение системы:</span> <span style="font-weight: 400">{{it.sug}}</span></span>
+                        </div>
+                      </sc-if>
+                    </div>
+                    <div class="exc-actions" style="flex: 0 0 200px; display: flex; flex-direction: column; gap: var(--space-2)">
+                      <sc-if value="{{it.hasSug}}" hint-placeholder-val="{{true}}">
+                        <x-import component-from-global-scope="RaccoonDS.Button" variant="primary" full-width="{{true}}" on-click="{{it.accept}}">Применить предложение</x-import>
+                      </sc-if>
+                      <sc-if value="{{it.isDispute}}" hint-placeholder-val="{{false}}">
+                        <x-import component-from-global-scope="RaccoonDS.Button" variant="primary" full-width="{{true}}">Ответить сотруднику</x-import>
+                      </sc-if>
+                      <x-import component-from-global-scope="RaccoonDS.Button" variant="secondary" full-width="{{true}}" on-click="{{it.toggleEdit}}">{{it.secondary}}</x-import>
+                      <a href="DayDetail.dc.html" class="rc-btn rc-btn--tertiary rc-btn--default" style="box-sizing: border-box; width: 100%; text-decoration: none">Открыть день</a>
+                    </div>
+                  </div>
+                </div>
+                <sc-if value="{{it.editing}}" hint-placeholder-val="{{false}}">
+                  <div style="margin-left: calc(16px + var(--space-4)); border-top: 1px solid var(--border-primary); padding-top: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6)">
+                    <sc-if value="{{it.isTime}}" hint-placeholder-val="{{true}}">
+                      <div style="display: flex; flex-wrap: wrap; gap: var(--space-3)">
+                        <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Пришёл" placeholder="--:--" icon-left="time" style="flex: 0 1 140px; min-width: 0"></x-import>
+                        <x-import component-from-global-scope="RaccoonDS.Field" layout="vertical" label="Ушёл" placeholder="--:--" icon-left="time" style="flex: 0 1 140px; min-width: 0"></x-import>
+                        <label style="flex: 0 1 180px; display: flex; flex-direction: column; gap: var(--space-1); font: var(--text-caption-m-regular); color: var(--text-secondary)">Код дня<span style="position: relative; display: block"><select style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-body-m-regular); color: var(--text-body); cursor: pointer"><option>Я — явка</option><option>НН — неявка</option><option>Б — больничный</option><option>ОТ — отпуск</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span></label>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{it.isCode}}" hint-placeholder-val="{{false}}">
+                      <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); font: var(--text-paragraph-m-regular)">
+                        <legend style="font: var(--text-caption-m-regular); color: var(--text-secondary); padding: 0 0 var(--space-2)">Код дня</legend>
+                        <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="НН — неявка"></x-import></div>
+                        <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="Б — больничный"></x-import></div>
+                        <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="ОТ — отпуск"></x-import></div>
+                        <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="ОД — с разрешения"></x-import></div>
+                        <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="Я — был, ввести время"></x-import></div>
+                      </fieldset>
+                    </sc-if>
+                    <div role="radiogroup" aria-label="Причина" style="display: flex; flex-direction: column; gap: var(--space-2)">
+                      <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Причина <span style="color: var(--text-error)">*</span></span>
+                      <div style="display: flex; flex-wrap: wrap; gap: var(--space-2)">
+                        <sc-for list="{{it.reasons}}" as="r" hint-placeholder-count="7">
+                          <sc-if value="{{r.on}}" hint-placeholder-val="{{false}}"><button type="button" role="radio" aria-checked="true" onClick="{{r.pick}}" style="height: 32px; box-sizing: border-box; padding: 0 var(--space-3); border-radius: var(--radius-full); font: var(--text-body-m-semibold); cursor: pointer; border: 1px solid var(--border-action); background: var(--surface-selected); color: var(--text-selected)">{{r.label}}</button></sc-if>
+                          <sc-if value="{{r.off}}" hint-placeholder-val="{{true}}"><button type="button" role="radio" aria-checked="false" onClick="{{r.pick}}" style="height: 32px; box-sizing: border-box; padding: 0 var(--space-3); border-radius: var(--radius-full); font: var(--text-body-m-regular); cursor: pointer; border: 1px solid var(--border-primary); background: var(--surface-primary); color: var(--text-body)">{{r.label}}</button></sc-if>
+                        </sc-for>
+                      </div>
+                      <sc-if value="{{it.otherOn}}" hint-placeholder-val="{{false}}">
+                        <textarea rows="2" aria-label="Своя причина" placeholder="Опишите причину" style="width: 100%; box-sizing: border-box; border: 1px solid var(--border-primary); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); font: var(--text-body-m-regular); color: var(--text-body); resize: vertical"></textarea>
+                      </sc-if>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center">
+                      <x-import component-from-global-scope="RaccoonDS.Button" variant="primary" on-click="{{it.toggleEdit}}">Сохранить и закрыть исключение</x-import>
+                      <x-import component-from-global-scope="RaccoonDS.Button" variant="tertiary" on-click="{{it.toggleEdit}}">Отмена</x-import>
+                      <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Сотрудник получит уведомление в боте</span>
+                    </div>
+                  </div>
+                </sc-if>
+              </article>
+            </sc-for>
+            </sc-if>
+          </div>
+        </sc-for>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":940}}'>
+const NAV_GROUPS = [
+  [{icon:'dashboard-icon',label:'Дэшборд',value:'dashboard'},{icon:'task',label:'Задания',value:'jobs'},{icon:'journey',label:'Маршруты',value:'routes'},{icon:'garbage-truck',label:'Экипажи',value:'crews'},{icon:'navigation',label:'Контроль движения',value:'gps'}],
+  [{icon:'location',label:'Площадки',value:'locations'},{icon:'group-of-locations',label:'Маршрутные группы',value:'route-groups'},{icon:'admin-icon',label:'Реестр контейнеров',value:'containers'},{icon:'budget',label:'Заказчики',value:'clients'}],
+  [{icon:'garage',label:'Автопарк',value:'fleet'},{icon:'tear-off-calendar',label:'График смен',value:'shifts'}],
+  [{icon:'phone-calling',label:'Колл-центр',value:'call-center'},{icon:'analytics',label:'Аналитика',value:'analytics'},{icon:'users',label:'Сотрудники',value:'staff'},{icon:'time-card',label:'Табель',value:'timesheet',href:'Main.dc.html'},{icon:'weight-station',label:'Весовая',value:'weighing'}]
+];
+const NAV_USER = {initials:'ГС',name:'Гульнара С.',role:'HR-менеджер'};
+class Component extends DCLogic {
+  renderVals() { return Object.assign({}, this._renderVals(), { navGroups: NAV_GROUPS, navUser: NAV_USER }); }
+  _renderVals() {
+    // r: [имя, роль, дата, тип, теги, предложение, пометка?, цитата?]; тег: 'подпись|значение|plain|warn|ok'
+    function item(r) {
+      return {
+        name: r[0], role: r[1], date: r[2], type: r[3], sug: r[5],
+        allChips: r[4].map(function (s) { var p = s.split('|'); var kind = p[2] || 'plain'; return { k: p[0], v: p[1] || '', plain: kind === 'plain', warn: kind === 'warn', ok: kind === 'ok' }; }),
+        hasSug: r[5] !== '', block: !r[6], soft: !!r[6],
+        isDispute: !!r[7], quote: r[7] || '',
+        secondary: r[3].indexOf('Неявка') === 0 ? 'Поставить код' : 'Исправить'
+      };
+    }
+    var groups = [
+      {
+        title: 'Нет данных', hint: 'отметки не хватает — система ищет опорное событие',
+        types: [
+          ['Нет «Пришёл»', '1', false, 'За день есть события (уход, выезд машины, задачи маршрута), но отметки прихода нет. Система предлагает время прихода по опорному событию.', 'HR'],
+          ['Нет «Ушёл»', '2', false, 'Приход отмечен, ухода нет, и прошло время автозакрытия смены. Система предлагает время ухода по последнему событию дня: закрытию маршрута или отъезду машины.', 'HR'],
+          ['Неявка?', '1', false, 'Сотрудник стоит в графике, но за день нет ни одного события: ни отметок, ни работы его машины. Нужно подтвердить неявку или поставить код дня.', 'Начальник колонны']
+        ],
+        items: [
+          ['Исаев Тимур', 'Грузчик', '2 Окт 2026, пт', 'Нет «Ушёл»', ['Напоминание об уходе|без ответа|warn', 'Машина уехала с последней точки|17:02', 'Маршрут|№7'], 'Ушёл 17:02 — отъезд машины с последней точки'],
+          ['Сериков Данияр', 'Водитель', '2 Окт 2026, пт', 'Нет «Пришёл»', ['Выезд на линию|план 06:00, факт 06:12', 'Ушёл|17:56, в депо|ok'], 'Пришёл 05:42 — оценка: факт выхода − норматив 30 мин'],
+          ['Касымов Арман', 'Грузчик', '5 Окт 2026, пн', 'Нет «Ушёл»', ['Напоминание об уходе|без ответа|warn', 'Пришёл|06:48|ok', 'Последняя точка маршрута закрыта|16:38', 'Маршрут|№12'], 'Ушёл 16:38 — закрыта последняя задача маршрута'],
+          ['Исаев Тимур', 'Грузчик', '14 Окт 2026, ср', 'Неявка?', ['За день|ни одной отметки|warn', 'По графику|в бригаде маршрута №7', 'Водитель|бригаду не отметил'], '']
+        ].map(item)
+      },
+      {
+        title: 'Сомнительные', hint: 'данные есть, но не сходятся с другими источниками',
+        types: [
+          ['Вне геозоны', '1', false, 'Отметка сделана дальше допустимого радиуса от депо или от точки начала работы.', 'HR'],
+          ['Нет подтверждения машиной', '1', false, 'Сотрудник отметился на точке, но по GPS машина его бригады туда не заезжала.', 'Начальник колонны'],
+          ['Расхождение с событиями', '0', false, 'Время отметки расходится с событиями дня (выездом машины, задачами маршрута) больше допуска.', 'HR'],
+          ['Резервный канал', '1', true, 'Отметка пришла сообщением в бот без фото с камеры и геолокации, например когда приложение не работало.', 'HR'],
+          ['Отметил водитель', '0', true, 'Грузчика отметил водитель за всю бригаду, сам сотрудник не отмечался.', 'Начальник колонны'],
+          ['Подмена', '0', false, 'Смену на машине начал не тот водитель, который на неё назначен.', 'Начальник колонны']
+        ],
+        items: [
+          ['Жумабаев Нурсултан', 'Грузчик', '1 Окт 2026, чт', 'Нет подтверждения машиной', ['Машина маршрута №9|не заезжала на эту точку|warn', 'Пришёл|06:55', 'Место отметки|ул. Сатпаева 30'], ''],
+          ['Ахметов Бауыржан', 'Водитель', '7 Окт 2026, ср', 'Вне геозоны', ['Отметка|в 3,8 км от депо|warn', 'Пришёл|05:31', 'Выезд на линию|вовремя, 06:04|ok'], ''],
+          ['Нурланов Ерлан', 'Водитель', '12 Окт 2026, пн', 'Резервный канал', ['Геолокация|не передана|warn', 'Фото|из галереи, не с камеры|warn', 'Выезд на линию|вовремя, 06:01|ok'], 'Принять как есть', true]
+        ].map(item)
+      },
+      {
+        title: 'По правилам', hint: 'данные верные, нужно решение по правилам компании',
+        types: [
+          ['Переработка', '1', false, 'Отработано больше нормы смены сверх порога из правил компании. Нужно решить, засчитывать ли сверхурочные.', 'HR'],
+          ['Ожидание машины', '1', true, 'Сотрудник пришёл на точку вовремя, но ждал машину дольше порога. Нужно решить, засчитывать ли ожидание как рабочее время.', 'HR'],
+          ['Ранний уход', '0', false, 'Сотрудник ушёл раньше, чем бригада закончила работу. Сейчас эта проверка выключена в настройках.', 'Начальник колонны', true],
+          ['Опоздание выхода на линию', '1', true, 'Машина выехала на линию позже плана больше порога. Нужно выяснить, по чьей вине задержка.', 'Начальник колонны']
+        ],
+        items: [
+          ['Ким Виктор', 'Водитель', '9 Окт 2026, пт', 'Переработка', ['Отработано|13,6 ч при норме 12 ч|warn', 'Причина|очередь на полигоне', 'Смена закончилась|18:40'], ''],
+          ['Ким Виктор', 'Водитель', '21 Окт 2026, ср', 'Опоздание выхода на линию', ['Выезд 2-й смены|план 13:00, факт 13:47|warn', 'Водитель пришёл|вовремя, 05:48|ok', 'Задержка|в депо, не по вине водителя', 'Выезд 1-й смены|вовремя|ok', 'Между сменами|не уходил'], '', true],
+          ['Касымов Арман', 'Грузчик', '13 Окт 2026, вт', 'Ожидание машины', ['Ждал машину|85 мин|warn', 'Пришёл на точку|06:20|ok', 'Машина приехала|07:45'], 'Засчитать ожидание по правилу компании', true]
+        ].map(item)
+      },
+      {
+        title: 'Спор сотрудника', hint: 'сотрудник не согласен с днём в табеле',
+        types: [
+          ['Спор', '1', false, 'Сотрудник не согласен с днём в табеле и написал об этом в боте. Нужно проверить данные и ответить ему.', 'HR']
+        ],
+        items: [
+          ['Абдрахманов Марат', 'Грузчик', '7 Окт 2026, ср', 'Спор', ['Машина его маршрута №4|работала 07:10–16:55|ok', 'Сейчас в табеле|НН — неявка', 'По графику|в бригаде маршрута №4'], '', false, 'Я был на маршруте №4 весь день, телефон сел. Водитель Сериков может подтвердить.']
+        ].map(item)
+      }
+    ];
+    var self = this;
+    var editKey = (this.state && this.state.editKey) || '';
+    var moreOpen = (this.state && this.state.moreOpen) || {};
+    var reasonSel = (this.state && this.state.reasonSel) || {};
+    var collapsed = (this.state && this.state.collapsed) || {};
+    var checkedMap = (this.state && this.state.checkedMap) || {};
+    var sort = (this.state && this.state.sort) || 'block';
+    var accepted = (this.state && this.state.accepted) || {};
+    var lastAccepted = (this.state && this.state.lastAccepted) || [];
+    function acceptKeys(keys) {
+      if (!keys.length) return;
+      var a = Object.assign({}, accepted), m = Object.assign({}, checkedMap);
+      keys.forEach(function (k) { a[k] = true; delete m[k]; });
+      self.setState({ accepted: a, checkedMap: m, lastAccepted: keys, editKey: keys.indexOf(editKey) >= 0 ? '' : editKey });
+    }
+    groups.forEach(function (g, gi) {
+      g.types = g.types.map(function (t, ti) {
+        var off = !!t[5], zero = t[1] === '0';
+        return {
+          id: 'tt-' + gi + '-' + ti, label: t[0], n: t[1], soft: !!t[2], desc: t[3],
+          hasSub: off || !!t[2], sub: off ? 'выключено' : 'пометка',
+          meta: (off ? 'Проверка выключена' : (t[2] ? 'Пометка, не блокирует закрытие' : 'Блокирует закрытие месяца')) + ' · разбирает ' + t[4],
+          color: zero ? 'var(--text-secondary)' : 'var(--text-body)'
+        };
+      });
+      g.items.forEach(function (it, ii) {
+        var key = gi + '-' + ii;
+        it.key = key;
+        it.accept = function () { acceptKeys([key]); };
+        it.day = parseInt(it.date, 10);
+        it.editing = editKey === key;
+        it.checked = !!checkedMap[key];
+        it.unchecked = !it.checked;
+        it.toggleCheck = function (e) {
+          var t = e && e.target;
+          if (t && t.closest && t.closest('button, a, input, select, textarea, label, .exc-actions')) return;
+          var m = Object.assign({}, checkedMap); m[key] = !m[key]; self.setState({ checkedMap: m });
+        };
+        it.expanded = it.editing ? 'true' : 'false';
+        it.isCode = it.secondary === 'Поставить код';
+        it.isTime = !it.isCode;
+        it.toggleEdit = function () { self.setState({ editKey: editKey === key ? '' : key }); };
+        var rsel = reasonSel[key] || '';
+        it.otherOn = rsel === 'Другое';
+        it.reasons = ['Сотрудник забыл отметиться', 'Подтвердил начальник колонны', 'Подтверждено GPS машины', 'Сбой связи или телефона', 'Ошибка в графике или маршруте', 'Отметил водитель за бригаду', 'Другое'].map(function (l) {
+          return { label: l, on: rsel === l, off: rsel !== l, pick: function () { var m = Object.assign({}, reasonSel); m[key] = rsel === l ? '' : l; self.setState({ reasonSel: m }); } };
+        });
+        var open = !!moreOpen[key];
+        it.chips = it.allChips.slice(0, 3);
+        it.extra = it.allChips.slice(3);
+        it.hasMore = it.extra.length > 0;
+        it.showMore = open;
+        it.moreExpanded = open ? 'true' : 'false';
+        it.moreLabel = open ? 'Свернуть' : '+' + it.extra.length;
+        it.toggleMore = function () { var m = Object.assign({}, moreOpen); m[key] = !m[key]; self.setState({ moreOpen: m }); };
+      });
+    });
+    groups.forEach(function (g) { g.items = g.items.filter(function (it) { return !accepted[it.key]; }); });
+    var role = (this.state && this.state.role) || 'all';
+    var roleCount = { all: 0, 'Водитель': 0, 'Грузчик': 0 };
+    groups.forEach(function (g) { g.items.forEach(function (it) { roleCount.all++; roleCount[it.role] = (roleCount[it.role] || 0) + 1; }); });
+    var roles = [['all', 'Все'], ['Водитель', 'Водители'], ['Грузчик', 'Грузчики']].map(function (r) {
+      return { label: r[1], n: roleCount[r[0]] || 0, on: role === r[0], off: role !== r[0], pick: function () { self.setState({ role: r[0] }); } };
+    });
+    if (role !== 'all') groups.forEach(function (g) { g.items = g.items.filter(function (it) { return it.role === role; }); });
+    groups.forEach(function (g) {
+      g.types.forEach(function (t) {
+        var n = g.items.filter(function (it) { return it.type === t.label; }).length;
+        t.n = n;
+        t.color = n === 0 ? 'var(--text-secondary)' : 'var(--text-body)';
+      });
+    });
+    function mkGroup(gkey, title, hint, items) {
+      var isOpen = !collapsed[gkey];
+      return {
+        title: title, hint: hint, items: items, open: isOpen,
+        expanded: isOpen ? 'true' : 'false',
+        chevIcon: isOpen ? 'chevron-down' : 'chevron-right',
+        toggle: function () { var c = Object.assign({}, collapsed); c[gkey] = !c[gkey]; self.setState({ collapsed: c }); }
+      };
+    }
+    function plural(n) { var m10 = n % 10, m100 = n % 100; return n + ' ' + (m10 === 1 && m100 !== 11 ? 'исключение' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'исключения' : 'исключений')); }
+    var listGroups;
+    if (sort === 'person') {
+      var byName = {};
+      groups.forEach(function (g) { g.items.forEach(function (it) { (byName[it.name] = byName[it.name] || []).push(it); }); });
+      listGroups = Object.keys(byName).sort(function (a, b) { return a.localeCompare(b, 'ru'); }).map(function (n) {
+        var its = byName[n].slice().sort(function (a, b) { return a.day - b.day; });
+        var nb = its.filter(function (it) { return it.block; }).length;
+        return mkGroup('p:' + n, n, its[0].role + ' · ' + plural(its.length) + (nb ? ', блокирующих ' + nb : ''), its);
+      });
+    } else {
+      listGroups = groups.map(function (g, gi) {
+        var its = g.items.slice().sort(function (a, b) { return (b.block - a.block) || (a.day - b.day); });
+        return mkGroup('c:' + gi, g.title, g.hint, its);
+      }).filter(function (g) { return g.items.length > 0; });
+    }
+    var allKeys = [];
+    var sugKeys = [];
+    groups.forEach(function (g) { g.items.forEach(function (it) { allKeys.push(it.key); if (it.hasSug) sugKeys.push(it.key); }); });
+    var checkedCount = allKeys.filter(function (k) { return checkedMap[k]; }).length;
+    var selSug = sugKeys.filter(function (k) { return checkedMap[k]; });
+    var selNoSug = checkedCount - selSug.length;
+    function predl(n) { var m10 = n % 10, m100 = n % 100; return n + ' ' + (m10 === 1 && m100 !== 11 ? 'предложение' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'предложения' : 'предложений')); }
+    var allChecked = checkedCount === allKeys.length && allKeys.length > 0;
+    return {
+      groups: groups,
+      totalAll: allKeys.length,
+      roles: roles,
+      listGroups: listGroups,
+      sort: sort,
+      selSugCount: selSug.length,
+      noSelSug: selSug.length === 0,
+      acceptSelected: function () { acceptKeys(selSug); },
+      showSelHint: checkedCount === 0 || selNoSug > 0,
+      selHint: checkedCount === 0 ? 'Отметьте исключения, чтобы принять по ним предложения системы' : (selNoSug + ' из выбранных без предложения системы, их нужно разобрать вручную'),
+      hasLast: lastAccepted.length > 0,
+      lastText: 'Принято ' + predl(lastAccepted.length) + ' системы, исключения закрыты',
+      undoLast: function () { var a = Object.assign({}, accepted); lastAccepted.forEach(function (k) { delete a[k]; }); self.setState({ accepted: a, lastAccepted: [] }); },
+      onSort: function (e) { self.setState({ sort: e.target.value }); },
+      allChecked: allChecked,
+      notAllChecked: !allChecked,
+      allPressed: allChecked ? 'true' : 'false',
+      hasChecked: checkedCount > 0,
+      checkedCount: checkedCount,
+      totalCount: allKeys.length,
+      toggleAll: function () {
+        var m = {};
+        if (!allChecked) allKeys.forEach(function (k) { m[k] = true; });
+        self.setState({ checkedMap: m });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

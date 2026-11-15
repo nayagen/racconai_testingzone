@@ -1,0 +1,150 @@
+/* Настройки (экраны 5–6) — стили поверх DS, только токены. Префикс st-.
+   Числа — только геометрия: ширина правой панели, ширины колонок таблицы типов исключений, flex-basis полей из макета. */
+:root {
+  --st-aside-w: 400px;
+  --st-ex-type: 260px;
+  --st-ex-chk: 100px;
+  --st-ex-beh: 210px;
+  --st-ex-who: 210px;
+  --st-ex-bulk: 130px;
+  --st-ex-ask: 150px;
+  --st-ex-row-h: 56px;
+  --st-ctl-h: 32px;
+}
+
+/* ---------- каркас ---------- */
+.st-status { align-self: center; font: var(--text-caption-m-regular); color: var(--text-success, var(--text-secondary)); }
+.st-status:empty { display: none; }
+
+.st-wrap { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: var(--space-4); overflow: hidden; }
+.st-seg { flex: 0 0 auto; align-self: flex-start; max-width: 100%; }
+.st-seg .rc-seg { flex-wrap: wrap; }
+a.rc-seg__item, a.rc-seg__item:hover { color: var(--text-body); text-decoration: none; }
+a.rc-seg__item.is-selected, a.rc-seg__item.is-selected:hover { color: var(--text-on-action); background: var(--surface-action); }
+
+.st-cols { flex: 1 1 0; min-height: 0; display: flex; gap: var(--space-4); align-items: stretch; }
+.st-main { flex: 1 1 0; min-width: 0; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-4); }
+.st-aside { flex: 0 0 var(--st-aside-w); width: var(--st-aside-w); min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-4); }
+
+/* ---------- карточки ---------- */
+.st-card {
+  flex: 0 0 auto; display: flex; flex-direction: column; gap: var(--space-6);
+  padding: var(--space-6); background: var(--surface-primary);
+  border: 1px solid var(--border-primary); border-radius: var(--radius-lg);
+  font: var(--text-paragraph-m-regular); color: var(--text-body);
+}
+.st-card__head { display: flex; flex-direction: column; gap: var(--space-1); }
+.st-card__title { margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-headings); }
+.st-card__title--gap { margin-bottom: var(--space-4); }
+.st-card__title--sm { margin-bottom: var(--space-1); }
+.st-card__sub { font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.st-card--list { gap: var(--space-2); }
+.st-card--scope { gap: var(--space-3); }
+.st-card--history { gap: var(--space-2); }
+.st-card--history .st-card__title { margin-bottom: var(--space-2); }
+.st-card--help { gap: var(--space-3); }
+.st-text { font: var(--text-paragraph-m-regular); color: var(--text-body); }
+a.st-text { color: var(--text-action); }
+a.st-text:hover { color: var(--text-action-hover); }
+.st-note { flex: 0 0 auto; font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.st-muted { color: var(--text-secondary); }
+
+/* ---------- поля и группы ---------- */
+.st-grid { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); }
+.st-grid--wide { gap: var(--space-6); }
+.st-grid--end { align-items: flex-end; }
+.st-field { min-width: 0; }
+.st-field .rc-field__input { font: var(--text-paragraph-m-regular); }
+.st-w150 { flex: 1 1 150px; }
+.st-w200 { flex: 1 1 200px; }
+.st-w220 { flex: 1 1 220px; }
+.st-w240 { flex: 1 1 240px; }
+.st-max320 { max-width: 320px; width: 100%; }
+.st-mt2 { margin-top: var(--space-2); }
+
+.st-fs {
+  border: 0; padding: 0; margin: 0; min-width: 0;
+  display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-paragraph-m-regular);
+}
+.st-legend { padding: 0 0 var(--space-2); font: var(--text-body-m-semibold); color: var(--text-headings); }
+.st-inline { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
+.st-row { display: flex; align-items: center; min-height: var(--st-ctl-h); }
+.st-row .rc-check, .st-row .rc-radio, .st-row .rc-switch { font: var(--text-paragraph-m-regular); }
+.st-row .rc-radio { cursor: pointer; }
+
+/* Switch DS неуправляемый — как .cb у чекбокса: кнопка ловит клик, сам переключатель событий не получает */
+.st-switch { position: relative; min-height: var(--st-ctl-h); }
+.st-switch:hover .rc-switch__track { box-shadow: inset 0 0 0 1px var(--border-action); }
+
+/* select в стиле макета: подпись — обычный текст */
+.st-select { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.st-select--inline { flex-direction: row; align-items: center; gap: var(--space-2); }
+.st-select--inline .st-select__wrap { flex: 1 1 auto; min-width: 0; }
+.st-select__el { font: var(--text-paragraph-m-regular); }
+
+/* ---------- предпросмотр ---------- */
+.st-preview { gap: var(--space-2); background: var(--surface-information-subtle); border-color: transparent; color: var(--text-information); }
+.st-preview__title, .st-preview__text { color: var(--text-information); }
+.st-preview__rows {
+  display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-paragraph-m-regular);
+  margin-top: var(--space-2); padding-top: var(--space-4); border-top: 1px solid var(--border-information-subtle);
+}
+.st-preview__row { display: flex; justify-content: space-between; gap: var(--space-4); }
+.st-preview__btn { display: flex; flex-direction: column; margin-top: var(--space-2); }
+
+/* ---------- типы исключений ---------- */
+.st-ex__intro { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); align-items: center; font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.st-ex__level { flex: 0 1 320px; min-width: 240px; }
+.st-ex__lead { flex: 1 1 360px; min-width: 0; max-width: 860px; }
+
+.st-ex { position: relative; flex: 0 0 auto; overflow-x: auto; background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); }
+.st-ex__table { min-width: calc(var(--st-ex-type) + var(--st-ex-chk) + var(--st-ex-beh) + var(--st-ex-who) + var(--st-ex-bulk) + var(--st-ex-ask)); display: flex; flex-direction: column; }
+.st-ex__head {
+  display: flex; align-items: center; border-bottom: 1px solid var(--border-primary);
+  font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary);
+}
+.st-ex__head .st-ex__c { padding: var(--space-2); }
+.st-ex__head .st-ex__c--type { padding: var(--space-2) var(--space-4); }
+.st-ex__group {
+  padding: var(--space-6) var(--space-4) var(--space-3); border-bottom: 1px solid var(--border-primary);
+  font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary); background: var(--surface-primary);
+}
+.st-ex__row { display: flex; align-items: center; min-height: var(--st-ex-row-h); border-bottom: 1px solid var(--border-primary); font: var(--text-paragraph-m-regular); }
+.st-ex__row:last-child { border-bottom: 0; }
+.st-ex__c { flex-shrink: 0; padding: 0 var(--space-2); min-width: 0; }
+.st-ex__c--type { width: var(--st-ex-type); padding: var(--space-2) var(--space-4); display: flex; flex-direction: column; gap: var(--space-1); }
+.st-ex__c--chk { width: var(--st-ex-chk); }
+.st-ex__c--beh { width: var(--st-ex-beh); }
+.st-ex__c--who { width: var(--st-ex-who); }
+.st-ex__c--bulk { width: var(--st-ex-bulk); }
+.st-ex__c--ask { width: var(--st-ex-ask); }
+.st-ex__label { font-weight: 600; }
+.st-ex__hint, .st-ex__na { font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.st-ex__always { font: var(--text-caption-m-regular); color: var(--text-body); }
+.st-ex__lock { font: var(--text-body-m-semibold); }
+
+/* ---------- узкие экраны: правая панель уходит под основную колонку, прокручивается вся область ---------- */
+@media (max-width: 1200px) {
+  .st-wrap { overflow-y: auto; }
+  .st-cols { flex: none; flex-direction: column; }
+  .st-main, .st-aside { flex: none; overflow: visible; min-height: auto; }
+  .st-aside { width: auto; }
+}
+@media (max-width: 900px) {
+  .st-wrap { overflow: visible; flex: none; }
+  .st-card { padding: var(--space-4); }
+  .st-ex__level { flex: 1 1 100%; min-width: 0; }
+  .st-ex__lead { flex-basis: 100%; }
+}
+
+/* при переносе длинной подписи не сжимать сам контрол */
+.st-wrap .rc-radio__dot, .st-wrap .rc-check__box, .st-wrap .rc-switch__track { flex-shrink: 0; }
+
+/* Типы исключений: таблице нужно ~1060px, поэтому до 1600px правая панель уходит под таблицу */
+@media (max-width: 1600px) {
+  .st-wrap:has(.st-ex) { overflow-y: auto; }
+  .st-wrap:has(.st-ex) .st-cols { flex: none; flex-direction: column; }
+  .st-wrap:has(.st-ex) :is(.st-main, .st-aside) { flex: none; overflow: visible; min-height: auto; }
+  .st-wrap:has(.st-ex) .st-aside { width: auto; flex-direction: row; flex-wrap: wrap; }
+  .st-wrap:has(.st-ex) .st-aside > * { flex: 1 1 320px; }
+}

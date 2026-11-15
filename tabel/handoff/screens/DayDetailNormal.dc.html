@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Карточка дня — штатный</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/raccoonds/tokens.css">
+<link rel="stylesheet" href="ds/raccoonds/components/bundle.css">
+<script src="ds/raccoonds/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--text-body);background:var(--surface-page);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}h1,h2,h3{margin:0;color:var(--text-headings)}
+a{color:var(--text-action)}a:hover{color:var(--text-action-hover)}.rc-btn--tertiary{box-shadow:none}.rc-check__box .rc-icon{color:transparent!important}.rc-check input:checked+.rc-check__box .rc-icon{color:var(--icons-on-action)!important}input,select,textarea{transition:border-color .12s}input:focus,select:focus,textarea:focus,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--border-action)!important}
+a.rc-tab,a.rc-tab:hover{color:var(--text-body)}a.rc-tab.is-selected,a.rc-tab.is-selected:hover{color:var(--text-selected)}a.rc-sidenav__item:hover{color:var(--text-body)}a.rc-sidenav__item.is-selected:hover{color:var(--text-selected)}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-4); box-sizing: border-box; min-height: 100vh; background: var(--surface-page)">
+  <x-import component-from-global-scope="RaccoonDS.SideNav" value="timesheet" groups="{{navGroups}}" user="{{navUser}}" quick-actions="{{false}}" style="flex: 0 0 232px; align-self: flex-start; position: sticky; top: var(--space-4); height: calc(100vh - 2 * var(--space-4))"></x-import>
+
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: var(--space-6)">
+    <div style="margin-bottom: calc(-1 * var(--space-2)); font: var(--text-caption-m-regular); color: var(--text-secondary)"><a href="Main.dc.html">Табель</a> / <a href="Exceptions.dc.html">Исключения</a> / Касымов Арман</div>
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4)">
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center">
+        <div style="display: flex; flex-direction: column; gap: var(--space-1)">
+          <h1 style="margin: 0; font: var(--text-heading-h1-bold); color: var(--text-headings)">Касымов Арман · 6 Окт 2026, вт</h1>
+          <span style="font: var(--text-paragraph-m-regular); color: var(--text-secondary)">Грузчик · Депо №1 · таб. № 1102</span>
+        </div>
+        <span style="display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 12px; border-radius: var(--radius-full); background: var(--surface-success-subtle); color: var(--text-success); font: var(--text-body-m-semibold); white-space: nowrap"><x-import component-from-global-scope="RaccoonDS.Icon" name="check" size="{{16}}" color="currentColor"></x-import>Штатный день · без исключений</span>
+        <div style="display: none">
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px">
+        <x-import component-from-global-scope="RaccoonDS.IconButton" icon="chevron-left" label="Предыдущий день" size="medium"></x-import>
+        <x-import component-from-global-scope="RaccoonDS.IconButton" icon="chevron-right" label="Следующий день" size="medium"></x-import>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 16px">
+      <div style="flex: 1 1 160px; background: var(--surface-primary); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary)">Пришёл</span><span style="font: var(--text-heading-h1-bold); color: var(--text-headings)">06:52</span><span style="font: var(--text-caption-m-regular); color: var(--text-success)">Подтверждено · фото, в геозоне</span></div>
+      <div style="flex: 1 1 160px; background: var(--surface-primary); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary)">Ушёл</span><span style="font: var(--text-heading-h1-bold); color: var(--text-headings)">16:12</span><span style="font: var(--text-caption-m-regular); color: var(--text-success)">Подтверждено · фото, в геозоне</span></div>
+      <div style="flex: 1 1 160px; background: var(--surface-primary); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary)">Отработано</span><span style="font: var(--text-heading-h1-bold); color: var(--text-headings)">9 ч 20 мин</span><span style="font: var(--text-caption-m-regular); color: var(--text-body)">9,3 ч в табель</span></div>
+      <div style="flex: 1 1 160px; background: var(--surface-primary); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary)">Смены в RaccoonAI</span><span style="font: var(--text-heading-h1-bold); color: var(--text-headings)">1 смена</span><span style="font: var(--text-caption-m-regular); color: var(--text-body)">06:58 – 16:05 · выход вовремя</span></div>
+    </div>
+
+    <section id="shifts" aria-label="Смены дня" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4)">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline">
+        <h2 style="margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-headings)">Смены дня</h2>
+        <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">план и факт выхода считаются по каждой смене отдельно</span>
+      </div>
+      <sc-for list="{{shifts}}" as="s" hint-placeholder-count="2">
+        <sc-if value="{{s.isGap}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: var(--space-1) 0 var(--space-1) var(--space-4); border-left: 2px dashed var(--border-primary); margin-left: 32px; font: var(--text-paragraph-m-regular); color: var(--text-body)">
+            <span style="font-weight: 600">{{s.title}}</span><span>{{s.text}}</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{s.isShift}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-5); align-items: center; background: var(--surface-secondary); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5)">
+            <span style="flex-shrink: 0; height: 28px; padding: 0 12px; display: flex; align-items: center; background: var(--surface-action); color: var(--text-on-action); border-radius: var(--radius-full); font: var(--text-paragraph-m-bold)">{{s.label}}</span>
+            <div style="flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+              <span style="font: var(--text-paragraph-m-bold)">{{s.period}}</span>
+              <span style="font: var(--text-paragraph-m-regular); color: var(--text-body)">{{s.meta}}</span>
+              <span style="margin-top: var(--space-1); font: var(--text-caption-m-regular); display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center">ID <a href="#" style="font-weight: 600; font-family: ui-monospace, Menlo, monospace">{{s.id}}</a> <x-import component-from-global-scope="RaccoonDS.Button" variant="secondary" size="small">Копировать</x-import></span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+              <span style="display: inline-flex; gap: 4px; height: 28px; align-items: center; padding: 0 8px; border: 0; border-radius: var(--radius-sm); background: var(--surface-tertiary); font: var(--text-caption-m-regular); white-space: nowrap"><span style="color: var(--text-secondary)">Выход план</span><span style="font-weight: 600">{{s.plan}}</span></span>
+              <span style="display: inline-flex; gap: 4px; height: 28px; align-items: center; padding: 0 8px; border: 0; border-radius: var(--radius-sm); background: var(--surface-tertiary); font: var(--text-caption-m-regular); white-space: nowrap"><span style="color: var(--text-secondary)">Выход факт</span><span style="font-weight: 600">{{s.fact}}</span></span>
+              <sc-if value="{{s.ok}}" hint-placeholder-val="{{true}}">
+                <span style="display: inline-flex; gap: 4px; height: 28px; align-items: center; padding: 0 8px; border: 0; border-radius: var(--radius-sm); background: var(--surface-success-subtle); color: var(--text-success); font: var(--text-caption-m-regular); white-space: nowrap"><span aria-hidden="true">✓</span><span style="font-weight: 600">{{s.delta}}</span></span>
+              </sc-if>
+              <sc-if value="{{s.late}}" hint-placeholder-val="{{false}}">
+                <span style="display: inline-flex; gap: 4px; height: 28px; align-items: center; padding: 0 8px; border: 0; border-radius: var(--radius-sm); background: var(--surface-warning-subtle); color: var(--text-warning); font: var(--text-caption-m-bold); white-space: nowrap">{{s.delta}}</span>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+      </sc-for>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: flex-start">
+      <section aria-label="Хронология дня" style="flex: 3 1 460px; min-width: 0; background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: 0">
+        <h2 style="margin: 0 0 var(--space-5); font: var(--text-heading-h3-semibold); color: var(--text-headings)">Хронология дня</h2>
+        <sc-for list="{{events}}" as="e" hint-placeholder-count="6">
+          <div style="display: flex; gap: 16px">
+            <div style="width: 54px; flex-shrink: 0; font: var(--text-paragraph-m-bold)">{{e.time}}</div>
+            <div style="display: flex; flex-direction: column; align-items: center; width: 16px; flex-shrink: 0">
+              <sc-if value="{{e.warn}}" hint-placeholder-val="{{false}}"><div style="width: 14px; height: 14px; border-radius: var(--radius-full); background: var(--surface-warning); margin-top: 4px"></div></sc-if>
+              <sc-if value="{{e.ok}}" hint-placeholder-val="{{true}}"><div style="width: 14px; height: 14px; border-radius: var(--radius-full); border: 2px solid var(--surface-action); background: var(--surface-primary); margin-top: 4px; box-sizing: border-box"></div></sc-if>
+              <div style="width: 2px; flex: 1 1 auto; min-height: 26px; background: var(--surface-tertiary)"></div>
+            </div>
+            <div style="flex: 1 1 auto; padding-bottom: var(--space-5); display: flex; flex-direction: column; gap: var(--space-1)">
+              <span style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+                <sc-if value="{{e.hasShift}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 8px; display: inline-flex; align-items: center; background: var(--surface-action); color: var(--text-on-action); border-radius: var(--radius-full); font: var(--text-caption-m-bold)">{{e.shiftLabel}}</span></sc-if>
+                <span style="font: var(--text-body-m-semibold)">{{e.title}}</span>
+              </span>
+              <span style="font: var(--text-paragraph-m-regular); color: var(--text-body)">{{e.meta}}</span>
+              <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Источник: {{e.src}}</span>
+            </div>
+          </div>
+        </sc-for>
+      </section>
+
+      <div style="flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-6)">
+        <section aria-label="Фото и карта отметок" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-5)">
+          <div style="display: flex; flex-direction: column; gap: var(--space-3)">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><span style="font: var(--text-body-m-semibold); color: var(--text-headings)">«Пришёл» 06:52</span><span style="font: var(--text-caption-m-semibold); padding: 4px 8px; border-radius: var(--radius-full); background: var(--surface-success-subtle); color: var(--text-success)">в геозоне</span></div>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px">
+              <div style="flex: 1 1 140px; min-width: 0"><button type="button" onClick="{{openPhoto}}" aria-label="Открыть фото отметки «Пришёл» в окне" title="Открыть фото" style="display: block; width: 100%; padding: 0; margin: 0; border: 0; background: transparent; cursor: zoom-in; position: relative; border-radius: var(--radius-md)"><img src="/_blob/cdfe281e7f1424dc1c703964f5f3b969" alt="Фото отметки «Пришёл»: Касымов Арман у разгрузки магазина" style="display: block; width: 100%; height: 150px; object-fit: cover; object-position: center 30%; border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-tertiary); box-sizing: border-box"><span aria-hidden="true" style="position: absolute; right: 8px; bottom: 8px; width: 28px; height: 28px; border-radius: var(--radius-full); background: var(--surface-primary); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--icons-default)"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg></span></button></div>
+              <div style="flex: 1 1 180px; min-width: 0"><button type="button" onClick="{{openMap}}" aria-label="Открыть карту: где сделана фотография отметки «Пришёл»" title="Открыть карту" style="display: block; position: relative; width: 100%; height: 150px; padding: 0; margin: 0; border: 1px solid var(--border-primary); border-radius: var(--radius-md); overflow: hidden; box-sizing: border-box; background: #f2efe9; cursor: zoom-in">
+              <svg viewBox="0 0 240 150" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" aria-hidden="true" style="display: block">
+                <g transform="scale(0.5)"><rect x="0" y="0" width="480" height="300" fill="#f2efe9"></rect>
+<rect x="324" y="0" width="156" height="100" fill="#d3e8bc"></rect>
+<circle cx="350" cy="20" r="5" fill="#bfdca2"></circle>
+<circle cx="372" cy="46" r="5" fill="#bfdca2"></circle>
+<circle cx="398" cy="24" r="5" fill="#bfdca2"></circle>
+<circle cx="430" cy="40" r="5" fill="#bfdca2"></circle>
+<circle cx="455" cy="70" r="5" fill="#bfdca2"></circle>
+<circle cx="345" cy="74" r="5" fill="#bfdca2"></circle>
+<circle cx="410" cy="80" r="5" fill="#bfdca2"></circle>
+<circle cx="462" cy="18" r="5" fill="#bfdca2"></circle>
+<path d="M0 262 C40 252 80 284 140 270" fill="none" stroke="#b5d8f2" stroke-width="12" stroke-linecap="round"></path>
+<rect x="6" y="6" width="22" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="46" width="22" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="33" y="6" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="33" y="34" width="30" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="68" y="6" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="68" y="34" width="26" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="102" y="6" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="102" y="40" width="22" height="54" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="6" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="34" width="30" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="6" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="40" width="30" height="54" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="231" y="6" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="231" y="34" width="26" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="263" y="6" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="263" y="40" width="36" height="54" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="118" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="42" y="118" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="77" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="104" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="188" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="215" y="118" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="253" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="281" y="118" width="25" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="358" y="118" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="118" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="37" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="81" y="170" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="105" y="170" width="29" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="194" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="229" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="267" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="357" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="385" y="170" width="13" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="456" y="170" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="32" y="222" width="22" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="62" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="86" y="222" width="36" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="250" width="18" height="44" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="184" y="222" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="184" y="250" width="30" height="44" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="222" y="222" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="222" y="256" width="26" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="256" y="222" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="256" y="256" width="26" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="287" y="222" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="287" y="256" width="18" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="222" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="256" width="30" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="366" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="366" y="250" width="18" height="44" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="222" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="256" width="26" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="456" y="222" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="456" y="262" width="18" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<path d="M0 158 L480 158" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 158 L480 158" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#fde7a4" stroke-width="11" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#fde7a4" stroke-width="11" fill="none"></path></g>
+                <circle cx="116" cy="79" r="58" style="fill: var(--surface-information-subtle); fill-opacity: 0.45; stroke: var(--surface-action); stroke-width: 1.5; stroke-dasharray: 4 3"></circle>
+                <polyline points="0,53 73,53 73,79 116,79 159,79 159,105 205,105 205,150" style="fill: none; stroke: var(--icons-secondary); stroke-width: 2; stroke-dasharray: 5 3; stroke-linecap: round; stroke-linejoin: round"></polyline>
+                <line x1="116" y1="79" x2="132" y2="60" style="stroke: var(--text-success); stroke-width: 1.25; stroke-dasharray: 2 2"></line>
+                <text x="126" y="75" style="fill: var(--text-headings); font-size: 8px; font-weight: 700; font-family: inherit">90 м</text>
+                <circle cx="116" cy="79" r="8" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 1.5"></circle>
+                <text x="116" y="82" text-anchor="middle" style="fill: var(--text-on-action); font-size: 9px; font-weight: 700; font-family: inherit">1</text>
+                <circle cx="159" cy="105" r="8" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 1.5"></circle>
+                <text x="159" y="108" text-anchor="middle" style="fill: var(--text-on-action); font-size: 9px; font-weight: 700; font-family: inherit">2</text>
+                <circle cx="205" cy="132" r="8" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 1.5"></circle>
+                <text x="205" y="135" text-anchor="middle" style="fill: var(--text-on-action); font-size: 9px; font-weight: 700; font-family: inherit">3</text>
+                <path d="M132 60 C132 60 122 48 122 42 A10 10 0 1 1 142 42 C142 48 132 60 132 60 Z" style="fill: var(--text-success); stroke: var(--surface-primary); stroke-width: 1.5"></path>
+                <circle cx="132" cy="42" r="4" style="fill: var(--surface-primary)"></circle>
+              </svg>
+              <span aria-hidden="true" style="position: absolute; right: 8px; bottom: 8px; width: 28px; height: 28px; border-radius: var(--radius-full); background: var(--surface-primary); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--icons-default)"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg></span>
+            </button></div>
+            </div>
+            <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Снято камерой · 90 м от первой точки маршрута №12 · радиус 400 м</span>
+          </div>
+          <div aria-hidden="true" style="height: 1px; background: var(--border-primary)"></div>
+          <div style="display: flex; flex-direction: column; gap: var(--space-3)">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><span style="font: var(--text-body-m-semibold); color: var(--text-headings)">«Ушёл» 16:12</span><span style="font: var(--text-caption-m-semibold); padding: 4px 8px; border-radius: var(--radius-full); background: var(--surface-success-subtle); color: var(--text-success)">в геозоне</span></div>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px">
+              <div style="flex: 1 1 140px; min-width: 0"><button type="button" onClick="{{openPhotoOut}}" aria-label="Открыть фото отметки «Ушёл» в окне" title="Открыть фото" style="display: block; width: 100%; padding: 0; margin: 0; border: 0; background: transparent; cursor: zoom-in; position: relative; border-radius: var(--radius-md)"><img src="/_blob/c40c07079db5873bacc3d460535f8586" alt="Фото отметки «Ушёл»: Касымов Арман у магазина в конце дня" style="display: block; width: 100%; height: 150px; object-fit: cover; object-position: center 30%; border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-tertiary); box-sizing: border-box"><span aria-hidden="true" style="position: absolute; right: 8px; bottom: 8px; width: 28px; height: 28px; border-radius: var(--radius-full); background: var(--surface-primary); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--icons-default)"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg></span></button></div>
+              <div style="flex: 1 1 180px; min-width: 0"><button type="button" onClick="{{openMapOut}}" aria-label="Открыть карту: где сделана фотография отметки «Ушёл»" title="Открыть карту" style="display: block; position: relative; width: 100%; height: 150px; padding: 0; margin: 0; border: 1px solid var(--border-primary); border-radius: var(--radius-md); overflow: hidden; box-sizing: border-box; background: #f2efe9; cursor: zoom-in">
+              <svg viewBox="0 0 240 150" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" aria-hidden="true" style="display: block">
+                <g transform="scale(0.5)"><rect x="0" y="0" width="480" height="300" fill="#f2efe9"></rect>
+<rect x="324" y="0" width="156" height="100" fill="#d3e8bc"></rect>
+<circle cx="350" cy="20" r="5" fill="#bfdca2"></circle>
+<circle cx="372" cy="46" r="5" fill="#bfdca2"></circle>
+<circle cx="398" cy="24" r="5" fill="#bfdca2"></circle>
+<circle cx="430" cy="40" r="5" fill="#bfdca2"></circle>
+<circle cx="455" cy="70" r="5" fill="#bfdca2"></circle>
+<circle cx="345" cy="74" r="5" fill="#bfdca2"></circle>
+<circle cx="410" cy="80" r="5" fill="#bfdca2"></circle>
+<circle cx="462" cy="18" r="5" fill="#bfdca2"></circle>
+<path d="M0 262 C40 252 80 284 140 270" fill="none" stroke="#b5d8f2" stroke-width="12" stroke-linecap="round"></path>
+<rect x="6" y="6" width="22" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="46" width="22" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="33" y="6" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="33" y="34" width="30" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="68" y="6" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="68" y="34" width="26" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="102" y="6" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="102" y="40" width="22" height="54" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="6" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="34" width="30" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="6" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="40" width="30" height="54" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="231" y="6" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="231" y="34" width="26" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="263" y="6" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="263" y="40" width="36" height="54" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="118" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="42" y="118" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="77" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="104" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="188" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="215" y="118" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="253" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="281" y="118" width="25" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="358" y="118" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="118" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="37" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="81" y="170" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="105" y="170" width="29" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="194" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="229" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="267" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="357" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="385" y="170" width="13" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="456" y="170" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="32" y="222" width="22" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="62" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="86" y="222" width="36" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="250" width="18" height="44" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="184" y="222" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="184" y="250" width="30" height="44" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="222" y="222" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="222" y="256" width="26" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="256" y="222" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="256" y="256" width="26" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="287" y="222" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="287" y="256" width="18" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="222" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="256" width="30" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="366" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="366" y="250" width="18" height="44" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="222" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="256" width="26" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="456" y="222" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="456" y="262" width="18" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<path d="M0 158 L480 158" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 158 L480 158" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#fde7a4" stroke-width="11" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#fde7a4" stroke-width="11" fill="none"></path></g>
+                <circle cx="205" cy="132" r="58" style="fill: var(--surface-information-subtle); fill-opacity: 0.45; stroke: var(--surface-action); stroke-width: 1.5; stroke-dasharray: 4 3"></circle>
+                <polyline points="0,53 73,53 73,79 116,79 159,79 159,105 205,105 205,150" style="fill: none; stroke: var(--icons-secondary); stroke-width: 2; stroke-dasharray: 5 3; stroke-linecap: round; stroke-linejoin: round"></polyline>
+                <line x1="205" y1="132" x2="198" y2="126" style="stroke: var(--text-success); stroke-width: 1.25; stroke-dasharray: 2 2"></line>
+                <text x="166" y="128" style="fill: var(--text-headings); font-size: 8px; font-weight: 700; font-family: inherit">60 м</text>
+                <circle cx="116" cy="79" r="8" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 1.5"></circle>
+                <text x="116" y="82" text-anchor="middle" style="fill: var(--text-on-action); font-size: 9px; font-weight: 700; font-family: inherit">1</text>
+                <circle cx="159" cy="105" r="8" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 1.5"></circle>
+                <text x="159" y="108" text-anchor="middle" style="fill: var(--text-on-action); font-size: 9px; font-weight: 700; font-family: inherit">2</text>
+                <circle cx="205" cy="132" r="8" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 1.5"></circle>
+                <text x="205" y="135" text-anchor="middle" style="fill: var(--text-on-action); font-size: 9px; font-weight: 700; font-family: inherit">3</text>
+                <path d="M198 126 C198 126 188 114 188 108 A10 10 0 1 1 208 108 C208 114 198 126 198 126 Z" style="fill: var(--text-success); stroke: var(--surface-primary); stroke-width: 1.5"></path>
+                <circle cx="198" cy="108" r="4" style="fill: var(--surface-primary)"></circle>
+              </svg>
+              <span aria-hidden="true" style="position: absolute; right: 8px; bottom: 8px; width: 28px; height: 28px; border-radius: var(--radius-full); background: var(--surface-primary); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--icons-default)"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg></span>
+            </button></div>
+            </div>
+            <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Снято камерой · 60 м от последней точки маршрута №12 (точка 3) · радиус 400 м</span>
+          </div>
+          <span style="display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); font: var(--text-caption-m-regular); color: var(--text-secondary)">
+              <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--text-success)"></span>отметка</span>
+              <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--surface-action)"></span>точки маршрута</span>
+              <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 12px; height: 0; border-top: 2px dashed var(--icons-secondary)"></span>трек машины</span>
+            </span>
+        </section>
+
+        <section aria-label="Итог дня" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-5)">
+          <h2 style="margin: 0; font: var(--text-heading-h3-semibold); color: var(--text-headings)">Итог дня</h2>
+          <div role="status" style="display: flex; gap: var(--space-2); align-items: flex-start; padding: var(--space-4); border-radius: var(--radius-md); background: var(--surface-success-subtle); color: var(--text-success); font: var(--text-paragraph-m-regular)">
+            <x-import component-from-global-scope="RaccoonDS.Icon" name="check" size="{{20}}" color="currentColor"></x-import>
+            <span style="display: flex; flex-direction: column; gap: var(--space-1)"><strong>Закрыт автоматически</strong><span style="color: var(--text-body)">Обе отметки сделаны сотрудником с фото внутри геозоны и совпали с событиями машины в пределах допуска 30 мин. Действий HR не требуется.</span></span>
+          </div>
+          <dl style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: var(--space-3) var(--space-6); font: var(--text-paragraph-m-regular)">
+            <dt style="color: var(--text-secondary)">Код дня</dt><dd style="margin: 0; font-weight: 600; color: var(--text-headings)">Я — явка</dd>
+            <dt style="color: var(--text-secondary)">В табель</dt><dd style="margin: 0; font-weight: 600; color: var(--text-headings)">9,3 ч</dd>
+            <dt style="color: var(--text-secondary)">Норма грузчика</dt><dd style="margin: 0; color: var(--text-body)">10 ч · переработки нет</dd>
+            <dt style="color: var(--text-secondary)">Выход на линию</dt><dd style="margin: 0; color: var(--text-body)">06:58 при плане 07:00 · вовремя</dd>
+            <dt style="color: var(--text-secondary)">Источник отметок</dt><dd style="margin: 0; color: var(--text-body)">WhatsApp-бот, сам · фото с камеры</dd>
+          </dl>
+          <div style="margin-top: var(--space-1); display: flex; flex-wrap: wrap; gap: var(--space-3)">
+            <x-import component-from-global-scope="RaccoonDS.Button" variant="tertiary" icon="edit">Исправить вручную</x-import>
+          </div>
+        </section>
+
+        <section aria-label="Журнал изменений" style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3)">
+          <h2 style="margin: 0 0 var(--space-2); font: var(--text-heading-h3-semibold); color: var(--text-headings)">Журнал изменений</h2>
+          <div style="font: var(--text-paragraph-m-regular); color: var(--text-body)">6 Окт 23:59 · Система · день закрыт автоматически, исключений нет</div>
+          <div style="font: var(--text-paragraph-m-regular); color: var(--text-body)">6 Окт 16:12 · Касымов А. · отметка «Ушёл»</div>
+          <div style="font: var(--text-paragraph-m-regular); color: var(--text-body)">6 Окт 06:52 · Касымов А. · отметка «Пришёл»</div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+<sc-if value="{{photoOpen}}" hint-placeholder-val="{{false}}">
+  <div style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box">
+    <button type="button" onClick="{{closePhoto}}" aria-label="Закрыть фото" tabindex="-1" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; margin: 0; border: 0; background: color-mix(in srgb, var(--surface-invert) 80%, transparent); cursor: zoom-out"></button>
+    <section role="dialog" aria-modal="true" aria-label="Фото отметки «Пришёл»" class="rc-modal" style="position: relative; width: 100%; max-width: 560px; overflow: hidden; box-shadow: var(--shadow-lg)">
+      <header class="rc-modal__head">
+        <div class="rc-modal__titles">
+          <h2 class="rc-modal__title--entity" style="margin: 0">Касымов Арман · «Пришёл» 06:52</h2>
+          <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">6 Окт 2026 · снято камерой · 90 м от первой точки маршрута №12</span>
+        </div>
+        <button type="button" class="rc-modal__close" onClick="{{closePhoto}}" aria-label="Закрыть" autofocus=""><x-import component-from-global-scope="RaccoonDS.Icon" name="cancel" size="{{24}}"></x-import></button>
+      </header>
+      <x-import component-from-global-scope="RaccoonDS.Separator"></x-import>
+      <img src="/_blob/cdfe281e7f1424dc1c703964f5f3b969" alt="Фото отметки «Пришёл»: Касымов Арман у разгрузки магазина" style="display: block; width: 100%; aspect-ratio: 1 / 1; max-height: 70vh; object-fit: contain; background: var(--surface-invert)">
+    </section>
+  </div>
+</sc-if>
+<sc-if value="{{photoOutOpen}}" hint-placeholder-val="{{false}}">
+  <div style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box">
+    <button type="button" onClick="{{closePhotoOut}}" aria-label="Закрыть фото" tabindex="-1" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; margin: 0; border: 0; background: color-mix(in srgb, var(--surface-invert) 80%, transparent); cursor: zoom-out"></button>
+    <section role="dialog" aria-modal="true" aria-label="Фото отметки «Ушёл»" class="rc-modal" style="position: relative; width: 100%; max-width: 560px; overflow: hidden; box-shadow: var(--shadow-lg)">
+      <header class="rc-modal__head">
+        <div class="rc-modal__titles">
+          <h2 class="rc-modal__title--entity" style="margin: 0">Касымов Арман · «Ушёл» 16:12</h2>
+          <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">6 Окт 2026 · снято камерой · 60 м от последней точки маршрута №12</span>
+        </div>
+        <button type="button" class="rc-modal__close" onClick="{{closePhotoOut}}" aria-label="Закрыть" autofocus=""><x-import component-from-global-scope="RaccoonDS.Icon" name="cancel" size="{{24}}"></x-import></button>
+      </header>
+      <x-import component-from-global-scope="RaccoonDS.Separator"></x-import>
+      <img src="/_blob/c40c07079db5873bacc3d460535f8586" alt="Фото отметки «Ушёл»: Касымов Арман у магазина в конце дня" style="display: block; width: 100%; aspect-ratio: 1 / 1; max-height: 70vh; object-fit: contain; background: var(--surface-invert)">
+    </section>
+  </div>
+</sc-if>
+<sc-if value="{{msgOpen}}" hint-placeholder-val="{{false}}">
+  <div style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box">
+    <button type="button" onClick="{{closeMsg}}" aria-label="Закрыть" tabindex="-1" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; margin: 0; border: 0; background: color-mix(in srgb, var(--surface-invert) 45%, transparent); cursor: default"></button>
+    <section role="dialog" aria-modal="true" aria-label="Сообщение сотруднику" class="rc-modal" style="position: relative; width: 100%; max-width: 560px; max-height: 100%; overflow: auto; box-shadow: var(--shadow-lg)">
+      <header class="rc-modal__head">
+        <div class="rc-modal__titles">
+          <h2 class="rc-modal__title" style="margin: 0">Сообщение от имени HR · Касымов Арман</h2>
+          <span style="font: var(--text-caption-m-regular); color: var(--text-secondary); display: flex; gap: 4px; align-items: center"><x-import component-from-global-scope="RaccoonDS.Icon" name="whatsapp" size="{{16}}" color="var(--icons-secondary)"></x-import>через WhatsApp-бот · +7 701 *** ** 34</span>
+        </div>
+        <button type="button" class="rc-modal__close" onClick="{{closeMsg}}" aria-label="Закрыть" autofocus=""><x-import component-from-global-scope="RaccoonDS.Icon" name="cancel" size="{{24}}"></x-import></button>
+      </header>
+      <x-import component-from-global-scope="RaccoonDS.Separator"></x-import>
+
+      <div aria-label="Переписка" style="background: var(--surface-secondary); padding: var(--space-5) var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); font: var(--text-paragraph-m-regular)">
+        <span style="align-self: center; font: var(--text-caption-m-regular); color: var(--text-secondary)">6 Окт 2026</span>
+        <div style="align-self: flex-start; max-width: 80%; background: var(--surface-primary); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm); padding: var(--space-3) var(--space-4); display: flex; flex-direction: column; gap: var(--space-1)">
+          <span style="font: var(--text-caption-m-semibold); color: var(--text-secondary)">Бот табеля</span>
+          <span>Вы закончили работу? Нажмите «Ушёл» и пришлите фото.</span>
+          <span style="align-self: flex-end; font: var(--text-caption-m-regular); color: var(--text-secondary)">16:41 · без ответа</span>
+        </div>
+        <sc-if value="{{msgSent}}" hint-placeholder-val="{{false}}">
+          <span style="align-self: center; font: var(--text-caption-m-regular); color: var(--text-secondary)">Сегодня</span>
+          <div style="align-self: flex-end; max-width: 80%; background: var(--surface-success-subtle); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg); padding: var(--space-3) var(--space-4); display: flex; flex-direction: column; gap: var(--space-1)">
+            <span style="font: var(--text-caption-m-semibold); color: var(--text-success)">HR · через бот</span>
+            <span style="white-space: pre-wrap; color: var(--text-headings)">{{sentText}}</span>
+            <sc-if value="{{sentWithButtons}}" hint-placeholder-val="{{true}}">
+              <span style="margin-top: var(--space-1); display: flex; flex-wrap: wrap; gap: var(--space-2)">
+                <span style="font: var(--text-caption-m-semibold); padding: 4px 8px; border-radius: var(--radius-full); background: var(--surface-primary); color: var(--text-action)">16:38 верно</span>
+                <span style="font: var(--text-caption-m-semibold); padding: 4px 8px; border-radius: var(--radius-full); background: var(--surface-primary); color: var(--text-action)">Ушёл в другое время</span>
+              </span>
+            </sc-if>
+            <span style="align-self: flex-end; font: var(--text-caption-m-regular); color: var(--text-secondary)">10:30 · {{sentStatus}}</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{msgTyping}}" hint-placeholder-val="{{false}}">
+          <span style="align-self: flex-start; font: var(--text-caption-m-regular); color: var(--text-secondary); font-style: italic">Касымов А. печатает…</span>
+        </sc-if>
+        <sc-if value="{{msgReplied}}" hint-placeholder-val="{{false}}">
+          <div style="align-self: flex-start; max-width: 80%; background: var(--surface-primary); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm); padding: var(--space-3) var(--space-4); display: flex; flex-direction: column; gap: var(--space-1)">
+            <span style="font: var(--text-caption-m-semibold); color: var(--text-secondary)">Касымов Арман</span>
+            <span>Ушёл в другое время: в 16:45. Ждал машину на точке, забыл нажать.</span>
+            <span style="align-self: flex-end; font: var(--text-caption-m-regular); color: var(--text-secondary)">10:31</span>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{msgReplied}}" hint-placeholder-val="{{false}}">
+        <div style="margin: var(--space-6) var(--space-6) 0; padding: var(--space-4); border-radius: var(--radius-md); background: var(--surface-information-subtle); color: var(--text-information); display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-4); align-items: center; justify-content: space-between; font: var(--text-paragraph-m-regular)">
+          <sc-if value="{{msgNotApplied}}" hint-placeholder-val="{{true}}"><span>Сотрудник указал уход в <strong>16:45</strong>. Подставить в решение?</span><x-import component-from-global-scope="RaccoonDS.Button" variant="primary" size="small" onClick="{{applyReply}}">Подставить 16:45</x-import></sc-if>
+          <sc-if value="{{msgApplied}}" hint-placeholder-val="{{false}}"><span>«Ушёл» 16:45 подставлен в решение HR. Выберите причину и сохраните.</span><x-import component-from-global-scope="RaccoonDS.Button" variant="secondary" size="small" onClick="{{closeMsg}}">К решению</x-import></sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{msgNotSent}}" hint-placeholder-val="{{true}}">
+        <div style="padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-5)">
+          <div role="radiogroup" aria-label="Шаблон" style="display: flex; flex-wrap: wrap; gap: var(--space-2)">
+            <sc-for list="{{tpls}}" as="t" hint-placeholder-count="3">
+              <button type="button" role="radio" aria-checked="{{t.checked}}" onClick="{{t.pick}}" style="height: 32px; padding: 0 12px; border-radius: var(--radius-full); border: 1px solid {{t.border}}; background: {{t.bg}}; color: {{t.fg}}; font: var(--text-paragraph-m-regular); cursor: pointer; font-weight: {{t.fw}}">{{t.label}}</button>
+            </sc-for>
+          </div>
+          <label style="display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption-m-regular); color: var(--text-secondary)">Текст сообщения
+            <textarea rows="4" value="{{msgText}}" onInput="{{onMsgInput}}" placeholder="Напишите сообщение" style="display: block; width: 100%; box-sizing: border-box; padding: var(--space-2) var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); font: var(--text-paragraph-m-regular); color: var(--text-body); resize: vertical"></textarea>
+          </label>
+          <button type="button" class="cb" onClick="{{toggleBtns}}" aria-pressed="{{btnsPressed}}" style="display: inline-flex; align-items: center; padding: 0; margin: 0; border: 0; background: transparent; font: inherit; color: inherit; cursor: pointer; text-align: left; align-self: flex-start"><span style="display: inline-flex; pointer-events: none"><sc-if value="{{btnsOn}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Добавить кнопки ответа: «16:38 верно» · «Ушёл в другое время»"></x-import></sc-if><sc-if value="{{btnsOff}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Добавить кнопки ответа: «16:38 верно» · «Ушёл в другое время»"></x-import></sc-if></span></button>
+          <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Ответ придёт сюда и в журнал дня. Исключение остаётся открытым, пока HR не примет решение.</span>
+          <div style="margin-top: var(--space-1); display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: flex-end">
+            <x-import component-from-global-scope="RaccoonDS.Button" variant="tertiary" onClick="{{closeMsg}}">Отмена</x-import>
+            <x-import component-from-global-scope="RaccoonDS.Button" variant="primary" icon="message-sent" disabled="{{sendDisabled}}" onClick="{{sendMsg}}">Отправить</x-import>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{msgSent}}" hint-placeholder-val="{{false}}">
+        <div style="padding: var(--space-6); display: flex; justify-content: flex-end">
+          <x-import component-from-global-scope="RaccoonDS.Button" variant="tertiary" onClick="{{closeMsg}}">Закрыть</x-import>
+        </div>
+      </sc-if>
+    </section>
+  </div>
+</sc-if>
+<sc-if value="{{mapOpen}}" hint-placeholder-val="{{false}}">
+  <div style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box">
+    <button type="button" onClick="{{closeMap}}" aria-label="Закрыть карту" tabindex="-1" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; margin: 0; border: 0; background: color-mix(in srgb, var(--surface-invert) 80%, transparent); cursor: zoom-out"></button>
+    <section role="dialog" aria-modal="true" aria-label="Карта отметки «Пришёл»" class="rc-modal" style="position: relative; width: 100%; max-width: 1140px; max-height: 100%; overflow: auto; box-shadow: var(--shadow-lg)">
+      <header class="rc-modal__head">
+        <div class="rc-modal__titles">
+          <h2 class="rc-modal__title--entity" style="margin: 0">Где сделана отметка «Пришёл» 06:52</h2>
+          <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Касымов Арман · 6 Окт 2026 · маршрут №12, ул. Жандосова 58</span>
+        </div>
+        <button type="button" class="rc-modal__close" onClick="{{closeMap}}" aria-label="Закрыть" autofocus=""><x-import component-from-global-scope="RaccoonDS.Icon" name="cancel" size="{{24}}"></x-import></button>
+      </header>
+      <x-import component-from-global-scope="RaccoonDS.Separator"></x-import>
+      <div style="position: relative; aspect-ratio: 480 / 300; background: #f2efe9">
+        <svg viewBox="0 0 480 300" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" role="img" aria-label="Карта: пин отметки «Пришёл» в 90 м от первой точки маршрута, внутри геозоны радиусом 400 м; рядом точки маршрута 2 и 3 и трек машины" style="display: block; position: absolute; inset: 0">
+          <rect x="0" y="0" width="480" height="300" fill="#f2efe9"></rect>
+<rect x="324" y="0" width="156" height="100" fill="#d3e8bc"></rect>
+<circle cx="350" cy="20" r="5" fill="#bfdca2"></circle>
+<circle cx="372" cy="46" r="5" fill="#bfdca2"></circle>
+<circle cx="398" cy="24" r="5" fill="#bfdca2"></circle>
+<circle cx="430" cy="40" r="5" fill="#bfdca2"></circle>
+<circle cx="455" cy="70" r="5" fill="#bfdca2"></circle>
+<circle cx="345" cy="74" r="5" fill="#bfdca2"></circle>
+<circle cx="410" cy="80" r="5" fill="#bfdca2"></circle>
+<circle cx="462" cy="18" r="5" fill="#bfdca2"></circle>
+<path d="M0 262 C40 252 80 284 140 270" fill="none" stroke="#b5d8f2" stroke-width="12" stroke-linecap="round"></path>
+<rect x="6" y="6" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="34" width="26" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="38" y="6" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="38" y="34" width="18" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="64" y="6" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="64" y="40" width="18" height="54" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="90" y="6" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="90" y="46" width="18" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="113" y="6" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="113" y="34" width="18" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="6" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="34" width="30" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="6" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="46" width="18" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="217" y="6" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="217" y="46" width="18" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="240" y="6" width="22" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="240" y="46" width="22" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="270" y="6" width="36" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="270" y="34" width="36" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="118" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="48" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="71" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="97" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="188" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="214" y="118" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="248" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="275" y="118" width="31" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="358" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="384" y="118" width="14" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="448" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="48" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="80" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="122" y="170" width="12" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="185" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="212" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="254" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="366" y="170" width="32" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="170" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="448" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="222" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="37" y="222" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="73" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="99" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="222" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="256" width="26" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="192" y="222" width="26" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="192" y="262" width="26" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="224" y="222" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="224" y="256" width="36" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="265" y="222" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="265" y="256" width="18" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="289" y="222" width="17" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="289" y="250" width="17" height="44" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="222" width="26" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="262" width="26" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="364" y="222" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="364" y="256" width="30" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="222" width="30" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="262" width="30" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="458" y="222" width="16" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="458" y="256" width="16" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<path d="M0 158 L480 158" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 158 L480 158" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#fde7a4" stroke-width="11" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#fde7a4" stroke-width="11" fill="none"></path>
+<text x="20" y="109" style="font-family: inherit; font-size: 8px; fill: #5c5a55; font-weight: 600">ул. Жандосова</text>
+<text x="0" y="0" transform="translate(149 290) rotate(-90)" style="font-family: inherit; font-size: 8px; fill: #5c5a55; font-weight: 600">ул. Розыбакиева</text>
+<text x="340" y="213" style="font-family: inherit; font-size: 8px; fill: #5c5a55">ул. Сатпаева</text>
+<text x="20" y="161" style="font-family: inherit; font-size: 8px; fill: #5c5a55">ул. Мынбаева</text>
+<text x="392" y="60" style="font-family: inherit; font-size: 8px; fill: #4f7a35; font-style: italic">сквер</text>
+<text x="18" y="290" style="font-family: inherit; font-size: 8px; fill: #4a87b8; font-style: italic">р. Есентай</text>
+          <circle cx="232" cy="158" r="116" style="fill: var(--surface-information-subtle); fill-opacity: 0.45; stroke: var(--surface-action); stroke-width: 2; stroke-dasharray: 6 4"></circle>
+          <polyline points="0,106 146,106 146,158 232,158 318,158 318,210 410,210 410,300" style="fill: none; stroke: var(--icons-secondary); stroke-width: 3; stroke-dasharray: 8 5; stroke-linecap: round; stroke-linejoin: round"></polyline>
+          <line x1="232" y1="158" x2="264" y2="120" style="stroke: var(--text-success); stroke-width: 2; stroke-dasharray: 3 3"></line>
+          <rect x="250" y="140" width="38" height="16" rx="8" style="fill: var(--surface-primary)"></rect>
+          <text x="269" y="152" text-anchor="middle" style="fill: var(--text-headings); font-size: 10px; font-weight: 700; font-family: inherit">90 м</text>
+          <circle cx="232" cy="158" r="12" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 2"></circle>
+          <text x="232" y="162" text-anchor="middle" style="fill: var(--text-on-action); font-size: 12px; font-weight: 700; font-family: inherit">1</text>
+          <circle cx="318" cy="210" r="12" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 2"></circle>
+          <text x="318" y="214" text-anchor="middle" style="fill: var(--text-on-action); font-size: 12px; font-weight: 700; font-family: inherit">2</text>
+          <circle cx="410" cy="262" r="12" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 2"></circle>
+          <text x="410" y="266" text-anchor="middle" style="fill: var(--text-on-action); font-size: 12px; font-weight: 700; font-family: inherit">3</text>
+          <circle cx="264" cy="120" r="14" style="fill: var(--text-success); fill-opacity: 0.18"></circle>
+          <path d="M264 120 C264 120 248 100 248 88 A16 16 0 1 1 280 88 C280 100 264 120 264 120 Z" style="fill: var(--text-success); stroke: var(--surface-primary); stroke-width: 2"></path>
+          <circle cx="264" cy="88" r="6" style="fill: var(--surface-primary)"></circle>
+          <line x1="14" y1="284" x2="43" y2="284" style="stroke: var(--text-headings); stroke-width: 2"></line>
+          <line x1="14" y1="280" x2="14" y2="288" style="stroke: var(--text-headings); stroke-width: 2"></line>
+          <line x1="43" y1="280" x2="43" y2="288" style="stroke: var(--text-headings); stroke-width: 2"></line>
+          <text x="50" y="287" style="fill: var(--text-headings); font-size: 9px; font-family: inherit">100 м</text>
+        </svg>
+        <div style="position: absolute; left: 60.4%; top: 12%; display: inline-flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2); background: var(--surface-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-md); white-space: nowrap; max-width: calc(100% - 60.4% - 8px); box-sizing: border-box">
+          <img src="/_blob/cdfe281e7f1424dc1c703964f5f3b969" alt="" width="44" height="44" style="width: 44px; height: 44px; object-fit: cover; border-radius: var(--radius-sm); flex-shrink: 0; display: block">
+          <span style="display: flex; flex-direction: column; gap: var(--space-1); min-width: 0">
+            <span style="font: var(--text-caption-m-bold); color: var(--text-headings)">«Пришёл» 06:52</span>
+            <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">камера · точность 12 м</span>
+            <span style="font: var(--text-caption-m-bold); color: var(--text-success)">в геозоне</span>
+          </span>
+        </div>
+        <div style="position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 1px; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md)">
+          <button type="button" aria-label="Приблизить" style="width: 36px; height: 36px; padding: 0; margin: 0; border: 0; background: var(--surface-primary); color: var(--icons-default); font: var(--text-heading-h3-semibold); cursor: pointer">+</button>
+          <button type="button" aria-label="Отдалить" style="width: 36px; height: 36px; padding: 0; margin: 0; border: 0; background: var(--surface-primary); color: var(--icons-default); font: var(--text-heading-h3-semibold); cursor: pointer">−</button>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); align-items: center; justify-content: space-between; padding: var(--space-5) var(--space-6)">
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font: var(--text-paragraph-m-regular)">
+          <span><span style="color: var(--text-secondary)">До точки 1:</span> <strong>90 м</strong></span>
+          <span><span style="color: var(--text-secondary)">Радиус геозоны:</span> <strong>400 м</strong></span>
+          <span><span style="color: var(--text-secondary)">Координаты:</span> <span style="font-family: ui-monospace, Menlo, monospace">43.2346, 76.8892</span></span>
+        </div>
+        <span style="display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); font: var(--text-caption-m-regular); color: var(--text-secondary)">
+          <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--text-success)"></span>отметка</span>
+          <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--surface-action)"></span>точки маршрута</span>
+          <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 12px; height: 0; border-top: 2px dashed var(--icons-secondary)"></span>трек машины</span>
+        </span>
+      </div>
+    </section>
+  </div>
+</sc-if>
+<sc-if value="{{mapOutOpen}}" hint-placeholder-val="{{false}}">
+  <div style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box">
+    <button type="button" onClick="{{closeMapOut}}" aria-label="Закрыть карту" tabindex="-1" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; margin: 0; border: 0; background: color-mix(in srgb, var(--surface-invert) 80%, transparent); cursor: zoom-out"></button>
+    <section role="dialog" aria-modal="true" aria-label="Карта отметки «Ушёл»" class="rc-modal" style="position: relative; width: 100%; max-width: 1140px; max-height: 100%; overflow: auto; box-shadow: var(--shadow-lg)">
+      <header class="rc-modal__head">
+        <div class="rc-modal__titles">
+          <h2 class="rc-modal__title--entity" style="margin: 0">Где сделана отметка «Ушёл» 16:12</h2>
+          <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Касымов Арман · 6 Окт 2026 · маршрут №12, последняя точка (точка 3)</span>
+        </div>
+        <button type="button" class="rc-modal__close" onClick="{{closeMapOut}}" aria-label="Закрыть" autofocus=""><x-import component-from-global-scope="RaccoonDS.Icon" name="cancel" size="{{24}}"></x-import></button>
+      </header>
+      <x-import component-from-global-scope="RaccoonDS.Separator"></x-import>
+      <div style="position: relative; aspect-ratio: 480 / 300; background: #f2efe9">
+        <svg viewBox="0 0 480 300" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" role="img" aria-label="Карта: пин отметки «Ушёл» в 60 м от последней точки маршрута (точка 3), внутри геозоны радиусом 400 м; трек машины и точки 1 и 2" style="display: block; position: absolute; inset: 0">
+          <rect x="0" y="0" width="480" height="300" fill="#f2efe9"></rect>
+<rect x="324" y="0" width="156" height="100" fill="#d3e8bc"></rect>
+<circle cx="350" cy="20" r="5" fill="#bfdca2"></circle>
+<circle cx="372" cy="46" r="5" fill="#bfdca2"></circle>
+<circle cx="398" cy="24" r="5" fill="#bfdca2"></circle>
+<circle cx="430" cy="40" r="5" fill="#bfdca2"></circle>
+<circle cx="455" cy="70" r="5" fill="#bfdca2"></circle>
+<circle cx="345" cy="74" r="5" fill="#bfdca2"></circle>
+<circle cx="410" cy="80" r="5" fill="#bfdca2"></circle>
+<circle cx="462" cy="18" r="5" fill="#bfdca2"></circle>
+<path d="M0 262 C40 252 80 284 140 270" fill="none" stroke="#b5d8f2" stroke-width="12" stroke-linecap="round"></path>
+<rect x="6" y="6" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="34" width="26" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="38" y="6" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="38" y="34" width="18" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="64" y="6" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="64" y="40" width="18" height="54" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="90" y="6" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="90" y="46" width="18" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="113" y="6" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="113" y="34" width="18" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="6" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="34" width="30" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="6" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="46" width="18" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="217" y="6" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="217" y="46" width="18" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="240" y="6" width="22" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="240" y="46" width="22" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="270" y="6" width="36" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="270" y="34" width="36" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="118" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="48" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="71" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="97" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="188" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="214" y="118" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="248" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="275" y="118" width="31" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="358" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="384" y="118" width="14" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="448" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="48" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="80" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="122" y="170" width="12" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="185" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="212" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="254" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="366" y="170" width="32" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="170" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="448" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="222" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="37" y="222" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="73" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="99" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="222" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="256" width="26" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="192" y="222" width="26" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="192" y="262" width="26" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="224" y="222" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="224" y="256" width="36" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="265" y="222" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="265" y="256" width="18" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="289" y="222" width="17" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="289" y="250" width="17" height="44" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="222" width="26" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="262" width="26" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="364" y="222" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="364" y="256" width="30" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="222" width="30" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="262" width="30" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="458" y="222" width="16" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="458" y="256" width="16" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<path d="M0 158 L480 158" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 158 L480 158" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#fde7a4" stroke-width="11" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#fde7a4" stroke-width="11" fill="none"></path>
+<text x="20" y="109" style="font-family: inherit; font-size: 8px; fill: #5c5a55; font-weight: 600">ул. Жандосова</text>
+<text x="0" y="0" transform="translate(149 290) rotate(-90)" style="font-family: inherit; font-size: 8px; fill: #5c5a55; font-weight: 600">ул. Розыбакиева</text>
+<text x="340" y="213" style="font-family: inherit; font-size: 8px; fill: #5c5a55">ул. Сатпаева</text>
+<text x="20" y="161" style="font-family: inherit; font-size: 8px; fill: #5c5a55">ул. Мынбаева</text>
+<text x="392" y="60" style="font-family: inherit; font-size: 8px; fill: #4f7a35; font-style: italic">сквер</text>
+<text x="18" y="290" style="font-family: inherit; font-size: 8px; fill: #4a87b8; font-style: italic">р. Есентай</text>
+          <circle cx="410" cy="264" r="116" style="fill: var(--surface-information-subtle); fill-opacity: 0.45; stroke: var(--surface-action); stroke-width: 2; stroke-dasharray: 6 4"></circle>
+          <polyline points="0,106 146,106 146,158 232,158 318,158 318,210 410,210 410,300" style="fill: none; stroke: var(--icons-secondary); stroke-width: 3; stroke-dasharray: 8 5; stroke-linecap: round; stroke-linejoin: round"></polyline>
+          <line x1="410" y1="264" x2="396" y2="252" style="stroke: var(--text-success); stroke-width: 2; stroke-dasharray: 3 3"></line>
+          <rect x="330" y="244" width="38" height="16" rx="8" style="fill: var(--surface-primary)"></rect>
+          <text x="349" y="256" text-anchor="middle" style="fill: var(--text-headings); font-size: 10px; font-weight: 700; font-family: inherit">60 м</text>
+          <circle cx="232" cy="158" r="12" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 2"></circle>
+          <text x="232" y="162" text-anchor="middle" style="fill: var(--text-on-action); font-size: 12px; font-weight: 700; font-family: inherit">1</text>
+          <circle cx="318" cy="210" r="12" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 2"></circle>
+          <text x="318" y="214" text-anchor="middle" style="fill: var(--text-on-action); font-size: 12px; font-weight: 700; font-family: inherit">2</text>
+          <circle cx="410" cy="262" r="12" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 2"></circle>
+          <text x="410" y="266" text-anchor="middle" style="fill: var(--text-on-action); font-size: 12px; font-weight: 700; font-family: inherit">3</text>
+          <circle cx="396" cy="252" r="14" style="fill: var(--text-success); fill-opacity: 0.18"></circle>
+          <path d="M396 252 C396 252 380 232 380 220 A16 16 0 1 1 412 220 C412 232 396 252 396 252 Z" style="fill: var(--text-success); stroke: var(--surface-primary); stroke-width: 2"></path>
+          <circle cx="396" cy="220" r="6" style="fill: var(--surface-primary)"></circle>
+          <line x1="14" y1="284" x2="43" y2="284" style="stroke: var(--text-headings); stroke-width: 2"></line>
+          <line x1="14" y1="280" x2="14" y2="288" style="stroke: var(--text-headings); stroke-width: 2"></line>
+          <line x1="43" y1="280" x2="43" y2="288" style="stroke: var(--text-headings); stroke-width: 2"></line>
+          <text x="50" y="287" style="fill: var(--text-headings); font-size: 9px; font-family: inherit">100 м</text>
+        </svg>
+        <div style="position: absolute; right: 20%; top: 52%; display: inline-flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2); background: var(--surface-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-md); white-space: nowrap;  box-sizing: border-box">
+          <img src="/_blob/c40c07079db5873bacc3d460535f8586" alt="" width="44" height="44" style="width: 44px; height: 44px; object-fit: cover; border-radius: var(--radius-sm); flex-shrink: 0; display: block">
+          <span style="display: flex; flex-direction: column; gap: var(--space-1); min-width: 0">
+            <span style="font: var(--text-caption-m-bold); color: var(--text-headings)">«Ушёл» 16:12</span>
+            <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">камера · точность 12 м</span>
+            <span style="font: var(--text-caption-m-bold); color: var(--text-success)">в геозоне</span>
+          </span>
+        </div>
+        <div style="position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 1px; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md)">
+          <button type="button" aria-label="Приблизить" style="width: 36px; height: 36px; padding: 0; margin: 0; border: 0; background: var(--surface-primary); color: var(--icons-default); font: var(--text-heading-h3-semibold); cursor: pointer">+</button>
+          <button type="button" aria-label="Отдалить" style="width: 36px; height: 36px; padding: 0; margin: 0; border: 0; background: var(--surface-primary); color: var(--icons-default); font: var(--text-heading-h3-semibold); cursor: pointer">−</button>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); align-items: center; justify-content: space-between; padding: var(--space-5) var(--space-6)">
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font: var(--text-paragraph-m-regular)">
+          <span><span style="color: var(--text-secondary)">До точки 3:</span> <strong>60 м</strong></span>
+          <span><span style="color: var(--text-secondary)">Радиус геозоны:</span> <strong>400 м</strong></span>
+          <span><span style="color: var(--text-secondary)">Координаты:</span> <span style="font-family: ui-monospace, Menlo, monospace">43.2318, 76.8961</span></span>
+        </div>
+        <span style="display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); font: var(--text-caption-m-regular); color: var(--text-secondary)">
+          <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--text-success)"></span>отметка</span>
+          <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--surface-action)"></span>точки маршрута</span>
+          <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 12px; height: 0; border-top: 2px dashed var(--icons-secondary)"></span>трек машины</span>
+        </span>
+      </div>
+    </section>
+  </div>
+</sc-if>
+<helmet><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"></helmet></x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+const NAV_GROUPS = [
+  [{icon:'dashboard-icon',label:'Дэшборд',value:'dashboard'},{icon:'task',label:'Задания',value:'jobs'},{icon:'journey',label:'Маршруты',value:'routes'},{icon:'garbage-truck',label:'Экипажи',value:'crews'},{icon:'navigation',label:'Контроль движения',value:'gps'}],
+  [{icon:'location',label:'Площадки',value:'locations'},{icon:'group-of-locations',label:'Маршрутные группы',value:'route-groups'},{icon:'admin-icon',label:'Реестр контейнеров',value:'containers'},{icon:'budget',label:'Заказчики',value:'clients'}],
+  [{icon:'garage',label:'Автопарк',value:'fleet'},{icon:'tear-off-calendar',label:'График смен',value:'shifts'}],
+  [{icon:'phone-calling',label:'Колл-центр',value:'call-center'},{icon:'analytics',label:'Аналитика',value:'analytics'},{icon:'users',label:'Сотрудники',value:'staff'},{icon:'time-card',label:'Табель',value:'timesheet',href:'Main.dc.html'},{icon:'weight-station',label:'Весовая',value:'weighing'}]
+];
+const NAV_USER = {initials:'ГС',name:'Гульнара С.',role:'HR-менеджер'};
+class Component extends DCLogic {
+  renderVals() { return Object.assign({}, this._renderVals(), { navGroups: NAV_GROUPS, navUser: NAV_USER }); }
+  _renderVals() {
+    var events = [
+      ['06:52', 'Пришёл', 'Фото + гео, 90 м от первой точки маршрута №12 (ул. Жандосова 58)', 'WhatsApp-бот, сам', false, ''],
+      ['06:58', 'Начало смены · маршрут №12', 'Выход: план 07:00, факт 06:58 · водитель Ахметов Б.', 'Платформа', false, '1'],
+      ['07:04', 'Машина 123 ABC 02 на первой точке', 'Присутствие грузчика подтверждено прибытием машины', 'Wialon', false, '1'],
+      ['16:05', 'Конец смены · маршрут №12', 'Последняя задача маршрута закрыта', 'DriverApp', false, '1'],
+      ['16:12', 'Ушёл', 'Фото + гео, 60 м от последней точки маршрута №12', 'WhatsApp-бот, сам', false, '']
+    ].map(function (e) { return { time: e[0], title: e[1], meta: e[2], src: e[3], warn: e[4], ok: !e[4], hasShift: e[5] !== '', shiftLabel: 'Смена ' + e[5] }; });
+    var shifts = [
+      { isShift: true, isGap: false, label: 'Смена 1', period: '06:58 – 16:05 · 9 ч 07 мин', meta: 'Маршрут №12 · 123 ABC 02 · водитель Ахметов Б.', id: 'S482401', plan: '07:00', fact: '06:58', delta: '−2 мин · вовремя', ok: true, late: false }
+    ];
+    var self = this;
+    var sel = (this.state && this.state.reason) || '';
+    var reasons = ['Сотрудник забыл отметиться', 'Подтвердил начальник колонны', 'Подтверждено GPS машины', 'Сбой связи или телефона', 'Ошибка в графике или маршруте', 'Отметил водитель за бригаду', 'Другое'].map(function (l) {
+      return { label: l, on: sel === l, off: sel !== l, pick: function () { self.setState({ reason: sel === l ? '' : l }); } };
+    });
+    var photoOpen = !!(this.state && this.state.photoOpen);
+    var st = this.state || {};
+    var TPL = {
+      time: 'Арман, добрый день! В табеле за 6 октября нет вашей отметки «Ушёл». По закрытию последней задачи это 16:38. Подтвердите время или напишите, когда вы ушли.',
+      remind: 'Арман, отметьте, пожалуйста, уход за 6 октября: нажмите «Ушёл» в боте и укажите время.',
+      own: ''
+    };
+    var tplKey = st.tpl || 'time';
+    var msgText = (st.msgText !== undefined) ? st.msgText : TPL[tplKey];
+    var btns = st.btns !== undefined ? !!st.btns : true;
+    var tpls = [['time', 'Уточнить время ухода'], ['remind', 'Попросить отметиться'], ['own', 'Своё сообщение']].map(function (t) {
+      var on = t[0] === tplKey;
+      return { label: t[1], checked: on ? 'true' : 'false', bg: on ? 'var(--surface-selected)' : 'var(--surface-primary)', fg: on ? 'var(--text-selected)' : 'var(--text-body)', border: on ? 'var(--border-action)' : 'var(--border-primary)', fw: on ? 600 : 400, pick: function () { self.setState({ tpl: t[0], msgText: TPL[t[0]] }); } };
+    });
+    var sent = !!st.msgSent, replied = !!st.msgReplied, applied = !!st.msgApplied;
+    var msgVals = {
+      msgOpen: !!st.msgOpen, openMsg: function () { self.setState({ msgOpen: true }); }, closeMsg: function () { self.setState({ msgOpen: false }); },
+      tpls: tpls, msgText: msgText, onMsgInput: function (e) { self.setState({ msgText: e && e.target ? e.target.value : '' }); },
+      btnsOn: btns, btnsOff: !btns, btnsPressed: btns ? 'true' : 'false', toggleBtns: function () { self.setState({ btns: !btns }); },
+      sendDisabled: !msgText || !msgText.trim(),
+      sendMsg: function () {
+        if (!msgText || !msgText.trim()) return;
+        self.setState({ msgSent: true, sentText: msgText, sentWithButtons: btns, msgTyping: false });
+        setTimeout(function () { self.setState({ msgTyping: true }); }, 900);
+        setTimeout(function () { self.setState({ msgTyping: false, msgReplied: true }); }, 2600);
+      },
+      msgSent: sent, msgNotSent: !sent, sentText: st.sentText || '', sentWithButtons: !!st.sentWithButtons, sentStatus: replied ? 'прочитано' : 'доставлено',
+      msgTyping: !!st.msgTyping, msgReplied: replied, msgApplied: applied, msgNotApplied: !applied,
+      applyReply: function () { self.setState({ msgApplied: true, leaveEdit: '16:45', reasonErr: false }); }
+    };
+    var leave = (st.leaveEdit !== undefined && st.leaveEdit !== '') ? st.leaveEdit : '16:38';
+    var changed = leave !== '16:38';
+    var saved = st.saved || null;
+    function mins(t) { var p = String(t).split(':'); return (+p[0]) * 60 + (+p[1] || 0); }
+    var effLeave = saved ? saved.time : leave;
+    var w = Math.max(0, mins(effLeave) - mins('06:52'));
+    var workedHours = (Math.round(w / 6) / 10).toFixed(1).replace('.', ',');
+    function trySave(mode, time) {
+      if (!sel) { self.setState({ reasonErr: true }); return; }
+      self.setState({ saved: { mode: mode, time: time, reason: sel }, reasonErr: false });
+    }
+    var dayVals = {
+      leaveTime: leave, leaveBoxCls: changed ? 'is-selected' : '',
+      leaveHint: changed ? (applied && leave === '16:45' ? 'со слов сотрудника · черновик был 16:38' : 'исправлено · черновик был 16:38') : 'черновик системы',
+      onLeaveInput: function (e) { self.setState({ leaveEdit: e && e.target ? e.target.value : '' }); },
+      resetLeave: function () { self.setState({ leaveEdit: undefined }); },
+      timeSame: !changed, timeChanged: changed,
+      reasonErr: !!st.reasonErr && !sel,
+      acceptDraft: function () { trySave('draft', '16:38'); },
+      saveFixed: function () { trySave('fixed', leave); },
+      undoSave: function () { self.setState({ saved: null }); },
+      daySaved: !!saved, dayOpen: !saved,
+      savedTime: saved ? saved.time : '', savedReason: saved ? saved.reason : '',
+      savedModeText: saved ? (saved.mode === 'draft' ? 'Принят черновик системы.' : 'Время ухода исправлено: 16:38 → ' + saved.time + '.') : '',
+      dayCode: 'Я — явка',
+      workedLabel: Math.floor(w / 60) + ' ч ' + (w % 60) + ' мин', workedHours: workedHours,
+      cardLeaveBg: saved ? 'var(--surface-primary)' : 'var(--surface-attention-subtle)', cardLeaveBorder: '0',
+      cardLeaveFg: saved ? 'var(--text-success)' : 'var(--text-attention)', cardLeaveLabel: saved ? 'var(--text-secondary)' : 'var(--text-attention)',
+      cardLeaveTime: saved ? saved.time : '16:38 ?', cardLeaveNote: saved ? 'Подтверждено HR' : 'Черновик системы — требует проверки'
+    };
+    var base = { mapOutOpen: !!(this.state && this.state.mapOutOpen), openMapOut: function () { self.setState({ mapOutOpen: true }); }, closeMapOut: function () { self.setState({ mapOutOpen: false }); }, photoOutOpen: !!(this.state && this.state.photoOutOpen), openPhotoOut: function () { self.setState({ photoOutOpen: true }); }, closePhotoOut: function () { self.setState({ photoOutOpen: false }); }, events: events, shifts: shifts, reasons: reasons, otherOn: sel === 'Другое', mapOpen: !!(this.state && this.state.mapOpen), openMap: function () { self.setState({ mapOpen: true }); }, closeMap: function () { self.setState({ mapOpen: false }); }, photoOpen: photoOpen, openPhoto: function () { self.setState({ photoOpen: true }); }, closePhoto: function () { self.setState({ photoOpen: false }); } };
+    return Object.assign(base, msgVals, dayVals);
+  }
+}
+</script>
+</body>
+</html>

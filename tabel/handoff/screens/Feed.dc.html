@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Лента отметок</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/raccoonds/tokens.css">
+<link rel="stylesheet" href="ds/raccoonds/components/bundle.css">
+<script src="ds/raccoonds/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--text-body);background:var(--surface-page);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}h1,h2,h3{margin:0;color:var(--text-headings)}
+a{color:var(--text-action)}a:hover{color:var(--text-action-hover)}.rc-btn--tertiary{box-shadow:none}.feed-thumb{transition:border-color .12s,box-shadow .12s}.feed-thumb:hover{border-color:var(--border-action)!important;box-shadow:0 0 0 2px var(--surface-information-subtle)}.feed-thumb:focus-visible{outline:2px solid var(--border-action);outline-offset:2px}.rc-check__box .rc-icon{color:transparent!important}.rc-check input:checked+.rc-check__box .rc-icon{color:var(--icons-on-action)!important}input,select,textarea{transition:border-color .12s}input:focus,select:focus,textarea:focus,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--border-action)!important}
+a.rc-tab,a.rc-tab:hover{color:var(--text-body)}a.rc-tab.is-selected,a.rc-tab.is-selected:hover{color:var(--text-selected)}a.rc-sidenav__item:hover{color:var(--text-body)}a.rc-sidenav__item.is-selected:hover{color:var(--text-selected)}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-4); box-sizing: border-box; min-height: 100vh; background: var(--surface-page)">
+  <x-import component-from-global-scope="RaccoonDS.SideNav" value="timesheet" groups="{{navGroups}}" user="{{navUser}}" quick-actions="{{false}}" style="flex: 0 0 232px; align-self: flex-start; position: sticky; top: var(--space-4); height: calc(100vh - 2 * var(--space-4))"></x-import>
+
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: var(--space-6)">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 40px">
+      <div role="tablist" class="rc-tabs rc-tabs--medium" style="flex-wrap: wrap">
+        <a href="Main.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none">Табель</a>
+        <a href="Exceptions.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none">Исключения <span class="rc-navcount">8</span></a>
+        <a href="Feed.dc.html" role="tab" aria-selected="true" class="rc-tab is-selected" style="text-decoration: none">Лента отметок</a>
+        <a href="SettingsRules.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="settings" size="{{16}}" color="currentColor"></x-import>Настройки</a>
+      </div>
+      <span style="font: var(--text-body-m-regular); color: var(--text-secondary)">Сегодня, 27 Окт 2026 · Депо №1 · обновляется в реальном времени</span>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: var(--space-4)">
+      <div style="flex: 1 1 150px; background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-1)"><span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">По графику сегодня</span><span style="font: var(--text-display-m-bold); color: var(--text-headings)">48</span></div>
+      <div style="flex: 1 1 150px; background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-1)"><span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Отметились «Пришёл»</span><span style="font: var(--text-display-m-bold); color: var(--text-headings)">41</span></div>
+      <div style="flex: 1 1 150px; background: var(--surface-attention-subtle); color: var(--text-attention); border: 0; border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-1)"><span style="font: var(--text-caption-m-regular); color: var(--text-attention)">Не отметились</span><span style="font: var(--text-display-m-bold); color: var(--text-headings)">3</span></div>
+      <div style="flex: 1 1 150px; background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-1)"><span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Ушли</span><span style="font: var(--text-display-m-bold); color: var(--text-headings)">1</span></div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: flex-start">
+      <section aria-label="Отметки" style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2)">
+        <div style="display: flex; margin-bottom: var(--space-2)"><x-import component-from-global-scope="RaccoonDS.SegmentedTabs" items="{{feedFilters}}" value="all"></x-import></div>
+        <sc-for list="{{feed}}" as="f" hint-placeholder-count="8">
+          <article style="background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-3) var(--space-4); display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center">
+            <span style="width: 48px; font: var(--text-body-m-bold)">{{f.time}}</span>
+            <button type="button" class="feed-thumb" onClick="{{f.open}}" aria-label="Открыть фото и карту отметки: {{f.name}}, «{{f.kind}}» {{f.time}}" title="Открыть фото и карту" style="flex-shrink: 0; width: 52px; height: 52px; padding: 0; margin: 0; border: 1px solid var(--border-primary); border-radius: var(--radius-md); overflow: hidden; background: var(--surface-tertiary); cursor: zoom-in; display: block"><img src="{{f.photo}}" alt="Фото отметки: {{f.name}}" width="52" height="52" style="width: 100%; height: 100%; object-fit: cover; display: block"></button>
+            <div style="flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1)">
+              <span style="font: var(--text-body-m-semibold)">{{f.name}} · {{f.kind}}</span>
+              <span style="font: var(--text-body-m-regular); color: var(--text-body)">{{f.role}} · {{f.place}}</span>
+            </div>
+            <sc-if value="{{f.ok}}" hint-placeholder-val="{{true}}">
+              <span style="font: var(--text-caption-m-semibold); background: var(--surface-success-subtle); color: var(--text-success); border-radius: var(--radius-full); padding: 4px 8px">Подтверждено</span>
+            </sc-if>
+            <sc-if value="{{f.warn}}" hint-placeholder-val="{{false}}">
+              <a href="DayDetail.dc.html" style="font: var(--text-caption-m-semibold); background: var(--surface-warning-subtle); color: var(--text-warning); border-radius: var(--radius-full); padding: 4px 8px; text-decoration: none">{{f.status}}</a>
+            </sc-if>
+          </article>
+        </sc-for>
+      </section>
+
+      <aside aria-label="Не отметились" style="flex: 1 1 280px; background: var(--surface-primary); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2)">
+        <h2 style="margin: 0; font: var(--text-heading-h4-semibold); color: var(--text-headings)">Не отметились</h2>
+        <span style="font: var(--text-paragraph-m-regular); color: var(--text-body)">Есть в графике, смена началась более 30 мин назад</span>
+        <sc-for list="{{missing}}" as="m" hint-placeholder-count="3">
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); align-items: center; justify-content: space-between; border-top: 1px solid var(--border-primary); margin-top: var(--space-2); padding-top: var(--space-4)">
+            <div style="display: flex; flex-direction: column; gap: var(--space-1)">
+              <span style="font: var(--text-body-m-semibold)">{{m.name}}</span>
+              <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">{{m.info}}</span>
+            </div>
+            <x-import component-from-global-scope="RaccoonDS.Button" variant="secondary" size="small">Напомнить в боте</x-import>
+          </div>
+        </sc-for>
+      </aside>
+    </div>
+  </main>
+</div>
+<sc-if value="{{selOpen}}" hint-placeholder-val="{{false}}">
+  <div role="dialog" aria-modal="true" aria-label="Фото и карта отметки: {{sel.name}}, «{{sel.kind}}» {{sel.time}}" style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: var(--space-6); box-sizing: border-box">
+    <button type="button" onClick="{{closeSel}}" aria-label="Закрыть" tabindex="-1" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; margin: 0; border: 0; background: color-mix(in srgb, var(--surface-invert) 80%, transparent); cursor: zoom-out"></button>
+    <section class="rc-modal" style="position: relative; width: 100%; max-width: 1200px; max-height: 100%; overflow: auto; box-shadow: var(--shadow-lg)">
+      <header class="rc-modal__head">
+        <div class="rc-modal__titles">
+          <h2 class="rc-modal__title--entity" style="margin: 0">{{sel.name}} · «{{sel.kind}}» {{sel.time}}</h2>
+          <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">Сегодня, 27 Окт 2026 · {{sel.role}} · {{sel.place}}</span>
+        </div>
+        <button type="button" class="rc-modal__close" onClick="{{closeSel}}" aria-label="Закрыть" autofocus=""><x-import component-from-global-scope="RaccoonDS.Icon" name="cancel" size="{{24}}"></x-import></button>
+      </header>
+      <x-import component-from-global-scope="RaccoonDS.Separator"></x-import>
+      <div style="display: flex; flex-wrap: wrap; align-items: stretch">
+        <div style="flex: 1 1 320px; min-height: 320px; background: var(--surface-invert); display: flex; align-items: center; justify-content: center">
+          <img src="{{sel.photo}}" alt="Фото отметки «{{sel.kind}}»: {{sel.name}}" style="display: block; width: 100%; height: 100%; max-height: 70vh; object-fit: contain">
+        </div>
+        <div style="flex: 1.6 1 480px; min-width: 0; display: flex; flex-direction: column; border-left: 1px solid var(--border-primary)">
+          <div style="position: relative; aspect-ratio: 480 / 300; background: #f2efe9; overflow: hidden">
+            <svg viewBox="0 0 480 300" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" role="img" aria-label="{{sel.mapLabel}}" style="display: block; position: absolute; inset: 0">
+          <rect x="0" y="0" width="480" height="300" fill="#f2efe9"></rect>
+<rect x="324" y="0" width="156" height="100" fill="#d3e8bc"></rect>
+<circle cx="350" cy="20" r="5" fill="#bfdca2"></circle>
+<circle cx="372" cy="46" r="5" fill="#bfdca2"></circle>
+<circle cx="398" cy="24" r="5" fill="#bfdca2"></circle>
+<circle cx="430" cy="40" r="5" fill="#bfdca2"></circle>
+<circle cx="455" cy="70" r="5" fill="#bfdca2"></circle>
+<circle cx="345" cy="74" r="5" fill="#bfdca2"></circle>
+<circle cx="410" cy="80" r="5" fill="#bfdca2"></circle>
+<circle cx="462" cy="18" r="5" fill="#bfdca2"></circle>
+<path d="M0 262 C40 252 80 284 140 270" fill="none" stroke="#b5d8f2" stroke-width="12" stroke-linecap="round"></path>
+<rect x="6" y="6" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="34" width="26" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="38" y="6" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="38" y="34" width="18" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="64" y="6" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="64" y="40" width="18" height="54" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="90" y="6" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="90" y="46" width="18" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="113" y="6" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="113" y="34" width="18" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="6" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="34" width="30" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="6" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="193" y="46" width="18" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="217" y="6" width="18" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="217" y="46" width="18" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="240" y="6" width="22" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="240" y="46" width="22" height="48" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="270" y="6" width="36" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="270" y="34" width="36" height="60" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="118" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="48" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="71" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="97" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="188" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="214" y="118" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="248" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="275" y="118" width="31" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="358" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="384" y="118" width="14" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="118" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="448" y="118" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="48" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="80" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="122" y="170" width="12" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="185" y="170" width="22" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="212" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="254" y="170" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="170" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="366" y="170" width="32" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="170" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="448" y="170" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="6" y="222" width="26" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="37" y="222" width="30" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="73" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="99" y="222" width="18" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="222" width="26" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="158" y="256" width="26" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="192" y="222" width="26" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="192" y="262" width="26" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="224" y="222" width="36" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="224" y="256" width="36" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="265" y="222" width="18" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="265" y="256" width="18" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="289" y="222" width="17" height="22" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="289" y="250" width="17" height="44" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="222" width="26" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="330" y="262" width="26" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="364" y="222" width="30" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="364" y="256" width="30" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="222" width="30" height="34" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="422" y="262" width="30" height="32" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="458" y="222" width="16" height="28" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<rect x="458" y="256" width="16" height="38" rx="1.5" fill="#e4dfd6" stroke="#d3ccc0" stroke-width="0.8"></rect>
+<path d="M0 158 L480 158" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#d8d1c5" stroke-width="9" fill="none"></path>
+<path d="M0 158 L480 158" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 210 L480 210" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M318 0 L318 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M410 106 L410 300" stroke="#ffffff" stroke-width="7" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#e3c66f" stroke-width="13" fill="none"></path>
+<path d="M0 106 L480 106" stroke="#fde7a4" stroke-width="11" fill="none"></path>
+<path d="M146 0 L146 300" stroke="#fde7a4" stroke-width="11" fill="none"></path>
+<text x="20" y="109" style="font-family: inherit; font-size: 8px; fill: #5c5a55; font-weight: 600">ул. Жандосова</text>
+<text x="0" y="0" transform="translate(149 290) rotate(-90)" style="font-family: inherit; font-size: 8px; fill: #5c5a55; font-weight: 600">ул. Розыбакиева</text>
+<text x="340" y="213" style="font-family: inherit; font-size: 8px; fill: #5c5a55">ул. Сатпаева</text>
+<text x="20" y="161" style="font-family: inherit; font-size: 8px; fill: #5c5a55">ул. Мынбаева</text>
+<text x="392" y="60" style="font-family: inherit; font-size: 8px; fill: #4f7a35; font-style: italic">сквер</text>
+<text x="18" y="290" style="font-family: inherit; font-size: 8px; fill: #4a87b8; font-style: italic">р. Есентай</text>
+
+              <circle cx="{{sel.cx}}" cy="{{sel.cy}}" r="{{sel.r}}" style="fill: var(--surface-information-subtle); fill-opacity: 0.45; stroke: var(--surface-action); stroke-width: 2; stroke-dasharray: 6 4"></circle>
+              <g style="display: {{sel.trackDisp}}">
+                <polyline points="0,106 146,106 146,158 232,158 318,158 318,210 410,210 410,300" style="fill: none; stroke: var(--icons-secondary); stroke-width: 3; stroke-dasharray: 8 5; stroke-linecap: round; stroke-linejoin: round"></polyline>
+                <circle cx="318" cy="210" r="12" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 2"></circle>
+                <text x="318" y="214" text-anchor="middle" style="fill: var(--text-on-action); font-size: 12px; font-weight: 700; font-family: inherit">2</text>
+                <circle cx="410" cy="262" r="12" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 2"></circle>
+                <text x="410" y="266" text-anchor="middle" style="fill: var(--text-on-action); font-size: 12px; font-weight: 700; font-family: inherit">3</text>
+              </g>
+              <g style="display: {{sel.pinDisp}}">
+                <line x1="{{sel.cx}}" y1="{{sel.cy}}" x2="{{sel.px}}" y2="{{sel.py}}" style="stroke: {{sel.pinColor}}; stroke-width: 2; stroke-dasharray: 3 3"></line>
+                <rect x="{{sel.lx}}" y="{{sel.ly}}" width="{{sel.lw}}" height="16" rx="8" style="fill: var(--surface-primary)"></rect>
+                <text x="{{sel.ltx}}" y="{{sel.lty}}" text-anchor="middle" style="fill: var(--text-headings); font-size: 10px; font-weight: 700; font-family: inherit">{{sel.dist}}</text>
+              </g>
+              <rect x="{{sel.mx}}" y="{{sel.my}}" width="24" height="24" rx="{{sel.mr}}" style="fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 2"></rect>
+              <text x="{{sel.cx}}" y="{{sel.mty}}" text-anchor="middle" style="fill: var(--text-on-action); font-size: 12px; font-weight: 700; font-family: inherit">{{sel.mark}}</text>
+              <g style="display: {{sel.pinDisp}}">
+                <circle cx="{{sel.px}}" cy="{{sel.py}}" r="14" style="fill: {{sel.pinColor}}; fill-opacity: 0.18"></circle>
+                <path d="{{sel.pinPath}}" style="fill: {{sel.pinColor}}; stroke: var(--surface-primary); stroke-width: 2"></path>
+                <circle cx="{{sel.px}}" cy="{{sel.pinDotY}}" r="6" style="fill: var(--surface-primary)"></circle>
+              </g>
+              <line x1="14" y1="284" x2="43" y2="284" style="stroke: var(--text-headings); stroke-width: 2"></line>
+              <line x1="14" y1="280" x2="14" y2="288" style="stroke: var(--text-headings); stroke-width: 2"></line>
+              <line x1="43" y1="280" x2="43" y2="288" style="stroke: var(--text-headings); stroke-width: 2"></line>
+              <text x="50" y="287" style="fill: var(--text-headings); font-size: 9px; font-family: inherit">100 м</text>
+            </svg>
+            <sc-if value="{{sel.hasPin}}" hint-placeholder-val="{{true}}">
+              <div style="position: absolute; {{sel.cardPos}}; display: inline-flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2); background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-md); white-space: nowrap; box-sizing: border-box">
+                <img src="{{sel.photo}}" alt="" width="44" height="44" style="width: 44px; height: 44px; object-fit: cover; border-radius: var(--radius-sm); flex-shrink: 0; display: block">
+                <span style="display: flex; flex-direction: column; gap: var(--space-1); min-width: 0">
+                  <span style="font: var(--text-caption-m-bold); color: var(--text-headings)">«{{sel.kind}}» {{sel.time}}</span>
+                  <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">{{sel.acc}}</span>
+                  <span style="font: var(--text-caption-m-bold); color: {{sel.zoneColor}}">{{sel.zoneText}}</span>
+                </span>
+              </div>
+            </sc-if>
+            <sc-if value="{{sel.noPin}}" hint-placeholder-val="{{false}}">
+              <div style="position: absolute; left: 50%; top: 16px; transform: translateX(-50%); display: flex; gap: var(--space-2); align-items: center; padding: var(--space-3) var(--space-4); background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-md); max-width: calc(100% - 32px); box-sizing: border-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; color: var(--text-warning)"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
+                <span style="font: var(--text-caption-m-regular); color: var(--text-body)">Геопозиция не передана: отметка через резервный канал без сети. Показана геозона депо.</span>
+              </div>
+            </sc-if>
+            <div style="position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 1px; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md)">
+              <button type="button" aria-label="Приблизить" style="width: 36px; height: 36px; padding: 0; margin: 0; border: 0; background: var(--surface-primary); color: var(--icons-default); font: var(--text-body-l-semibold); cursor: pointer">+</button>
+              <button type="button" aria-label="Отдалить" style="width: 36px; height: 36px; padding: 0; margin: 0; border: 0; background: var(--surface-primary); color: var(--icons-default); font: var(--text-body-l-semibold); cursor: pointer">−</button>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); align-items: center; justify-content: space-between; padding: var(--space-5) var(--space-6)">
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font: var(--text-paragraph-m-regular)">
+              <span><span style="color: var(--text-secondary)">{{sel.distLabel}}:</span> <strong style="color: {{sel.distColor}}">{{sel.distFull}}</strong></span>
+              <span><span style="color: var(--text-secondary)">Радиус геозоны:</span> <strong>{{sel.radius}}</strong></span>
+              <span><span style="color: var(--text-secondary)">Координаты:</span> <span style="font-family: ui-monospace, Menlo, monospace">{{sel.coords}}</span></span>
+            </div>
+            <span style="display: flex; flex-wrap: wrap; gap: 4px 12px; font: var(--text-caption-m-regular); color: var(--text-secondary)">
+              <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: var(--radius-sm); background: {{sel.pinColor}}"></span>отметка</span>
+              <span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: var(--radius-xs); background: var(--surface-action)"></span>{{sel.markLegend}}</span>
+              <sc-if value="{{sel.track}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; gap: 4px; align-items: center"><span aria-hidden="true" style="width: 12px; height: 0; border-top: 2px dashed var(--icons-secondary)"></span>трек машины</span></sc-if>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":940}}'>
+const NAV_GROUPS = [
+  [{icon:'dashboard-icon',label:'Дэшборд',value:'dashboard'},{icon:'task',label:'Задания',value:'jobs'},{icon:'journey',label:'Маршруты',value:'routes'},{icon:'garbage-truck',label:'Экипажи',value:'crews'},{icon:'navigation',label:'Контроль движения',value:'gps'}],
+  [{icon:'location',label:'Площадки',value:'locations'},{icon:'group-of-locations',label:'Маршрутные группы',value:'route-groups'},{icon:'admin-icon',label:'Реестр контейнеров',value:'containers'},{icon:'budget',label:'Заказчики',value:'clients'}],
+  [{icon:'garage',label:'Автопарк',value:'fleet'},{icon:'tear-off-calendar',label:'График смен',value:'shifts'}],
+  [{icon:'phone-calling',label:'Колл-центр',value:'call-center'},{icon:'analytics',label:'Аналитика',value:'analytics'},{icon:'users',label:'Сотрудники',value:'staff'},{icon:'time-card',label:'Табель',value:'timesheet',href:'Main.dc.html'},{icon:'weight-station',label:'Весовая',value:'weighing'}]
+];
+const NAV_USER = {initials:'ГС',name:'Гульнара С.',role:'HR-менеджер'};
+class Component extends DCLogic {
+  renderVals() { return Object.assign({}, this._renderVals(), { navGroups: NAV_GROUPS, navUser: NAV_USER }); }
+  _renderVals() {
+    var self = this;
+    var feed = [
+      ['07:12', 'Касымов Арман', 'Пришёл', 'Грузчик', 'первая точка маршрута №12, 90 м', '', '/_blob/cdfe281e7f1424dc1c703964f5f3b969'],
+      ['07:09', 'Абдрахманов Марат', 'Пришёл', 'Грузчик', 'отметил водитель Ахметов Б., фото бригады', '', '/_blob/f6978e3db6258c4536eb2af30a5a45a0'],
+      ['07:02', 'Жумабаев Нурсултан', 'Пришёл', 'Грузчик', '1,2 км от первой точки маршрута №9', 'Вне геозоны', '/_blob/07872ace9d25b42de40c85350e487d21'],
+      ['06:51', 'Исаев Тимур', 'Пришёл', 'Грузчик', 'первая точка маршрута №7, 210 м', '', '/_blob/494ff1030f55ddcdb2a38ac686f322ac'],
+      ['06:05', 'Ким Виктор', 'Ушёл', 'Водитель', 'Депо №1 · ночная смена с 26 Окт', '', '/_blob/8291d95b4adc63e61755604d3f3426a6'],
+      ['05:58', 'Сериков Данияр', 'Пришёл', 'Водитель', 'Депо №1', '', '/_blob/69fc65f6add1cbc32c887a0ab9273799'],
+      ['05:44', 'Ахметов Бауыржан', 'Пришёл', 'Водитель', 'Депо №1', '', '/_blob/a3a4848671703ab8f2408558dbbb44d6'],
+      ['05:40', 'Нурланов Ерлан', 'Пришёл', 'Водитель', 'резерв · WhatsApp без ссылки, сеть недоступна', 'Резервный канал', '/_blob/d665f37817c73e0cfbf52bf1db4558de']
+    ].map(function (r, i) { return { time: r[0], name: r[1], kind: r[2], role: r[3], place: r[4], status: r[5], warn: r[5] !== '', ok: r[5] === '', photo: r[6], open: function () { self.setState({ sel: i }); } }; });
+    // гео отметки на карте: центр геозоны (cx, cy, r в px; 100 м = 29 px), пин (px, py), что подписать
+    var GEO = [
+      { kind: 'route', cx: 232, cy: 158, r: 116, px: 264, py: 120, dist: '90 м', to: 'До точки 1', radius: '400 м', acc: 'камера · точность 12 м', inZone: true, coords: '43.2346, 76.8892', track: true },
+      { kind: 'route', cx: 232, cy: 158, r: 116, px: 218, py: 146, dist: '40 м', to: 'До точки 1', radius: '400 м', acc: 'телефон водителя · точность 8 м', inZone: true, coords: '43.2339, 76.8871', track: true },
+      { kind: 'route', cx: 92, cy: 214, r: 116, px: 432, py: 92, dist: '1,2 км', to: 'До точки 1', radius: '400 м', acc: 'камера · точность 15 м', inZone: false, coords: '43.2412, 76.9015', track: false },
+      { kind: 'route', cx: 232, cy: 158, r: 116, px: 280, py: 120, dist: '210 м', to: 'До точки 1', radius: '400 м', acc: 'камера · точность 10 м', inZone: true, coords: '43.2351, 76.8901', track: true },
+      { kind: 'depot', cx: 232, cy: 184, r: 58, px: 254, py: 168, dist: '30 м', to: 'До депо', radius: '200 м', acc: 'камера · точность 9 м', inZone: true, coords: '43.2318, 76.8884', track: false },
+      { kind: 'depot', cx: 232, cy: 184, r: 58, px: 206, py: 200, dist: '35 м', to: 'До депо', radius: '200 м', acc: 'камера · точность 11 м', inZone: true, coords: '43.2313, 76.8876', track: false },
+      { kind: 'depot', cx: 232, cy: 184, r: 58, px: 262, py: 196, dist: '40 м', to: 'До депо', radius: '200 м', acc: 'камера · точность 7 м', inZone: true, coords: '43.2314, 76.8889', track: false },
+      { kind: 'depot', cx: 232, cy: 184, r: 58, px: null, py: null, dist: '', to: 'До депо', radius: '200 м', acc: '', inZone: false, coords: 'нет данных', track: false }
+    ];
+    var st = this.state || {};
+    var selIdx = (typeof st.sel === 'number') ? st.sel : -1;
+    var sel = null;
+    if (selIdx >= 0 && feed[selIdx]) {
+      var f = feed[selIdx], g = GEO[selIdx], has = g.px !== null;
+      var color = g.inZone ? 'var(--text-success)' : 'var(--text-warning)';
+      var mx = (g.cx + (has ? g.px : g.cx)) / 2, my = (g.cy + (has ? g.py : g.cy)) / 2;
+      var lw = g.dist.length > 4 ? 46 : 38;
+      var cardRight = has && g.px > 330;
+      var cardPos = !has ? '' : (cardRight
+        ? 'right: ' + ((480 - g.px + 22) / 480 * 100).toFixed(1) + '%; top: ' + ((g.py + 6) / 300 * 100).toFixed(1) + '%'
+        : 'left: ' + ((g.px + 22) / 480 * 100).toFixed(1) + '%; top: ' + (Math.max(4, g.py - 64) / 300 * 100).toFixed(1) + '%');
+      var isDepot = g.kind === 'depot';
+      sel = Object.assign({}, f, {
+        cx: g.cx, cy: g.cy, r: g.r, px: g.px || 0, py: g.py || 0, hasPin: has, noPin: !has, track: g.track, trackDisp: g.track ? 'inline' : 'none', pinDisp: has ? 'inline' : 'none',
+        pinColor: color, zoneColor: color, zoneText: g.inZone ? 'в геозоне' : 'вне геозоны',
+        pinPath: has ? ('M' + g.px + ' ' + g.py + ' C' + g.px + ' ' + g.py + ' ' + (g.px - 16) + ' ' + (g.py - 20) + ' ' + (g.px - 16) + ' ' + (g.py - 32) + ' A16 16 0 1 1 ' + (g.px + 16) + ' ' + (g.py - 32) + ' C' + (g.px + 16) + ' ' + (g.py - 20) + ' ' + g.px + ' ' + g.py + ' ' + g.px + ' ' + g.py + ' Z') : '',
+        pinDotY: (g.py || 0) - 32,
+        lx: mx - lw / 2 + 10, ly: my - 18, lw: lw, ltx: mx + 10, lty: my - 6, dist: g.dist,
+        mx: g.cx - 12, my: g.cy - 12, mr: isDepot ? 4 : 12, mty: g.cy + 4, mark: isDepot ? 'Д' : '1',
+        markLegend: isDepot ? 'депо' : 'точки маршрута',
+        acc: g.acc, cardPos: cardPos, radius: g.radius, coords: g.coords,
+        distLabel: g.to, distFull: has ? g.dist : 'нет геопозиции', distColor: has ? color : 'var(--text-warning)',
+        mapLabel: has ? ('Карта: пин отметки «' + f.kind + '» ' + f.time + ', ' + g.dist + ' от ' + (isDepot ? 'депо' : 'первой точки маршрута') + ', ' + (g.inZone ? 'внутри' : 'вне') + ' геозоны радиусом ' + g.radius) : 'Карта: геозона депо, геопозиция отметки не передана'
+      });
+    }
+    var missing = [
+      ['Омаров Ерасыл', 'Грузчик · маршрут №4 · начало 07:00'],
+      ['Байжанов Кайрат', 'Водитель · машина 456 DEF 02 · начало 06:00'],
+      ['Тулегенов Аслан', 'Грузчик · маршрут №12 · начало 07:00']
+    ].map(function (m) { return { name: m[0], info: m[1] }; });
+    var feedFilters = [{ value: 'all', label: 'Все' }, { value: 'in', label: 'Пришёл' }, { value: 'out', label: 'Ушёл' }, { value: 'warn', label: 'Требуют проверки', count: 2 }];
+    return { feed: feed, missing: missing, feedFilters: feedFilters, sel: sel || {}, selOpen: !!sel, closeSel: function () { self.setState({ sel: -1 }); } };
+  }
+}
+</script>
+</body>
+</html>

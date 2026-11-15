@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Табель за месяц</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/raccoonds/tokens.css">
+<link rel="stylesheet" href="ds/raccoonds/components/bundle.css">
+<script src="ds/raccoonds/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font:var(--text-paragraph-m-regular);color:var(--text-body);background:var(--surface-page);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv11" 1}h1,h2,h3{margin:0;color:var(--text-headings)}
+a{color:var(--text-action)}a:hover{color:var(--text-action-hover)}.rc-btn--tertiary{box-shadow:none}.rc-check__box .rc-icon{color:transparent!important}.rc-check input:checked+.rc-check__box .rc-icon{color:var(--icons-on-action)!important}input,select,textarea{transition:border-color .12s}input:focus,select:focus,textarea:focus,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--border-action)!important}
+.cb{display:inline-flex;align-items:center;padding:0;margin:0;border:0;background:transparent;font:inherit;color:inherit;cursor:pointer;text-align:left;border-radius:var(--radius-sm)}.cb-in{display:inline-flex;pointer-events:none}.cb:hover .rc-check__box{box-shadow:inset 0 0 0 1px var(--border-action)}.cb:hover input:checked+.rc-check__box{background:var(--surface-action-hover)}.cb:focus-visible{outline:2px solid var(--border-action);outline-offset:2px}
+.preset-opt:hover{border-color:var(--border-action)!important}.period-btn:focus-visible,.preset-opt:focus-visible{outline:2px solid var(--border-action);outline-offset:2px}.day-cell{text-decoration:none;cursor:pointer}.day-cell:hover{background:var(--surface-secondary)!important;border-radius:var(--radius-md)}.day-cell:focus-visible{border-radius:var(--radius-md)}.day-cell:focus-visible{outline:2px solid var(--border-action);outline-offset:-2px}
+a.rc-tab,a.rc-tab:hover{color:var(--text-body)}a.rc-tab.is-selected,a.rc-tab.is-selected:hover{color:var(--text-selected)}a.rc-sidenav__item:hover{color:var(--text-body)}a.rc-sidenav__item.is-selected:hover{color:var(--text-selected)}
+.trow:has(.nm:hover) .nm,.trow:has(.nm:hover) .dcw,.trow:has(.nm:hover) .dcw .day-cell,.trow:has(.nm:hover) .dcw .offc,.trow:has(.nm:hover) .rs,.trow:has(.dcw:hover) .nm,.trow:has(.rs:hover) .nm,.rs:hover,.tt:has(.rs1:hover) .hs1,.tt:has(.rs2:hover) .hs2,.tt:has(.rs3:hover) .hs3,.tt:has(.rs4:hover) .hs4,.tt:has(.rs5:hover) .hs5,.tt:has(.rs6:hover) .hs6,.tt:has(.rs7:hover) .hs7,.tt:has(.rs8:hover) .hs8{background:var(--surface-secondary)!important}.rs{align-self:stretch;display:flex;align-items:center}
+.tt:has(.h-d0:hover) :is(.h-d0,.c-d0,.c-d0 .day-cell,.c-d0 .offc),.tt:has(.h-d1:hover) :is(.h-d1,.c-d1,.c-d1 .day-cell,.c-d1 .offc),.tt:has(.h-d2:hover) :is(.h-d2,.c-d2,.c-d2 .day-cell,.c-d2 .offc),.tt:has(.h-d3:hover) :is(.h-d3,.c-d3,.c-d3 .day-cell,.c-d3 .offc),.tt:has(.h-d4:hover) :is(.h-d4,.c-d4,.c-d4 .day-cell,.c-d4 .offc),.tt:has(.h-d5:hover) :is(.h-d5,.c-d5,.c-d5 .day-cell,.c-d5 .offc),.tt:has(.h-d6:hover) :is(.h-d6,.c-d6,.c-d6 .day-cell,.c-d6 .offc),.tt:has(.h-d7:hover) :is(.h-d7,.c-d7,.c-d7 .day-cell,.c-d7 .offc),.tt:has(.h-d8:hover) :is(.h-d8,.c-d8,.c-d8 .day-cell,.c-d8 .offc),.tt:has(.h-d9:hover) :is(.h-d9,.c-d9,.c-d9 .day-cell,.c-d9 .offc),.tt:has(.h-d10:hover) :is(.h-d10,.c-d10,.c-d10 .day-cell,.c-d10 .offc),.tt:has(.h-d11:hover) :is(.h-d11,.c-d11,.c-d11 .day-cell,.c-d11 .offc),.tt:has(.h-d12:hover) :is(.h-d12,.c-d12,.c-d12 .day-cell,.c-d12 .offc),.tt:has(.h-d13:hover) :is(.h-d13,.c-d13,.c-d13 .day-cell,.c-d13 .offc),.tt:has(.h-d14:hover) :is(.h-d14,.c-d14,.c-d14 .day-cell,.c-d14 .offc),.tt:has(.h-d15:hover) :is(.h-d15,.c-d15,.c-d15 .day-cell,.c-d15 .offc),.tt:has(.h-d16:hover) :is(.h-d16,.c-d16,.c-d16 .day-cell,.c-d16 .offc),.tt:has(.h-d17:hover) :is(.h-d17,.c-d17,.c-d17 .day-cell,.c-d17 .offc),.tt:has(.h-d18:hover) :is(.h-d18,.c-d18,.c-d18 .day-cell,.c-d18 .offc),.tt:has(.h-d19:hover) :is(.h-d19,.c-d19,.c-d19 .day-cell,.c-d19 .offc),.tt:has(.h-d20:hover) :is(.h-d20,.c-d20,.c-d20 .day-cell,.c-d20 .offc),.tt:has(.h-d21:hover) :is(.h-d21,.c-d21,.c-d21 .day-cell,.c-d21 .offc),.tt:has(.h-d22:hover) :is(.h-d22,.c-d22,.c-d22 .day-cell,.c-d22 .offc),.tt:has(.h-d23:hover) :is(.h-d23,.c-d23,.c-d23 .day-cell,.c-d23 .offc),.tt:has(.h-d24:hover) :is(.h-d24,.c-d24,.c-d24 .day-cell,.c-d24 .offc),.tt:has(.h-d25:hover) :is(.h-d25,.c-d25,.c-d25 .day-cell,.c-d25 .offc),.tt:has(.h-d26:hover) :is(.h-d26,.c-d26,.c-d26 .day-cell,.c-d26 .offc),.tt:has(.h-d27:hover) :is(.h-d27,.c-d27,.c-d27 .day-cell,.c-d27 .offc),.tt:has(.h-d28:hover) :is(.h-d28,.c-d28,.c-d28 .day-cell,.c-d28 .offc),.tt:has(.h-d29:hover) :is(.h-d29,.c-d29,.c-d29 .day-cell,.c-d29 .offc),.tt:has(.h-d30:hover) :is(.h-d30,.c-d30,.c-d30 .day-cell,.c-d30 .offc),.tt:has(.h-d31:hover) :is(.h-d31,.c-d31,.c-d31 .day-cell,.c-d31 .offc),.tt:has(.h-d32:hover) :is(.h-d32,.c-d32,.c-d32 .day-cell,.c-d32 .offc),.tt:has(.h-d33:hover) :is(.h-d33,.c-d33,.c-d33 .day-cell,.c-d33 .offc),.tt:has(.h-d34:hover) :is(.h-d34,.c-d34,.c-d34 .day-cell,.c-d34 .offc),.tt:has(.h-d35:hover) :is(.h-d35,.c-d35,.c-d35 .day-cell,.c-d35 .offc),.tt:has(.h-d36:hover) :is(.h-d36,.c-d36,.c-d36 .day-cell,.c-d36 .offc),.tt:has(.h-d37:hover) :is(.h-d37,.c-d37,.c-d37 .day-cell,.c-d37 .offc),.tt:has(.h-d38:hover) :is(.h-d38,.c-d38,.c-d38 .day-cell,.c-d38 .offc),.tt:has(.h-d39:hover) :is(.h-d39,.c-d39,.c-d39 .day-cell,.c-d39 .offc),.tt:has(.h-d40:hover) :is(.h-d40,.c-d40,.c-d40 .day-cell,.c-d40 .offc),.tt:has(.h-d41:hover) :is(.h-d41,.c-d41,.c-d41 .day-cell,.c-d41 .offc),.tt:has(.h-d42:hover) :is(.h-d42,.c-d42,.c-d42 .day-cell,.c-d42 .offc),.tt:has(.h-d43:hover) :is(.h-d43,.c-d43,.c-d43 .day-cell,.c-d43 .offc),.tt:has(.h-d44:hover) :is(.h-d44,.c-d44,.c-d44 .day-cell,.c-d44 .offc),.tt:has(.h-d45:hover) :is(.h-d45,.c-d45,.c-d45 .day-cell,.c-d45 .offc),.tt:has(.h-d46:hover) :is(.h-d46,.c-d46,.c-d46 .day-cell,.c-d46 .offc),.tt:has(.h-d47:hover) :is(.h-d47,.c-d47,.c-d47 .day-cell,.c-d47 .offc),.tt:has(.h-d48:hover) :is(.h-d48,.c-d48,.c-d48 .day-cell,.c-d48 .offc),.tt:has(.h-d49:hover) :is(.h-d49,.c-d49,.c-d49 .day-cell,.c-d49 .offc),.tt:has(.h-d50:hover) :is(.h-d50,.c-d50,.c-d50 .day-cell,.c-d50 .offc),.tt:has(.h-d51:hover) :is(.h-d51,.c-d51,.c-d51 .day-cell,.c-d51 .offc),.tt:has(.h-d52:hover) :is(.h-d52,.c-d52,.c-d52 .day-cell,.c-d52 .offc),.tt:has(.h-d53:hover) :is(.h-d53,.c-d53,.c-d53 .day-cell,.c-d53 .offc),.tt:has(.h-d54:hover) :is(.h-d54,.c-d54,.c-d54 .day-cell,.c-d54 .offc),.tt:has(.h-d55:hover) :is(.h-d55,.c-d55,.c-d55 .day-cell,.c-d55 .offc),.tt:has(.h-d56:hover) :is(.h-d56,.c-d56,.c-d56 .day-cell,.c-d56 .offc),.tt:has(.h-d57:hover) :is(.h-d57,.c-d57,.c-d57 .day-cell,.c-d57 .offc),.tt:has(.h-d58:hover) :is(.h-d58,.c-d58,.c-d58 .day-cell,.c-d58 .offc),.tt:has(.h-d59:hover) :is(.h-d59,.c-d59,.c-d59 .day-cell,.c-d59 .offc),.tt:has(.h-d60:hover) :is(.h-d60,.c-d60,.c-d60 .day-cell,.c-d60 .offc),.tt:has(.h-d61:hover) :is(.h-d61,.c-d61,.c-d61 .day-cell,.c-d61 .offc),.tt:has(.hs1:hover) :is(.hs1,.rs1),.tt:has(.hs2:hover) :is(.hs2,.rs2),.tt:has(.hs3:hover) :is(.hs3,.rs3),.tt:has(.hs4:hover) :is(.hs4,.rs4),.tt:has(.hs5:hover) :is(.hs5,.rs5),.tt:has(.hs6:hover) :is(.hs6,.rs6),.tt:has(.hs7:hover) :is(.hs7,.rs7),.tt:has(.hs8:hover) :is(.hs8,.rs8){background:var(--surface-secondary)!important}
+.tt:has(.c-d0:hover) .h-d0,.tt:has(.c-d1:hover) .h-d1,.tt:has(.c-d2:hover) .h-d2,.tt:has(.c-d3:hover) .h-d3,.tt:has(.c-d4:hover) .h-d4,.tt:has(.c-d5:hover) .h-d5,.tt:has(.c-d6:hover) .h-d6,.tt:has(.c-d7:hover) .h-d7,.tt:has(.c-d8:hover) .h-d8,.tt:has(.c-d9:hover) .h-d9,.tt:has(.c-d10:hover) .h-d10,.tt:has(.c-d11:hover) .h-d11,.tt:has(.c-d12:hover) .h-d12,.tt:has(.c-d13:hover) .h-d13,.tt:has(.c-d14:hover) .h-d14,.tt:has(.c-d15:hover) .h-d15,.tt:has(.c-d16:hover) .h-d16,.tt:has(.c-d17:hover) .h-d17,.tt:has(.c-d18:hover) .h-d18,.tt:has(.c-d19:hover) .h-d19,.tt:has(.c-d20:hover) .h-d20,.tt:has(.c-d21:hover) .h-d21,.tt:has(.c-d22:hover) .h-d22,.tt:has(.c-d23:hover) .h-d23,.tt:has(.c-d24:hover) .h-d24,.tt:has(.c-d25:hover) .h-d25,.tt:has(.c-d26:hover) .h-d26,.tt:has(.c-d27:hover) .h-d27,.tt:has(.c-d28:hover) .h-d28,.tt:has(.c-d29:hover) .h-d29,.tt:has(.c-d30:hover) .h-d30,.tt:has(.c-d31:hover) .h-d31,.tt:has(.c-d32:hover) .h-d32,.tt:has(.c-d33:hover) .h-d33,.tt:has(.c-d34:hover) .h-d34,.tt:has(.c-d35:hover) .h-d35,.tt:has(.c-d36:hover) .h-d36,.tt:has(.c-d37:hover) .h-d37,.tt:has(.c-d38:hover) .h-d38,.tt:has(.c-d39:hover) .h-d39,.tt:has(.c-d40:hover) .h-d40,.tt:has(.c-d41:hover) .h-d41,.tt:has(.c-d42:hover) .h-d42,.tt:has(.c-d43:hover) .h-d43,.tt:has(.c-d44:hover) .h-d44,.tt:has(.c-d45:hover) .h-d45,.tt:has(.c-d46:hover) .h-d46,.tt:has(.c-d47:hover) .h-d47,.tt:has(.c-d48:hover) .h-d48,.tt:has(.c-d49:hover) .h-d49,.tt:has(.c-d50:hover) .h-d50,.tt:has(.c-d51:hover) .h-d51,.tt:has(.c-d52:hover) .h-d52,.tt:has(.c-d53:hover) .h-d53,.tt:has(.c-d54:hover) .h-d54,.tt:has(.c-d55:hover) .h-d55,.tt:has(.c-d56:hover) .h-d56,.tt:has(.c-d57:hover) .h-d57,.tt:has(.c-d58:hover) .h-d58,.tt:has(.c-d59:hover) .h-d59,.tt:has(.c-d60:hover) .h-d60,.tt:has(.c-d61:hover) .h-d61{background:var(--surface-secondary)!important}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; box-sizing: border-box; min-height: 100vh; background: var(--surface-page)">
+  <x-import component-from-global-scope="RaccoonDS.SideNav" value="timesheet" groups="{{navGroups}}" user="{{navUser}}" quick-actions="{{false}}" style="flex: 0 0 232px; align-self: flex-start; position: sticky; top: var(--space-4); height: calc(100vh - 2 * var(--space-4))"></x-import>
+
+  <main style="flex: 999 1 560px; min-width: 0; height: calc(100vh - 32px); box-sizing: border-box; display: flex; flex-direction: column; gap: var(--space-4)">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 40px">
+      <div role="tablist" aria-label="Разделы табеля" class="rc-tabs rc-tabs--medium" style="flex-wrap: wrap">
+        <a href="Main.dc.html" role="tab" aria-selected="true" class="rc-tab is-selected" style="text-decoration: none">Табель</a>
+        <a href="Exceptions.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none">Исключения <span class="rc-navcount">{{flagCount}}</span></a>
+        <a href="Feed.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none">Лента отметок</a>
+        <a href="SettingsRules.dc.html" role="tab" aria-selected="false" class="rc-tab" style="text-decoration: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="settings" size="{{16}}" color="currentColor"></x-import>Настройки</a>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-2)">
+        <x-import component-from-global-scope="RaccoonDS.Button" variant="secondary" on-click="{{openExport}}">Выгрузить в 1С / Excel</x-import>
+        <x-import component-from-global-scope="RaccoonDS.Button" variant="primary" disabled="{{true}}">Закрыть период</x-import>
+      </div>
+    </div>
+
+    <div style="flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-6); box-sizing: border-box; background: var(--surface-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg)">
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-4); align-items: flex-end">
+        <div style="position: relative; display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption-m-regular); color: var(--text-secondary); flex: 0 0 auto; min-width: 0"><span id="period-lbl">Период</span>
+          <div class="rc-dategroup">
+            <x-import component-from-global-scope="RaccoonDS.IconButton" icon="chevron-left" label="Предыдущий период" on-click="{{prevPeriod}}" size="medium"></x-import>
+            <button type="button" class="rc-datebtn period-btn" onClick="{{togglePicker}}" aria-haspopup="dialog" aria-expanded="{{pickerExpanded}}" aria-labelledby="period-lbl period-val" style="box-shadow: inset 0 0 0 1px {{pickerBorder}}"><x-import component-from-global-scope="RaccoonDS.Icon" name="tear-off-calendar" size="{{20}}"></x-import><span id="period-val">{{periodLabel}}</span></button>
+            <sc-if value="{{canNext}}" hint-placeholder-val="{{false}}">
+              <x-import component-from-global-scope="RaccoonDS.IconButton" icon="chevron-right" label="Следующий период" on-click="{{nextPeriod}}" size="medium"></x-import>
+            </sc-if>
+            <sc-if value="{{noNext}}" hint-placeholder-val="{{true}}">
+              <x-import component-from-global-scope="RaccoonDS.IconButton" icon="chevron-right" label="Следующий период ещё не начался" size="medium" disabled="{{true}}"></x-import>
+            </sc-if>
+          </div>
+          <sc-if value="{{pickerOpen}}" hint-placeholder-val="{{false}}">
+            <button type="button" onClick="{{closePicker}}" aria-label="Закрыть выбор периода" tabindex="-1" style="position: fixed; inset: 0; z-index: 19; width: 100%; height: 100%; padding: 0; margin: 0; border: 0; background: transparent; cursor: default"></button>
+            <div role="dialog" aria-label="Период табеля" style="position: absolute; top: calc(100% + var(--space-2)); left: 0; z-index: 20; width: 380px; max-width: calc(100vw - 32px); box-sizing: border-box; background: var(--surface-primary); border: 0; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); font: var(--text-paragraph-m-regular); color: var(--text-body)">
+              <div style="display: flex; flex-direction: column; gap: var(--space-1)">
+                <span style="font: var(--text-heading-h4-semibold); color: var(--text-headings)">Период табеля</span>
+                <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">У каждого МВО свой период закрытия. Выберите шаблон или задайте даты.</span>
+              </div>
+              <div role="radiogroup" aria-label="Шаблон периода" style="display: flex; flex-direction: column; gap: var(--space-2)">
+                <sc-for list="{{presets}}" as="pr" hint-placeholder-count="4">
+                  <button type="button" role="radio" aria-checked="{{pr.checked}}" onClick="{{pr.pick}}" class="preset-opt" style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 40px; padding: 0 var(--space-3); margin: 0; border: 1px solid {{pr.border}}; border-radius: var(--radius-md); background: {{pr.bg}}; font: var(--text-body-m-regular); color: {{pr.fg}}; font-weight: {{pr.fw}}; text-align: left; cursor: pointer"><span>{{pr.label}}</span><span style="font: var(--text-caption-m-regular); color: var(--text-secondary); white-space: nowrap">{{pr.hint}}</span></button>
+                </sc-for>
+              </div>
+              <div style="display: flex; gap: var(--space-2); align-items: flex-end">
+                <label style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption-m-regular); color: var(--text-secondary)">С
+                  <input type="date" value="{{dFrom}}" max="{{todayIso}}" onChange="{{onFrom}}" onInput="{{onFrom}}" style="height: 32px; box-sizing: border-box; margin: 0; padding: 0 var(--space-2); border: 1px solid {{pBorder}}; border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-body-m-regular); color: var(--text-body); width: 100%; min-width: 0">
+                </label>
+                <span aria-hidden="true" style="height: 32px; display: flex; align-items: center; color: var(--text-secondary)">—</span>
+                <label style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption-m-regular); color: var(--text-secondary)">По
+                  <input type="date" value="{{dTo}}" min="{{dFrom}}" onChange="{{onTo}}" onInput="{{onTo}}" style="height: 32px; box-sizing: border-box; margin: 0; padding: 0 var(--space-2); border: 1px solid {{pBorder}}; border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-body-m-regular); color: var(--text-body); width: 100%; min-width: 0">
+                </label>
+              </div>
+              <span role="status" style="margin-top: calc(-1 * var(--space-2)); font: var(--text-caption-m-regular); color: {{pHintColor}}">{{pHint}}</span>
+              <button type="button" class="cb" onClick="{{toggleRemember}}" aria-pressed="{{rememberPressed}}" style="min-height: 32px"><span class="cb-in"><sc-if value="{{remember}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Сделать периодом по умолчанию для МВО «Депо №1»"></x-import></sc-if><sc-if value="{{rememberOff}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Сделать периодом по умолчанию для МВО «Депо №1»"></x-import></sc-if></span></button>
+              <div style="display: flex; justify-content: flex-end; gap: var(--space-2); padding-top: var(--space-4); border-top: 1px solid var(--border-primary)">
+                <div style="display: flex; gap: var(--space-2)">
+                  <x-import component-from-global-scope="RaccoonDS.Button" variant="tertiary" on-click="{{closePicker}}">Отмена</x-import>
+                  <x-import component-from-global-scope="RaccoonDS.Button" variant="primary" disabled="{{applyDisabled}}" on-click="{{applyPeriod}}">Показать</x-import>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption-m-regular); color: var(--text-secondary); flex: 1 1 180px; min-width: 0">Депо
+          <span style="position: relative; display: block"><select style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-body-m-regular); color: var(--text-body); cursor: pointer"><option>Депо №1</option><option>Депо №2</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption-m-regular); color: var(--text-secondary); flex: 1 1 160px; min-width: 0">Роль
+          <span style="position: relative; display: block"><select value="{{role}}" onChange="{{pickRole}}" style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-body-m-regular); color: var(--text-body); cursor: pointer"><option value="all">Все</option><option value="Водитель">Водители</option><option value="Грузчик">Грузчики</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption-m-regular); color: var(--text-secondary); flex: 1 1 180px; min-width: 0">Группировка
+          <span style="position: relative; display: block"><select style="appearance: none; -webkit-appearance: none; display: block; width: 100%; min-width: 0; height: 32px; box-sizing: border-box; margin: 0; padding: 0 calc(var(--space-1) + 24px) 0 var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-body-m-regular); color: var(--text-body); cursor: pointer"><option>По командам</option><option>По ролям</option><option>Без группировки</option></select><span aria-hidden="true" style="position: absolute; right: var(--space-1); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="chevron-down" size="{{20}}" color="var(--icons-secondary)"></x-import></span></span>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption-m-regular); color: var(--text-secondary); flex: 1 1 220px; min-width: 0">Поиск
+          <span style="position: relative; display: block"><span aria-hidden="true" style="position: absolute; left: var(--space-2); top: 0; bottom: 0; display: flex; align-items: center; pointer-events: none"><x-import component-from-global-scope="RaccoonDS.Icon" name="search" size="{{20}}" color="var(--icons-secondary)"></x-import></span><input type="search" placeholder="ФИО или табельный №" style="display: block; width: 100%; height: 32px; box-sizing: border-box; margin: 0; padding: 0 var(--space-3) 0 calc(var(--space-2) + 24px); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary); font: var(--text-body-m-regular); color: var(--text-body)"></span>
+        </label>
+        <button type="button" aria-pressed="{{onlyFlagsPressed}}" onClick="{{toggleOnlyFlags}}" style="flex: 0 0 auto; height: 32px; padding: 0 var(--space-2); border: 0; background: transparent; display: flex; align-items: center; cursor: pointer"><span style="display: inline-flex; pointer-events: none"><sc-if value="{{onlyFlags}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Только с исключениями"></x-import></sc-if><sc-if value="{{onlyFlagsOff}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Только с исключениями"></x-import></sc-if></span></button>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); align-items: center; padding: var(--space-3) var(--space-4); background: var(--surface-attention-subtle); border: 0; border-radius: var(--radius-lg); font: var(--text-body-m-regular); color: var(--text-attention)">
+        <span style="font: var(--text-body-m-semibold)">{{periodStatus}}</span>
+        <span style="color: var(--text-attention)">{{staffCount}} сотрудников · исключений к разбору до закрытия периода: {{flagCount}}</span>
+        <a href="Exceptions.dc.html" style="font: var(--text-body-m-semibold); text-decoration: none; color: var(--text-action)">Перейти к исключениям →</a>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center">
+
+        <x-import component-from-global-scope="RaccoonDS.SegmentedTabs" items="{{metricItems}}" value="{{metric}}" on-change="{{onMetric}}"></x-import>
+
+        <div style="display: flex; gap: var(--space-2); margin-left: auto">
+          <x-import component-from-global-scope="RaccoonDS.Button" variant="secondary" size="small" on-click="{{expandAll}}">Развернуть все</x-import>
+          <x-import component-from-global-scope="RaccoonDS.Button" variant="secondary" size="small" on-click="{{collapseAll}}">Свернуть все</x-import>
+        </div>
+      </div>
+
+      <div style="flex: 1 1 0; min-height: 320px; overflow: auto; background: var(--surface-primary); border: 1px solid var(--surface-primary); border-radius: var(--radius-md); border-style: solid; border-color: var(--border-primary, #e2e8f0)">
+        <div class="tt" style="width: max-content; min-width: 100%; display: flex; flex-direction: column">
+          <div style="position: sticky; top: 0; z-index: 3; display: flex; align-items: stretch; border-bottom: 2px solid var(--border-primary); font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary); background: var(--surface-primary)">
+            <div style="width: {{leftW}}px; box-sizing: border-box; position: sticky; left: 0; z-index: 2; display: flex; align-items: center; flex-shrink: 0; border-right: 1px solid var(--border-primary); align-self: stretch; background: var(--surface-primary)">
+              <div style="flex: 1 1 auto; min-width: 0; padding: 8px 12px; box-sizing: border-box">Сотрудник</div>
+              <div style="flex: 0 1 84px; min-width: 0; overflow: hidden; padding: 8px 4px; box-sizing: border-box">Роль</div>
+              <button type="button" aria-label="Изменить ширину колонки сотрудников" title="Потяните, чтобы изменить ширину. Двойной клик — по умолчанию" onMouseDown="{{startResizeLeft}}" onDoubleClick="{{resetResizeLeft}}" style="position: absolute; right: -7px; top: 0; bottom: 0; width: 12px; padding: 0; border: 0; background: transparent; cursor: col-resize; z-index: 5; display: flex; align-items: center; justify-content: center"><span aria-hidden="true" style="width: 4px; height: 24px; border-radius: var(--radius-xs); background: var(--icons-secondary)"></span></button>
+            </div>
+            <div style="flex: 1 0 auto; display: flex; background: var(--surface-primary)">
+              <sc-for list="{{days}}" as="d" hint-placeholder-count="31">
+                <sc-if value="{{d.wd}}" hint-placeholder-val="{{true}}">
+                  <div class="h-{{d.k}}" style="width: 50px; flex-shrink: 0; padding: 8px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-1); box-sizing: border-box; border-left: {{d.bl}}">
+                    <span style="font: var(--text-body-m-semibold); color: var(--text-body)">{{d.n}}</span>
+                    <span style="font: var(--text-caption-m-regular); text-transform: none; white-space: nowrap">{{d.w}}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{d.we}}" hint-placeholder-val="{{false}}">
+                  <div class="h-{{d.k}}" style="width: 50px; flex-shrink: 0; padding: 8px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-1); box-sizing: border-box; background: var(--surface-primary); border-left: {{d.bl}}">
+                    <span style="font: var(--text-body-m-semibold); color: var(--text-error)">{{d.n}}</span>
+                    <span style="font: var(--text-caption-m-regular); text-transform: none; color: var(--text-error); white-space: nowrap">{{d.w}}</span>
+                  </div>
+                </sc-if>
+              </sc-for>
+            </div>
+            <div style="width: {{sumW}}px; position: sticky; right: 0; z-index: 2; display: flex; align-items: center; flex-shrink: 0; border-left: 2px solid var(--border-primary); align-self: stretch; box-sizing: border-box; background: var(--surface-primary)">
+              <button type="button" aria-label="Изменить ширину блока итогов" title="Потяните, чтобы изменить ширину. Двойной клик — по умолчанию" onMouseDown="{{startResize}}" onDoubleClick="{{resetResize}}" style="position: absolute; left: -7px; top: 0; bottom: 0; width: 12px; padding: 0; border: 0; background: transparent; cursor: col-resize; z-index: 5; display: flex; align-items: center; justify-content: center"><span aria-hidden="true" style="width: 4px; height: 24px; border-radius: var(--radius-xs); background: var(--icons-secondary)"></span></button>
+              <div class="hs1" style="flex: 1 1 0; align-self: stretch; display: flex; align-items: center; min-width: 44px; padding: var(--space-2); text-align: left; box-sizing: border-box; overflow-wrap: anywhere">Часы по норме</div>
+              <div class="hs2" style="flex: 1 1 0; align-self: stretch; display: flex; align-items: center; min-width: 44px; padding: var(--space-2); text-align: left; box-sizing: border-box; overflow-wrap: anywhere">Переработка, ч</div>
+              <div class="hs3" style="flex: 1 1 0; align-self: stretch; display: flex; align-items: center; min-width: 44px; padding: var(--space-2); text-align: left; box-sizing: border-box; overflow-wrap: anywhere">Пробег, км</div>
+              <div class="hs4" style="flex: 1 1 0; align-self: stretch; display: flex; align-items: center; min-width: 44px; padding: var(--space-2); text-align: left; box-sizing: border-box; overflow-wrap: anywhere">ГСМ, л</div>
+              <div class="hs5" style="flex: 1 1 0; align-self: stretch; display: flex; align-items: center; min-width: 44px; padding: var(--space-2); text-align: left; box-sizing: border-box; overflow-wrap: anywhere">л/100 км</div>
+              <div class="hs6" style="flex: 1 1 0; align-self: stretch; display: flex; align-items: center; min-width: 44px; padding: var(--space-2); text-align: left; box-sizing: border-box; overflow-wrap: anywhere">Опозд. выхода, дн</div>
+              <div class="hs7" style="flex: 1 1 0; align-self: stretch; display: flex; align-items: center; min-width: 44px; padding: var(--space-2); text-align: left; box-sizing: border-box; overflow-wrap: anywhere">Дни</div>
+              <div class="hs8" style="flex: 1 1 0; align-self: stretch; min-width: 44px; padding: var(--space-2); text-align: left; box-sizing: border-box; overflow-wrap: anywhere; display: flex; align-items: center"><span role="img" aria-label="Исключения" title="Исключения" style="width: 16px; height: 16px; border-radius: var(--radius-full); background: var(--surface-warning); color: var(--text-on-action); font: var(--text-caption-m-bold); display: inline-flex; align-items: center; justify-content: center">!</span></div>
+            </div>
+          </div>
+
+          <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+            <div style="display: flex; align-items: stretch; border-top: 8px solid var(--surface-primary); font: var(--text-body-m-regular); background: var(--surface-secondary)">
+              <div style="width: {{leftW}}px; box-sizing: border-box; position: sticky; left: 0; z-index: 2; display: flex; align-items: center; flex-shrink: 0; border-right: 1px solid var(--border-primary); align-self: stretch; background: var(--surface-secondary)">
+                <button type="button" onClick="{{g.toggle}}" aria-expanded="{{g.expanded}}" style="width: 100%; min-width: 0; min-height: 48px; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 0; background: transparent; text-align: left; font: var(--text-body-m-regular); color: var(--text-body); cursor: pointer; box-sizing: border-box">
+                  <x-import component-from-global-scope="RaccoonDS.Icon" name="{{g.chevIcon}}" size="{{20}}" color="var(--icons-default)"></x-import>
+                  <span style="font: var(--text-body-m-bold); color: var(--text-headings)">{{g.name}}</span>
+                  <span style="margin-left: auto; flex-shrink: 0; display: inline-flex"><x-import component-from-global-scope="RaccoonDS.CounterBadge" count="{{g.countLabel}}" tone="neutral"></x-import></span>
+                </button>
+              </div>
+              <div style="flex: 1 0 auto; display: flex">
+                <sc-for list="{{days}}" as="d" hint-placeholder-count="31"><div style="width: 50px; flex-shrink: 0"></div></sc-for>
+              </div>
+              <div style="width: {{sumW}}px; position: sticky; right: 0; z-index: 2; display: flex; align-items: center; flex-shrink: 0; border-left: 2px solid var(--border-primary); align-self: stretch; box-sizing: border-box; background: var(--surface-secondary)">
+                <div style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; box-sizing: border-box">{{g.total}}</div>
+                <div style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; box-sizing: border-box">{{g.over}}</div>
+                <div style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; box-sizing: border-box">{{g.km}}</div>
+                <div style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; box-sizing: border-box">{{g.fuel}}</div>
+                <div style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; box-sizing: border-box">{{g.rate}}</div>
+                <div style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; box-sizing: border-box">{{g.late}}</div>
+                <div style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; color: var(--text-body); box-sizing: border-box">—</div>
+                <div style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; box-sizing: border-box">{{g.flags}}</div>
+              </div>
+            </div>
+            <sc-if value="{{g.open}}" hint-placeholder-val="{{true}}">
+              <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="2">
+                <div class="trow" style="display: flex; align-items: stretch; border-bottom: 1px solid var(--border-primary); font: var(--text-body-m-regular)">
+                  <div class="nm" style="width: {{leftW}}px; box-sizing: border-box; position: sticky; left: 0; z-index: 2; display: flex; align-items: center; flex-shrink: 0; border-right: 1px solid var(--border-primary); align-self: stretch; background: var(--surface-primary)">
+                    <div style="flex: 1 1 auto; min-width: 0; padding: 8px 12px 8px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: var(--space-1)">
+                      <span style="font: var(--text-body-m-semibold); color: var(--text-headings); overflow-wrap: anywhere">{{r.name}}</span>
+                      <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">таб. № {{r.id}}</span>
+                    </div>
+                    <div style="flex: 0 1 84px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 4px; color: var(--text-secondary); box-sizing: border-box">{{r.role}}</div>
+                  </div>
+                  <div style="flex: 1 0 auto; display: flex; align-items: stretch">
+                    <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="31">
+                      <div class="dcw c-{{c.k}}" style="width: 50px; flex-shrink: 0; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center">
+                        <sc-if value="{{c.num}}" hint-placeholder-val="{{true}}">
+                          <a href="DayDetailNormal.dc.html" class="day-cell" aria-label="Открыть карточку дня: {{c.t}} ч" title="Открыть карточку дня" style="height: 40px; display: flex; align-items: center; justify-content: center; position: relative; box-sizing: border-box; font-variant-numeric: tabular-nums; background: {{c.cellBg}}; color: {{c.fg}}; font-weight: {{c.fw}}">{{c.t}}<sc-if value="{{c.multi}}" hint-placeholder-val="{{false}}"><span style="position: absolute; bottom: 2px; right: 3px; font: var(--text-tiny-xs-bold); color: var(--text-secondary)">2см</span></sc-if></a>
+                        </sc-if>
+                        <sc-if value="{{c.off}}" hint-placeholder-val="{{false}}">
+                          <div class="offc" style="height: 40px; display: flex; align-items: center; justify-content: center; background: {{c.cellBg}}">
+                            <span style="min-width: 28px; height: 24px; padding: 0 4px; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); font: var(--text-caption-m-regular); background: {{c.pillBg}}; color: {{c.fg}}; font-weight: {{c.fw}}">{{c.t}}</span>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{c.flag}}" hint-placeholder-val="{{false}}">
+                          <a href="DayDetail.dc.html" aria-label="Открыть день, требует проверки" style="margin: 4px 4px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-warning-subtle); border-radius: var(--radius-sm); background: var(--surface-warning-subtle); color: var(--text-warning); font-weight: 700; text-decoration: none; position: relative; box-sizing: border-box">{{c.t}}<span style="position: absolute; top: -7px; right: -5px; width: 16px; height: 16px; border-radius: var(--radius-full); background: var(--surface-warning); color: var(--text-on-action); font: var(--text-caption-m-bold); display: flex; align-items: center; justify-content: center">!</span><sc-if value="{{c.multi}}" hint-placeholder-val="{{false}}"><span style="position: absolute; bottom: 1px; right: 2px; font: var(--text-tiny-xs-bold)">2см</span></sc-if></a>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="width: {{sumW}}px; position: sticky; right: 0; z-index: 2; display: flex; align-items: center; flex-shrink: 0; border-left: 2px solid var(--border-primary); align-self: stretch; box-sizing: border-box; background: var(--surface-primary)">
+                    <div class="rs rs1" style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; color: var(--text-headings); box-sizing: border-box; font-variant-numeric: tabular-nums">{{r.total}}</div>
+                    <sc-if value="{{r.overHot}}" hint-placeholder-val="{{false}}"><div class="rs rs2" style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; color: var(--text-body); box-sizing: border-box">{{r.over}}</div></sc-if><sc-if value="{{r.overCalm}}" hint-placeholder-val="{{true}}"><div class="rs rs2" style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; color: var(--text-secondary); box-sizing: border-box">{{r.over}}</div></sc-if>
+                    <div class="rs rs3" style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; box-sizing: border-box">{{r.km}}</div>
+                    <div class="rs rs4" style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; box-sizing: border-box">{{r.fuel}}</div>
+                    <div class="rs rs5" style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; box-sizing: border-box">{{r.rate}}</div>
+                    <div class="rs rs6" style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; box-sizing: border-box">{{r.late}}</div>
+                    <div class="rs rs7" style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; box-sizing: border-box">{{r.days}}</div>
+                    <div class="rs rs8" style="flex: 1 1 0; min-width: 44px; padding: 0 var(--space-2); text-align: left; font-weight: 700; color: var(--text-warning); box-sizing: border-box">{{r.flags}}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-if>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); align-items: center; font: var(--text-paragraph-m-regular); color: var(--text-body)">
+        <span style="display: flex; gap: 8px; align-items: center"><span style="width: 34px; height: 24px; display: flex; align-items: center; justify-content: center; font: var(--text-caption-m-regular)">12,0</span> часы · <span style="font: var(--text-paragraph-m-medium)">12,9</span> сверх нормы</span>
+        <span style="display: flex; gap: 8px; align-items: center"><span style="width: 34px; height: 24px; border: 1px solid var(--border-warning-subtle); border-radius: var(--radius-sm); background: var(--surface-warning-subtle); box-sizing: border-box"></span> требует проверки — клик открывает день</span>
+        <span style="display: flex; gap: 8px; align-items: center"><span style="color: var(--text-secondary); font: var(--text-paragraph-m-medium)">В</span> выходной · <span style="padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--surface-information-subtle); color: var(--text-information); font: var(--text-caption-m-semibold)">Б</span> больничный · <span style="padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--surface-tertiary); font: var(--text-caption-m-semibold)">ОТ</span> отпуск · <span style="padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--surface-error-subtle); color: var(--text-error); font: var(--text-caption-m-semibold)">НН</span> неявка</span>
+        <span>Дни прокручиваются горизонтально; сотрудник и итоги закреплены</span>
+        <span>«2см» — в дне две смены, в режиме опоздания показано худшее отклонение за день</span>
+        <span>Пробег — по Wialon за смены дня, ГСМ — из мониторинга ГСМ; у грузчиков не считается</span>
+        <span>Команды задаются в справочнике; сотрудник состоит в одной команде, без команды — отдельная группа внизу</span>
+      </div>
+    </div>
+  </main>
+
+  <sc-if value="{{exportOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: fixed; inset: 0; z-index: 50; background: color-mix(in srgb, var(--surface-invert) 45%, transparent); display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box">
+      <section role="dialog" aria-modal="true" aria-label="Выгрузка табеля" class="rc-modal" style="width: 640px; max-height: 100%; box-shadow: var(--shadow-lg)">
+        <header class="rc-modal__head" style="padding: var(--space-5) var(--space-6)">
+          <div class="rc-modal__titles" style="gap: var(--space-1)">
+            <h2 class="rc-modal__title" style="margin: 0">Выгрузка табеля</h2>
+            <div class="rc-modal__subtitle">{{periodLabel}} · Депо №1</div>
+          </div>
+          <button type="button" class="rc-modal__close" aria-label="Закрыть" onClick="{{closeExport}}"><x-import component-from-global-scope="RaccoonDS.Icon" name="cancel" size="{{24}}"></x-import></button>
+        </header>
+        <x-import component-from-global-scope="RaccoonDS.Separator"></x-import>
+        <div class="rc-modal__body" style="display: flex; flex-direction: column; gap: var(--space-6); padding: var(--space-6); font: var(--text-paragraph-m-regular)">
+          <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6)">
+            <legend style="font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary); padding: 0 0 8px">Формат</legend>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" checked="{{true}}" label="Excel (.xlsx)"></x-import></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="1С (файл обмена)"></x-import></div>
+          </fieldset>
+
+          <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
+            <legend style="font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary); padding: 0 0 8px; width: 100%">Команды</legend>
+            <div style="display: flex; gap: var(--space-4); padding-bottom: var(--space-1)">
+              <x-import component-from-global-scope="RaccoonDS.Button" variant="link" size="small" on-click="{{exportSelectAll}}">Выбрать все</x-import>
+              <x-import component-from-global-scope="RaccoonDS.Button" variant="link" size="small" on-click="{{exportSelectNone}}">Снять все</x-import>
+            </div>
+            <sc-for list="{{exportTeams}}" as="t" hint-placeholder-count="7">
+              <button type="button" onClick="{{t.toggle}}" aria-pressed="{{t.pressed}}" style="display: flex; gap: 8px; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 var(--space-4); border: 0; border-radius: var(--radius-md); background: var(--surface-secondary); cursor: pointer; text-align: left; font: var(--text-body-m-regular); color: var(--text-body)">
+                <span style="display: inline-flex; pointer-events: none"><sc-if value="{{t.checked}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="{{t.name}}"></x-import></sc-if><sc-if value="{{t.unchecked}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="{{t.name}}"></x-import></sc-if></span>
+                <span style="font: var(--text-caption-m-regular); color: var(--text-secondary)">{{t.count}} чел.</span>
+              </button>
+            </sc-for>
+          </fieldset>
+
+          <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
+            <legend style="font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary); padding: 0 0 8px">Как разложить</legend>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" checked="{{true}}" label="Один файл, отдельный лист на каждую команду"></x-import></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="Один лист, команды блоками с итогами"></x-import></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Radio" label="Отдельный файл на каждую команду (ZIP)"></x-import></div>
+          </fieldset>
+
+          <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6)">
+            <legend style="font: var(--text-caption-caps-bold); text-transform: uppercase; color: var(--text-secondary); padding: 0 0 8px">Что включить</legend>
+            <div style="display: flex; align-items: center; min-height: 32px"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" disabled="{{true}}" label="Часы и коды дней"></x-import></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.ex1.toggle}}" aria-pressed="{{cb.ex1.pressed}}"><span class="cb-in"><sc-if value="{{cb.ex1.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Пробег"></x-import></sc-if><sc-if value="{{cb.ex1.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Пробег"></x-import></sc-if></span></button></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.ex2.toggle}}" aria-pressed="{{cb.ex2.pressed}}"><span class="cb-in"><sc-if value="{{cb.ex2.on}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="ГСМ"></x-import></sc-if><sc-if value="{{cb.ex2.off}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="ГСМ"></x-import></sc-if></span></button></div>
+            <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.ex3.toggle}}" aria-pressed="{{cb.ex3.pressed}}"><span class="cb-in"><sc-if value="{{cb.ex3.on}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Пометки исключений"></x-import></sc-if><sc-if value="{{cb.ex3.off}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Пометки исключений"></x-import></sc-if></span></button></div>
+          </fieldset>
+
+          <div style="display: flex; align-items: center; min-height: 32px"><button type="button" class="cb" onClick="{{cb.ex4.toggle}}" aria-pressed="{{cb.ex4.pressed}}"><span class="cb-in"><sc-if value="{{cb.ex4.on}}" hint-placeholder-val="{{false}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" checked="{{true}}" label="Учитывать текущие фильтры (роль, «Только с исключениями»)"></x-import></sc-if><sc-if value="{{cb.ex4.off}}" hint-placeholder-val="{{true}}"><x-import component-from-global-scope="RaccoonDS.Checkbox" label="Учитывать текущие фильтры (роль, «Только с исключениями»)"></x-import></sc-if></span></button></div>
+
+          <sc-if value="{{periodOpen}}" hint-placeholder-val="{{true}}">
+            <div style="font: var(--text-paragraph-m-regular); background: var(--surface-secondary); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4)">Период ещё не закрыт — в файле будет пометка «Черновик». Неразобранных исключений: {{flagCount}}.</div>
+          </sc-if>
+        </div>
+        <x-import component-from-global-scope="RaccoonDS.Separator"></x-import>
+        <footer class="rc-modal__foot" style="flex-wrap: wrap; padding: var(--space-4) var(--space-6)">
+          <span class="rc-modal__footl" style="font: var(--text-body-m-regular); color: var(--text-body)">Будет выгружено: команд — {{exportTeamCount}}, сотрудников — {{exportPeopleCount}}</span>
+          <div class="rc-modal__footr">
+            <x-import component-from-global-scope="RaccoonDS.Button" variant="tertiary" on-click="{{closeExport}}">Отмена</x-import>
+            <sc-if value="{{exportReady}}" hint-placeholder-val="{{true}}">
+              <x-import component-from-global-scope="RaccoonDS.Button" variant="primary" on-click="{{closeExport}}">Скачать</x-import>
+            </sc-if>
+            <sc-if value="{{exportEmpty}}" hint-placeholder-val="{{false}}">
+              <x-import component-from-global-scope="RaccoonDS.Button" variant="primary" disabled="{{true}}">Скачать</x-import>
+            </sc-if>
+          </div>
+        </footer>
+      </section>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+const NAV_GROUPS = [
+  [{icon:'dashboard-icon',label:'Дэшборд',value:'dashboard'},{icon:'task',label:'Задания',value:'jobs'},{icon:'journey',label:'Маршруты',value:'routes'},{icon:'garbage-truck',label:'Экипажи',value:'crews'},{icon:'navigation',label:'Контроль движения',value:'gps'}],
+  [{icon:'location',label:'Площадки',value:'locations'},{icon:'group-of-locations',label:'Маршрутные группы',value:'route-groups'},{icon:'admin-icon',label:'Реестр контейнеров',value:'containers'},{icon:'budget',label:'Заказчики',value:'clients'}],
+  [{icon:'garage',label:'Автопарк',value:'fleet'},{icon:'tear-off-calendar',label:'График смен',value:'shifts'}],
+  [{icon:'phone-calling',label:'Колл-центр',value:'call-center'},{icon:'analytics',label:'Аналитика',value:'analytics'},{icon:'users',label:'Сотрудники',value:'staff'},{icon:'time-card',label:'Табель',value:'timesheet',href:'Main.dc.html'},{icon:'weight-station',label:'Весовая',value:'weighing'}]
+];
+const NAV_USER = {initials:'ГС',name:'Гульнара С.',role:'HR-менеджер'};
+class Component extends DCLogic {
+  renderVals() { return Object.assign({}, this._renderVals(), { navGroups: NAV_GROUPS, navUser: NAV_USER }); }
+  _renderVals() {
+    var self = this;
+    var st0 = this.state || {};
+    // ---- период табеля: шаблон (month | p26 | p21 | custom) + даты с/по ----
+    var TODAY = '2026-10-28', MAXD = 62;
+    var MON = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+    var MONF = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+    var WK = ['вс','пн','вт','ср','чт','пт','сб'];
+    function pd(iso) { var a = String(iso).split('-'); return new Date(Date.UTC(+a[0], +a[1] - 1, +a[2])); }
+    function iso(d) { return d.toISOString().slice(0, 10); }
+    function addD(isoS, n) { var d = pd(isoS); d.setUTCDate(d.getUTCDate() + n); return iso(d); }
+    function diffD(a, b) { return Math.round((pd(b) - pd(a)) / 86400000); }
+    function ym(y, m) { var d = new Date(Date.UTC(y, m, 1)); return { y: d.getUTCFullYear(), m: d.getUTCMonth() }; }
+    function rangeFor(preset, y, m) {
+      var a = ym(y, m), b = ym(y, m + 1), p = ym(y, m - 1);
+      function mk(yy, mm, dd) { return iso(new Date(Date.UTC(yy, mm, dd))); }
+      if (preset === 'p26') return { from: mk(p.y, p.m, 26), to: mk(a.y, a.m, 25) };
+      if (preset === 'p21') return { from: mk(p.y, p.m, 21), to: mk(a.y, a.m, 20) };
+      return { from: mk(a.y, a.m, 1), to: iso(new Date(Date.UTC(b.y, b.m, 0))) };
+    }
+    var period = st0.period || { preset: 'month', y: 2026, m: 9, from: '2026-10-01', to: '2026-10-31' };
+    function shortD(isoS, withY) { var d = pd(isoS); return d.getUTCDate() + ' ' + MON[d.getUTCMonth()] + (withY ? ' ' + d.getUTCFullYear() : ''); }
+    function labelOf(p) {
+      if (p.preset === 'month') return MONF[p.m] + ' ' + p.y;
+      var sameY = p.from.slice(0, 4) === p.to.slice(0, 4);
+      return shortD(p.from, !sameY) + ' – ' + shortD(p.to, true);
+    }
+    function shift(p, dir) {
+      if (p.preset === 'custom') { var len = diffD(p.from, p.to) + 1; return { preset: 'custom', from: addD(p.from, dir * len), to: addD(p.to, dir * len) }; }
+      var t = ym(p.y, p.m + dir), r = rangeFor(p.preset, t.y, t.m);
+      return { preset: p.preset, y: t.y, m: t.m, from: r.from, to: r.to };
+    }
+    var nextP = shift(period, 1);
+    var days = [];
+    var nDays = diffD(period.from, period.to) + 1;
+    for (var di0 = 0; di0 < nDays; di0++) {
+      var dd = pd(addD(period.from, di0));
+      var w = WK[dd.getUTCDay()];
+      var we = w === 'сб' || w === 'вс';
+      var first = di0 === 0, mStart = dd.getUTCDate() === 1;
+      days.push({ k: 'd' + di0, n: String(dd.getUTCDate()), w: (first || mStart) ? MON[dd.getUTCMonth()] + ', ' + w : w, we: we, wd: !we, bl: (mStart && !first) ? '2px solid var(--border-primary)' : '0' });
+    }
+    // черновик в окне выбора
+    var draft = st0.draft || period;
+    var dLen = diffD(draft.from, draft.to) + 1;
+    var dErr = !draft.from || !draft.to ? 'Укажите обе даты' : (dLen < 1 ? 'Дата «по» раньше даты «с»' : (dLen > MAXD ? 'Слишком длинный период: ' + dLen + ' дн., максимум ' + MAXD : (draft.from > TODAY ? 'Период ещё не начался' : '')));
+    var anchor = (function () { var d = pd(draft.to || period.to); return { y: d.getUTCFullYear(), m: d.getUTCMonth() }; })();
+    var presets = [['month', 'Календарный месяц', '1–31 число'], ['p26', 'С 26-го по 25-е', 'расчётный месяц'], ['p21', 'С 21-го по 20-е', 'расчётный месяц'], ['custom', 'Свои даты', 'до ' + MAXD + ' дней']].map(function (x) {
+      var on = draft.preset === x[0];
+      return { label: x[1], hint: x[2], checked: on ? 'true' : 'false', bg: on ? 'var(--surface-selected)' : 'var(--surface-primary)', fg: on ? 'var(--text-selected)' : 'var(--text-body)', border: on ? 'var(--border-action)' : 'var(--border-primary)', fw: on ? 600 : 400,
+        pick: function () {
+          if (x[0] === 'custom') { self.setState({ draft: Object.assign({}, draft, { preset: 'custom' }) }); return; }
+          var r = rangeFor(x[0], anchor.y, anchor.m);
+          self.setState({ draft: { preset: x[0], y: anchor.y, m: anchor.m, from: r.from, to: r.to } });
+        } };
+    });
+    function setDate(key) { return function (e) { var v = e && e.target ? e.target.value : ''; var nd = Object.assign({}, draft, { preset: 'custom' }); nd[key] = v; self.setState({ draft: nd }); }; }
+    var pickerOpen = !!st0.pickerOpen;
+    var periodVals = {
+      periodLabel: labelOf(period), pickerOpen: pickerOpen, pickerExpanded: pickerOpen ? 'true' : 'false',
+      pickerBorder: pickerOpen ? 'var(--border-action)' : 'var(--border-primary)',
+      togglePicker: function () { self.setState({ pickerOpen: !pickerOpen, draft: null }); },
+      closePicker: function () { self.setState({ pickerOpen: false, draft: null }); },
+      presets: presets, dFrom: draft.from, dTo: draft.to, todayIso: TODAY,
+      onFrom: setDate('from'), onTo: setDate('to'),
+      pBorder: dErr ? 'var(--border-error, var(--text-error))' : 'var(--border-primary)',
+      pHint: dErr || ((draft.preset === 'custom' ? 'Свой период' : 'Шаблон') + ': ' + shortD(draft.from, true) + ' – ' + shortD(draft.to, true) + ' · ' + dLen + ' дн.'),
+      pHintColor: dErr ? 'var(--text-error)' : 'var(--text-secondary)',
+      applyDisabled: !!dErr,
+      applyPeriod: function () { if (dErr) return; self.setState({ period: draft, pickerOpen: false, draft: null }); },
+      remember: !!st0.remember, rememberOff: !st0.remember, rememberPressed: st0.remember ? 'true' : 'false',
+      toggleRemember: function () { self.setState({ remember: !st0.remember }); },
+      canNext: nextP.from <= TODAY, noNext: nextP.from > TODAY,
+      prevPeriod: function () { self.setState({ period: shift(period, -1) }); },
+      nextPeriod: function () { if (nextP.from <= TODAY) self.setState({ period: nextP }); },
+      periodOpen: period.to >= '2026-10-01',
+      periodStatus: period.to < '2026-10-01' ? 'Период закрыт · только просмотр' : 'Период открыт'
+    };
+    function extend(str, role) {
+      var base = str.split(',');
+      var out = [];
+      var norm = role === 'Водитель' ? '12.0' : '10.0';
+      for (var d = 0; d < days.length; d++) {
+        var s = base[d % base.length];
+        if (d >= base.length && s.charAt(0) === '!') s = s.slice(1);
+        if (days[d].we) { out.push(s.charAt(0) === '~' && s !== '~В' ? s : '~В'); continue; }
+        if (s === '~В' || (d >= base.length && (s === '—' || s.charAt(0) === '~'))) s = norm;
+        out.push(s);
+      }
+      return out.join(',');
+    }
+    var named = {
+      rear: [
+        ['Ахметов Бауыржан', '0412', '12.3,12.0,~В,~В,11.8,12.5,!12.9,12.1,11.9,~В,~В,12.2,12.0,12.4'],
+        ['Сериков Данияр', '0417', '11.5,!11.9,~В,~В,12.0,11.7,12.2,12.0,12.3,~В,~В,11.9,12.1,12.0']
+      ],
+      bunker: [
+        ['Нурланов Ерлан', '0433', '~ОТ,~ОТ,~ОТ,~ОТ,~ОТ,~ОТ,~ОТ,12.1,12.0,~В,~В,11.8,12.2,12.0'],
+        ['Ким Виктор', '0451', '12.0,12.1,~В,~В,~Б,~Б,~Б,12.0,!13.6,~В,~В,12.2,11.8,12.0']
+      ]
+    };
+    var teams = [
+      ['rear', 'Мусоровозы — задняя загрузка', 16],
+      ['side', 'Мусоровозы — боковая загрузка', 10],
+      ['front', 'Мусоровозы — фронтальная загрузка', 6],
+      ['bunker', 'Бункеровозы', 12],
+      ['hook', 'Мультилифты (крюковые)', 9],
+      ['dump', 'Самосвалы (СО)', 7],
+      ['loaders', 'Грузчики', 4]
+    ];
+    var sur = ['Абенов','Байжанов','Бекмуратов','Габдуллин','Досанов','Ергалиев','Жакупов','Жунусов','Исмаилов','Кайратов','Калиев','Кенжебаев','Ковалёв','Кузнецов','Мамырбеков','Мукашев','Нургалиев','Оспанов','Петренко','Рахимов','Сагындыков','Сарсенов','Смагулов','Тлеубаев','Токтаров','Уразбаев','Хамитов','Шайхин','Шевченко','Юсупов'];
+    var fst = ['Айдос','Бекзат','Владимир','Галым','Дамир','Ержан','Жандос','Ильяс','Канат','Мейрам','Нурлан','Олжас','Павел','Руслан','Самат','Талгат','Улан','Фархат','Шерхан','Эльдар'];
+    function genDays(k) {
+      var out = [];
+      var sched = k % 3;
+      for (var d = 0; d < days.length; d++) {
+        var off = sched === 0 ? days[d].we : (sched === 1 ? days[d].w === 'вс' : Math.floor((d + k) / 2) % 2 === 1);
+        if (off) { out.push('~В'); continue; }
+        if (k % 11 === 3 && d >= 9 && d <= 22) { out.push('~ОТ'); continue; }
+        if (k % 17 === 6 && d >= 5 && d <= 7) { out.push('~Б'); continue; }
+        if (k % 29 === 10 && d === 15) { out.push('~НН'); continue; }
+        var h = (11 + ((k * 13 + d * 7) % 23) / 10).toFixed(1);
+        out.push(((k * 31 + d * 17) % 97 === 0 && d < days.length - 5 ? '!' : '') + h);
+      }
+      return out.join(',');
+    }
+    var raw = [];
+    var teamOf = {};
+    var k = 0;
+    teams.forEach(function (t) {
+      if (t[0] === 'loaders') {
+        [
+          ['Касымов Арман', '1102', '10.2,10.5,~В,~В,!9.8,10.1,10.4,10.0,10.6,~В,~В,10.3,!10.9,10.1'],
+          ['Абдрахманов Марат', '1108', '10.0,10.4,~В,~В,10.2,10.1,~НН,10.5,10.3,~В,~В,10.0,10.2,10.4'],
+          ['Жумабаев Нурсултан', '1115', '!10.1,10.3,~В,~В,10.0,10.2,10.4,10.1,10.0,~В,~В,10.2,10.3,10.0'],
+          ['Исаев Тимур', '1121', '10.4,!10.2,~В,~В,10.0,10.8,10.1,10.3,10.2,~В,~В,10.5,10.0,!—']
+        ].forEach(function (p) { raw.push([p[0], p[1], 'Грузчик', p[2]]); teamOf[p[1]] = 'loaders'; });
+        return;
+      }
+      var fixed = named[t[0]] || [];
+      fixed.forEach(function (p) { raw.push([p[0], p[1], 'Водитель', p[2]]); teamOf[p[1]] = t[0]; });
+      for (var n = fixed.length; n < t[2]; n++) {
+        var id = String(500 + k);
+        while (id.length < 4) id = '0' + id;
+        raw.push([sur[k % 30] + ' ' + fst[(k + Math.floor(k / 30) * 3) % 20], id, 'Водитель', genDays(k)]);
+        teamOf[id] = t[0];
+        k++;
+      }
+    });
+    var cbState = (this.state && this.state.cb) || {};
+    function mkCb(k, def) {
+      var v = Object.prototype.hasOwnProperty.call(cbState, k) ? !!cbState[k] : !!def;
+      return { on: v, off: !v, pressed: v ? 'true' : 'false', toggle: function () { var m = Object.assign({}, cbState); m[k] = !v; self.setState({ cb: m }); } };
+    }
+    var cb = {};
+    cb.ex1 = mkCb('ex1', true);
+    cb.ex2 = mkCb('ex2', true);
+    cb.ex3 = mkCb('ex3', false);
+    cb.ex4 = mkCb('ex4', false);
+    var metric = (this.state && this.state.metric) || 'h';
+    var metrics = [['h', 'Часы'], ['km', 'Пробег, км'], ['fuel', 'ГСМ, л'], ['late', 'Опоздание выхода, мин']].map(function (m) {
+      return { label: m[1], active: metric === m[0], idle: metric !== m[0], pick: function () { self.setState({ metric: m[0] }); } };
+    });
+    function fmt1(n) { return n.toFixed(1).replace('.', ','); }
+    var rows = raw.map(function (r, ri) {
+      var total = 0, overSum = 0, cnt = 0, flags = 0, kmSum = 0, fuelSum = 0, lateDays = 0;
+      var isDriver = r[2] === 'Водитель';
+      var bunker = teamOf[r[1]] === 'bunker' || teamOf[r[1]] === 'hook';
+      var cells = extend(r[3], r[2]).split(',').map(function (s, di) {
+        var weBg = 'var(--surface-primary)';
+        if (s.charAt(0) === '~') {
+          var code = s.slice(1);
+          var tone = { 'В': ['transparent', 'var(--text-secondary)'], 'Б': ['var(--surface-information-subtle)', 'var(--text-information)'], 'ОТ': ['var(--surface-tertiary)', 'var(--text-body)'], 'НН': ['var(--surface-error-subtle)', 'var(--text-error)'] }[code] || ['transparent', 'var(--text-secondary)'];
+          return { t: code, off: true, num: false, flag: false, cellBg: weBg, pillBg: tone[0], fg: tone[1], fw: '600' };
+        }
+        var isFlag = s.charAt(0) === '!';
+        var v = isFlag ? s.slice(1) : s;
+        if (isFlag) flags++;
+        var km = 0, fuel = 0, late = 0, two = false;
+        if (v !== '—') {
+          var h = parseFloat(v);
+          var normH = isDriver ? 12 : 10;
+          total += Math.min(h, normH); overSum += Math.max(0, h - normH); cnt++;
+          if (isDriver) {
+            km = Math.round(h * (bunker ? 11 : 7.5) + ((ri * 7 + di * 3) % 11));
+            fuel = Math.round(km * (bunker ? 0.36 : 0.52));
+            kmSum += km; fuelSum += fuel;
+            var lv = (ri * 37 + di * 11) % 53;
+            late = lv > 46 ? (lv - 46) * 8 : (lv > 40 ? lv - 40 : 0);
+            two = (ri * 13 + di * 5) % 17 === 0;
+            if (two) {
+              var lv2 = (ri * 29 + di * 7) % 61;
+              late = Math.max(late, lv2 > 50 ? (lv2 - 45) * 3 : 3);
+            }
+            if (late > 10) lateDays++;
+          }
+        }
+        var t = v.replace('.', ',');
+        if (metric !== 'h') {
+          if (!isDriver) return { t: '—', off: !isFlag, num: false, flag: isFlag, cellBg: weBg, pillBg: 'transparent', fg: 'var(--text-secondary)', fw: '400' };
+          if (v !== '—') t = metric === 'late' ? (late > 10 ? '+' + late : '0') : String(metric === 'km' ? km : fuel);
+        }
+        var hot = metric === 'late' && late > 10;
+        var over = metric === 'h' && v !== '—' && parseFloat(v) > (isDriver ? 12 : 10);
+        var quiet = metric === 'late' && late <= 10;
+        return { t: t, num: !isFlag, flag: isFlag, off: false, multi: metric === 'late' && two, cellBg: weBg,
+          fg: hot ? 'var(--text-warning)' : (quiet ? 'var(--text-secondary)' : 'var(--text-body)'), fw: hot ? '700' : (over ? '600' : '400') };
+      });
+      return {
+        name: r[0], id: r[1], role: r[2], team: r[4], cells: cells.map(function (c, ci) { c.k = 'd' + ci; return c; }),
+        totalNum: total, overNum: overSum, flagsNum: flags, kmNum: kmSum, fuelNum: fuelSum,
+        total: fmt1(total), over: overSum > 0.05 ? fmt1(overSum) : '—',
+        km: isDriver ? String(kmSum) : '—', fuel: isDriver ? String(fuelSum) : '—',
+        rate: isDriver && kmSum ? fmt1(fuelSum / kmSum * 100) : '—',
+        lateNum: lateDays, late: isDriver ? String(lateDays) : '—', overHot: overSum > 0.05, overCalm: !(overSum > 0.05),
+        days: String(cnt), flags: flags ? String(flags) : ''
+      };
+    });
+    var closed = (this.state && this.state.closed) || {};
+    var onlyFlags = !!(this.state && this.state.onlyFlags);
+    var groups = teams.map(function (t) {
+      var all = rows.filter(function (r) { return teamOf[r.id] === t[0]; });
+      var role = (self.state && self.state.role) || 'all';
+      if (role !== 'all') all = all.filter(function (r) { return r.role === role; });
+      var members = onlyFlags ? all.filter(function (r) { return r.flagsNum > 0; }) : all;
+      var sum = 0, go = 0, fl = 0, gk = 0, gf = 0, gl = 0;
+      members.forEach(function (m) { sum += m.totalNum; go += m.overNum; fl += m.flagsNum; gk += m.kmNum; gf += m.fuelNum; gl += m.lateNum; });
+      var isOpen = !closed[t[0]];
+      return {
+        name: t[1], meta: t[2], size: onlyFlags ? members.length + ' из ' + all.length + ' чел.' : members.length + ' чел.', countLabel: onlyFlags ? members.length + '/' + all.length : String(members.length), rows: members, count: members.length,
+        total: sum.toFixed(1).replace('.', ','), over: go > 0.05 ? fmt1(go) : '—', flags: fl ? String(fl) : '',
+        km: gk ? String(gk) : '—', fuel: gf ? String(gf) : '—', rate: gk ? fmt1(gf / gk * 100) : '—', late: gk ? String(gl) : '—',
+        open: isOpen, expanded: isOpen ? 'true' : 'false', chev: isOpen ? '▾' : '▸', chevIcon: isOpen ? 'chevron-down' : 'chevron-right',
+        toggle: function () { var c = Object.assign({}, closed); c[t[0]] = !c[t[0]]; self.setState({ closed: c }); }
+      };
+    });
+    groups = groups.filter(function (g) { return g.count > 0; });
+    var exportSel = (this.state && this.state.exportSel) || null;
+    var exportTeams = teams.map(function (t) {
+      var n = rows.filter(function (r) { return teamOf[r.id] === t[0]; }).length;
+      var checked = exportSel ? !!exportSel[t[0]] : true;
+      return { id: t[0], name: t[1], count: String(n), countNum: n, checked: checked, unchecked: !checked, pressed: checked ? 'true' : 'false',
+        toggle: function () {
+          var cur = {};
+          teams.forEach(function (x) { cur[x[0]] = exportSel ? !!exportSel[x[0]] : true; });
+          cur[t[0]] = !cur[t[0]];
+          self.setState({ exportSel: cur });
+        } };
+    });
+    var exTeamCount = 0, exPeople = 0;
+    exportTeams.forEach(function (t) { if (t.checked) { exTeamCount++; exPeople += t.countNum; } });
+    var flagCount = 0;
+    rows.forEach(function (r) { flagCount += r.flagsNum; });
+    var allClosed = {};
+    teams.forEach(function (t) { allClosed[t[0]] = true; });
+    var sumW = (this.state && this.state.sumW) || 560;
+    var startResize = function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      var startX = e.clientX, startW = (self.state && self.state.sumW) || 560;
+      function move(ev) { var w = Math.max(360, Math.min(1000, startW + (startX - ev.clientX))); self.setState({ sumW: w }); }
+      function up() { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); }
+      window.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', up);
+    };
+    var leftW = (this.state && this.state.leftW) || 294;
+    var startResizeLeft = function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      var startX = e.clientX, startW = (self.state && self.state.leftW) || 294;
+      function move(ev) { var w = Math.max(200, Math.min(560, startW + (ev.clientX - startX))); self.setState({ leftW: w }); }
+      function up() { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); }
+      window.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', up);
+    };
+    var metricItems = [{ value: 'h', label: 'Часы' }, { value: 'km', label: 'Пробег, км' }, { value: 'fuel', label: 'ГСМ, л' }, { value: 'late', label: 'Опоздание выхода, мин' }];
+    var roleItems = [{ value: 'all', label: 'Все' }, { value: 'Водитель', label: 'Водители' }, { value: 'Грузчик', label: 'Грузчики' }];
+    return Object.assign(periodVals, { cb: cb, days: days, groups: groups, metrics: metrics, metric: metric, metricItems: metricItems, roleItems: roleItems,
+      onMetric: function (v) { self.setState({ metric: v }); },
+      onRole: function (v) { self.setState({ role: v }); },
+      onlyFlagsPressed: ((this.state && this.state.onlyFlags) ? 'true' : 'false'), onlyFlagsOff: !(this.state && this.state.onlyFlags), sumW: sumW, startResize: startResize,
+      leftW: leftW, startResizeLeft: startResizeLeft, resetResizeLeft: function () { self.setState({ leftW: 294 }); },
+      resetResize: function () { self.setState({ sumW: 560 }); }, flagCount: String(flagCount), staffCount: String(rows.length),
+      onlyFlags: onlyFlags,
+      exportOpen: !!(this.state && this.state.exportOpen),
+      openExport: function () { self.setState({ exportOpen: true }); },
+      closeExport: function () { self.setState({ exportOpen: false }); },
+      exportTeams: exportTeams,
+      exportTeamCount: String(exTeamCount), exportPeopleCount: String(exPeople),
+      exportReady: exTeamCount > 0, exportEmpty: exTeamCount === 0,
+      exportSelectAll: function () { self.setState({ exportSel: null }); },
+      exportSelectNone: function () { var z = {}; teams.forEach(function (x) { z[x[0]] = false; }); self.setState({ exportSel: z }); },
+      role: (this.state && this.state.role) || 'all',
+      pickRole: function (e) { self.setState({ role: e && e.target ? e.target.value : 'all' }); },
+      toggleOnlyFlags: function () { self.setState({ onlyFlags: !onlyFlags }); },
+      expandAll: function () { self.setState({ closed: {} }); },
+      collapseAll: function () { self.setState({ closed: allClosed }); } });
+  }
+}
+</script>
+</body>
+</html>

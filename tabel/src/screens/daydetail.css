@@ -1,0 +1,374 @@
+/* Карточка дня (DayDetail, DayDetailNormal) — handoff/screens/DayDetail.dc.html, DayDetailNormal.dc.html.
+   Только токены DS. Исключения — рисунок карты и моноширинный шрифт координат: цвета подложки карты
+   взяты из макета как есть (у DS нет картографических токенов) и собраны в переменные --dd-map-* ниже. */
+
+.dd {
+  --dd-map-ground: #f2efe9; --dd-map-park: #d3e8bc; --dd-map-tree: #bfdca2; --dd-map-water: #b5d8f2;
+  --dd-map-bld: #e4dfd6; --dd-map-bld-edge: #d3ccc0; --dd-map-road-edge: #d8d1c5; --dd-map-road: #ffffff;
+  --dd-map-avenue-edge: #e3c66f; --dd-map-avenue: #fde7a4;
+  --dd-map-label: #5c5a55; --dd-map-label-park: #4f7a35; --dd-map-label-water: #4a87b8;
+  --dd-mono: ui-monospace, Menlo, monospace;
+  --dd-media-h: 150px;
+  display: flex; flex-direction: column; gap: var(--space-6); min-width: 0;
+}
+/* Экран длиннее окна: каркас растёт по содержимому, страница прокручивается целиком, как в макете */
+.shell__main:has(> .dd) { height: auto; min-height: calc(100vh - 2 * var(--space-4)); }
+
+.dd-mono { font-family: var(--dd-mono); }
+.dd-muted { font: var(--text-caption-m-regular); color: var(--text-secondary); }
+
+/* ---------- шапка ---------- */
+.dd-crumbs { margin-bottom: calc(-1 * var(--space-2)); font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.dd-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.dd-head__main { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; min-width: 0; }
+.dd-head__titles { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.dd-title { font: var(--text-heading-h1-bold); color: var(--text-headings); overflow-wrap: anywhere; }
+.dd-sub { font: var(--text-paragraph-m-regular); color: var(--text-secondary); }
+.dd-head__nav { display: flex; gap: var(--space-2); }
+.dd-pill {
+  display: inline-flex; align-items: center; gap: var(--space-1); min-height: 28px; padding: 0 var(--space-3);
+  border-radius: var(--radius-full); font: var(--text-body-m-semibold);
+}
+.dd-pill--warn { background: var(--surface-warning-subtle); color: var(--text-warning); }
+.dd-pill--ok { background: var(--surface-success-subtle); color: var(--text-success); }
+
+/* ---------- панели ---------- */
+.dd-panel {
+  min-width: 0; display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-6);
+  background: var(--surface-primary); border-radius: var(--radius-lg);
+}
+.dd-panel--shifts { gap: var(--space-4); }
+.dd-panel--timeline { gap: 0; }
+.dd-panel--log { gap: var(--space-3); }
+.dd-panel__head { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: baseline; }
+.dd-h2 { font: var(--text-heading-h3-semibold); color: var(--text-headings); }
+.dd-h2--timeline { margin-bottom: var(--space-5); }
+.dd-cols { display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: flex-start; }
+/* слева — что произошло, справа — решение: оно остаётся на экране, пока HR листает доказательства */
+.dd-main { flex: 3 1 480px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-6); }
+.dd-side { flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-6); position: sticky; top: var(--space-4); }
+
+/* сворачиваемые блоки: смены и журнал нужны редко */
+.dd-fold { gap: 0; }
+.dd-fold[open] { gap: var(--space-4); }
+.dd-fold__sum { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; cursor: pointer; list-style: none; }
+.dd-fold__sum::-webkit-details-marker { display: none; }
+.dd-fold__sum .rc-icon, .dd-fold__sum > svg { transition: transform .15s ease-out; }
+.dd-fold[open] > .dd-fold__sum .rc-icon, .dd-fold[open] > .dd-fold__sum > svg { transform: rotate(90deg); }
+.dd-fold__sum:focus-visible { outline: 2px solid var(--border-action); outline-offset: 4px; border-radius: var(--radius-sm); }
+
+/* форма решения */
+.dd-lead { margin: 0; font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.dd-lead strong { color: var(--text-headings); }
+.dd-total { font: var(--text-paragraph-m-regular); color: var(--text-secondary); }
+.dd-total strong { color: var(--text-headings); }
+.dd-more { font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.dd-more > summary { cursor: pointer; display: flex; gap: var(--space-2); align-items: baseline; color: var(--text-action); font: var(--text-body-m-semibold); }
+.dd-more > summary:focus-visible { outline: 2px solid var(--border-action); outline-offset: 2px; border-radius: var(--radius-sm); }
+.dd-more__body { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3); }
+.dd-more__body > * { flex: 1 1 140px; }
+.dd-code.is-error .ctl__select { border-color: var(--border-error, var(--text-error)); }
+.dd-foot { display: flex; flex-direction: column; gap: var(--space-1); align-items: flex-start; padding-top: var(--space-4); border-top: 1px solid var(--border-primary); }
+
+/* ---------- смены ---------- */
+.dd-gap {
+  display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center;
+  margin-left: var(--space-8); padding: var(--space-1) 0 var(--space-1) var(--space-4); border-left: 2px dashed var(--border-primary);
+  font: var(--text-paragraph-m-regular); color: var(--text-body);
+}
+.dd-gap__title { font-weight: 600; }
+.dd-shift {
+  display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-5); align-items: center;
+  padding: var(--space-4) var(--space-5); background: var(--surface-secondary); border-radius: var(--radius-md);
+}
+.dd-shift__label {
+  flex-shrink: 0; height: 28px; padding: 0 var(--space-3); display: flex; align-items: center;
+  background: var(--surface-action); color: var(--text-on-action); border-radius: var(--radius-full); font: var(--text-paragraph-m-bold);
+}
+.dd-shift__info { flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.dd-shift__period { font: var(--text-paragraph-m-bold); }
+.dd-shift__meta { font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.dd-shift__id { margin-top: var(--space-1); display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; font: var(--text-caption-m-regular); }
+.dd-shift__id a { font-weight: 500; }
+.dd-shift__id a.dd-mono { font-weight: 600; }
+.dd-shift__chips { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.dd-chip {
+  display: inline-flex; gap: var(--space-1); height: 28px; align-items: center; padding: 0 var(--space-2);
+  border-radius: var(--radius-sm); background: var(--surface-tertiary); font: var(--text-caption-m-regular); white-space: nowrap;
+}
+.dd-chip__k { color: var(--text-body); } /* на surface-tertiary text-secondary даёт 3,9:1 */
+.dd-chip__v { font-weight: 600; }
+.dd-chip--ok { background: var(--surface-success-subtle); color: var(--text-success); }
+.dd-chip--late { background: var(--surface-warning-subtle); color: var(--text-warning); font: var(--text-caption-m-bold); }
+
+/* ---------- хронология ---------- */
+.dd-ev { display: flex; gap: var(--space-4); }
+.dd-ev__time { width: 54px; flex-shrink: 0; font: var(--text-paragraph-m-bold); }
+.dd-ev__rail { width: 16px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
+.dd-ev__dot {
+  width: 14px; height: 14px; margin-top: var(--space-1); border-radius: var(--radius-full);
+  border: 2px solid var(--surface-action); background: var(--surface-primary);
+}
+.dd-ev__dot--warn { border: 0; background: var(--surface-warning); }
+.dd-ev__line { width: 2px; flex: 1 1 auto; min-height: 26px; background: var(--surface-tertiary); }
+.dd-ev__body { flex: 1 1 auto; min-width: 0; padding-bottom: var(--space-5); display: flex; flex-direction: column; gap: var(--space-1); }
+.dd-ev__title { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.dd-ev__shift {
+  height: 20px; padding: 0 var(--space-2); display: inline-flex; align-items: center;
+  background: var(--surface-action); color: var(--text-on-action); border-radius: var(--radius-full); font: var(--text-caption-m-bold);
+}
+.dd-ev__name { font: var(--text-body-m-semibold); }
+.dd-ev__meta { font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.dd-ev__src { font: var(--text-caption-m-regular); color: var(--text-secondary); }
+
+/* ---------- фото и карта отметок ---------- */
+.dd-mark { display: flex; flex-direction: column; gap: var(--space-3); }
+.dd-mark__head { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.dd-mark__title { font: var(--text-body-m-semibold); color: var(--text-headings); }
+.dd-tag { font: var(--text-caption-m-semibold); padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); }
+.dd-tag--ok { background: var(--surface-success-subtle); color: var(--text-success); }
+.dd-tag--warn { background: var(--surface-warning-subtle); color: var(--text-warning); }
+.dd-mark__media { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.dd-mark__photo { flex: 1 1 140px; min-width: 0; }
+.dd-mark__map { flex: 1 1 180px; min-width: 0; }
+.dd-divider { height: 1px; background: var(--border-primary); }
+
+.dd-photo {
+  display: block; width: 100%; position: relative; padding: 0; margin: 0; border: 0; background: transparent;
+  border-radius: var(--radius-md); cursor: zoom-in;
+}
+.dd-photo__frame {
+  display: block; height: var(--dd-media-h); overflow: hidden;
+  border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-tertiary);
+}
+.dd-photo__svg { display: block; }
+.dd-expand {
+  position: absolute; right: var(--space-2); bottom: var(--space-2); width: 28px; height: 28px; border-radius: var(--radius-full);
+  background: var(--surface-primary); color: var(--icons-default); box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.dd-photo:hover .dd-expand, .dd-mapthumb:hover .dd-expand { color: var(--icons-action, var(--text-action)); }
+
+.dd-mapthumb {
+  display: block; position: relative; width: 100%; height: var(--dd-media-h); padding: 0; margin: 0; overflow: hidden;
+  border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--dd-map-ground); cursor: zoom-in;
+}
+.dd-mapthumb--static { cursor: default; }
+.dd-nophoto {
+  height: var(--dd-media-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-1);
+  padding: var(--space-3); text-align: center; color: var(--text-warning);
+  border: 1px dashed var(--border-warning-subtle); border-radius: var(--radius-md); background: var(--surface-warning-subtle);
+}
+.dd-nophoto__title { font: var(--text-body-m-semibold); }
+.dd-nophoto__sub { font: var(--text-caption-m-regular); }
+
+.dd-legend { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.dd-legend > span { display: inline-flex; gap: var(--space-1); align-items: center; }
+.dd-legend__dot { width: 8px; height: 8px; border-radius: var(--radius-full); }
+.dd-legend__dot--mark { background: var(--text-success); }
+.dd-legend__dot--pt { background: var(--surface-action); }
+.dd-legend__dash { width: 12px; height: 0; border-top: 2px dashed var(--icons-secondary); }
+
+/* рисунок карты */
+.dd-map__svg { display: block; }
+.dd-map__ground { fill: var(--dd-map-ground); }
+.dd-map__park { fill: var(--dd-map-park); }
+.dd-map__tree { fill: var(--dd-map-tree); }
+.dd-map__river { fill: none; stroke: var(--dd-map-water); stroke-width: 12; stroke-linecap: round; }
+.dd-map__bld { fill: var(--dd-map-bld); stroke: var(--dd-map-bld-edge); stroke-width: .8; }
+.dd-map__road-edge { fill: none; stroke: var(--dd-map-road-edge); stroke-width: 9; }
+.dd-map__road { fill: none; stroke: var(--dd-map-road); stroke-width: 7; }
+.dd-map__avenue-edge { fill: none; stroke: var(--dd-map-avenue-edge); stroke-width: 13; }
+.dd-map__avenue { fill: none; stroke: var(--dd-map-avenue); stroke-width: 11; }
+.dd-map__labels text { font-family: inherit; font-size: 8px; fill: var(--dd-map-label); }
+.dd-map__labels .is-strong { font-weight: 600; }
+.dd-map__labels .is-park { fill: var(--dd-map-label-park); font-style: italic; }
+.dd-map__labels .is-water { fill: var(--dd-map-label-water); font-style: italic; }
+.dd-map__zone { fill: var(--surface-information-subtle); fill-opacity: .45; stroke: var(--surface-action); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.dd-map__zone--big { stroke-width: 2; stroke-dasharray: 6 4; }
+.dd-map__track { fill: none; stroke: var(--icons-secondary); stroke-width: 2; stroke-dasharray: 5 3; stroke-linecap: round; stroke-linejoin: round; }
+.dd-map__track--big { stroke-width: 3; stroke-dasharray: 8 5; }
+.dd-map__dist { stroke: var(--text-success); stroke-width: 1.25; stroke-dasharray: 2 2; }
+.dd-map__dist--big { stroke-width: 2; stroke-dasharray: 3 3; }
+.dd-map__dist-t { fill: var(--text-headings); font-family: inherit; font-size: 8px; font-weight: 700; }
+.dd-map__dist-t--big { font-size: 10px; }
+.dd-map__dist-bg { fill: var(--surface-primary); }
+.dd-map__pt { fill: var(--surface-action); stroke: var(--surface-primary); stroke-width: 1.5; }
+.dd-map__pt--big { stroke-width: 2; }
+.dd-map__pt-t { fill: var(--text-on-action); font-family: inherit; font-size: 9px; font-weight: 700; }
+.dd-map__pt-t--big { font-size: 12px; }
+.dd-map__pin { fill: var(--text-success); stroke: var(--surface-primary); stroke-width: 1.5; }
+.dd-map__pin--big { stroke-width: 2; }
+.dd-map__pin-hole { fill: var(--surface-primary); }
+.dd-map__halo { fill: var(--text-success); fill-opacity: .18; }
+.dd-map__ring { fill: none; stroke: var(--surface-warning); stroke-width: 2; stroke-dasharray: 3 2; }
+.dd-map__scale { stroke: var(--text-headings); stroke-width: 2; }
+.dd-map__scale-t { fill: var(--text-headings); font-family: inherit; font-size: 9px; }
+
+/* нарисованный кадр с камеры */
+.dd-ph__sky { fill: var(--surface-information-subtle); }
+.is-evening .dd-ph__sky { fill: var(--surface-attention-subtle); }
+.dd-ph__wall { fill: var(--surface-tertiary); }
+.dd-ph__sign { fill: var(--surface-action); }
+.dd-ph__sign-t { fill: var(--surface-primary); opacity: .8; }
+.dd-ph__win { fill: var(--surface-secondary); stroke: var(--border-primary); stroke-width: 1; }
+.dd-ph__door { fill: var(--surface-secondary); stroke: var(--border-primary); stroke-width: 1; }
+.dd-ph__door-l { stroke: var(--border-primary); stroke-width: 1; }
+.dd-ph__ground { fill: var(--border-primary); }
+.dd-ph__box { fill: var(--surface-warning-subtle); stroke: var(--border-warning-subtle); stroke-width: 1; }
+.dd-ph__head { fill: var(--icons-secondary); }
+.dd-ph__body { fill: var(--icons-default); }
+.dd-ph__vest { fill: var(--surface-warning); }
+.dd-ph__stripe { fill: var(--surface-primary); opacity: .85; }
+.dd-ph__legs { fill: var(--icons-default); }
+
+/* ---------- решение HR ---------- */
+.dd-times { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.dd-times__f { flex: 1 1 110px; min-width: 0; display: flex; flex-direction: column; }
+.dd-times__f > .rc-field { flex: 1 1 auto; }
+.dd-times input[type="time"] { font: inherit; color: var(--text-body); }
+.dd-times .rc-field__box:focus-within { box-shadow: inset 0 0 0 1px var(--border-action); }
+.dd-code .ctl__select { font: var(--text-paragraph-m-regular); }
+.dd-reasons { display: flex; flex-direction: column; gap: var(--space-2); }
+.dd-label { display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.dd-label__t { font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.dd-req { color: var(--text-error); }
+.dd-choices { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.dd-choice {
+  min-height: 32px; padding: 0 var(--space-3); margin: 0; border-radius: var(--radius-full); cursor: pointer;
+  border: 1px solid var(--border-primary); background: var(--surface-primary); color: var(--text-body);
+  font: var(--text-paragraph-m-regular); text-align: left;
+}
+.dd-choice:hover { border-color: var(--border-action); }
+.dd-choice.is-on { border-color: var(--border-action); background: var(--surface-selected); color: var(--text-selected); font: var(--text-body-m-semibold); }
+.dd-choice--tpl.is-on { font: var(--text-paragraph-m-regular); font-weight: 600; }
+.dd-textarea {
+  display: block; width: 100%; margin: 0; padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--surface-primary);
+  font: var(--text-paragraph-m-regular); color: var(--text-body); resize: vertical; transition: border-color .12s;
+}
+.dd-textarea:focus { outline: none; border-color: var(--border-action); }
+.dd-err { font: var(--text-caption-m-semibold); color: var(--text-error); }
+.dd-actions { margin-top: var(--space-1); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+
+.dd-done {
+  display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4); border-radius: var(--radius-md);
+  background: var(--surface-success-subtle); color: var(--text-success); font: var(--text-paragraph-m-regular);
+}
+.dd-done__title { display: flex; gap: var(--space-2); align-items: center; font-weight: 700; }
+.dd-done__line { color: var(--text-headings); }
+.dd-done__text { color: var(--text-body); }
+.dd-done__actions { margin-top: var(--space-2); display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); align-items: center; }
+
+/* ---------- итог штатного дня ---------- */
+.dd-auto {
+  display: flex; gap: var(--space-2); align-items: flex-start; padding: var(--space-4); border-radius: var(--radius-md);
+  background: var(--surface-success-subtle); color: var(--text-success); font: var(--text-paragraph-m-regular);
+}
+.dd-auto > .rc-icon, .dd-auto > svg { flex-shrink: 0; }
+.dd-auto__text { display: flex; flex-direction: column; gap: var(--space-1); }
+.dd-auto__text > span { color: var(--text-body); }
+.dd-dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: var(--space-3) var(--space-6); font: var(--text-paragraph-m-regular); }
+.dd-dl dt { color: var(--text-secondary); }
+.dd-dl dd { margin: 0; color: var(--text-body); }
+.dd-dl dd.is-strong { font-weight: 600; color: var(--text-headings); }
+
+/* ---------- журнал ---------- */
+.dd-log { font: var(--text-paragraph-m-regular); color: var(--text-body); }
+
+/* ---------- окна ---------- */
+.dd-overlay {
+  position: fixed; inset: 0; z-index: 100; padding: var(--space-6);
+  display: flex; align-items: center; justify-content: center;
+}
+.dd-overlay__scrim {
+  position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; margin: 0; border: 0; cursor: default;
+  background: color-mix(in srgb, var(--surface-invert) 45%, transparent);
+}
+.dd-overlay__scrim.is-dim { background: color-mix(in srgb, var(--surface-invert) 80%, transparent); cursor: zoom-out; }
+.dd-modal { position: relative; width: 100%; max-height: 100%; overflow: auto; box-shadow: var(--shadow-lg); }
+.dd-modal h2 { margin: 0; }
+.dd-modal__sub { display: flex; gap: var(--space-1); align-items: center; font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.dd-modal--photo { max-width: 560px; overflow: hidden; }
+.dd-modal--photo-wide { max-width: 840px; }
+.dd-modal--msg { max-width: 560px; }
+.dd-modal--map { max-width: 1140px; }
+.dd-photo-full { width: 100%; aspect-ratio: 1 / 1; max-height: calc(100vh - 140px); background: var(--surface-invert); flex-shrink: 0; }
+.dd-modal--photo .dd-photo-full { max-height: 70vh; }
+.dd-photo-full .dd-photo__svg { width: 100%; height: 100%; }
+.dd-photo-full svg { display: block; }
+
+.dd-bigmap { position: relative; flex-shrink: 0; aspect-ratio: 480 / 300; overflow: hidden; background: var(--dd-map-ground); }
+.dd-bigmap__canvas { position: absolute; inset: 0; transition: transform .2s; }
+.dd-bigmap__card {
+  position: absolute; display: inline-flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2); background: var(--surface-primary);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-md); white-space: nowrap;
+}
+.dd-bigmap__thumb { width: 44px; height: 44px; flex-shrink: 0; overflow: hidden; border-radius: var(--radius-sm); display: block; }
+.dd-bigmap__thumb svg { display: block; }
+.dd-bigmap__card-text { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.dd-bigmap__card-title { font: var(--text-caption-m-bold); color: var(--text-headings); }
+.dd-bigmap__card-sub { font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.dd-bigmap__card-ok { font: var(--text-caption-m-bold); color: var(--text-success); }
+.dd-zoom {
+  position: absolute; top: var(--space-3); left: var(--space-3); display: flex; flex-direction: column; gap: 1px;
+  border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md);
+}
+.dd-zoom button {
+  width: 36px; height: 36px; padding: 0; margin: 0; border: 0; background: var(--surface-primary);
+  color: var(--icons-default); font: var(--text-heading-h3-semibold); cursor: pointer;
+}
+.dd-zoom button:hover:not(:disabled) { background: var(--surface-secondary); }
+.dd-zoom button:disabled { color: var(--icons-secondary); cursor: default; }
+.dd-bigmap__foot {
+  display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); align-items: center; justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+}
+.dd-bigmap__stats { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font: var(--text-paragraph-m-regular); }
+.dd-bigmap__k { color: var(--text-secondary); }
+
+/* переписка */
+.dd-chat {
+  display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5) var(--space-6);
+  background: var(--surface-secondary); font: var(--text-paragraph-m-regular);
+}
+.dd-chat__day { align-self: center; font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.dd-chat__typing { align-self: flex-start; font: var(--text-caption-m-regular); font-style: italic; color: var(--text-secondary); }
+.dd-bubble { max-width: 80%; display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3) var(--space-4); }
+.dd-bubble--in { align-self: flex-start; background: var(--surface-primary); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm); }
+.dd-bubble--out { align-self: flex-end; background: var(--surface-success-subtle); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg); }
+.dd-bubble__who { font: var(--text-caption-m-semibold); color: var(--text-secondary); }
+.dd-bubble__who--hr { color: var(--text-success); }
+.dd-bubble__text { white-space: pre-wrap; color: var(--text-headings); }
+.dd-bubble__btns { margin-top: var(--space-1); display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.dd-quick { font: var(--text-caption-m-semibold); padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); background: var(--surface-primary); color: var(--text-action); }
+.dd-bubble__time { align-self: flex-end; font: var(--text-caption-m-regular); color: var(--text-secondary); }
+.dd-apply {
+  margin: var(--space-6) var(--space-6) 0; padding: var(--space-4); border-radius: var(--radius-md);
+  display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-4); align-items: center; justify-content: space-between;
+  background: var(--surface-information-subtle); color: var(--text-information); font: var(--text-paragraph-m-regular);
+}
+.dd-compose { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-5); }
+.dd-compose--sent { flex-direction: row; justify-content: flex-end; }
+.dd-compose__foot { margin-top: var(--space-1); display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: flex-end; }
+.dd-cb { align-self: flex-start; }
+
+/* ---------- узкие экраны ---------- */
+@media (max-width: 900px) {
+  .shell__main:has(> .dd) { min-height: calc(100vh - 2 * var(--space-2)); }
+}
+@media (max-width: 600px) {
+  .dd { gap: var(--space-4); }
+  .dd-panel { padding: var(--space-4); }
+  .dd-main, .dd-side { flex-basis: 100%; }
+  .dd-side { position: static; }
+  .dd-shift { padding: var(--space-4); }
+  .dd-overlay { padding: var(--space-3); }
+  .dd-chat, .dd-compose, .dd-bigmap__foot { padding-left: var(--space-4); padding-right: var(--space-4); }
+  .dd-apply { margin-left: var(--space-4); margin-right: var(--space-4); }
+  .dd-bigmap { aspect-ratio: 4 / 3; }
+  .dd-bigmap__card { display: none; }
+  .dd-dl { grid-template-columns: 1fr; gap: var(--space-1); }
+  .dd-dl dd { margin-bottom: var(--space-2); }
+}
