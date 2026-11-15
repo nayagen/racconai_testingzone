@@ -24,7 +24,7 @@ const FEED = [
   ['06:05', 'Ким Виктор', 'Ушёл', 'Водитель', 'Депо №1 · ночная смена с 26 Окт', ''],
   ['05:58', 'Сериков Данияр', 'Пришёл', 'Водитель', 'Депо №1', ''],
   ['05:44', 'Ахметов Бауыржан', 'Пришёл', 'Водитель', 'Депо №1', ''],
-  ['05:40', 'Нурланов Ерлан', 'Пришёл', 'Водитель', 'резерв · WhatsApp без ссылки, сеть недоступна', 'Резервный канал']
+  ['05:40', 'Нурланов Ерлан', 'Пришёл', 'Водитель', 'Депо №1', '']
 ].map((r, i) => ({ i, time: r[0], name: r[1], kind: r[2], role: r[3], place: r[4], status: r[5], warn: r[5] !== '' }));
 
 // гео отметки на карте: центр геозоны (cx, cy, r в px; 100 м = 29 px), пин (px, py), что подписать
@@ -36,7 +36,7 @@ const GEO = [
   { kind: 'depot', cx: 232, cy: 184, r: 58, px: 254, py: 168, dist: '30 м', to: 'До депо', radius: '200 м', acc: 'камера · точность 9 м', inZone: true, coords: '43.2318, 76.8884', track: false },
   { kind: 'depot', cx: 232, cy: 184, r: 58, px: 206, py: 200, dist: '35 м', to: 'До депо', radius: '200 м', acc: 'камера · точность 11 м', inZone: true, coords: '43.2313, 76.8876', track: false },
   { kind: 'depot', cx: 232, cy: 184, r: 58, px: 262, py: 196, dist: '40 м', to: 'До депо', radius: '200 м', acc: 'камера · точность 7 м', inZone: true, coords: '43.2314, 76.8889', track: false },
-  { kind: 'depot', cx: 232, cy: 184, r: 58, px: null, py: null, dist: '', to: 'До депо', radius: '200 м', acc: '', inZone: false, coords: 'нет данных', track: false }
+  { kind: 'depot', cx: 232, cy: 184, r: 58, px: 214, py: 172, dist: '25 м', to: 'До депо', radius: '200 м', acc: 'камера · точность 10 м', inZone: true, coords: '43.2317, 76.8878', track: false }
 ];
 
 const MISSING = [
@@ -185,12 +185,6 @@ function MarkMap({ f }) {
           </div>
         )}
       </div>
-      {!has && (
-        <div className="fd-nogeo">
-          <svg className="fd-nogeo__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 9v4" /><path d="M12 17h.01" /><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /></svg>
-          <span>Геопозиция не передана: отметка через резервный канал без сети. Показана геозона депо.</span>
-        </div>
-      )}
       <div className="fd-zoom">
         <button type="button" aria-label="Приблизить" disabled={zoom === ZOOMS.length - 1} onClick={() => setZoom(Math.min(ZOOMS.length - 1, zoom + 1))}>+</button>
         <button type="button" aria-label="Отдалить" disabled={zoom === 0} onClick={() => setZoom(Math.max(0, zoom - 1))}>−</button>

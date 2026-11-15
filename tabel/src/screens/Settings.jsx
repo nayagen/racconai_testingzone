@@ -171,7 +171,6 @@ const RULES = {
   routeAt: { label: 'отправка маршрута грузчику' },
   photo: { label: 'обязательное фото' },
   cameraOnly: { label: 'фото только с камеры' },
-  backup: { label: 'резервный канал' },
   driverCrew: { label: 'отметка бригады водителем' }
 };
 
@@ -183,7 +182,7 @@ const ORG_DEFAULTS = {
   gap: 'ifNoLeave', gapMax: '120', loaderStart: 'plan', waitCount: true, waitMax: '30',
   normDriver: '12', normLoader: '10', overtime: '30', breakMin: '0',
   noShow: '30', leaveRemind: '15', autoClose: '23:59', routeAt: '20:00',
-  photo: true, cameraOnly: true, backup: true, driverCrew: true
+  photo: true, cameraOnly: true, driverCrew: true
 };
 
 const LEVELS = [
@@ -415,7 +414,6 @@ function SettingsRulesScreen({ flagCount }) {
         <h2 className="st-card__title st-card__title--gap">Отметка</h2>
         <Sw k="photo" label="Фото обязательно" />
         <Sw k="cameraOnly" label="Только с камеры, не из галереи" />
-        <Sw k="backup" label="Разрешить резервный канал — обычное сообщение в WhatsApp, с пометкой" />
         <Sw k="driverCrew" label="Водитель может отмечать свою бригаду" />
       </section>
 
@@ -440,7 +438,6 @@ const EX_DATA = [
     ['Вне геозоны', 'дальше радиуса депо или точки', 'on', 'block', 'HR', 'on', false],
     ['Нет подтверждения машиной', 'машина бригады не была на точке', 'on', 'block', 'Начальник колонны', 'na', false],
     ['Расхождение с событиями', 'больше допуска', 'on', 'block', 'HR', 'on', false],
-    ['Резервный канал', 'сообщение без фото с камеры и гео', 'on', 'soft', 'HR', 'on', false],
     ['Отметил водитель', 'грузчик отмечен за бригаду', 'on', 'soft', 'Начальник колонны', 'on', false],
     ['Подмена', 'смену начал не назначенный водитель', 'on', 'block', 'Начальник колонны', 'na', false]
   ]],
@@ -449,9 +446,6 @@ const EX_DATA = [
     ['Ожидание машины', 'дольше порога', 'on', 'soft', 'HR', 'on', false],
     ['Ранний уход', 'ушёл до конца работы бригады', 'off', 'block', 'Начальник колонны', 'na', true],
     ['Опоздание выхода на линию', 'факт позже плана больше порога', 'on', 'soft', 'Начальник колонны', 'na', true]
-  ]],
-  ['Спор', [
-    ['Спор сотрудника', 'работник оспорил день в боте', 'lock', 'lock', 'HR', 'na', false]
   ]]
 ];
 

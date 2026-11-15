@@ -140,14 +140,6 @@
 .fd-pincard__acc { font: var(--text-caption-m-regular); color: var(--text-secondary); }
 .fd-pincard__zone { font: var(--text-caption-m-bold); }
 
-.fd-nogeo {
-  position: absolute; left: 50%; top: var(--space-4); transform: translateX(-50%);
-  display: flex; gap: var(--space-2); align-items: center; max-width: calc(100% - 2 * var(--space-4));
-  padding: var(--space-3) var(--space-4); background: var(--surface-primary);
-  border: 1px solid var(--border-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-md);
-  font: var(--text-caption-m-regular); color: var(--text-body);
-}
-.fd-nogeo__icon { flex-shrink: 0; color: var(--text-warning); }
 
 .fd-zoom {
   position: absolute; top: var(--space-3); left: var(--space-3); display: flex; flex-direction: column; gap: var(--space-px);

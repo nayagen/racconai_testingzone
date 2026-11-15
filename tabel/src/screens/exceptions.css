@@ -61,9 +61,8 @@
   font: var(--text-caption-m-semibold); border-radius: var(--radius-full); padding: var(--space-1) var(--space-2);
   background: var(--surface-tertiary); color: var(--text-body); cursor: help;
 }
-.ex-row__sug, .ex-row__quote { margin: 0; font: var(--text-paragraph-m-regular); color: var(--text-body); }
+.ex-row__sug { margin: 0; font: var(--text-paragraph-m-regular); color: var(--text-body); }
 .ex-row__sug-lbl { color: var(--text-secondary); }
-.ex-row__quote { color: var(--text-secondary); font-style: italic; }
 .ex-row__actions { flex: 0 0 auto; display: flex; gap: var(--space-2); align-items: center; margin-left: auto; }
 .ex-link { text-decoration: none; }
 
