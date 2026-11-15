@@ -2,6 +2,7 @@
 //
 //   npm i --no-save --no-package-lock esbuild@0.24.2
 //   node tabel/tools/build.mjs            → tabel/dist/{index.html, app.js, app.css}
+//   node tabel/tools/build.mjs <out>      → в указанную папку (так сборка сайта кладёт табель в _site/tabel)
 //
 // Порядок файлов берётся из tabel/index.html, поэтому новый экран достаточно подключить там.
 // Что делает:
@@ -16,7 +17,9 @@ import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const out = path.join(root, "dist");
+const out = process.argv[2] ? path.resolve(process.argv[2]) : path.join(root, "dist");
+// favicon лежит в корне сайта: из tabel/dist это ../../, из <сайт>/tabel (сборка сайта) — ../
+const favicon = process.argv[2] ? "../favicon.svg" : "../../favicon.svg";
 const esbuild = createRequire(path.join(process.cwd(), "/"))("esbuild");
 const read = (rel) => fs.readFileSync(path.join(root, rel), "utf8");
 
@@ -77,7 +80,7 @@ fs.writeFileSync(path.join(out, "index.html"), `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
-<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="${favicon}" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
